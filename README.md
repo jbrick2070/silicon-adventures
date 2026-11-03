@@ -18,7 +18,7 @@ Double-click **Play Enchanted Scepters.exe** on 64-bit Windows. The launcher ope
 | Up arrow in the command line | Recall the last command |
 | ⌖ in the picture title bar | Return to the original doorway viewpoint |
 
-Read the journal after each action. You can travel by approaching a room edge and pressing E, using the **Travel** tab, or typing a direction. A physical step inside a room leaves the turn counter alone. An adventure command can advance an enemy, a trap or a puzzle.
+Read the journal after each action. You can travel by approaching a room edge and pressing E, using the **Travel** tab, or typing a direction. The Travel tab also keeps Saber’s chart, a map of the rooms you have seen drawn on the disk’s own room grid, with ink edges where the map blocks a bearing and gaps where it opens. A physical step inside a room leaves the turn counter alone. An adventure command can advance an enemy, a trap or a puzzle.
 
 **Save** keeps the world state, inventory, and first-person viewpoint in `%USERPROFILE%\Saved Games\Silicon Adventures\adventure.sav`. Use **Restore** to return there. On your own journey each new room you enter also saves there as a doorway checkpoint, and after a death the journal offers to return to it. The game keeps one save, so turn checkpoints off in the **Field guide** to keep a hand-placed save. When someone asks you a question, only the answer is safe: the journal offers Yes and No, and other actions count as a refusal. **Field guide** includes a sound-caption switch. The game runs a server on this PC’s loopback address and closes it after the browser has been gone for five minutes.
 
@@ -35,6 +35,7 @@ The source images came from the Internet Archive. The source records include the
 | `sources/README.md` | Disk provenance, intake and extraction |
 | `archive/es/catalog.json` and `archive/dc/catalog.json` | Disk-file and resource inventories |
 | `art/README.md` and `art/foreground.tsv` | Original draw commands, image layers, and inferred depth |
+| `game/map.js` | Saber’s chart: a 1-bit fog-of-war map of the room grid in the Travel tab, kept in the save |
 | `art/refresh/README.md` and `game/refresh.js` | Separate non-destructive 1-bit refresh layers, steady `CODE 1` halftones, High Altar geometry, landmark room rigs, and lifted forms |
 | `archive/dc/README.md` | Sound, motion and interface decoding |
 | `archive/es/PLAYTEST.md` | Complete four-scepter campaign verification |

@@ -24,6 +24,22 @@
     return o&&o.type!==9?'Take the '+name:'Click '+name;
   }
   const enemyBase=new Map();
+  // Saber's chart: which of the 200 rooms this run has seen, in design order.
+  const roomList=ES_DESIGNS.filter(d=>d.type==='ASCN');
+  const roomIndex=new Map(roomList.map((d,i)=>[d.id,i]));
+  const worldMap=new WorldMap($('map'),roomList);
+  let visited=new Uint8Array(roomList.length);
+  function packSeen(){let s='';for(let i=0;i<visited.length;i+=8){let b=0;for(let k=0;k<8;k++)if(visited[i+k])b|=1<<k;s+=String.fromCharCode(b);}return btoa(s);}
+  function unpackSeen(text){const v=new Uint8Array(roomList.length);try{const s=atob(text);for(let i=0;i<s.length;i++){const b=s.charCodeAt(i);for(let k=0;k<8&&i*8+k<v.length;k++)if(b&(1<<k))v[i*8+k]=1;}}catch{}return v;}
+  function drawChart(){
+    if(!scene||$('routePanel').hidden)return;
+    worldMap.draw(visited,scene.id);
+    const k=Math.max(1,Math.min(2,Math.floor(($('routePanel').clientWidth||400)/worldMap.w)));
+    $('map').style.width=(worldMap.w*k)+'px';$('map').style.height=(worldMap.h*k)+'px';
+    const n=visited.reduce((a,b)=>a+b,0);$('mapNote').textContent=n+(n===1?' room charted':' rooms charted')+' · ink edges are walls on the map, gaps are openings';
+  }
+  $('map').onpointermove=e=>{const r=$('map').getBoundingClientRect();const room=worldMap.roomAt((e.clientX-r.left)*worldMap.w/r.width,(e.clientY-r.top)*worldMap.h/r.height);$('map').title=room&&visited[roomIndex.get(room.id)]?title(room.name):'';};
+  function rememberSeen(){try{sessionStorage.setItem('scepters-seen',JSON.stringify({session:state?.session,seen:packSeen()}));}catch{}}
   const condition=p=>p<.40?'very bad':p<.55?'bad':p<.70?'average':p<.85?'good':'very good';
   const whom=s=>s==='them'?'them':/^the\b/i.test(s)?s:'the '+s;
   // The last line of a turn that ends in a question mark is a scripted question (the King's
@@ -134,6 +150,7 @@
     for(const id of ['journal','pack','route']){
       $(id+'Panel').hidden=id!==which;$(id+'Tab').setAttribute('aria-pressed',String(id===which));
     }
+    if(which==='route')drawChart();
   }
   for(const name of ['journal','pack','route'])$(name+'Tab').onclick=()=>tabs(name);
   function controls(){
@@ -218,7 +235,8 @@
       scene=designs.get('ASCN/'+next.scene);
       if(!scene)throw new Error('Missing room plate '+next.scene);
       await view.load(scene);sound.scene(scene);
-      if(opts.fresh) {$('log').replaceChildren();wizardRead=false;prayed=false;enemyBase.clear();checkpointNoted=false;}
+      if(opts.fresh) {$('log').replaceChildren();wizardRead=false;prayed=false;enemyBase.clear();checkpointNoted=false;if(!opts.keepSeen)visited=new Uint8Array(roomList.length);}
+      if(roomIndex.has(scene.id)){visited[roomIndex.get(scene.id)]=1;rememberSeen();drawChart();}
       if(!opts.fresh && playing)line('— '+title(scene.name)+' —','entry');
       if(scene.id!==7990)shortcut=false;
       keys.clear();stepDistance=0;tabs('journal');
@@ -243,7 +261,7 @@
     // Doorway checkpoint: only a run that owns the save slot, only on a real turn, never mid-fight or at the altar.
     if(owner&&checkpointsOn&&opts.echo&&changed&&scene.id!==7990&&!state.characters.length){
       try{
-        const result=await api('save',JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut,auto:true,hp:state.hp}));
+        const result=await api('save',JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut,auto:true,hp:state.hp,seen:packSeen()}));
         state.saved=result.saved;checkpoint={room:scene.name,hp:state.hp};
         if(!checkpointNoted){checkpointNoted=true;line('Checkpoint at the doorway. Restore returns here; turn this off in the field guide to keep a hand-placed save.','aside');}
         controls();
@@ -303,6 +321,7 @@
       if(entry==='altar')line('A voice carries from the far side of the stone.','aside');
       if(entry==='restore'&&state.viewData){
         try{const v=JSON.parse(state.viewData);
+          if(typeof v.seen==='string'){visited=unpackSeen(v.seen);if(roomIndex.has(scene.id))visited[roomIndex.get(scene.id)]=1;rememberSeen();drawChart();}
           if(v.scene===scene.id && [v.x,v.z,v.yaw,v.pitch].every(Number.isFinite)) {
             Object.assign(view.pose,{x:v.x,z:v.z,yaw:v.yaw,pitch:v.pitch});
             wizardRead=!!v.read;shortcut=!!v.shortcut;
@@ -319,7 +338,7 @@
   $('save').onclick=async()=>{
     if(busy||!playing)return;busy=true;
     try{
-      const result=await api('save',JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut,hp:state.hp}));
+      const result=await api('save',JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut,hp:state.hp,seen:packSeen()}));
       state.saved=result.saved;owner=true;checkpoint={room:scene.name,hp:state.hp};controls();line('Adventure saved.','aside');
     }catch(e){line(e.message,'aside');}finally{busy=false;}
   };
@@ -541,7 +560,8 @@
       const resumable=sessionStorage.getItem('scepters-session')===snapshot.session;
       if(resumable){
         playing=true;$('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;
-        await apply(snapshot,{fresh:true});
+        try{const kept=JSON.parse(sessionStorage.getItem('scepters-seen')||'null');if(kept&&kept.session===snapshot.session)visited=unpackSeen(kept.seen);}catch{}
+        await apply(snapshot,{fresh:true,keepSeen:true});
       }else{
         await view.load(scene);state=snapshot;$('resume').hidden=!snapshot.saved;
         const lid=designs.get('AOBJ/14168');
