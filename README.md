@@ -17,6 +17,7 @@ Double-click **Play Enchanted Scepters.exe** on 64-bit Windows. The launcher ope
 | R | Repeat the last attack while someone stands against you |
 | Where next? | One more clue toward the next scepter, from a nudge to the exact inputs of a winning run (an addition of this edition) |
 | Up arrow in the command line | Recall the last command |
+| On a phone or tablet | Hold the Walk, Back and turn buttons under the picture; tap an object; drag to look |
 | ⌖ in the picture title bar | Return to the original doorway viewpoint |
 
 Read the journal after each action. It keeps the whole session, survives a reload within a launch, and comes back with a Restore; its heading counts the scepters you hold. You can travel by approaching a room edge and pressing E, using the **Travel** tab, or typing a direction. The Travel tab also keeps Saber’s chart, a map of the rooms you have seen drawn on the disk’s own room grid, with ink edges where the map blocks a bearing and gaps where it opens. A physical step inside a room leaves the turn counter alone. An adventure command can advance an enemy, a trap or a puzzle.

@@ -138,7 +138,7 @@
   }
   function sourceEvents(next,point){
     if(!playing||!next.sounds?.length)return;
-    const fallback=point||{x:.35,z:Math.max(1.7,view.rig.back-.8)};
+    const fallback=point||{x:.35,z:Math.max(1.7,(view.rig?.back??5)-.8)};
     if(scene?.id!==18366){sound.events(next.sounds,fallback);return;}
     // The Finale names its bearings: earthquakes north, tornadoes east, volcanoes west, the tidal wave
     // south, and Elron's horn from where he stands. Each run of cues plays from that side, in order.
@@ -399,7 +399,7 @@
   function fieldGuide(){
     const h=document.createElement('h2');h.textContent='Field guide';
     openDialog('Field guide',h,
-      para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around.'),
+      para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around. On a phone or tablet, hold the Walk, Back and turn buttons under the picture.'),
       para('Click a drawn object or approach it and press E. A click is a turn in the original game: it may take, answer a question or spring a trap, so E offers the edition’s honest prompt (Take, Click, Face, Go). Press / to type. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
       para('The disk’s vocabulary: the Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, ACCEPT, WEAR, and each weapon’s own verb. There is no EXAMINE, USE or TALK; this edition sends EXAMINE as Look and USE as the item’s verb. Status and Rest are turns of their own, so use them away from a fight.'),
       para('When someone stands against you, your weapons join the action row. Press R to repeat the last attack and the up arrow in the command line to recall the last command.'),
@@ -527,6 +527,13 @@
     }
   });
   document.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
+  // Hold-to-walk buttons feed the same key set as the keyboard, so walking and step sounds need no change.
+  for(const b of document.querySelectorAll('.touch-walk button')){
+    const k=b.dataset.key,release=()=>{keys.delete(k);b.classList.remove('held');};
+    b.addEventListener('pointerdown',e=>{if(!playing)return;e.preventDefault();b.setPointerCapture(e.pointerId);keys.add(k);b.classList.add('held');});
+    for(const ev of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(ev,release);
+    b.addEventListener('contextmenu',e=>e.preventDefault());
+  }
   window.addEventListener('blur',()=>{keys.clear();drag=null;});
   for(const event of ['pointerdown','keydown'])document.addEventListener(event,()=>{
     if(playing&&!sound.started&&!muted)sound.start().catch(()=>{});
