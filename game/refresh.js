@@ -181,7 +181,7 @@
     },
     // Lava tunnel: rock walls meet the dark floor at y ≈ 195.
     17983: {
-      cy: 125, left: -3.0, right: 3.0, back: 5.5, ceiling: 5.2, wallTop: 5.0, environment: 'chamber',
+      cy: 125, left: -3.0, right: 3.0, back: 5.5, ceiling: 5.2, wallTop: 5.0, environment: 'cave',
       unseen: { floor: 6, east: 13, west: 4, rear: 5, ceiling: 7, courses: false, baseboard: false }
     },
     // Dogleg: ashlar blocks and 2.6 m floor slabs continue around the bend.
@@ -208,7 +208,7 @@
     },
     // Cavern: light rock walls close in around the nest.
     18391: {
-      cy: 150, left: -3.2, right: 3.2, back: 5.5, ceiling: 4.2, wallTop: 4.0, environment: 'chamber',
+      cy: 150, left: -3.2, right: 3.2, back: 5.5, ceiling: 4.2, wallTop: 4.0, environment: 'cave',
       unseen: { floor: 5, east: 3, west: 3, rear: 2, ceiling: 2, courses: false, baseboard: false }
     },
     // Cave entrance: the sky meets the far ground at y ≈ 100.
@@ -579,9 +579,10 @@
   }
 
   // Shade unseen world surfaces (side wall extensions, rear doorway wall, ceilings, horizons) with CODE 1 patterns.
-  function shadeUnseenWorld(view, face, x, y, z, t, sx, sy) {
+  function shadeUnseenWorld(view, face, x, y, z, t, sx, sy, dx, dy, dz) {
     const r = view.rig;
     const pen = Math.max(0.004, t / r.focal);
+    const cave = view.env === 'cave';
 
     if (r.environment === 'submerged') {
       const angle = Math.atan2(x, z), ridge = 1.65 + 0.13 * Math.sin(angle * 8) + 0.06 * Math.cos(angle * 15);
@@ -592,23 +593,26 @@
     }
 
     if (view.outside) {
-      if (face === -3) return samplePattern(2, sx, sy) ? 1 : 2;
       if (face === 3) {
         let pat = t < 3.4 ? 13 : t < 7.2 ? 5 : 4;
         if (hasContactShadow(view.solids, null, x, y, z) || spriteShadow(view, x, z)) pat = shiftPattern(pat, 1);
         return samplePattern(pat, sx, sy) ? 1 : 2;
       }
-      const a = Math.atan2(x, z), ridge = 1.6 + 0.23 * Math.sin(a * 13) + 0.30 * Math.cos(a * 4);
-      if (Math.abs(y - ridge) < 1.35 * pen) return 1;
-      const pat = y < ridge ? (t > 8.0 ? 5 : 6) : 3;
+      // One horizon at infinity: the ridge depends only on the ray's bearing and elevation,
+      // so it holds still while walking and never seams between the wall and ceiling faces.
+      if (dx === undefined) { dx = x - view.pose.x; dz = z - view.pose.z; dy = y - r.eye; }
+      const a = Math.atan2(dx, dz), ridge = 1.6 + 0.23 * Math.sin(a * 13) + 0.30 * Math.cos(a * 4);
+      const elev = dy / Math.max(1e-6, Math.hypot(dx, dz)), ridgeElev = (ridge - r.eye) / 12;
+      if (Math.abs(elev - ridgeElev) < 1.35 * pen / 12) return 1;
+      const pat = elev < ridgeElev ? (elev < ridgeElev - 0.08 ? 5 : 6) : (r.unseen?.sky || 3);
       return samplePattern(pat, sx, sy) ? 1 : 2;
     }
 
-    // Indoor stone chamber
+    // Indoor stone chamber, or a cave: rock without courses, cornice or baseboard
     const wallTop = r.wallTop || r.ceiling;
     const unseen = r.unseen || null;
     if (face === -3 || (Math.abs(face) !== 3 && y >= wallTop)) {
-      if (Math.abs(face) !== 3 && y < wallTop + 1.6 * pen) return 1; // Cornice ink line
+      if (!cave && Math.abs(face) !== 3 && y < wallTop + 1.6 * pen) return 1; // Cornice ink line
       const cPat = unseen?.ceiling ? shiftPattern(unseen.ceiling, t > 6.5 ? 1 : 0) : (t > 6.5 ? 8 : 7);
       return samplePattern(cPat, sx, sy) ? 1 : 2;
     }
@@ -621,7 +625,16 @@
       if (face === 2 && (!exits || exits.south)) along = x;
       else if (face === -1 && exits?.east) along = z - view.sideDoorZ;
       else if (face === 1 && exits?.west) along = z - view.sideDoorZ;
-      if (along !== null && Math.abs(along) < 0.62) {
+      if (along !== null && cave && Math.abs(along) < 0.7) {
+        // A dark mouth in the rock, its edge wandering like the plates' own tunnel openings
+        const mouthTop = 2.15 - 1.5 * (along / 0.62) * (along / 0.62) + 0.07 * Math.sin(along * 11);
+        const halfW = 0.62 - 0.05 * Math.cos(y * 7.3);
+        if (y < mouthTop && Math.abs(along) < halfW) {
+          const edge = Math.min(halfW - Math.abs(along), mouthTop - y);
+          if (edge < 1.8 * pen) return 1;
+          return samplePattern(edge < 5.0 * pen ? 7 : 8, sx, sy) ? 1 : 2;
+        }
+      } else if (along !== null && Math.abs(along) < 0.62) {
         const archTop = 2.28 - Math.max(0, Math.abs(along) - 0.26) * 0.68;
         if (y < archTop) {
           const edge = Math.min(0.62 - Math.abs(along), archTop - y);
@@ -639,7 +652,7 @@
     }
 
     const isFloor = face === 3;
-    const courses = unseen ? unseen.courses !== false : true;
+    const courses = cave ? false : (unseen ? unseen.courses !== false : true);
     const courseH = isFloor ? (r.slabD || 1.15) : (r.courseH || 0.96);
     const blockW = isFloor ? (r.slabW || 1.24) : (r.blockW || 1.18);
     const along = (isFloor || Math.abs(face) === 2) ? x : z;
@@ -653,7 +666,7 @@
 
     // Crisp screen-consistent QuickDraw black mortar joint + 1px lit stone bevel
     if (courses && (vDist < 1.55 * pen || uDist < 1.55 * pen)) return 1;
-    if (!isFloor && unseen?.baseboard && y < 1.6 * pen) return 1; // Baseboard ink line
+    if (!cave && !isFloor && unseen?.baseboard && y < 1.6 * pen) return 1; // Baseboard ink line
     const onBevel = courses && ((up - row * courseH > courseH - 3.0 * pen) || (uShift - col * blockW < 2.9 * pen));
 
     let pat;

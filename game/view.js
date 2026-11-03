@@ -81,7 +81,8 @@ class PlateView {
     if (!this.origRig) return;
     this.rig = this.refreshed ? this.refreshRig : this.origRig;
     this.solids = this.refreshed ? this.refreshSolids : this.origSolids;
-    this.outside = this.rig.environment ? this.rig.environment !== 'chamber' : this.outsideByName;
+    this.env = this.rig.environment || (this.outsideByName ? 'open' : 'chamber');
+    this.outside = this.env === 'open' || this.env === 'submerged';
     for (const s of this.sprites) {
       if (s.plate && !s.altarLid) Object.assign(s, this.pointFromPlate(s.plate)); // Re-seat on the active horizon
       if (s.altarLid && this.meta?.id === 7990) {
@@ -107,9 +108,15 @@ class PlateView {
     const fallbackRig = {eye:1.8, focal:215, cx:169, cy:140, back:outside?9.6:5.0, left:outside?-4.7:-2.75, right:outside?4.7:2.75, ceiling:outside?6.2:3.65, solids:[]};
     const origRig = (meta.id === 7990 && window.AltarLayout) || window.RoomLayouts?.[meta.id] || fallbackRig;
     // Refreshed landmark rigs layer over the original rig and never replace separated originals.
+    // Rooms without a rig of their own take the hand-checked environment table's box in refreshed mode.
     const layout = window.RefreshRoomLayouts?.[meta.id];
+    const env = window.RefreshEnvironments?.[meta.id];
+    const wide = env === 'open' || env === 'submerged';
+    const envRig = env && origRig === fallbackRig
+      ? {...fallbackRig, environment: env, back: wide ? 9.6 : 5.0, left: wide ? -4.7 : -2.75, right: wide ? 4.7 : 2.75, ceiling: wide ? 6.2 : 3.65}
+      : origRig;
     const refreshRig = (meta.id === 7990 && window.AltarRefresh) ||
-      (layout ? {...origRig, ...layout, solids: [...origRig.solids, ...(layout.solids || [])]} : origRig);
+      (layout ? {...envRig, ...layout, solids: [...origRig.solids, ...(layout.solids || [])]} : envRig);
     // Honest navigation cues: the map's open bearings, or a doorway the room text names.
     const text = meta.text || '';
     const names = d => new RegExp('\\b(door|doorway|doors|passage|passageway|arch|archway|opening|exit|stairs?|steps|tunnel|hallway|hall|path|road|corridor|gate|gateway)\\b[^.!?]{0,40}\\b(to the |on the |)' + d + '\\b', 'i').test(text) ||
@@ -311,7 +318,7 @@ class PlateView {
             : clean.bits[pIdx];
           pix[idx]=cBit===1?ink:paper;
         } else if(R){
-          pix[idx]=R.shadeUnseenWorld(this,face,x,y,z,t,sx,sy)===1?ink:paper;
+          pix[idx]=R.shadeUnseenWorld(this,face,x,y,z,t,sx,sy,dx,dy,dz)===1?ink:paper;
         } else {
           // Original mode fallback hatch for unseen surfaces.
           const bayer=((i&1)*2+(j&1)+((i>>1 ^ j>>1)&1))%5;
