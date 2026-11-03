@@ -22,7 +22,7 @@ Read the journal after each action. You can travel by approaching a room edge an
 
 ## What came from the disks
 
-The adventure uses the Enchanted Scepters scene and global scripts, map connections, objects, inhabitants, inventory changes, traps, and four-scepter ending. All 200 rooms have a first-person view. Twenty-two have individually separated foreground geometry. The other 178 project the original illustration onto a walkable room. Depths and surfaces hidden in the original illustration are interpretations.
+The adventure uses the Enchanted Scepters scene and global scripts, map connections, objects, inhabitants, inventory changes, traps, and four-scepter ending. All 200 rooms have a first-person view. Twenty-two have individually separated foreground geometry. The other 178 project the original illustration onto a walkable room. In the refreshed layer mode, twelve landmark rooms along the campaign (the throne room, marble hall, banquet hall, armory, bridge room, mirror room, lava tunnel, dogleg, Queen’s Chamber, Finale, cavern and cave entrance) also use measured horizons and wall depths, three of them with the throne, dais, trestle table and platform lifted off the walls as separate layers, and doorways appear on unseen walls only where the map or the room text opens them. Depths and surfaces hidden in the original illustration are interpretations.
 
 Dark Castle supplies animated visitors and positional recordings. The High Altar wizard reacts to your actions. Bats inhabit three caves. The Black Knight’s original Dark Castle gestures also animate his counterpart in Enchanted Scepters combat. The encounters and spatial placements belong to this edition. The disk cabinet lets you inspect the source drawings, compare animation frames, play sounds, and trace resources by disk, file, type, ID and hash. Some records, including system and executable resources, are preserved for inspection.
 
@@ -33,7 +33,7 @@ The source images came from the Internet Archive. The source records include the
 | `sources/README.md` | Disk provenance, intake and extraction |
 | `archive/es/catalog.json` and `archive/dc/catalog.json` | Disk-file and resource inventories |
 | `art/README.md` and `art/foreground.tsv` | Original draw commands, image layers, and inferred depth |
-| `art/refresh/README.md` and `game/refresh.js` | Separate non-destructive 1-bit refresh layers, steady `CODE 1` halftones, and High Altar geometry |
+| `art/refresh/README.md` and `game/refresh.js` | Separate non-destructive 1-bit refresh layers, steady `CODE 1` halftones, High Altar geometry, landmark room rigs, and lifted forms |
 | `archive/dc/README.md` | Sound, motion and interface decoding |
 | `archive/es/PLAYTEST.md` | Complete four-scepter campaign verification |
 | `archive/es/campaign-trace.tsv` | Spoilers. Room-by-room commands and clicks from the winning run |

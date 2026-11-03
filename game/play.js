@@ -297,18 +297,28 @@
     if(!playing){begin('altar');return;}
     drag={x:e.clientX,y:e.clientY,total:0};$('world').setPointerCapture(e.pointerId);
   };
+  // Clickable Macintosh objects announce themselves: pointer over a drawn sprite, grab elsewhere.
+  function hoverCursor(e){
+    const world=$('world');
+    if(!playing){world.style.cursor='';return;}
+    if(drag){world.style.cursor=drag.total>3?'grabbing':'pointer';return;}
+    world.style.cursor=view.hit(...canvasPoint(e))?'pointer':'grab';
+  }
   $('world').onpointermove=e=>{
-    if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+    if(!drag){hoverCursor(e);return;}
+    const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
     drag.total+=Math.abs(dx)+Math.abs(dy);
     if(drag.total>3){view.pose.yaw+=dx*.007;view.pose.pitch=Math.max(-135,Math.min(135,view.pose.pitch-dy*.5));dirty=true;}
     drag.x=e.clientX;drag.y=e.clientY;
+    hoverCursor(e);
   };
   $('world').onpointerup=e=>{
     if(!drag)return;
     if(drag.total<=4){const t=view.hit(...canvasPoint(e));if(t)use(t.key);}
-    drag=null;
+    drag=null;hoverCursor(e);
   };
-  $('world').onpointercancel=()=>drag=null;
+  $('world').onpointercancel=()=>{drag=null;$('world').style.cursor=playing?'grab':'';};
+  $('world').onpointerleave=()=>{if(!drag)$('world').style.cursor='';};
   document.addEventListener('keydown',e=>{
     if($('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
     if(e.target.tagName==='INPUT'){if(e.key==='Escape')$('world').focus();return;}

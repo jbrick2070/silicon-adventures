@@ -132,9 +132,8 @@ def expand_ranges(spec):
     return out
 
 
-def build_tone_layer(png_path, cmds, selected_indices=None, opaque_bg=True):
-    orig = Image.open(png_path).convert("RGBA")
-    w, h = orig.size
+def raster_patterns(cmds, w, h, selected_indices=None, opaque_bg=True):
+    """Rasterise ASCN commands into per-pixel pattern-index, border and halo maps."""
     pat_img = Image.new("L", (w, h), 1 if opaque_bg else 0)
     bdr_img = Image.new("L", (w, h), 0)
     alt_img = Image.new("L", (w, h), 0)  # nearby stroke pattern for 1px Java vs PIL stroke width edge cases
@@ -193,7 +192,13 @@ def build_tone_layer(png_path, cmds, selected_indices=None, opaque_bg=True):
                 da.line(pts, fill=bfill, width=thick + 3)
                 dp.line(pts, fill=bfill, width=max(1, thick))
                 db.line(pts, fill=1, width=max(1, thick))
+    return pat_img, bdr_img, alt_img
 
+
+def build_tone_layer(png_path, cmds, selected_indices=None, opaque_bg=True):
+    orig = Image.open(png_path).convert("RGBA")
+    w, h = orig.size
+    pat_img, bdr_img, alt_img = raster_patterns(cmds, w, h, selected_indices, opaque_bg)
     orig_bytes = orig.tobytes()
     p_bytes = pat_img.tobytes()
     b_bytes = bdr_img.tobytes()
@@ -298,6 +303,146 @@ def build_sprite_rim(src_path, fw, fh, rows_cols, skip_bottom=True):
     return rim
 
 
+# Additional non-destructive separated forms. Each entry lifts a group of
+# one-based ASCN commands out of its room plate into art/refresh/forms/ so the
+# first-person renderer can stand it in front of the room shell. The split is
+# taken from the exported plate pixels themselves (never re-drawn), and the
+# clean plate repaints only the pixels hidden beneath the lifted form from the
+# remaining commands. Reassembly is verified bit-for-bit against the plate.
+REFRESH_FORMS = [
+    (17888, "dais-lower", "12-13"),
+    (17888, "dais-upper", "14-15"),
+    (17888, "throne", "9-11,16-21"),
+    (8807, "table", "33-38"),
+    (18458, "platform", "10-11"),
+]
+
+
+def build_form_split(plate_path, cmds, groups):
+    """Return (clean RGBA, {key: form RGBA}) for the plate with the groups lifted."""
+    plate = Image.open(plate_path).convert("RGBA")
+    w, h = plate.size
+    src = plate.tobytes()
+    masks = {}
+    for key, sel in groups:
+        pat_img, bdr_img, alt_img = raster_patterns(cmds, w, h, sel, False)
+        p, b = pat_img.tobytes(), bdr_img.tobytes()
+        core = bytearray(w * h)
+        for i in range(w * h):
+            if 1 <= p[i] <= 29 or b[i]:
+                core[i] = 1
+        # Java strokes may fall one pixel wider than PIL's: claim the ink ring too.
+        mask = bytearray(core)
+        for y in range(h):
+            for x in range(w):
+                i = y * w + x
+                if core[i] or src[i * 4] >= 128:
+                    continue
+                for dy in (-1, 0, 1):
+                    ny = y + dy
+                    if ny < 0 or ny >= h:
+                        continue
+                    for dx in (-1, 0, 1):
+                        nx = x + dx
+                        if 0 <= nx < w and core[ny * w + nx]:
+                            mask[i] = 1
+                            break
+                    if mask[i]:
+                        break
+        masks[key] = mask
+    union = bytearray(w * h)
+    for mask in masks.values():
+        for i in range(w * h):
+            if mask[i]:
+                union[i] = 1
+    used = set()
+    for _, sel in groups:
+        used |= sel
+    remaining = set(range(1, len(cmds) + 1)) - used
+    pat_img, _, _ = raster_patterns(cmds, w, h, remaining, True)
+    p = pat_img.tobytes()
+    clean = bytearray(src)
+    for y in range(h):
+        for x in range(w):
+            i = y * w + x
+            if union[i]:
+                bit = pat_bit(p[i] if 1 <= p[i] <= 29 else 1, x, y)
+                v = 0 if bit == 1 else 255
+                clean[i * 4 : i * 4 + 4] = bytes((v, v, v, 255))
+    forms = {}
+    for key, mask in masks.items():
+        layer = bytearray(w * h * 4)
+        for i in range(w * h):
+            if mask[i]:
+                layer[i * 4 : i * 4 + 4] = src[i * 4 : i * 4 + 4]
+        forms[key] = Image.frombytes("RGBA", (w, h), bytes(layer))
+    return Image.frombytes("RGBA", (w, h), bytes(clean)), forms
+
+
+def verify_form_split(plate_path, clean, forms):
+    composite = clean.copy()
+    for layer in forms.values():
+        composite.alpha_composite(layer)
+    plate = Image.open(plate_path).convert("RGBA")
+    if composite.convert("RGB").tobytes() != plate.convert("RGB").tobytes():
+        raise ValueError(f"Form split of {plate_path} does not reassemble")
+
+
+def build_exterior_rim(src_path):
+    """1-pixel paper rim on exterior transparent pixels only; interior holes stay open."""
+    src = Image.open(src_path).convert("RGBA")
+    w, h = src.size
+    px = src.tobytes()
+    opaque = bytearray(w * h)
+    ink = bytearray(w * h)
+    for i in range(w * h):
+        if px[i * 4 + 3] >= 128:
+            opaque[i] = 1
+            if px[i * 4] < 128:
+                ink[i] = 1
+    outside = bytearray(w * h)
+    stack = [i for i in range(w * h) if not opaque[i] and (i < w or i >= w * (h - 1) or i % w in (0, w - 1))]
+    for i in stack:
+        outside[i] = 1
+    while stack:
+        i = stack.pop()
+        x, y = i % w, i // w
+        for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+            if 0 <= nx < w and 0 <= ny < h:
+                j = ny * w + nx
+                if not opaque[j] and not outside[j]:
+                    outside[j] = 1
+                    stack.append(j)
+    rim = bytearray(w * h * 4)
+    count = 0
+    for y in range(h):
+        for x in range(w):
+            i = y * w + x
+            if not outside[i]:
+                continue
+            touch = False
+            for dy in (-1, 0, 1):
+                ny = y + dy
+                if ny < 0 or ny >= h:
+                    continue
+                for dx in (-1, 0, 1):
+                    nx = x + dx
+                    if (dx or dy) and 0 <= nx < w and ink[ny * w + nx]:
+                        touch = True
+                        break
+                if touch:
+                    break
+            if touch:
+                rim[i * 4 : i * 4 + 4] = b"\xff\xff\xff\xff"
+                count += 1
+    return Image.frombytes("RGBA", (w, h), bytes(rim)), count
+
+
+def load_designs():
+    js = (ROOT / "archive/es/designs.js").read_text(encoding="utf-8")
+    return json.loads(js[js.index("[") : js.rindex("]") + 1])
+
+
 def main():
     (OUT / "plates").mkdir(parents=True, exist_ok=True)
     (OUT / "foreground").mkdir(parents=True, exist_ok=True)
@@ -384,7 +529,50 @@ def main():
         rim.save(dest, optimize=True)
         sp_bytes += dest.stat().st_size
 
-    # 5. Export JS lookup table for luma -> (patternIndex, isBorder)
+    # 5. Additional separated refresh forms (plate pixels lifted, never redrawn)
+    (OUT / "forms").mkdir(parents=True, exist_ok=True)
+    (OUT / "forms/tone").mkdir(parents=True, exist_ok=True)
+    form_rooms = {}
+    for ident, key, spec in REFRESH_FORMS:
+        form_rooms.setdefault(ident, []).append((key, expand_ranges(spec)))
+    form_bytes = 0
+    form_index = {}
+    for ident, groups in form_rooms.items():
+        plate = ROOT / f"archive/es/plates/ASCN-{ident}.png"
+        clean, forms = build_form_split(plate, parsed[ident], groups)
+        verify_form_split(plate, clean, forms)
+        used = set()
+        for _, sel in groups:
+            used |= sel
+        jobs = [("clean", clean, set(range(1, len(parsed[ident]) + 1)) - used, True)]
+        jobs += [(key, forms[key], sel, False) for key, sel in groups]
+        for key, image, sel, opq in jobs:
+            dest = OUT / f"forms/{ident}-{key}.png"
+            image.save(dest, optimize=True)
+            tone = build_tone_layer(dest, parsed[ident], sel, opq)
+            verify_tone_layer(dest, tone)
+            tone.save(OUT / f"forms/tone/{ident}-{key}.png", optimize=True)
+            form_bytes += dest.stat().st_size
+        form_index[ident] = [key for key, _ in groups]
+
+    # 6. Exterior-only paper rims for native inhabitants and hand-sized objects
+    (OUT / "sprites/es").mkdir(parents=True, exist_ok=True)
+    native_rims = {}
+    es_bytes = 0
+    for design in load_designs():
+        if design["type"] not in ("ACHR", "AOBJ") or design["width"] < 2:
+            continue
+        if design["type"] == "AOBJ" and max(design["width"], design["height"]) > 110:
+            continue
+        rim, count = build_exterior_rim(ROOT / design["path"])
+        if not count:
+            continue
+        dest = OUT / f"sprites/es/{design['type']}-{design['id']}-rim.png"
+        rim.save(dest, optimize=True)
+        es_bytes += dest.stat().st_size
+        native_rims[design["path"]] = dest.relative_to(ROOT).as_posix()
+
+    # 7. Export JS lookup table for luma -> (patternIndex, isBorder)
     pat_lookup = [0] * 256
     bdr_lookup = [0] * 256
     for luma, meta in enumerate(LUMA_TO_META):
@@ -392,6 +580,14 @@ def main():
             pat_lookup[luma] = meta[0]
             bdr_lookup[luma] = meta[1]
 
+    rims = {
+        "art/castle-wizard.png": "art/refresh/sprites/castle-wizard-rim.png",
+        "art/castle/B-PPCT-300.png": "art/refresh/sprites/B-PPCT-300-rim.png",
+        "art/castle/B-PPCT-908.png": "art/refresh/sprites/B-PPCT-908-rim.png",
+        "art/castle/B-PPCT-912.png": "art/refresh/sprites/B-PPCT-912-rim.png",
+        "art/castle/B-PPCT-915.png": "art/refresh/sprites/B-PPCT-915-rim.png",
+    }
+    rims.update(sorted(native_rims.items()))
     js = (
         "/* Generated by art/build_refresh.py. Maps refresh layer luma bytes back to\n"
         " * exact CODE 1 ScepterPatterns indices (1..29) and border-stroke flags (0/1).\n"
@@ -399,13 +595,8 @@ def main():
         "window.RefreshPalette = {\n"
         f"  patternByLuma: {json.dumps(pat_lookup, separators=(',', ':'))},\n"
         f"  borderByLuma: {json.dumps(bdr_lookup, separators=(',', ':'))},\n"
-        "  spriteRims: {\n"
-        '    "art/castle-wizard.png": "art/refresh/sprites/castle-wizard-rim.png",\n'
-        '    "art/castle/B-PPCT-300.png": "art/refresh/sprites/B-PPCT-300-rim.png",\n'
-        '    "art/castle/B-PPCT-908.png": "art/refresh/sprites/B-PPCT-908-rim.png",\n'
-        '    "art/castle/B-PPCT-912.png": "art/refresh/sprites/B-PPCT-912-rim.png",\n'
-        '    "art/castle/B-PPCT-915.png": "art/refresh/sprites/B-PPCT-915-rim.png"\n'
-        "  }\n"
+        f"  spriteRims: {json.dumps(rims, indent=4)},\n"
+        f"  forms: {json.dumps(form_index, separators=(',', ':'))}\n"
         "};\n"
     )
     (OUT / "refresh-index.js").write_text(js, encoding="utf-8")
@@ -413,7 +604,9 @@ def main():
     print(
         f"Built 200 room tone plates ({plate_bytes/1024:.1f} KB), "
         f"foreground tone layers ({fg_bytes/1024:.1f} KB), "
-        f"and {len(sprite_jobs)} sprite rim layers ({sp_bytes/1024:.1f} KB) — 0 mismatches."
+        f"{len(sprite_jobs)} crossover rim layers ({sp_bytes/1024:.1f} KB), "
+        f"{sum(len(v) for v in form_rooms.values())} separated refresh forms ({form_bytes/1024:.1f} KB), "
+        f"and {len(native_rims)} native sprite rims ({es_bytes/1024:.1f} KB) — 0 mismatches."
     )
 
 

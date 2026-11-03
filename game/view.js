@@ -81,7 +81,9 @@ class PlateView {
     if (!this.origRig) return;
     this.rig = this.refreshed ? this.refreshRig : this.origRig;
     this.solids = this.refreshed ? this.refreshSolids : this.origSolids;
+    this.outside = this.rig.environment ? this.rig.environment !== 'chamber' : this.outsideByName;
     for (const s of this.sprites) {
+      if (s.plate && !s.altarLid) Object.assign(s, this.pointFromPlate(s.plate)); // Re-seat on the active horizon
       if (s.altarLid && this.meta?.id === 7990) {
         if (this.refreshed && window.AltarRefresh?.lid) {
           Object.assign(s, window.AltarRefresh.lid);
@@ -104,7 +106,16 @@ class PlateView {
     const outside = /forest|swamp|marsh|mountain|desert|valley|canyon|road|clearing|grove|trail|garden|bank|shore|courtyard|lake|river|sea\b|meadow|prairie/i.test(meta.name+' '+meta.text?.slice(0,90));
     const fallbackRig = {eye:1.8, focal:215, cx:169, cy:140, back:outside?9.6:5.0, left:outside?-4.7:-2.75, right:outside?4.7:2.75, ceiling:outside?6.2:3.65, solids:[]};
     const origRig = (meta.id === 7990 && window.AltarLayout) || window.RoomLayouts?.[meta.id] || fallbackRig;
-    const refreshRig = (meta.id === 7990 && window.AltarRefresh) || origRig;
+    // Refreshed landmark rigs layer over the original rig and never replace separated originals.
+    const layout = window.RefreshRoomLayouts?.[meta.id];
+    const refreshRig = (meta.id === 7990 && window.AltarRefresh) ||
+      (layout ? {...origRig, ...layout, solids: [...origRig.solids, ...(layout.solids || [])]} : origRig);
+    // Honest navigation cues: the map's open bearings, or a doorway the room text names.
+    const text = meta.text || '';
+    const names = d => new RegExp('\\b(door|doorway|doors|passage|passageway|arch|archway|opening|exit|stairs?|steps|tunnel|hallway|hall|path|road|corridor|gate|gateway)\\b[^.!?]{0,40}\\b(to the |on the |)' + d + '\\b', 'i').test(text) ||
+      new RegExp('\\b' + d + '(ern|erly)?\\b[^.!?]{0,30}\\b(door|doorway|passage|exit|opening|arch|archway|tunnel|hallway|path|road|gate|stairs?)\\b', 'i').test(text);
+    const exits = {};
+    for (const d of ['north', 'south', 'east', 'west']) exits[d] = !(meta.blocked && meta.blocked[d]) || names(d);
     const [source, origClean, refreshClean, origSolids, refreshSolids] = await Promise.all([
       this.texture(meta.path),
       this.texture(origRig.clean || meta.path),
@@ -118,10 +129,10 @@ class PlateView {
       origRig, refreshRig,
       origClean, refreshClean,
       origSolids, refreshSolids: refreshSolids || origSolids,
-      outside: origRig.environment ? origRig.environment !== 'chamber' : outside
+      outsideByName: outside, exits, sideDoorZ: 1.15, shadowSpots: []
     });
-    this.syncMode();
     this.rear = -1.75; this.reset(); this.sprites = [];
+    this.syncMode();
   }
   solidAt(x,z,radius) {
     return this.solids.some(s=>!s.noCollision && s.y1>.62 && s.y0<1.9 &&
@@ -129,10 +140,40 @@ class PlateView {
   }
   move(side,forward) {
     const p=this.pose,r=this.rig,cos=Math.cos(p.yaw),sin=Math.sin(p.yaw),rad=.14;
-    const nx=Math.max(r.left+rad,Math.min(r.right-rad,p.x+side*cos+forward*sin));
-    const nz=Math.max(this.rear+rad,Math.min(r.back-rad,p.z-side*sin+forward*cos));
-    if(!this.solidAt(nx,p.z,rad)) p.x=nx;
-    if(!this.solidAt(p.x,nz,rad)) p.z=nz;
+    const clamp=()=>{
+      x=Math.max(r.left+rad,Math.min(r.right-rad,x));
+      z=Math.max(this.rear+rad,Math.min(r.back-rad,z));
+    };
+    let x=p.x+side*cos+forward*sin, z=p.z-side*sin+forward*cos;
+    // Slide along the nearest face of any convex footprint we would enter, so
+    // walking diagonally past columns, basins and furniture never snags.
+    for(let pass=0;pass<4;pass++){
+      clamp();
+      let pushed=false;
+      for(const s of this.solids){
+        if(s.noCollision || s.y1<=.62 || s.y0>=1.9)continue;
+        let minD=Infinity,nearest=null,inside=true;
+        for(const pl of s.planes){
+          const d=pl.nx*x+pl.nz*z-pl.offset;
+          if(d<-rad){inside=false;break;}
+          if(d<minD){minD=d;nearest=pl;}
+        }
+        if(!inside)continue;
+        const push=minD+rad+1e-4;
+        x-=nearest.nx*push; z-=nearest.nz*push; pushed=true;
+      }
+      if(!pushed)break;
+    }
+    clamp();
+    if(this.solidAt(x,z,rad)){
+      // Wedged between bodies: fall back to axis-separated stepping.
+      const ax=Math.max(r.left+rad,Math.min(r.right-rad,p.x+side*cos+forward*sin));
+      const az=Math.max(this.rear+rad,Math.min(r.back-rad,p.z-side*sin+forward*cos));
+      x=p.x;z=p.z;
+      if(!this.solidAt(ax,z,rad))x=ax;
+      if(!this.solidAt(x,az,rad))z=az;
+    }
+    p.x=x;p.z=z;
   }
   steps() {
     const {x,z}=this.pose;
@@ -153,6 +194,7 @@ class PlateView {
     const texture=await this.texture(meta.path);
     if(ticket!==this.serial) return;
     const sprite=Object.assign(this.pointFromPlate(meta),{key,texture,cols:1,row:0,frame:0,...options});
+    if(options.x===undefined && options.z===undefined) sprite.plate=meta; // Seated by the active rig horizon
     if(this.meta?.id===7990 && key==='AOBJ/14168') {
       sprite.altarLid = meta;
       if (this.refreshed && window.AltarRefresh?.lid) Object.assign(sprite, window.AltarRefresh.lid);
@@ -168,6 +210,9 @@ class PlateView {
     const panX=Math.round(p.yaw*f), panY=Math.round(-p.pitch);
     const sn=Math.sin(p.yaw),cs=Math.cos(p.yaw), pix=this.pixels,depth=this.depth,source=this.source;
     const paper=this.paper,ink=this.ink,boxHits=[];
+    // Grounded contact shadows: floor-standing sprites darken the CODE 1 floor tone beneath them.
+    this.shadowSpots=R?this.sprites.filter(s=>!s.hidden && Math.abs(s.y-this.steps())<.12 && s.key!=='wizard' && s.key!=='bat')
+      .map(s=>({x:s.x,z:s.z+s.w*.12,rx:Math.max(.2,s.w*.42),rz:Math.max(.12,s.w*.16)})):[];
     for(let i=0;i<w;i++) {
       const sx = i + panX;
       const u=(i+.5-cx)/f,dx=sn+cs*u,dz=cs-sn*u;

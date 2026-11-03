@@ -115,6 +115,118 @@
     lid: { x: 0.27647, z: 4.40308, y: 0.305, w: 0.92158, h: 0.63486 }
   };
 
+  // Refreshed rigs for landmark story rooms. Used only while view.refreshed is
+  // true; the Original mode keeps the generic fallback rig. Horizons (cy) come
+  // from the vanishing points of the drawn floor edges, depths from the wall
+  // bases, and widths from the wall edges, all measured on the 338 × 314 ASCN
+  // vector commands in archive/es/Scepters.rsrc. The `unseen` block names the
+  // plate's own CODE 1 patterns so walls, floors and ceilings continue past the
+  // plate edges without a step seam when the camera turns. The separated forms
+  // under art/refresh/forms/ are lifted plate pixels (see art/build_refresh.py).
+  const F = 'art/refresh/forms/';
+  function post(x, z, rx, rz) { return [[x - rx, z - rz], [x + rx, z - rz], [x + rx, z + rz], [x - rx, z + rz]]; }
+  window.RefreshRoomLayouts = {
+    // Throne room: dais steps (Cmd 12–15) and obsidian throne (9–11, 16–21) stand free of the arcaded wall.
+    17888: {
+      cy: 92, left: -3.9, right: 3.9, back: 4.96, ceiling: 4.6, wallTop: 3.95, environment: 'chamber',
+      clean: F + '17888-clean.png',
+      unseen: { floor: 4, east: 3, west: 3, rear: 3, ceiling: 6, courses: false, baseboard: false },
+      solids: [
+        { id: 'dais-lower', kind: 'dais', texture: F + '17888-dais-lower.png', commands: [12, 13],
+          footprint: [[-1.82, 2.46], [1.53, 2.46], [1.35, 3.71], [-1.88, 3.71]], y0: 0, y1: 0.16,
+          patterns: { front: 8, top: 3, east: 5, west: 6, back: 6, side: 5 } },
+        { id: 'dais-upper', kind: 'dais', texture: F + '17888-dais-upper.png', commands: [14, 15],
+          footprint: [[-1.58, 2.64], [1.20, 2.64], [1.13, 3.47], [-1.66, 3.47]], y0: 0.16, y1: 0.30,
+          patterns: { front: 8, top: 3, east: 5, west: 6, back: 6, side: 5 } },
+        { id: 'throne', kind: 'throne', texture: F + '17888-throne.png', commands: [9, 10, 11, 16, 17, 18, 19, 20, 21],
+          footprint: [[-0.87, 3.04], [0.41, 3.04], [0.29, 3.52], [-0.75, 3.52]], y0: 0.30, y1: 2.05,
+          silhouette: true, twoSided: true, reversePattern: 6,
+          patterns: { front: 5, top: 7, east: 6, west: 6, back: 7, side: 6 } }
+      ]
+    },
+    // Marble hall: runner edges vanish at y = 95; the far door stands 7.7 m away.
+    22844: {
+      cy: 95, left: -1.32, right: 1.27, back: 7.74, ceiling: 4.0, wallTop: 3.5, environment: 'chamber',
+      unseen: { floor: 1, east: 3, west: 3, rear: 3, ceiling: 6, courses: false, baseboard: true }
+    },
+    // Banquet hall: wall bases vanish at y = 170; the trestle table (Cmd 33–38) is lifted off the far wall.
+    8807: {
+      cy: 170, left: -4.46, right: 3.93, back: 9.4, ceiling: 5.0, wallTop: 3.07, environment: 'chamber',
+      clean: F + '8807-clean.png',
+      unseen: { floor: 4, east: 5, west: 5, rear: 5, ceiling: 6, courses: false, baseboard: false },
+      solids: [
+        { id: 'table top', kind: 'table', texture: F + '8807-table.png', commands: [33, 38],
+          footprint: [[-2.07, 3.37], [1.33, 3.37], [1.18, 4.30], [-1.90, 4.30]], y0: 0.72, y1: 0.88,
+          patterns: { front: 5, top: 5, east: 6, west: 6, back: 6, side: 6 } },
+        { id: 'table leg 1', kind: 'table', texture: F + '8807-table.png', commands: [34], footprint: post(-1.63, 3.33, 0.10, 0.10), y0: 0, y1: 0.74, patterns: { front: 5, side: 6, back: 6 } },
+        { id: 'table leg 2', kind: 'table', texture: F + '8807-table.png', commands: [35], footprint: post(0.94, 3.33, 0.10, 0.10), y0: 0, y1: 0.74, patterns: { front: 5, side: 6, back: 6 } },
+        { id: 'table leg 3', kind: 'table', texture: F + '8807-table.png', commands: [36], footprint: post(-1.48, 3.99, 0.09, 0.09), y0: 0, y1: 0.74, patterns: { front: 5, side: 6, back: 6 } },
+        { id: 'table leg 4', kind: 'table', texture: F + '8807-table.png', commands: [37], footprint: post(0.70, 3.99, 0.09, 0.09), y0: 0, y1: 0.74, patterns: { front: 5, side: 6, back: 6 } }
+      ]
+    },
+    // Armory: the frontal rack wall stands 3.3 m away beneath a low 2.5 m ceiling.
+    20357: {
+      cy: 117, left: -3.0, right: 1.65, back: 3.28, ceiling: 2.52, wallTop: 2.49, environment: 'chamber',
+      unseen: { floor: 4, east: 5, west: 5, rear: 5, ceiling: 6, courses: false, baseboard: false }
+    },
+    // Bridge room: crank wall bases vanish at y = 137.
+    7395: {
+      cy: 137, left: -3.5, right: 1.6, back: 5.3, ceiling: 3.3, wallTop: 3.25, environment: 'chamber',
+      unseen: { floor: 4, east: 5, west: 5, rear: 5, ceiling: 6, courses: false, baseboard: false }
+    },
+    // Mirror room: a narrow smooth-stone hallway ending at the framed mirror.
+    20791: {
+      cy: 140, left: -1.05, right: 0.95, back: 3.3, ceiling: 3.6, wallTop: 3.5, environment: 'chamber',
+      unseen: { floor: 13, east: 7, west: 7, rear: 13, ceiling: 13, courses: false, baseboard: false }
+    },
+    // Lava tunnel: rock walls meet the dark floor at y ≈ 195.
+    17983: {
+      cy: 125, left: -3.0, right: 3.0, back: 5.5, ceiling: 5.2, wallTop: 5.0, environment: 'chamber',
+      unseen: { floor: 6, east: 13, west: 4, rear: 5, ceiling: 7, courses: false, baseboard: false }
+    },
+    // Dogleg: ashlar blocks and 2.6 m floor slabs continue around the bend.
+    3122: {
+      cy: 120, left: -1.9, right: 3.0, back: 6.3, ceiling: 5.5, wallTop: 5.3, environment: 'chamber',
+      courseH: 2.6, blockW: 2.4, slabW: 2.6, slabD: 3.0,
+      unseen: { floor: 7, east: 5, west: 6, rear: 5, ceiling: 8, courses: true, baseboard: false }
+    },
+    // Queen's Chamber: rug and platform edges vanish at y ≈ 90; the white platform (Cmd 10–11) is lifted.
+    18458: {
+      cy: 90, left: -2.05, right: 2.6, back: 4.95, ceiling: 4.4, wallTop: 4.27, environment: 'chamber',
+      clean: F + '18458-clean.png',
+      unseen: { floor: 14, east: 4, west: 5, rear: 5, ceiling: 6, courses: false, baseboard: true },
+      solids: [
+        { id: 'platform', kind: 'dais', texture: F + '18458-platform.png', commands: [10, 11],
+          footprint: [[-1.30, 3.17], [1.58, 3.17], [1.67, 4.80], [-1.27, 4.80]], y0: 0, y1: 0.147,
+          patterns: { front: 5, top: 1, east: 4, west: 5, back: 5, side: 4 } }
+      ]
+    },
+    // Finale: the brick wall (Pattern 19) carries on around the chamber.
+    18366: {
+      cy: 140, left: -2.6, right: 2.6, back: 3.17, ceiling: 4.0, wallTop: 3.78, environment: 'chamber',
+      unseen: { floor: 6, east: 19, west: 19, rear: 19, ceiling: 7, courses: false, baseboard: false }
+    },
+    // Cavern: light rock walls close in around the nest.
+    18391: {
+      cy: 150, left: -3.2, right: 3.2, back: 5.5, ceiling: 4.2, wallTop: 4.0, environment: 'chamber',
+      unseen: { floor: 5, east: 3, west: 3, rear: 2, ceiling: 2, courses: false, baseboard: false }
+    },
+    // Cave entrance: the sky meets the far ground at y ≈ 100.
+    10850: { cy: 100, left: -4.7, right: 4.7, back: 9.6, ceiling: 6.2, environment: 'open' }
+  };
+
+  // Grounded contact shadow beneath floor-standing sprites (AOBJ pickups, ACHR inhabitants).
+  function spriteShadow(view, x, z) {
+    const spots = view.shadowSpots;
+    if (!spots || !spots.length) return false;
+    for (let k = 0; k < spots.length; k++) {
+      const s = spots[k];
+      const dx = (x - s.x) / s.rx, dz = (z - s.z) / s.rz;
+      if (dx * dx + dz * dz < 1) return true;
+    }
+    return false;
+  }
+
   // Trace descending 3D stone stairwell inside the High Altar plinth opening (Cmd 27).
   function traceCavity(cavity, p, eye, dx, dy, dz, tEntry, pen, sx, sy) {
     const hx = p.x + dx * tEntry, hz = p.z + dz * tEntry;
@@ -363,11 +475,11 @@
       else if (dRel < -1.0 && t < 2.4 && face === 3) delta -= 1;
     } else if (view.outside) {
       if (dRel > 1.8 && t > 8.5 && face !== -3) delta -= 1;
-      if (face === 3 && hasContactShadow(view.solids, solid, x, y, z)) delta += 1;
+      if (face === 3 && (hasContactShadow(view.solids, solid, x, y, z) || (!solid && spriteShadow(view, x, z)))) delta += 1;
     } else {
       // Indoor stone chambers
       if (face === 3) {
-        if (hasContactShadow(view.solids, solid, x, y, z)) {
+        if (hasContactShadow(view.solids, solid, x, y, z) || (!solid && spriteShadow(view, x, z))) {
           delta += 1;
         } else if (!solid && view.meta?.id === 7990 && z > r.back - 0.22) {
           delta += 1; // Deep shadow along the recessed rear wall behind the dais
@@ -386,7 +498,9 @@
         }
       } else {
         // Separated 3D foreground solid (columns, dais, plinth, furniture)
-        if (solid.kind === 'pillar' && face !== 3 && y - solid.y0 < 0.08) {
+        if (face === 3 && spriteShadow(view, x, z)) {
+          delta += 1; // A pickup or inhabitant standing on a dais top
+        } else if (solid.kind === 'pillar' && face !== 3 && y - solid.y0 < 0.08) {
           delta += 1; // Grounded contact where monolith shaft meets the dais
         } else if (dRel > 1.45 && t > 6.0) {
           delta += 1;
@@ -394,7 +508,8 @@
       }
     }
 
-    const finalPat = shiftPattern(pat, Math.max(-1, Math.min(2, delta)));
+    let finalPat = shiftPattern(pat, Math.max(-1, Math.min(2, delta)));
+    if (finalPat === 1 && delta > 0) finalPat = 2; // Even paper-white floors take a faint grounded shadow
     return samplePattern(finalPat, sx, sy) ? 1 : 2;
   }
 
@@ -480,7 +595,7 @@
       if (face === -3) return samplePattern(2, sx, sy) ? 1 : 2;
       if (face === 3) {
         let pat = t < 3.4 ? 13 : t < 7.2 ? 5 : 4;
-        if (hasContactShadow(view.solids, null, x, y, z)) pat = shiftPattern(pat, 1);
+        if (hasContactShadow(view.solids, null, x, y, z) || spriteShadow(view, x, z)) pat = shiftPattern(pat, 1);
         return samplePattern(pat, sx, sy) ? 1 : 2;
       }
       const a = Math.atan2(x, z), ridge = 1.6 + 0.23 * Math.sin(a * 13) + 0.30 * Math.cos(a * 4);
@@ -491,26 +606,42 @@
 
     // Indoor stone chamber
     const wallTop = r.wallTop || r.ceiling;
+    const unseen = r.unseen || null;
     if (face === -3 || (Math.abs(face) !== 3 && y >= wallTop)) {
       if (Math.abs(face) !== 3 && y < wallTop + 1.6 * pen) return 1; // Cornice ink line
-      return samplePattern(t > 6.5 ? 8 : 7, sx, sy) ? 1 : 2;
+      const cPat = unseen?.ceiling ? shiftPattern(unseen.ceiling, t > 6.5 ? 1 : 0) : (t > 6.5 ? 8 : 7);
+      return samplePattern(cPat, sx, sy) ? 1 : 2;
     }
 
-    // Rear wall arched iron-grate / oak portal at doorway x = 0, z = rear
-    if (face === 2 && Math.abs(x) < 0.62) {
-      const archTop = 2.28 - Math.max(0, Math.abs(x) - 0.26) * 0.68;
-      if (y < archTop) {
-        const edge = Math.min(0.62 - Math.abs(x), archTop - y);
-        if (edge < 2.0 * pen) return 1;
-        if (edge < 3.4 * pen) return samplePattern(4, sx, sy) ? 1 : 2;
-        const gx = Math.floor((x + 1) * 30), gy = Math.floor(y * 32);
-        return ((gx % 8 !== 0) && (gy % 26 !== 0 || Math.abs(x) > 0.48)) ? 1 : (samplePattern(6, sx, sy) ? 1 : 2);
+    // Doorways only where the map (or the room text) actually opens: rear wall
+    // for south, unseen stretches of the side walls for east and west.
+    const exits = view.exits;
+    if (Math.abs(face) !== 3) {
+      let along = null;
+      if (face === 2 && (!exits || exits.south)) along = x;
+      else if (face === -1 && exits?.east) along = z - view.sideDoorZ;
+      else if (face === 1 && exits?.west) along = z - view.sideDoorZ;
+      if (along !== null && Math.abs(along) < 0.62) {
+        const archTop = 2.28 - Math.max(0, Math.abs(along) - 0.26) * 0.68;
+        if (y < archTop) {
+          const edge = Math.min(0.62 - Math.abs(along), archTop - y);
+          if (edge < 2.0 * pen) return 1;
+          if (edge < 3.4 * pen) return samplePattern(4, sx, sy) ? 1 : 2;
+          if (face === 2) {
+            // Arched iron grate across the entrance behind the doorway viewpoint
+            const gx = Math.floor((along + 1) * 30), gy = Math.floor(y * 32);
+            return ((gx % 8 !== 0) && (gy % 26 !== 0 || Math.abs(along) > 0.48)) ? 1 : (samplePattern(6, sx, sy) ? 1 : 2);
+          }
+          // Open side passage receding into shadow
+          return samplePattern(edge < 6.5 * pen ? 7 : 8, sx, sy) ? 1 : 2;
+        }
       }
     }
 
     const isFloor = face === 3;
+    const courses = unseen ? unseen.courses !== false : true;
     const courseH = isFloor ? (r.slabD || 1.15) : (r.courseH || 0.96);
-    const blockW = isFloor ? (r.slabW || 1.24) : 1.18;
+    const blockW = isFloor ? (r.slabW || 1.24) : (r.blockW || 1.18);
     const along = (isFloor || Math.abs(face) === 2) ? x : z;
     const up = isFloor ? z : y;
 
@@ -521,19 +652,22 @@
     const uDist = Math.min(uShift - col * blockW, (col + 1) * blockW - uShift);
 
     // Crisp screen-consistent QuickDraw black mortar joint + 1px lit stone bevel
-    if (vDist < 1.55 * pen || uDist < 1.55 * pen) return 1;
-    const onBevel = (up - row * courseH > courseH - 3.0 * pen) || (uShift - col * blockW < 2.9 * pen);
+    if (courses && (vDist < 1.55 * pen || uDist < 1.55 * pen)) return 1;
+    if (!isFloor && unseen?.baseboard && y < 1.6 * pen) return 1; // Baseboard ink line
+    const onBevel = courses && ((up - row * courseH > courseH - 3.0 * pen) || (uShift - col * blockW < 2.9 * pen));
 
     let pat;
     if (isFloor) {
-      pat = t > 5.75 ? 6 : 5;
-      if (hasContactShadow(view.solids, null, x, y, z)) pat = shiftPattern(pat, 1);
+      pat = unseen?.floor ? shiftPattern(unseen.floor, t > 5.75 ? 1 : 0) : (t > 5.75 ? 6 : 5);
+      if (hasContactShadow(view.solids, null, x, y, z) || spriteShadow(view, x, z)) pat = pat === 1 ? 2 : shiftPattern(pat, 1);
     } else if (face === -1) {
-      // East / right lit chamber wall continues Pattern 5 seamlessly from plate edge
-      pat = t > 5.85 ? 6 : 5;
+      // East / right lit chamber wall continues the plate's pattern seamlessly from its edge
+      pat = unseen?.east ? shiftPattern(unseen.east, t > 5.85 ? 1 : 0) : (t > 5.85 ? 6 : 5);
+    } else if (face === 1) {
+      pat = unseen?.west ? shiftPattern(unseen.west, t > 5.85 ? 1 : 0) : ((y > wallTop - 0.35 || t > 5.85) ? 7 : 6);
     } else {
-      // West / left shadowed wall and rear entrance wall
-      pat = (y > wallTop - 0.35 || t > 5.85) ? 7 : 6;
+      // Rear entrance wall
+      pat = unseen?.rear ? shiftPattern(unseen.rear, t > 5.85 ? 1 : 0) : ((y > wallTop - 0.35 || t > 5.85) ? 7 : 6);
     }
 
     if (onBevel) pat = shiftPattern(pat, -1);
