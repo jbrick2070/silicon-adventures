@@ -6,15 +6,16 @@
   const rate = 11025;
   const tau = Math.PI * 2;
   const lengths = {
-    step: 0.25, keeperStep: 0.32, keeper: 0.78, bird: 0.86,
+    step: 0.25, keeperStep: 0.32, keeper: 0.78, bird: 0.86, knight: 0.32,
     bell: 2.6, gate: 2.18, pickup: 0.47, call: 1.42, answer: 1.78
   };
   const owner = {
-    keeperStep: 'keeper', keeper: 'keeper', bird: 'bird', bell: 'bell'
+    keeperStep: 'keeper', keeper: 'keeper', bird: 'bird', bell: 'bell', knight: 'knight'
   };
-  const initialDelay = {keeper: 4.8, bird: 1.4, bell: 10.5};
+  const initialDelay = {keeper: 4.8, bird: 1.4, bell: 10.5, knight: 6};
+  const period = {keeper: 12, bird: 5.6, bell: 24, knight: 15};
   // Assignments are adaptations. The disk's SOUN records have numeric IDs only.
-  const casting = {step: 84, keeperStep: 0, keeper: 1, bird: 70, gate: 69};
+  const casting = {step: 84, keeperStep: 0, keeper: 1, bird: 70, gate: 69, knight: 0};
 
   function envelope(t, attack, decay) {
     return t < 0 ? 0 : Math.min(1, t / attack) * Math.exp(-t / decay);
@@ -247,7 +248,7 @@
         if (this.next[id] === undefined) this.next[id] = now + initialDelay[id];
         if (now >= this.next[id]) {
           this.play(id);
-          this.next[id] = now + ({keeper: 12, bird: 5.6, bell: 24}[id]) + Math.random() * 2;
+          this.next[id] = now + period[id] + Math.random() * (id === 'knight' ? 3 : 2);
         }
       }
     }

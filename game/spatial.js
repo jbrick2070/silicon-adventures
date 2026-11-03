@@ -4,10 +4,12 @@ class SceneSound {
   constructor() {
     this.vault = new VaultAudio();
     this.vault.onCue = (id, point) => {
-      const names = {keeper: 'A voice', keeperStep: 'A footfall', bird: 'Two high notes',
-        bell: 'A bell', gate: 'A mechanism', call: 'A call', answer: 'An answer'};
-      if (this.onCaption && id !== 'step') this.onCaption(names[id] || id, point);
+      const text = SceneSound.caption(id);
+      if (this.onCaption && text) this.onCaption(text, point);
     };
+    // Room geometry for ambient placement, supplied by the view so it follows the L toggle.
+    this.geometry = null;
+    this.ambientTurn = 0;
     this.onCaption = null;
     this.library = new Map((window.ES_SOUNDS || []).map(r => [r.name.trim().toLowerCase(), r]));
     this.decoded = new Map();
@@ -22,6 +24,20 @@ class SceneSound {
     this.started = false;
     this.starting = null;
     this.queueEnd = 0;
+  }
+
+  // The one caption dictionary for every cue: disk recordings by role, drawn effects, and a plain
+  // fallback naming the Dark Castle resource for listening-stone picks. Footfalls are not captioned.
+  static caption(id) {
+    const names = {
+      keeper: 'A voice', bird: 'Two short notes', knight: 'A shield blow', bell: 'A bell', gate: 'A mechanism',
+      call: 'A call', answer: 'An answer', pickup: 'A chime',
+      'dc:0': 'A shield blow', 'dc:1': 'A voice', 'dc:69': 'A knock from the doorway', 'dc:70': 'Two short notes'
+    };
+    if (id === 'step' || id === 'keeperStep' || id === 'dc:84') return '';
+    if (names[id]) return names[id];
+    const m = /^dc:(\d+)$/.exec(id);
+    return m ? 'Dark Castle SOUN ' + m[1] : id;
   }
 
   start() {
@@ -81,7 +97,11 @@ class SceneSound {
   ambientFrame(now) {
     const room = this.room;
     if (!room || !room.sound || !(room.soundFrequency > 0)) return;
-    const resource = this.library.get(room.sound.trim().toLowerCase());
+    // The disk names an ambient the ASND list lacks: 'song bird' in the jungle corner (27293).
+    // It borrows the Dark Castle cave bat's two notes rather than inventing a recording.
+    const alias = {'song bird': 'dc:70'};
+    const resource = this.library.get(room.sound.trim().toLowerCase()) ||
+      (alias[room.sound.trim().toLowerCase()] ? {id: alias[room.sound.trim().toLowerCase()], name: room.sound.trim(), vault: true} : null);
     if (!resource) return;
     if (this.minute === null || now >= this.minute + 60) {
       // WAGE schedules random events anywhere in a minute, and periodic
@@ -94,11 +114,17 @@ class SceneSound {
     if (!this.ticks.length || this.ticks[0] > now) return;
     // Resuming a background tab must not replay a minute's missed events.
     while (this.ticks.length && this.ticks[0] <= now) this.ticks.shift();
-    const exits = {north:{x:0,z:4.7}, east:{x:2.6,z:2.6}, west:{x:-2.6,z:2.6}, south:{x:0,z:-1.7}};
-    const dirs = Object.keys(exits).filter(dir => room.blocked?.[dir] === false);
-    const side = dirs[Math.abs(room.id) % Math.max(1,dirs.length)];
-    const point = this.point(room.soundPosition || exits[side] || {x:1.5,z:3.5});
+    // Emit just past an open wall of the room as it is currently rigged: periodic sounds take
+    // the openings in turn, random ones pick one, so every doorway is heard over a minute.
+    const g = this.geometry ? this.geometry() : null;
+    const rig = g?.rig || {back: 5, left: -2.75, right: 2.75}, rear = g?.rear ?? -1.75, doorZ = g?.sideDoorZ ?? 1.15;
+    const exits = {north:{x:0,z:rig.back+0.4}, east:{x:rig.right+0.4,z:doorZ}, west:{x:rig.left-0.4,z:doorZ}, south:{x:0,z:rear-0.4}};
+    const open = g?.exits || room.blocked || {};
+    const dirs = Object.keys(exits).filter(dir => g?.exits ? open[dir] : room.blocked?.[dir] === false);
+    const pick = dirs.length ? (room.soundType === 1 ? Math.floor(Math.random()*dirs.length) : (this.ambientTurn++) % dirs.length) : -1;
+    const point = this.point(room.soundPosition || (pick >= 0 ? exits[dirs[pick]] : {x:1.5,z:Math.max(2, rig.back-1.5)}));
     const generation = this.generation;
+    if (resource.vault) { this.effect(resource.id, point); return; }
     this.buffer(resource).then(b => {
       if (!b || generation !== this.generation || this.paused) return;
       const voice = this.emit(b, point, this.vault.ctx.currentTime, 0.48);

@@ -136,7 +136,19 @@
     if(!r.ok)throw new Error(await r.text()||'The adventure could not process that action.');
     return r.json();
   }
-  function sourceEvents(next,point){if(playing && next.sounds?.length)sound.events(next.sounds,point||{x:.35,z:Math.max(1.7,view.rig.back-.8)});}
+  function sourceEvents(next,point){
+    if(!playing||!next.sounds?.length)return;
+    const fallback=point||{x:.35,z:Math.max(1.7,view.rig.back-.8)};
+    if(scene?.id!==18366){sound.events(next.sounds,fallback);return;}
+    // The Finale names its bearings: earthquakes north, tornadoes east, volcanoes west, the tidal wave
+    // south, and Elron's horn from where he stands. Each run of cues plays from that side, in order.
+    const p=view.pose,elron=view.sprites.find(s=>s.key==='AOBJ/23092');
+    const bearing={boom:{x:p.x,z:p.z+4},fireball:{x:p.x+4,z:p.z},roar:{x:p.x-4,z:p.z},splash:{x:p.x,z:p.z-4},horn:elron?{x:elron.x,z:elron.z}:fallback};
+    let run=[];
+    const flush=()=>{if(run.length){const k=run[0].toLowerCase();sound.events(run,bearing[k]||fallback);run=[];}};
+    for(const name of next.sounds){if(run.length&&run[0].toLowerCase()!==name.toLowerCase())flush();run.push(name);}
+    flush();
+  }
   async function crossover(){
     npc=null;
     if(scene.id===7990){
@@ -527,10 +539,11 @@
     return ' · '+['ahead','right','behind','left'][(Math.round(a/(Math.PI/2))%4+4)%4];
   }
   sound.onCaption=(name,p)=>{
-    if(!captions||!playing||['step','keeperStep','dc:84'].includes(name))return;
-    const alias={keeper:'A voice',bird:'Two short notes', 'dc:1':'A voice','dc:70':'Two short notes',bell:'A bell'};
-    message((alias[name]||name)+direction(p));
+    if(!captions||!playing)return;
+    const text=SceneSound.caption(name);
+    if(text)message(text+direction(p));
   };
+  sound.geometry=()=>({rig:view.rig,exits:view.exits,sideDoorZ:view.sideDoorZ,rear:view.rear});
   function animate(ms){
     const dt=Math.min(.05,Math.max(0,(ms-oldTime)/1000));oldTime=ms;elapsed+=dt;
     if(playing && !busy && !$('dialog').open && !state?.ended) {
@@ -552,7 +565,7 @@
           if(!wizardRead)actors.bird={x:-1.29,z:4.98};
         }else if(npc.key==='bat'){
           npc.frame=Math.floor(elapsed*8)%npc.cols;npc.x=1.35*Math.sin(elapsed*.85);npc.z=3.1+Math.cos(elapsed*.85);actors.bird=npc;
-        }else{npc.frame=Math.floor(elapsed*5)%npc.cols;actors.keeper=npc;}
+        }else{npc.frame=Math.floor(elapsed*5)%npc.cols;actors[npc.key==='knight'?'knight':'keeper']=npc;}
         if(npc.frame!==before)dirty=true;
       }
       if(combatant){

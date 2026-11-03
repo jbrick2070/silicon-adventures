@@ -25,13 +25,13 @@ The SOUN records have no names. The following labels describe uses chosen for th
 
 | File | SOUN | Assigned use |
 | --- | ---: | --- |
-| Data A | 0 | Moving inhabitant's footfall and Black Knight's shield strike |
+| Data A | 0 | Moving inhabitant's footfall and the Black Knight's shield strike, also his own periodic cue in the armory |
 | Data A | 1 | Voice from the High Altar inhabitant |
 | Data B | 69 | Answering knock from the armory doorway |
-| Data B | 70 | Pitched directional cue behind the column and the cave bat's call |
+| Data B | 70 | Pitched directional cue behind the column, the cave bat's call, and the jungle corner's `song bird` ambient, which the Enchanted Scepters disk names but has no recording for |
 | Data B | 84 | Player footfall |
 
-The samples share a Web Audio listener with Enchanted Scepters' original scene and event sounds. The bell, pickup chime and four-note call and answer in the audio renderer are locally composed effects. The optional synthesis fallback is explicitly identified in `audio/vault-audio.js`.
+Sound captions come from one dictionary in `game/spatial.js`: a shield blow, a voice, a knock from the doorway, two short notes, and `Dark Castle SOUN n` for any other recording picked at the listening stone. Footfalls are not captioned. The samples share a Web Audio listener with Enchanted Scepters' original scene and event sounds. The bell, pickup chime and four-note call and answer in the audio renderer are locally composed effects. The optional synthesis fallback is explicitly identified in `audio/vault-audio.js`.
 
 ## Rebuilding
 

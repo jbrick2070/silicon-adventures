@@ -11,7 +11,7 @@
 | Air | Entered the temple, operated its sand-room button and traversed the slide floor, jumping door, boulder, spikes, web and sliding walls. Read the murals, prayed and took the scepter at the High Altar. Moved the altar and descended to the marsh. |
 | Water | Retrieved diving gear, oil and a computer chip. Found the wreck's pearl, opened the route past the oyster and recovered the trident. Operated the hatch and pumps, met the Queen, unlocked the grate and struck the Sea Demon. Took the scepter, repaired the computer and piloted the submarine back to the beach. |
 | Fire | Obtained rope from the Hurk Captain's office, opened the sphinx and worked through the phoenix, sealed doors and sarcophagus. Tied the rope, descended into the volcano and fought the Fire Demon for his scepter. |
-| Return | Passed both gate challenges, entered the courtyard with all four scepters and went north. The Finale triggered ten sound cues before Elron confirmed that Callion was saved. |
+| Return | Passed both gate challenges, entered the courtyard with all four scepters and went north. The Finale triggered ten sound cues before Elron confirmed that Callion was saved. The cues replay from the disk's Finale bookmark: south, west, north, then wait. In the first-person edition each run of cues plays from the bearing the script names. |
 
 ## Save and map checks
 
