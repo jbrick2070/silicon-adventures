@@ -8,6 +8,7 @@
   let state,scene,playing=false,busy=false,muted=false,captions=true,drag=null;
   let shortcut=false,wizardRead=false,prayed=false,npc=null,combatant=null,knightReel=908;
   // A scripted question waiting for its answer, slot ownership for doorway checkpoints, and combat recall.
+  let callionSaved=false;
   let pending=null,owner=false,checkpoint=null,checkpointsOn=true,checkpointNoted=false,lastCommand='',lastAttack='',parserHelp=0;
   const history=[];let histAt=0;
   // Click targets: the disk's names are terse (dung.1, stor.2); only stems the room text itself names get a word.
@@ -107,9 +108,20 @@
     const b=document.createElement('button');b.type='button';b.className=cls;b.textContent=label;b.addEventListener('click',fn);return b;
   }
   function para(s,cls='') {const p=document.createElement('p');p.textContent=s;p.className=cls;return p;}
-  function line(s,cls=''){
+  // The journal keeps the whole session like the Macintosh console did (600 paragraphs), and
+  // survives a reload within a launch; Save copies it so Restore brings the story back too.
+  const journal=[];
+  function rememberJournal(){try{sessionStorage.setItem('scepters-journal',JSON.stringify({session:state?.session,journal}));}catch{}}
+  function line(s,cls='',remember=true){
     if(!s)return;
-    const log=$('log');log.append(para(s.trim(),cls));while(log.children.length>50)log.firstChild.remove();log.scrollTop=log.scrollHeight;
+    const log=$('log');log.append(para(s.trim(),cls));
+    if(remember){journal.push({text:s.trim(),cls});while(journal.length>600)journal.shift();rememberJournal();}
+    while(log.children.length>600)log.firstChild.remove();log.scrollTop=log.scrollHeight;
+  }
+  function replayJournal(entries){
+    const log=$('log');log.setAttribute('aria-live','off');log.replaceChildren();journal.length=0;
+    for(const e of entries)line(e.text,e.cls,false);
+    journal.push(...entries.slice(-600));log.setAttribute('aria-live','polite');rememberJournal();
   }
   function message(s){ $('cue').textContent=s;captionUntil=elapsed+3.3; }
   function openDialog(name,...content){
@@ -169,7 +181,8 @@
   for(const name of ['journal','pack','route'])$(name+'Tab').onclick=()=>tabs(name);
   function controls(){
     $('roomTitle').textContent=state.ended?'Journey’s end':scene.name;
-    $('chapterTag').textContent=state.ended?'END OF ADVENTURE':shortcut?'HIGH ALTAR EXCURSION':'SABER’S JOURNAL';
+    const held=[608,23213,19566,4500].map(id=>state.inventory.some(o=>o.id===id)?'●':'○').join('');
+    $('chapterTag').textContent=state.ended?(callionSaved?'CALLION SAVED':'END OF ADVENTURE'):shortcut?'HIGH ALTAR EXCURSION':'SABER’S JOURNAL · SCEPTERS '+held+(held==='●●●●'?' · TO ELRON':'');
     $('windowName').textContent=title(scene.name);$('plateCode').textContent='ASCN · '+scene.id;
     const share=state.maxHp?state.hp/state.maxHp:1;
     $('health').textContent=state.ended?'':'HP '+state.hp+(state.maxHp?' / '+state.maxHp+' · '+condition(share):'');
@@ -242,7 +255,8 @@
     if(state.ended){
       if(!scene)scene=designs.get('ASCN/7990');
       sourceEvents(next,opts.point);line(next.output);
-      if(!/saved Callion/i.test(next.output)&&diedIn)line('Saber fell in '+diedIn+'.','aside');
+      if(/saved Callion/i.test(next.output))callionSaved=true;
+      else if(diedIn)line('Saber fell in '+diedIn+'.','aside');
       line(state.saved?'Restore returns to '+(checkpoint?checkpoint.room+' with HP '+checkpoint.hp:'your last save')+'.':'This adventure has ended. Begin again or choose a new entry.','aside');
       controls();return;
     }
@@ -250,10 +264,10 @@
       scene=designs.get('ASCN/'+next.scene);
       if(!scene)throw new Error('Missing room plate '+next.scene);
       await view.load(scene);sound.scene(scene);
-      if(opts.fresh) {$('log').replaceChildren();wizardRead=false;prayed=false;enemyBase.clear();checkpointNoted=false;hintGoal=-1;hintTier=0;hintsUsed=0;if(!opts.keepSeen)visited=new Uint8Array(roomList.length);}
+      if(opts.fresh) {if(!opts.keepJournal){$('log').replaceChildren();journal.length=0;rememberJournal();}wizardRead=false;prayed=false;callionSaved=false;enemyBase.clear();checkpointNoted=false;hintGoal=-1;hintTier=0;hintsUsed=0;if(!opts.keepSeen)visited=new Uint8Array(roomList.length);}
       if(roomIndex.has(scene.id)){visited[roomIndex.get(scene.id)]=1;rememberSeen();drawChart();}
       if(!opts.fresh && playing)line('— '+title(scene.name)+' —','entry');
-      if(scene.id!==7990)shortcut=false;
+      if(scene.id!==7990&&shortcut){shortcut=false;line('The High Altar excursion ends here, in the hidden valley. The full adventure continues from this point.','aside');}
       keys.clear();stepDistance=0;tabs('journal');
     }
     if(opts.echo)line('› '+opts.echo,'entry');
@@ -267,6 +281,7 @@
       if(/materializes/i.test(next.output)||state.inventory.some(a=>a.id===23213))prayed=true;
     }
     if(scene.name.toLowerCase()==='finale' && /saved Callion/i.test(next.output)) {
+      callionSaved=true;
       line('All four scepters have come home.','aside');
     }
     const share=state.maxHp?state.hp/state.maxHp:1;
@@ -332,7 +347,10 @@
       const next=await api('start',entry);
       playing=true;shortcut=entry==='altar';owner=entry==='new'||entry==='restore';checkpoint=null;lastCommand=lastAttack='';
       $('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;fitViewport();
-      await apply(next,{fresh:true});sessionStorage.setItem('scepters-session',state.session);
+      let kept=null;
+      if(entry==='restore'){try{kept=JSON.parse(localStorage.getItem('scepters-saved-journal')||'null');}catch{}}
+      if(Array.isArray(kept)&&kept.length){replayJournal(kept);line('— Restored —','entry');}
+      await apply(next,{fresh:true,keepJournal:Array.isArray(kept)&&kept.length>0});sessionStorage.setItem('scepters-session',state.session);
       if(entry==='altar')line('A voice carries from the far side of the stone.','aside');
       if(entry==='restore'&&state.viewData){
         try{const v=JSON.parse(state.viewData);
@@ -355,6 +373,7 @@
     try{
       const result=await api('save',JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut,hp:state.hp,seen:packSeen()}));
       state.saved=result.saved;owner=true;checkpoint={room:scene.name,hp:state.hp};controls();line('Adventure saved.','aside');
+      try{localStorage.setItem('scepters-saved-journal',JSON.stringify(journal));}catch{}
     }catch(e){line(e.message,'aside');}finally{busy=false;}
   };
   $('load').onclick=()=>openDialog('Restore adventure',para('Resume your last manual save?'),button('Restore saved adventure',()=>begin('restore')),button('Keep playing',()=>$('dialog').close()));
@@ -576,7 +595,9 @@
       if(resumable){
         playing=true;$('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;
         try{const kept=JSON.parse(sessionStorage.getItem('scepters-seen')||'null');if(kept&&kept.session===snapshot.session)visited=unpackSeen(kept.seen);}catch{}
-        await apply(snapshot,{fresh:true,keepSeen:true});
+        let keptJournal=false;
+        try{const j=JSON.parse(sessionStorage.getItem('scepters-journal')||'null');if(j&&j.session===snapshot.session&&Array.isArray(j.journal)&&j.journal.length){replayJournal(j.journal);keptJournal=true;}}catch{}
+        await apply(snapshot,{fresh:true,keepSeen:true,keepJournal:keptJournal});
       }else{
         await view.load(scene);state=snapshot;$('resume').hidden=!snapshot.saved;
         const lid=designs.get('AOBJ/14168');
