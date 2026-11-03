@@ -1,0 +1,555 @@
+/* Non-destructive visual refresh layer for Enchanted Scepters.
+ * Preserves the native 338 × 314 viewport, original plates, separated command
+ * PNGs, and sprite dimensions/anchors while adding:
+ *   1. Aligned High Altar 3D footprints, plinth-contact altar, and stair shaft
+ *   2. Steady camera-coherent CODE 1 ScepterPatterns halftone rendering
+ *   3. Lit stone, shadow, and distance modulation using the disk's tile ramp
+ *   4. Drawn QuickDraw ink borders and bevels on newly visible 3D stone faces
+ *   5. Separate 1-pixel paper silhouette rims for Dark Castle crossover reels
+ */
+(() => {
+  'use strict';
+
+  // Monotonic tonal ramp built strictly from original CODE 1 ScepterPatterns:
+  // 1 (0%), 2 (6.2%), 3 (12.5%), 4 (25%), 13 (37.5%), 5 (50%), 6 (75%), 7 (87.5%), 8 (100%)
+  const TONE_RAMP = [1, 2, 3, 4, 13, 5, 6, 7, 8];
+  const RAMP_INDEX = {
+    1: 0, 2: 1, 3: 2, 14: 2,
+    4: 3, 10: 3, 12: 3,
+    13: 4, 18: 4,
+    5: 5,
+    6: 6, 9: 6,
+    7: 7,
+    8: 8
+  };
+
+  function shiftPattern(pat, delta) {
+    if (!delta || pat === 1 || pat === 8) return pat;
+    const idx = RAMP_INDEX[pat];
+    if (idx === undefined) return pat; // Preserve pictorial motifs (e.g. 15 door planks, 19 brick, 27 frieze)
+    const next = Math.max(1, Math.min(7, idx + delta));
+    return TONE_RAMP[next];
+  }
+
+  function samplePattern(pat, sx, sy) {
+    const tiles = window.ScepterPatterns;
+    if (!tiles || !tiles[pat]) return pat >= 6;
+    return !!(tiles[pat][sy & 7] & (128 >> (sx & 7)));
+  }
+
+  function toneUrl(url) {
+    if (!url) return null;
+    if (url.startsWith('archive/es/plates/ASCN-')) {
+      return 'art/refresh/plates/' + url.slice('archive/es/plates/'.length);
+    }
+    if (url.startsWith('art/foreground/')) {
+      return 'art/refresh/foreground/' + url.slice('art/foreground/'.length);
+    }
+    if (/^art\/(altar|quarters|sanctum|court)-.+\.png$/.test(url)) {
+      return 'art/refresh/' + url.slice(4);
+    }
+    return null;
+  }
+
+  function spriteRimUrl(url) {
+    return window.RefreshPalette?.spriteRims?.[url] || null;
+  }
+
+  function buildPlanes(points) {
+    const cx = points.reduce((v, p) => v + p[0], 0) / points.length;
+    const cz = points.reduce((v, p) => v + p[1], 0) / points.length;
+    return points.map(([ax, az], i) => {
+      const [bx, bz] = points[(i + 1) % points.length];
+      const len = Math.hypot(bz - az, bx - ax) || 1e-6;
+      const ux = (bx - ax) / len, uz = (bz - az) / len;
+      let nx = (az - bz) / len, nz = (bx - ax) / len;
+      if (nx * (cx - ax) + nz * (cz - az) < 0) { nx = -nx; nz = -nz; }
+      return { ax, az, bx, bz, len, ux, uz, nx, nz, offset: nx * ax + nz * az };
+    });
+  }
+
+  // Refreshed High Altar (ASCN 7990) geometry layer:
+  // Convex footprints enclose 100% of ASCN commands 16–20, 23, and 25–27 from
+  // the doorway while leaving clear walking and gesture room behind left-column.
+  window.AltarRefresh = {
+    eye: 1.8, focal: 215, cx: 169, cy: 123,
+    left: -2.16, right: 2.436, back: 5.55, ceiling: 3.38,
+    wallTop: 2.834, courseH: 1.417, slabW: 1.28, slabD: 1.34,
+    separatedShell: true,
+    clean: 'art/altar-clean.png',
+    solids: [
+      {
+        id: 'dais', kind: 'dais',
+        footprint: [[-1.385, 3.721], [1.748, 3.721], [1.875, 5.235], [-1.480, 5.485]],
+        y0: 0, y1: 0.172,
+        texture: 'art/altar-dais.png', commands: [16, 23],
+        patterns: { front: 4, top: 5, east: 5, west: 6, back: 6, side: 6 }
+      },
+      {
+        id: 'left-column', kind: 'pillar',
+        footprint: [[-1.275, 4.185], [-0.595, 4.185], [-0.478, 4.90], [-1.225, 4.86]],
+        y0: 0.172, y1: 3.38, silhouette: true,
+        texture: 'art/altar-column-left.png', commands: [19, 20],
+        patterns: { front: 4, top: 7, east: 6, west: 5, back: 6, side: 5 }
+      },
+      {
+        id: 'right-column', kind: 'pillar',
+        footprint: [[1.012, 4.235], [1.602, 4.235], [1.555, 4.90], [0.918, 4.90]],
+        y0: 0.172, y1: 3.38, silhouette: true,
+        texture: 'art/altar-column-right.png', commands: [17, 18],
+        patterns: { front: 4, top: 7, east: 5, west: 6, back: 6, side: 6 }
+      },
+      {
+        id: 'plinth', kind: 'plinth',
+        footprint: [[-0.341, 4.070], [0.842, 4.070], [0.855, 5.185], [-0.190, 5.185]],
+        y0: 0.172, y1: 0.305,
+        texture: 'art/altar-plinth.png', commands: [25, 26, 27],
+        patterns: { front: 4, top: 5, east: 5, west: 6, back: 6, side: 6 },
+        cavity: {
+          footprint: [[-0.128, 4.425], [0.768, 4.425], [0.688, 4.790], [-0.004, 4.790]],
+          z0: 4.425, z1: 4.790, top: 0.305, bottom: -0.46, steps: 3
+        }
+      }
+    ],
+    // AOBJ 14168 sits flush on the plinth top (y = 0.305) at native [160, 165, 45, 31].
+    lid: { x: 0.27647, z: 4.40308, y: 0.305, w: 0.92158, h: 0.63486 }
+  };
+
+  // Trace descending 3D stone stairwell inside the High Altar plinth opening (Cmd 27).
+  function traceCavity(cavity, p, eye, dx, dy, dz, tEntry, pen, sx, sy) {
+    const hx = p.x + dx * tEntry, hz = p.z + dz * tEntry;
+    const cPlanes = cavity.planes;
+    for (let k = 0; k < cPlanes.length; k++) {
+      if (cPlanes[k].nx * hx + cPlanes[k].nz * hz - cPlanes[k].offset < 0) return null;
+    }
+    let tWall = Infinity, wallPlane = null;
+    for (let k = 0; k < cPlanes.length; k++) {
+      const cp = cPlanes[k];
+      const rate = cp.nx * dx + cp.nz * dz;
+      if (rate < -1e-9) {
+        const tw = -(cp.nx * p.x + cp.nz * p.z - cp.offset) / rate;
+        if (tw > tEntry && tw < tWall) { tWall = tw; wallPlane = cp; }
+      }
+    }
+    const span = (cavity.z1 - cavity.z0) / cavity.steps;
+    let step = Math.max(0, Math.min(cavity.steps - 1, Math.floor((hz - cavity.z0) / span)));
+    for (let iter = 0; iter <= cavity.steps; iter++) {
+      const yTread = cavity.top - 0.145 - step * 0.165;
+      const zLo = cavity.z0 + step * span, zHi = zLo + span;
+      const tTread = dy < -1e-9 ? (yTread - eye) / dy : Infinity;
+      const tNextZ = Math.abs(dz) > 1e-9 ? ((dz > 0 ? zHi : zLo) - p.z) / dz : Infinity;
+      if (Math.min(tTread, tWall) <= tNextZ) {
+        if (tTread <= tWall && tTread > tEntry) {
+          const zHit = p.z + dz * tTread;
+          const nosing = zHit - zLo;
+          let pat = step === 0 ? 6 : step === 1 ? 7 : 8;
+          if (nosing < 1.5 * pen) pat = 8;
+          else if (nosing < 2.8 * pen && step < 2) pat = step === 0 ? 5 : 6;
+          return { t: tTread, bit: samplePattern(pat, sx, sy) ? 1 : 2 };
+        }
+        break;
+      }
+      const nextStep = step + (dz > 0 ? 1 : -1);
+      if (nextStep < 0 || nextStep >= cavity.steps) break;
+      const nextTread = cavity.top - 0.145 - nextStep * 0.165;
+      const yCross = eye + dy * tNextZ;
+      if (yCross <= nextTread && tNextZ > tEntry) {
+        const topDist = nextTread - yCross;
+        const pat = topDist < 1.6 * pen ? 8 : (nextStep === 0 ? 6 : 7);
+        return { t: tNextZ, bit: samplePattern(pat, sx, sy) ? 1 : 2 };
+      }
+      step = nextStep;
+    }
+    if (tWall < Infinity) {
+      const yHit = eye + dy * tWall;
+      const rim = cavity.top - yHit;
+      let pat = yHit > 0.16 ? 6 : yHit > -0.02 ? 7 : 8;
+      if (wallPlane && wallPlane.nz < -0.5) pat = shiftPattern(pat, 1); // Far north shaft wall in deeper shadow
+      if (rim < 1.8 * pen) pat = 8;
+      return { t: tWall, bit: samplePattern(pat, sx, sy) ? 1 : 2 };
+    }
+    return { t: tEntry + 0.35, bit: 1 };
+  }
+
+  // Grounded contact/cast shadow test on horizontal surfaces (floor and dais top).
+  function hasContactShadow(solids, selfSolid, x, y, z) {
+    // Light arrives from upper-front-right; shadows cast slightly back-and-left (-x, +z).
+    for (let k = 0; k < solids.length; k++) {
+      const s = solids[k];
+      if (s === selfSolid || s.noCollision && !s.silhouette || s.collisionOnly) continue;
+      if (s.y0 > y + 0.06 || s.y1 <= y + 0.04) continue;
+      const lift = Math.min(0.45, (s.y1 - y) * 0.18);
+      const sx = x + 0.16 * lift, sz = z - 0.30 * lift;
+      let maxOut = -Infinity;
+      for (let m = 0; m < s.planes.length; m++) {
+        const pl = s.planes[m];
+        const inside = pl.nx * sx + pl.nz * sz - pl.offset;
+        const out = -inside;
+        if (out > maxOut) maxOut = out;
+      }
+      if (maxOut <= 0.075) return true;
+    }
+    return false;
+  }
+
+  // Build 2x Chamfer SDF + medial stroke ridge + slab fill propagation once per room
+  // so close-up views keep QuickDraw 2px pen strokes crisp instead of 8x jagged bars.
+  function prepareToneFields(w, h, tones, borders) {
+    const n = w * h, W = w * 2, H = h * 2, N = W * H, INF = 1e6;
+    const ink2 = new Uint8Array(N);
+    for (let y = 0; y < h; y++) {
+      const r0 = (y * 2) * W, r1 = r0 + W, sy = y * w;
+      for (let x = 0; x < w; x++) {
+        if (tones[sy + x] === 8) {
+          const x2 = x * 2;
+          ink2[r0 + x2] = ink2[r0 + x2 + 1] = ink2[r1 + x2] = ink2[r1 + x2 + 1] = 1;
+        }
+      }
+    }
+    const dpIn = new Float32Array(N), dpOut = new Float32Array(N);
+    for (let q = 0; q < N; q++) {
+      dpIn[q] = ink2[q] ? INF : 0;
+      dpOut[q] = ink2[q] ? 0 : INF;
+    }
+    for (const dp of [dpIn, dpOut]) {
+      for (let y = 0; y < H; y++) {
+        const row = y * W;
+        for (let x = 0; x < W; x++) {
+          let v = dp[row + x];
+          if (v === 0) continue;
+          if (y > 0) {
+            const prev = row - W + x;
+            if (dp[prev] + 3 < v) v = dp[prev] + 3;
+            if (x > 0 && dp[prev - 1] + 4 < v) v = dp[prev - 1] + 4;
+            if (x + 1 < W && dp[prev + 1] + 4 < v) v = dp[prev + 1] + 4;
+          }
+          if (x > 0 && dp[row + x - 1] + 3 < v) v = dp[row + x - 1] + 3;
+          dp[row + x] = v;
+        }
+      }
+      for (let y = H - 1; y >= 0; y--) {
+        const row = y * W;
+        for (let x = W - 1; x >= 0; x--) {
+          let v = dp[row + x];
+          if (v === 0) continue;
+          if (y + 1 < H) {
+            const next = row + W + x;
+            if (dp[next] + 3 < v) v = dp[next] + 3;
+            if (x + 1 < W && dp[next + 1] + 4 < v) v = dp[next + 1] + 4;
+            if (x > 0 && dp[next - 1] + 4 < v) v = dp[next - 1] + 4;
+          }
+          if (x + 1 < W && dp[row + x + 1] + 3 < v) v = dp[row + x + 1] + 3;
+          dp[row + x] = v;
+        }
+      }
+    }
+    const sdf2 = new Float32Array(N), tmp = new Float32Array(N), ridge2 = new Float32Array(N);
+    for (let q = 0; q < N; q++) {
+      sdf2[q] = ink2[q] ? (dpIn[q] - 1.5) / 6 : -(dpOut[q] - 1.5) / 6;
+    }
+    for (let y = 0; y < H; y++) {
+      const row = y * W;
+      for (let x = 0; x < W; x++) {
+        let m = -INF;
+        const x0 = Math.max(0, x - 4), x1 = Math.min(W - 1, x + 4);
+        for (let k = x0; k <= x1; k++) if (sdf2[row + k] > m) m = sdf2[row + k];
+        tmp[row + x] = m;
+      }
+    }
+    for (let y = 0; y < H; y++) {
+      const y0 = Math.max(0, y - 4), y1 = Math.min(H - 1, y + 4), row = y * W;
+      for (let x = 0; x < W; x++) {
+        let m = -INF;
+        for (let k = y0; k <= y1; k++) if (tmp[k * W + x] > m) m = tmp[k * W + x];
+        ridge2[row + x] = m;
+      }
+    }
+
+    const fillTone = new Uint8Array(n), bevelTone = new Uint8Array(n);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const i = y * w + x, t = tones[i];
+        if (!t) continue;
+        const rVal = ridge2[(y * 2) * W + (x * 2)];
+        const thinInk = t === 8 && rVal <= 3.2;
+        if (!borders[i] && !thinInk) fillTone[i] = t;
+        for (let dy = -1; dy <= 1 && !bevelTone[i]; dy++) {
+          const ny = y + dy;
+          if (ny < 0 || ny >= h) continue;
+          for (let dx = -1; dx <= 1; dx++) {
+            const nx = x + dx;
+            if (nx < 0 || nx >= w) continue;
+            const ni = ny * w + nx;
+            if (borders[ni] && tones[ni] && tones[ni] !== 8) { bevelTone[i] = tones[ni]; break; }
+          }
+        }
+      }
+    }
+    for (let pass = 0; pass < 6; pass++) {
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const i = y * w + x;
+          if (fillTone[i] || !tones[i]) continue;
+          fillTone[i] = (x > 0 && fillTone[i - 1]) || (x + 1 < w && fillTone[i + 1]) ||
+                        (y > 0 && fillTone[i - w]) || (y + 1 < h && fillTone[i + w]) || 0;
+        }
+      }
+    }
+    for (let i = 0; i < n; i++) if (!fillTone[i] && tones[i]) fillTone[i] = tones[i] === 8 ? 6 : tones[i];
+    return { W, H, sdf2, ridge2, fillTone, bevelTone };
+  }
+
+  function bilerp(grid, W, H, gx, gy) {
+    const cx = Math.max(0, Math.min(W - 1.001, gx)), cy = Math.max(0, Math.min(H - 1.001, gy));
+    const x0 = Math.floor(cx), y0 = Math.floor(cy), tx = cx - x0, ty = cy - y0;
+    const r0 = y0 * W + x0, r1 = r0 + W;
+    const a = grid[r0] + (grid[r0 + 1] - grid[r0]) * tx;
+    const b = grid[r1] + (grid[r1 + 1] - grid[r1]) * tx;
+    return a + (b - a) * ty;
+  }
+
+  function resolvePlateSample(tex, fx, fy, mag, pIdx) {
+    const fields = tex.fields;
+    if (!fields || mag <= 1.18) return { pat: tex.tones[pIdx], border: tex.borders[pIdx] };
+    const gx = fx * 2 - 0.5, gy = fy * 2 - 0.5;
+    const sdf = bilerp(fields.sdf2, fields.W, fields.H, gx, gy);
+    const ridge = bilerp(fields.ridge2, fields.W, fields.H, gx, gy);
+    if (ridge > 3.2) {
+      if (sdf >= 0) return { pat: 8, border: 0 };
+      return { pat: fields.fillTone[pIdx], border: 0 };
+    }
+    if (ridge > 0.15) {
+      const dCenter = Math.max(0, ridge - sdf);
+      const halfInk = Math.min(ridge, 0.95 / mag);
+      if (sdf >= -0.15 && dCenter <= halfInk) return { pat: 8, border: 1 };
+      const bTone = fields.bevelTone[pIdx];
+      if (bTone && sdf < halfInk && dCenter <= halfInk + 1.35 / mag) {
+        return { pat: bTone, border: 1 };
+      }
+      return { pat: fields.fillTone[pIdx], border: 0 };
+    }
+    return { pat: fields.fillTone[pIdx] || tex.tones[pIdx], border: 0 };
+  }
+
+  // Modulate a plate/layer's base CODE 1 pattern for lit stone, shadow, and distance
+  // without slicing circular rings through flat QuickDraw polygons.
+  function shadePlateTone(view, solid, face, x, y, z, t, tex, pIdx, fx, fy, sx, sy) {
+    const r = view.rig;
+    const t0 = Math.hypot(x, y - r.eye, z);
+    const mag = Math.abs(face) === 3
+      ? Math.max(t0 / Math.max(0.15, t), (z / Math.max(0.25, t)) * 1.15)
+      : t0 / Math.max(0.15, t);
+    const { pat, border: isBorder } = resolvePlateSample(tex, fx, fy, mag, pIdx);
+    const fallbackBit = tex.bits[pIdx];
+    if (pat === 8) return 1;
+    if (pat === 1) return 2;
+    const dRel = t - t0; // Positive when player walks farther away than doorway, negative when closer
+
+    // Preserve pictorial motif patterns (e.g. 15 wooden door planks, 19 brick, 27 diamond frieze)
+    if (RAMP_INDEX[pat] === undefined) {
+      if (dRel > 1.8 && t > 6.8 && !view.outside) return samplePattern(7, sx, sy) ? 1 : 2;
+      return fallbackBit;
+    }
+    if (isBorder) {
+      let bPat = pat;
+      if (pat === 4 && dRel < -0.9 && t < 2.2 && !view.outside && r.environment !== 'submerged') bPat = 3;
+      else if (dRel > 1.6 && t > 6.4 && !view.outside) bPat = shiftPattern(pat, 1);
+      return samplePattern(bPat, sx, sy) ? 1 : 2;
+    }
+
+    let delta = 0;
+    if (r.environment === 'submerged') {
+      if (dRel > 1.4 && t > 6.6) delta += 1;
+      else if (dRel < -1.0 && t < 2.4 && face === 3) delta -= 1;
+    } else if (view.outside) {
+      if (dRel > 1.8 && t > 8.5 && face !== -3) delta -= 1;
+      if (face === 3 && hasContactShadow(view.solids, solid, x, y, z)) delta += 1;
+    } else {
+      // Indoor stone chambers
+      if (face === 3) {
+        if (hasContactShadow(view.solids, solid, x, y, z)) {
+          delta += 1;
+        } else if (!solid && view.meta?.id === 7990 && z > r.back - 0.22) {
+          delta += 1; // Deep shadow along the recessed rear wall behind the dais
+        } else if (dRel > 1.35 && t > 5.8) {
+          delta += 1;
+        }
+      } else if (face === -3) {
+        if (dRel > 1.5 && t > 6.4) delta += 1;
+      } else if (!solid) {
+        // Room walls: step clean architectural courses rather than curved radial arcs
+        if (view.meta?.id === 7990 && Math.abs(z - r.back) < 0.09 && y < 1.255) {
+          // Recessed lower dado course (right below the horizontal mortar line) behind columns & altar
+          delta += 1;
+        } else if (dRel > 1.35 && t > 5.9) {
+          delta += 1;
+        }
+      } else {
+        // Separated 3D foreground solid (columns, dais, plinth, furniture)
+        if (solid.kind === 'pillar' && face !== 3 && y - solid.y0 < 0.08) {
+          delta += 1; // Grounded contact where monolith shaft meets the dais
+        } else if (dRel > 1.45 && t > 6.0) {
+          delta += 1;
+        }
+      }
+    }
+
+    const finalPat = shiftPattern(pat, Math.max(-1, Math.min(2, delta)));
+    return samplePattern(finalPat, sx, sy) ? 1 : 2;
+  }
+
+  // Draw newly visible faces of 3D solids with QuickDraw 2px ink borders, 1px stone bevels, and CODE 1 patterns.
+  function shadeSolidFace(view, hit, solid, face, x, y, z, t, dx, dz, sx, sy) {
+    const f = view.rig.focal;
+    const pen = Math.max(0.0035, t / f);
+
+    if (Math.abs(face) === 3) {
+      let minEdge = Infinity;
+      for (let k = 0; k < solid.planes.length; k++) {
+        const pl = solid.planes[k];
+        const d = pl.nx * x + pl.nz * z - pl.offset;
+        if (d < minEdge) minEdge = d;
+      }
+      if (minEdge < 1.75 * pen) return 1;
+      let pat = face === 3 ? (solid.patterns?.top || 5) : 7;
+      if (face === 3 && minEdge < 3.0 * pen) pat = shiftPattern(pat, -1);
+      else if (face === 3 && hasContactShadow(view.solids, solid, x, y, z)) pat = shiftPattern(pat, 1);
+      return samplePattern(pat, sx, sy) ? 1 : 2;
+    }
+
+    const pl = hit.plane;
+    const v0 = y - solid.y0, v1 = solid.y1 - y;
+    const vMin = Math.min(v0, v1);
+    const isCurved = solid.planes.length > 8; // e.g. 32-sided Courtyard basin or Sanctum lectern foot
+
+    if (vMin < 1.75 * pen) return 1;
+    let u = 0, uMin = Infinity, uLit = Infinity;
+    if (pl) {
+      u = (x - pl.ax) * pl.ux + (z - pl.az) * pl.uz;
+      uMin = Math.min(u, pl.len - u);
+      const uToLight = pl.ux * 0.38 + pl.uz * (-0.72);
+      uLit = uToLight < 0 ? u : pl.len - u;
+      if (!isCurved && uMin < 1.75 * pen) return 1;
+      if (isCurved && Math.abs(pl.nx * dx + pl.nz * dz) < 0.22) return 1;
+    }
+
+    const ox = pl ? -pl.nx : 0, oz = pl ? -pl.nz : 1;
+    const litDot = ox * 0.38 + oz * (-0.72);
+    let pat = 5;
+    if (solid.patterns) {
+      if (oz > 0.45) pat = solid.patterns.back ?? solid.patterns.side ?? 6;
+      else if (oz < -0.45) pat = solid.patterns.front ?? 4;
+      else if (ox > 0.35) pat = solid.patterns.east ?? solid.patterns.side ?? 5;
+      else if (ox < -0.35) pat = solid.patterns.west ?? solid.patterns.side ?? 6;
+      else pat = solid.patterns.side ?? 6;
+    } else {
+      pat = litDot > 0.25 ? 4 : litDot > -0.22 ? 5 : 6;
+    }
+
+    // Subtle base grounding where monolith columns meet the dais
+    if (solid.kind === 'pillar' && v0 < 0.08) {
+      pat = shiftPattern(pat, 1);
+    }
+
+    // QuickDraw 1-pixel inner stone bevel along top lip and light-facing vertical arris
+    if ((solid.kind === 'dais' || solid.kind === 'plinth') && v1 < 3.1 * pen) {
+      pat = shiftPattern(pat, -1);
+    } else if (!isCurved && uLit < 3.0 * pen) {
+      pat = shiftPattern(pat, -1);
+    } else if (t > 5.8 && !view.outside) {
+      pat = shiftPattern(pat, 1);
+    }
+
+    return samplePattern(pat, sx, sy) ? 1 : 2;
+  }
+
+  // Shade unseen world surfaces (side wall extensions, rear doorway wall, ceilings, horizons) with CODE 1 patterns.
+  function shadeUnseenWorld(view, face, x, y, z, t, sx, sy) {
+    const r = view.rig;
+    const pen = Math.max(0.004, t / r.focal);
+
+    if (r.environment === 'submerged') {
+      const angle = Math.atan2(x, z), ridge = 1.65 + 0.13 * Math.sin(angle * 8) + 0.06 * Math.cos(angle * 15);
+      if (face !== 3 && Math.abs(y - ridge) < 1.3 * pen) return 1;
+      let pat = face === 3 ? 4 : y < ridge ? 5 : 7;
+      if (t > 6.6) pat = shiftPattern(pat, 1);
+      return samplePattern(pat, sx, sy) ? 1 : 2;
+    }
+
+    if (view.outside) {
+      if (face === -3) return samplePattern(2, sx, sy) ? 1 : 2;
+      if (face === 3) {
+        let pat = t < 3.4 ? 13 : t < 7.2 ? 5 : 4;
+        if (hasContactShadow(view.solids, null, x, y, z)) pat = shiftPattern(pat, 1);
+        return samplePattern(pat, sx, sy) ? 1 : 2;
+      }
+      const a = Math.atan2(x, z), ridge = 1.6 + 0.23 * Math.sin(a * 13) + 0.30 * Math.cos(a * 4);
+      if (Math.abs(y - ridge) < 1.35 * pen) return 1;
+      const pat = y < ridge ? (t > 8.0 ? 5 : 6) : 3;
+      return samplePattern(pat, sx, sy) ? 1 : 2;
+    }
+
+    // Indoor stone chamber
+    const wallTop = r.wallTop || r.ceiling;
+    if (face === -3 || (Math.abs(face) !== 3 && y >= wallTop)) {
+      if (Math.abs(face) !== 3 && y < wallTop + 1.6 * pen) return 1; // Cornice ink line
+      return samplePattern(t > 6.5 ? 8 : 7, sx, sy) ? 1 : 2;
+    }
+
+    // Rear wall arched iron-grate / oak portal at doorway x = 0, z = rear
+    if (face === 2 && Math.abs(x) < 0.62) {
+      const archTop = 2.28 - Math.max(0, Math.abs(x) - 0.26) * 0.68;
+      if (y < archTop) {
+        const edge = Math.min(0.62 - Math.abs(x), archTop - y);
+        if (edge < 2.0 * pen) return 1;
+        if (edge < 3.4 * pen) return samplePattern(4, sx, sy) ? 1 : 2;
+        const gx = Math.floor((x + 1) * 30), gy = Math.floor(y * 32);
+        return ((gx % 8 !== 0) && (gy % 26 !== 0 || Math.abs(x) > 0.48)) ? 1 : (samplePattern(6, sx, sy) ? 1 : 2);
+      }
+    }
+
+    const isFloor = face === 3;
+    const courseH = isFloor ? (r.slabD || 1.15) : (r.courseH || 0.96);
+    const blockW = isFloor ? (r.slabW || 1.24) : 1.18;
+    const along = (isFloor || Math.abs(face) === 2) ? x : z;
+    const up = isFloor ? z : y;
+
+    const row = Math.floor(up / courseH);
+    const vDist = Math.min(up - row * courseH, (row + 1) * courseH - up);
+    const uShift = along + (row & 1) * blockW * 0.5;
+    const col = Math.floor(uShift / blockW);
+    const uDist = Math.min(uShift - col * blockW, (col + 1) * blockW - uShift);
+
+    // Crisp screen-consistent QuickDraw black mortar joint + 1px lit stone bevel
+    if (vDist < 1.55 * pen || uDist < 1.55 * pen) return 1;
+    const onBevel = (up - row * courseH > courseH - 3.0 * pen) || (uShift - col * blockW < 2.9 * pen);
+
+    let pat;
+    if (isFloor) {
+      pat = t > 5.75 ? 6 : 5;
+      if (hasContactShadow(view.solids, null, x, y, z)) pat = shiftPattern(pat, 1);
+    } else if (face === -1) {
+      // East / right lit chamber wall continues Pattern 5 seamlessly from plate edge
+      pat = t > 5.85 ? 6 : 5;
+    } else {
+      // West / left shadowed wall and rear entrance wall
+      pat = (y > wallTop - 0.35 || t > 5.85) ? 7 : 6;
+    }
+
+    if (onBevel) pat = shiftPattern(pat, -1);
+    return samplePattern(pat, sx, sy) ? 1 : 2;
+  }
+
+  window.RefreshEngine = {
+    toneUrl,
+    spriteRimUrl,
+    prepareToneFields,
+    buildPlanes,
+    traceCavity,
+    shadePlateTone,
+    shadeSolidFace,
+    shadeUnseenWorld,
+    samplePattern,
+    shiftPattern
+  };
+})();

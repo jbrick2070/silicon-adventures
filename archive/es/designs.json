@@ -1,0 +1,7582 @@
+[
+  {
+    "type": "ASCN",
+    "id": 12320,
+    "name": "annex",
+    "path": "archive/es/plates/ASCN-12320.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 14,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Scattered debris fills the empty annex. There is a passage north and a tunnel east."
+  },
+  {
+    "type": "ASCN",
+    "id": 29622,
+    "name": "Treasury",
+    "path": "archive/es/plates/ASCN-29622.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 14,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A narrow tunnel leads north."
+  },
+  {
+    "type": "ASCN",
+    "id": 2818,
+    "name": "basin",
+    "path": "archive/es/plates/ASCN-2818.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 14,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A small basin punctuates the end of the hallway. Strange symbols adorn the walls.\nThere is a long hallway north and a passage west."
+  },
+  {
+    "type": "ASCN",
+    "id": 2933,
+    "name": "lava path",
+    "path": "archive/es/plates/ASCN-2933.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 13,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The path runs up to the north and down to the south."
+  },
+  {
+    "type": "ASCN",
+    "id": 14750,
+    "name": "devil's sanctum",
+    "path": "archive/es/plates/ASCN-14750.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 11,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You are surrounded by a hot, volcanic cavern. The smell of sulphur hangs in the air. A rope dangles from overhead."
+  },
+  {
+    "type": "ASCN",
+    "id": 3099,
+    "name": "volcano top",
+    "path": "archive/es/plates/ASCN-3099.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 12,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "The trail ends here.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You come to the rim of the volcano. You can see something far below down inside the cone. There is a stump here, the trail leads south."
+  },
+  {
+    "type": "ASCN",
+    "id": 25730,
+    "name": "sandstone",
+    "path": "archive/es/plates/ASCN-25730.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 12,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The hallway angles to the north and south."
+  },
+  {
+    "type": "ASCN",
+    "id": 30856,
+    "name": "phoenix",
+    "path": "archive/es/plates/ASCN-30856.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 13,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The carving is east.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The hallway runs north-south."
+  },
+  {
+    "type": "ASCN",
+    "id": 12086,
+    "name": "ante chamber",
+    "path": "archive/es/plates/ASCN-12086.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 13,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a large entrance west and smaller tunnels running north and south."
+  },
+  {
+    "type": "ASCN",
+    "id": 27504,
+    "name": "passage",
+    "path": "archive/es/plates/ASCN-27504.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 13,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Stairs lead up to the north. There is a small annex south."
+  },
+  {
+    "type": "ASCN",
+    "id": 27318,
+    "name": "stair entrance",
+    "path": "archive/es/plates/ASCN-27318.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 12,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Dark stairs descend into blackness. Sunlight shows to the north."
+  },
+  {
+    "type": "ASCN",
+    "id": 5896,
+    "name": "sepulchre",
+    "path": "archive/es/plates/ASCN-5896.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 12,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "The doors are closed.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A shrine sits in the center of the room. A tunnel leads south."
+  },
+  {
+    "type": "ASCN",
+    "id": 17983,
+    "name": "lava tunnel",
+    "path": "archive/es/plates/ASCN-17983.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 14,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A lava path is up to the north. To the south is a rocky chamber leading down."
+  },
+  {
+    "type": "ASCN",
+    "id": 2293,
+    "name": "snake trail",
+    "path": "archive/es/plates/ASCN-2293.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 13,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The top of the volcano is north. There is a cliff path south."
+  },
+  {
+    "type": "ASCN",
+    "id": 5049,
+    "name": "ledge",
+    "path": "archive/es/plates/ASCN-5049.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 12,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A precarious trail leads down to the north and up to the south. A narrow path leads east."
+  },
+  {
+    "type": "ASCN",
+    "id": 63,
+    "name": "volcano vista",
+    "path": "archive/es/plates/ASCN-63.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 11,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A volcano smolders in the south. There is a narrow pass north, a trail climbs south."
+  },
+  {
+    "type": "ASCN",
+    "id": 19939,
+    "name": "cliff path",
+    "path": "archive/es/plates/ASCN-19939.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 14,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "To the north is an upward winding path. To the south is a narrow crack in the cliff side."
+  },
+  {
+    "type": "ASCN",
+    "id": 31593,
+    "name": "osiris",
+    "path": "archive/es/plates/ASCN-31593.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 11,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A stone statue of the goddess Osiris stands at the north end of the hall."
+  },
+  {
+    "type": "ASCN",
+    "id": 5101,
+    "name": "shrine",
+    "path": "archive/es/plates/ASCN-5101.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 11,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is an exit south."
+  },
+  {
+    "type": "ASCN",
+    "id": 28820,
+    "name": "sphinx",
+    "path": "archive/es/plates/ASCN-28820.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 11,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "The sphinx blocks you.",
+      "east": "The sphinx blocks you.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You stand between the paws of a massive sphinx. There are footprints nearby."
+  },
+  {
+    "type": "ASCN",
+    "id": 29592,
+    "name": "sphinx vista",
+    "path": "archive/es/plates/ASCN-29592.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 10,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A huge and ancient sphinx appears to be cut from the side of the cliff."
+  },
+  {
+    "type": "ASCN",
+    "id": 26550,
+    "name": "cactus",
+    "path": "archive/es/plates/ASCN-26550.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 10,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A lone cactus stands watch."
+  },
+  {
+    "type": "ASCN",
+    "id": 6591,
+    "name": "ravine",
+    "path": "archive/es/plates/ASCN-6591.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 10,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "An empty ravine provides no respite from the boiling sun."
+  },
+  {
+    "type": "ASCN",
+    "id": 25219,
+    "name": "oasis",
+    "path": "archive/es/plates/ASCN-25219.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 10,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "loon",
+    "soundFrequency": 6,
+    "soundType": 1,
+    "text": "A small oasis shelters a pool of blue water."
+  },
+  {
+    "type": "ASCN",
+    "id": 9440,
+    "name": "narrow pass",
+    "path": "archive/es/plates/ASCN-9440.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 10,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A narrow pass runs north-south. "
+  },
+  {
+    "type": "ASCN",
+    "id": 12523,
+    "name": "mud",
+    "path": "archive/es/plates/ASCN-12523.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 9,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The ground is laced with cracks from long dried mud."
+  },
+  {
+    "type": "ASCN",
+    "id": 20641,
+    "name": "drift",
+    "path": "archive/es/plates/ASCN-20641.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 9,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The relentless sun bakes the shifting sands. "
+  },
+  {
+    "type": "ASCN",
+    "id": 4223,
+    "name": "desert",
+    "path": "archive/es/plates/ASCN-4223.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 8,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Heat rises off the Great Fire Desert in the south. A trail leads north."
+  },
+  {
+    "type": "ASCN",
+    "id": 999,
+    "name": "flats",
+    "path": "archive/es/plates/ASCN-999.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 9,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Miles of featureless desert surround the relentless sun."
+  },
+  {
+    "type": "ASCN",
+    "id": 14895,
+    "name": "outcrop",
+    "path": "archive/es/plates/ASCN-14895.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 9,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A stone outcrop stands in the fearsome heat."
+  },
+  {
+    "type": "ASCN",
+    "id": 4787,
+    "name": "peak",
+    "path": "archive/es/plates/ASCN-4787.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 8,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A silent peak stands in the desert sand."
+  },
+  {
+    "type": "ASCN",
+    "id": 859,
+    "name": "water hole",
+    "path": "archive/es/plates/ASCN-859.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 8,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A small pool of water comforts a lone tree."
+  },
+  {
+    "type": "ASCN",
+    "id": 27689,
+    "name": "trail",
+    "path": "archive/es/plates/ASCN-27689.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 9,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A lonely trail runs north-south."
+  },
+  {
+    "type": "ASCN",
+    "id": 11672,
+    "name": "mesa",
+    "path": "archive/es/plates/ASCN-11672.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 8,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A mesa shimmers in the desert heat."
+  },
+  {
+    "type": "ASCN",
+    "id": 11734,
+    "name": "butte",
+    "path": "archive/es/plates/ASCN-11734.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 8,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A tall butte breaks the rolling sands."
+  },
+  {
+    "type": "ASCN",
+    "id": 14237,
+    "name": "past battle",
+    "path": "archive/es/plates/ASCN-14237.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 7,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "There is rocky terrain south.",
+      "east": "There is a steep cliff east.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The remains of the first assault on the castle lie scattered nearby."
+  },
+  {
+    "type": "ASCN",
+    "id": 6029,
+    "name": "pen",
+    "path": "archive/es/plates/ASCN-6029.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 7,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "There is rocky terrain south.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A large cage bakes in the desert sun."
+  },
+  {
+    "type": "ASCN",
+    "id": 23935,
+    "name": "ram",
+    "path": "archive/es/plates/ASCN-23935.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 7,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": "There is rough terrain west."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The castle is far to the north, a vast desert lies to the south. The battle field lies to the east."
+  },
+  {
+    "type": "ASCN",
+    "id": 29467,
+    "name": "lobby",
+    "path": "archive/es/plates/ASCN-29467.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 6,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "The door is closed.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Stairs lead up to the east. There is a door north and a passage south."
+  },
+  {
+    "type": "ASCN",
+    "id": 15246,
+    "name": "barracks",
+    "path": "archive/es/plates/ASCN-15246.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 7,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Row after row of bunk beds line the walls. There is an exit west."
+  },
+  {
+    "type": "ASCN",
+    "id": 23160,
+    "name": "bunker",
+    "path": "archive/es/plates/ASCN-23160.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 6,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "There are rocks north.",
+      "south": "There are rocks south.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The entrance to the Hurk command post lies beneath the western cliff. The castle road runs north-south, there are signs of activity east."
+  },
+  {
+    "type": "ASCN",
+    "id": 23064,
+    "name": "catapult",
+    "path": "archive/es/plates/ASCN-23064.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 6,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You stand in the center of a smoky and ravaged battle field. There appear to be paths in all directions."
+  },
+  {
+    "type": "ASCN",
+    "id": 31748,
+    "name": "strategy",
+    "path": "archive/es/plates/ASCN-31748.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 5,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Large charts on the wall detail the Hurks' advances. There is an exit west."
+  },
+  {
+    "type": "ASCN",
+    "id": 1092,
+    "name": "office",
+    "path": "archive/es/plates/ASCN-1092.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 5,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "The door is closed.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "This room contains some bunks and furniture. There is a door south and a room east."
+  },
+  {
+    "type": "ASCN",
+    "id": 17455,
+    "name": "pikes",
+    "path": "archive/es/plates/ASCN-17455.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 5,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "The pikes block you.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Large pikes protect a weak point in the Hurks' line. The kingdom of Callion lies behind the rampart wall to the north. War machines can be seen south."
+  },
+  {
+    "type": "ASCN",
+    "id": 27492,
+    "name": "main road",
+    "path": "archive/es/plates/ASCN-27492.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 5,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "The rampart doors are closed.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The main road runs north to the rampart doors and south into enemy territory."
+  },
+  {
+    "type": "ASCN",
+    "id": 9567,
+    "name": "center",
+    "path": "archive/es/plates/ASCN-9567.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 6,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The Hurks' command post can be seen to the west. The main road runs north-south. There are signs of activity east."
+  },
+  {
+    "type": "ASCN",
+    "id": 29561,
+    "name": "turn",
+    "path": "archive/es/plates/ASCN-29561.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 7,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a hallway north. To the east are some barracks."
+  },
+  {
+    "type": "ASCN",
+    "id": 4940,
+    "name": "weapons storage",
+    "path": "archive/es/plates/ASCN-4940.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 6,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "There is a steep cliff east.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A shady storage rack protects armaments from the desert sun."
+  },
+  {
+    "type": "ASCN",
+    "id": 26096,
+    "name": "cannon",
+    "path": "archive/es/plates/ASCN-26096.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 5,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "There is a ravine north.",
+      "south": "",
+      "east": "There is a steep cliff east.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A large cannon points at the rampart wall to the north. In front of the cannon is a deep ravine. There is an open area south."
+  },
+  {
+    "type": "ASCN",
+    "id": 26847,
+    "name": "sand bar",
+    "path": "archive/es/plates/ASCN-26847.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 18,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": "The sand bar blocks your way."
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "A sand bar wells up from the sea floor. The ocean extends in every direction."
+  },
+  {
+    "type": "ASCN",
+    "id": 23272,
+    "name": "control",
+    "path": "archive/es/plates/ASCN-23272.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 20,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "ping",
+    "soundFrequency": 15,
+    "soundType": 0,
+    "text": "The front panel is covered with many strange controls. The helm is east of here."
+  },
+  {
+    "type": "ASCN",
+    "id": 10472,
+    "name": "helm room",
+    "path": "archive/es/plates/ASCN-10472.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 20,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "ping",
+    "soundFrequency": 15,
+    "soundType": 0,
+    "text": "There is a ladder extending up to a hatch. The submarine extends west."
+  },
+  {
+    "type": "ASCN",
+    "id": 28593,
+    "name": "sub deck",
+    "path": "archive/es/plates/ASCN-28593.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 20,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "There is water north!",
+      "south": "There is water south!",
+      "east": "There is water east!",
+      "west": "There is water west!"
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The submarine's hatch is below."
+  },
+  {
+    "type": "ASCN",
+    "id": 18458,
+    "name": "Queen's Chamber",
+    "path": "archive/es/plates/ASCN-18458.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 18,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a door to the north and to the south."
+  },
+  {
+    "type": "ASCN",
+    "id": 31514,
+    "name": "queen",
+    "path": "archive/es/plates/ASCN-31514.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 17,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "The south door is bolted.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A royal throne room surrounds you. There is a large doorway to the west."
+  },
+  {
+    "type": "ASCN",
+    "id": 14057,
+    "name": "Neptune's Throne",
+    "path": "archive/es/plates/ASCN-14057.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 17,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The green and blue throne of an ancient king lies sunken in the sand. There are old paths south and west."
+  },
+  {
+    "type": "ASCN",
+    "id": 17872,
+    "name": "court",
+    "path": "archive/es/plates/ASCN-17872.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 17,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "This intersection gives rise to passages east, west, and south."
+  },
+  {
+    "type": "ASCN",
+    "id": 9709,
+    "name": "computer",
+    "path": "archive/es/plates/ASCN-9709.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 19,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A large central computer stands against the north wall. The hallway continues east and west."
+  },
+  {
+    "type": "ASCN",
+    "id": 26474,
+    "name": "greeting",
+    "path": "archive/es/plates/ASCN-26474.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 18,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": "The airlock is closed."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a doorway north and a heavy airlock west."
+  },
+  {
+    "type": "ASCN",
+    "id": 18468,
+    "name": "submarine",
+    "path": "archive/es/plates/ASCN-18468.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 19,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "An old submarine covered with barnacles and moss floats to the west. There is a large computer east."
+  },
+  {
+    "type": "ASCN",
+    "id": 22001,
+    "name": "murals",
+    "path": "archive/es/plates/ASCN-22001.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 18,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The walls of this tunnel are covered with faded murals that depict an ancient underwater civilization. There is a larger area north and a tunnel south."
+  },
+  {
+    "type": "ASCN",
+    "id": 32256,
+    "name": "palace",
+    "path": "archive/es/plates/ASCN-32256.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 17,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The ruins of a once magnificent palace shimmer in the blue water. The street extends east and south."
+  },
+  {
+    "type": "ASCN",
+    "id": 29361,
+    "name": "shell",
+    "path": "archive/es/plates/ASCN-29361.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 19,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "There is a rock wall north.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The channel runs up to the west and down to the east."
+  },
+  {
+    "type": "ASCN",
+    "id": 31555,
+    "name": "clear water",
+    "path": "archive/es/plates/ASCN-31555.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 17,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "Green light plays on the sea floor. There is a tall cliff east, the beach is north."
+  },
+  {
+    "type": "ASCN",
+    "id": 6048,
+    "name": "crawl tunnel",
+    "path": "archive/es/plates/ASCN-6048.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 20,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "A low tunnel runs east-west."
+  },
+  {
+    "type": "ASCN",
+    "id": 7083,
+    "name": "aft",
+    "path": "archive/es/plates/ASCN-7083.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 20,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The southern part of the galleon is almost buried in deep sand."
+  },
+  {
+    "type": "ASCN",
+    "id": 23449,
+    "name": "seaweed",
+    "path": "archive/es/plates/ASCN-23449.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 18,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "Large underwater plants wave in the gentle ocean current. A steep cliff blocks the east."
+  },
+  {
+    "type": "ASCN",
+    "id": 15266,
+    "name": "galleon",
+    "path": "archive/es/plates/ASCN-15266.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 19,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "A shipwreck shimmers in the murky water to the west."
+  },
+  {
+    "type": "ASCN",
+    "id": 23229,
+    "name": "store room",
+    "path": "archive/es/plates/ASCN-23229.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 20,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The ship's store room tilts down to the south. The rest of the galleon is north. There is a large chest here."
+  },
+  {
+    "type": "ASCN",
+    "id": 2352,
+    "name": "bend",
+    "path": "archive/es/plates/ASCN-2352.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 19,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "A narrow rock channel bends down to the south and leads up to the west."
+  },
+  {
+    "type": "ASCN",
+    "id": 17595,
+    "name": "wheel",
+    "path": "archive/es/plates/ASCN-17595.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 19,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The wheel of this galleon has been untouched since an ancient mariner lost the ship on a coral reef below.\nWide open sea lies east, the ship extends north and south."
+  },
+  {
+    "type": "ASCN",
+    "id": 7747,
+    "name": "grate",
+    "path": "archive/es/plates/ASCN-7747.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 20,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "There is a larger area east of here."
+  },
+  {
+    "type": "ASCN",
+    "id": 290,
+    "name": "sea room",
+    "path": "archive/es/plates/ASCN-290.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 20,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The tunnel continues east and west."
+  },
+  {
+    "type": "ASCN",
+    "id": 8642,
+    "name": "deep",
+    "path": "archive/es/plates/ASCN-8642.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 18,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The light barely filters down from above. The sea extends in all directions."
+  },
+  {
+    "type": "ASCN",
+    "id": 20431,
+    "name": "deck",
+    "path": "archive/es/plates/ASCN-20431.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 18,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The ship extends to the north and south. There is a cargo bay below."
+  },
+  {
+    "type": "ASCN",
+    "id": 30379,
+    "name": "cannon",
+    "path": "archive/es/plates/ASCN-30379.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 19,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "A rusty cannon encrusted with coral points to the west. The hull continues north-south."
+  },
+  {
+    "type": "ASCN",
+    "id": 25538,
+    "name": "lair",
+    "path": "archive/es/plates/ASCN-25538.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 20,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The tunnel ends in a large round room. There is an exit east."
+  },
+  {
+    "type": "ASCN",
+    "id": 6364,
+    "name": "hold",
+    "path": "archive/es/plates/ASCN-6364.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 18,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The hull runs north-south. Light glimmers from above."
+  },
+  {
+    "type": "ASCN",
+    "id": 22673,
+    "name": "closet",
+    "path": "archive/es/plates/ASCN-22673.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 16,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You are in a closet that smells of mothballs. There is a door east."
+  },
+  {
+    "type": "ASCN",
+    "id": 640,
+    "name": "cabin",
+    "path": "archive/es/plates/ASCN-640.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 17,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "You are in a once magnificent cabin that probably belonged to a captain. The exit is south."
+  },
+  {
+    "type": "ASCN",
+    "id": 24601,
+    "name": "coral reef",
+    "path": "archive/es/plates/ASCN-24601.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 17,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": "The coral blocks movement west."
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "A multi-colored coral reef forms a patchwork on the sea floor. The ocean gets shallow to the north and deeper to the south and east."
+  },
+  {
+    "type": "ASCN",
+    "id": 13946,
+    "name": "dunes",
+    "path": "archive/es/plates/ASCN-13946.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 15,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 12,
+    "soundType": 0,
+    "text": "A shack is visible to the west, a salty breeze blows from the quiet sea to the south."
+  },
+  {
+    "type": "ASCN",
+    "id": 1776,
+    "name": "meager room",
+    "path": "archive/es/plates/ASCN-1776.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 19,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The Queen's Chamber is north, there is a room west.\nYou find a strange computer here. The screen glows with bright colors."
+  },
+  {
+    "type": "ASCN",
+    "id": 9514,
+    "name": "airlock",
+    "path": "archive/es/plates/ASCN-9514.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 18,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The airlock is closed.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a ladder leading up. A large crank is on the north wall. There is an airlock east."
+  },
+  {
+    "type": "ASCN",
+    "id": 12464,
+    "name": "bow",
+    "path": "archive/es/plates/ASCN-12464.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 17,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The bow of the ship is covered with moss and slime. "
+  },
+  {
+    "type": "ASCN",
+    "id": 14688,
+    "name": "salty bar",
+    "path": "archive/es/plates/ASCN-14688.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 315,
+    "worldX": 3,
+    "worldY": 15,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": "The doors are closed."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A ramshackle tavern lies to the west. There is a dock south."
+  },
+  {
+    "type": "ASCN",
+    "id": 10573,
+    "name": "gambling",
+    "path": "archive/es/plates/ASCN-10573.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 16,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": "The closet is closed."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A large table is in the center of the room. There is a closet west, the bar is north."
+  },
+  {
+    "type": "ASCN",
+    "id": 21831,
+    "name": "pool table",
+    "path": "archive/es/plates/ASCN-21831.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 15,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "There is a wall.",
+      "south": "There is a wall.",
+      "east": "",
+      "west": "There is a wall."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A dusty pool table sits in the corner of the room. There is a hall east."
+  },
+  {
+    "type": "ASCN",
+    "id": 13371,
+    "name": "drinks",
+    "path": "archive/es/plates/ASCN-13371.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 15,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There are pool tables west and a smaller room south. The exit is east."
+  },
+  {
+    "type": "ASCN",
+    "id": 9841,
+    "name": "hook",
+    "path": "archive/es/plates/ASCN-9841.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 20,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The rock path runs up to the north and down to the west."
+  },
+  {
+    "type": "ASCN",
+    "id": 15787,
+    "name": "dock",
+    "path": "archive/es/plates/ASCN-15787.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 16,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A rickety dock extends over the sea. There is a tavern north."
+  },
+  {
+    "type": "ASCN",
+    "id": 6785,
+    "name": "seaside",
+    "path": "archive/es/plates/ASCN-6785.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 16,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You are walking along an east-west beach. A dock can be seen to the west."
+  },
+  {
+    "type": "ASCN",
+    "id": 7820,
+    "name": "hatch",
+    "path": "archive/es/plates/ASCN-7820.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 18,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "There is a cliff south.",
+      "east": "There is a cliff east.",
+      "west": "There is a cliff west."
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "A small hatch is nestled in the sea floor. There is a larger area north."
+  },
+  {
+    "type": "ASCN",
+    "id": 15901,
+    "name": "view",
+    "path": "archive/es/plates/ASCN-15901.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 17,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Large clear panels span the west wall of the room. There is a hallway east."
+  },
+  {
+    "type": "ASCN",
+    "id": 23679,
+    "name": "south sea",
+    "path": "archive/es/plates/ASCN-23679.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 19,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "Sharp coral formations line the south wall of the ocean. The sea extends north, east, and west."
+  },
+  {
+    "type": "ASCN",
+    "id": 1193,
+    "name": "sea cliff",
+    "path": "archive/es/plates/ASCN-1193.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 15,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "There are cliffs east.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Tall cliffs block the north and east. The roar of the ocean can be heard south. There is a tunnel in the north wall."
+  },
+  {
+    "type": "ASCN",
+    "id": 20301,
+    "name": "silicon beach",
+    "path": "archive/es/plates/ASCN-20301.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 16,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "There are cliffs east.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A crystaline beach of unequaled beauty stretches to the west. There are tall cliffs east."
+  },
+  {
+    "type": "ASCN",
+    "id": 27201,
+    "name": "trench",
+    "path": "archive/es/plates/ASCN-27201.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 19,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "A deep trench cuts down into the cliff wall to the east. The sea floor slopes up to the north and west."
+  },
+  {
+    "type": "ASCN",
+    "id": 15776,
+    "name": "tidewater",
+    "path": "archive/es/plates/ASCN-15776.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 17,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "bubbles",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "The ocean floor slants down to the south. The beach is north."
+  },
+  {
+    "type": "ASCN",
+    "id": 4896,
+    "name": "twisty trail",
+    "path": "archive/es/plates/ASCN-4896.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 16,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The trail runs east up the canyon wall and down to the north."
+  },
+  {
+    "type": "ASCN",
+    "id": 24035,
+    "name": "nest",
+    "path": "archive/es/plates/ASCN-24035.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 16,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A large nest overlooks the misty valley. There is a passage into the rocks east."
+  },
+  {
+    "type": "ASCN",
+    "id": 26180,
+    "name": "keeper",
+    "path": "archive/es/plates/ASCN-26180.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 16,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The cage is closed.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a cage built into the east wall and a passage west."
+  },
+  {
+    "type": "ASCN",
+    "id": 21025,
+    "name": "cage",
+    "path": "archive/es/plates/ASCN-21025.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 16,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The door is closed.",
+      "west": "The bars are closed."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You are in a long filthy rock corridor. There is a door east."
+  },
+  {
+    "type": "ASCN",
+    "id": 24275,
+    "name": "arena",
+    "path": "archive/es/plates/ASCN-24275.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 16,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": "The door is locked."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is no exit except a door on the west wall."
+  },
+  {
+    "type": "ASCN",
+    "id": 12242,
+    "name": "fire room",
+    "path": "archive/es/plates/ASCN-12242.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 15,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A fire smokes in the center of the room. The mouth of the cave is west, there is another room north."
+  },
+  {
+    "type": "ASCN",
+    "id": 10525,
+    "name": "cave painting",
+    "path": "archive/es/plates/ASCN-10525.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 14,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Charcoal paintings line the north wall of the cave."
+  },
+  {
+    "type": "ASCN",
+    "id": 22874,
+    "name": "ferns",
+    "path": "archive/es/plates/ASCN-22874.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 15,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "loon",
+    "soundFrequency": 6,
+    "soundType": 1,
+    "text": "The path runs east-west along the canyon wall, tall trees lie north."
+  },
+  {
+    "type": "ASCN",
+    "id": 964,
+    "name": "alcove",
+    "path": "archive/es/plates/ASCN-964.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 15,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You come to a small alcove in the south wall of the canyon. "
+  },
+  {
+    "type": "ASCN",
+    "id": 3521,
+    "name": "cliff road",
+    "path": "archive/es/plates/ASCN-3521.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 15,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The trail climbs to the south and falls to the north and east. A smaller trail branches to the west."
+  },
+  {
+    "type": "ASCN",
+    "id": 25936,
+    "name": "slough",
+    "path": "archive/es/plates/ASCN-25936.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 14,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The ground is higher to the south."
+  },
+  {
+    "type": "ASCN",
+    "id": 2577,
+    "name": "bog",
+    "path": "archive/es/plates/ASCN-2577.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 14,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A stinky bog surrounds you. Tall trees can be seen to the north."
+  },
+  {
+    "type": "ASCN",
+    "id": 9603,
+    "name": "port",
+    "path": "archive/es/plates/ASCN-9603.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 13,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "Mud and brush bar the way.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Redwoods thrust to the sky. "
+  },
+  {
+    "type": "ASCN",
+    "id": 4980,
+    "name": "gulley",
+    "path": "archive/es/plates/ASCN-4980.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 14,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The rocks are impassible.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "High rock walls line the path."
+  },
+  {
+    "type": "ASCN",
+    "id": 14969,
+    "name": "large cave",
+    "path": "archive/es/plates/ASCN-14969.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 15,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a large cave in the east side of the canyon wall."
+  },
+  {
+    "type": "ASCN",
+    "id": 12955,
+    "name": "whirlpool",
+    "path": "archive/es/plates/ASCN-12955.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 13,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The water slows considerably. There is a large whirlpool to the south. The stream runs from the north and turns west."
+  },
+  {
+    "type": "ASCN",
+    "id": 5878,
+    "name": "mellow pond",
+    "path": "archive/es/plates/ASCN-5878.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 13,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "There is a cliff north.",
+      "south": "There is a rock wall south.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "loon",
+    "soundFrequency": 10,
+    "soundType": 1,
+    "text": "Tall cliffs rise to the north, there is a rocky wall south. The stream runs east-west."
+  },
+  {
+    "type": "ASCN",
+    "id": 4315,
+    "name": "stagnant pool",
+    "path": "archive/es/plates/ASCN-4315.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 13,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": "There is shallow water and mud west."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The water is almost still. To the west is an inviting river bank. A large pond is east of here. There are tall cliffs north."
+  },
+  {
+    "type": "ASCN",
+    "id": 25694,
+    "name": "swamp",
+    "path": "archive/es/plates/ASCN-25694.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 14,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "cricket",
+    "soundFrequency": 20,
+    "soundType": 1,
+    "text": "The ground gets wetter to the north. There are large rocks east and vegetation south."
+  },
+  {
+    "type": "ASCN",
+    "id": 24338,
+    "name": "marsh",
+    "path": "archive/es/plates/ASCN-24338.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 13,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You are in a hidden valley with high canyon walls. A humid marsh extends to the south."
+  },
+  {
+    "type": "ASCN",
+    "id": 7990,
+    "name": "high altar",
+    "path": "archive/es/plates/ASCN-7990.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 12,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Two massive granite columns support the lofty ceiling. There is a door to the east."
+  },
+  {
+    "type": "ASCN",
+    "id": 22733,
+    "name": "web",
+    "path": "archive/es/plates/ASCN-22733.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 12,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a door west and a small tunnel north."
+  },
+  {
+    "type": "ASCN",
+    "id": 20189,
+    "name": "squasher",
+    "path": "archive/es/plates/ASCN-20189.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 12,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": "The door is locked!"
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a door on the west wall."
+  },
+  {
+    "type": "ASCN",
+    "id": 7039,
+    "name": "spikes",
+    "path": "archive/es/plates/ASCN-7039.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 313,
+    "worldX": 9,
+    "worldY": 12,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a door on the west wall."
+  },
+  {
+    "type": "ASCN",
+    "id": 14979,
+    "name": "shallows",
+    "path": "archive/es/plates/ASCN-14979.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 12,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "loon",
+    "soundFrequency": 10,
+    "soundType": 1,
+    "text": "The water runs from north to south between narrow river banks. A tall cliff looms to the west. The ferns and trees to the east are unusually large."
+  },
+  {
+    "type": "ASCN",
+    "id": 5112,
+    "name": "rapids",
+    "path": "archive/es/plates/ASCN-5112.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 11,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "Forget it. You'll be lucky to avoid rocks.",
+      "west": "The current is too swift."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "White water churns to either side, the stream roars southward. Large insects buzz through the air."
+  },
+  {
+    "type": "ASCN",
+    "id": 25655,
+    "name": "ball",
+    "path": "archive/es/plates/ASCN-25655.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 11,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There are entrances to the north and south."
+  },
+  {
+    "type": "ASCN",
+    "id": 17730,
+    "name": "dead end",
+    "path": "archive/es/plates/ASCN-17730.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 11,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "This alcove looks like the lair of a large insect. Strange designs cover the walls."
+  },
+  {
+    "type": "ASCN",
+    "id": 32726,
+    "name": "sand room",
+    "path": "archive/es/plates/ASCN-32726.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 11,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "There is a wall north.",
+      "south": "",
+      "east": "",
+      "west": "The door is locked!"
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a hole in the ceiling. A large button above the door glows with red light."
+  },
+  {
+    "type": "ASCN",
+    "id": 27025,
+    "name": "priest's room",
+    "path": "archive/es/plates/ASCN-27025.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 11,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The door is closed.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There are two large candles, an altar, and a door to the east."
+  },
+  {
+    "type": "ASCN",
+    "id": 18278,
+    "name": "temple stairs",
+    "path": "archive/es/plates/ASCN-18278.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 10,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Stairs climb to a small room at the summit."
+  },
+  {
+    "type": "ASCN",
+    "id": 3122,
+    "name": "dogleg",
+    "path": "archive/es/plates/ASCN-3122.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 10,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "The door is locked!",
+      "east": "The door is closed.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a door to the east."
+  },
+  {
+    "type": "ASCN",
+    "id": 21162,
+    "name": "slide floor",
+    "path": "archive/es/plates/ASCN-21162.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 10,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": "The door is closed."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a door to the east."
+  },
+  {
+    "type": "ASCN",
+    "id": 9691,
+    "name": "jumping door",
+    "path": "archive/es/plates/ASCN-9691.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 10,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is an entrance on every wall."
+  },
+  {
+    "type": "ASCN",
+    "id": 30680,
+    "name": "fast water",
+    "path": "archive/es/plates/ASCN-30680.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 10,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The bank is covered with brambles.",
+      "west": "The bank is obscured by vines."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The water pulls quickly to the south. Large stones are visible upstream to the north. The air is hot and misty."
+  },
+  {
+    "type": "ASCN",
+    "id": 10456,
+    "name": "quiet water",
+    "path": "archive/es/plates/ASCN-10456.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 8,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The bank is steep and rocky.",
+      "west": "There is no good place to land."
+    },
+    "sound": "loon",
+    "soundFrequency": 10,
+    "soundType": 1,
+    "text": "The stream continues north-south."
+  },
+  {
+    "type": "ASCN",
+    "id": 17473,
+    "name": "pot",
+    "path": "archive/es/plates/ASCN-17473.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 8,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "drum",
+    "soundFrequency": 40,
+    "soundType": 0,
+    "text": "There is a large pot and some wood here. There is a stream to the east."
+  },
+  {
+    "type": "ASCN",
+    "id": 25584,
+    "name": "idols",
+    "path": "archive/es/plates/ASCN-25584.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 7,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "drum",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "Silent idols stand to either side of the east-west trail. "
+  },
+  {
+    "type": "ASCN",
+    "id": 20177,
+    "name": "vines",
+    "path": "archive/es/plates/ASCN-20177.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 9,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "drum",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "Larger trees fill the center of the jungle. "
+  },
+  {
+    "type": "ASCN",
+    "id": 16874,
+    "name": "temple vista",
+    "path": "archive/es/plates/ASCN-16874.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 9,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "drum",
+    "soundFrequency": 5,
+    "soundType": 0,
+    "text": "To the south lies a huge Mayan Temple."
+  },
+  {
+    "type": "ASCN",
+    "id": 30474,
+    "name": "hut",
+    "path": "archive/es/plates/ASCN-30474.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 9,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "The jungle bars the north.",
+      "south": "Rocks block the south.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "drum",
+    "soundFrequency": 20,
+    "soundType": 0,
+    "text": "To the east is a large grass hut."
+  },
+  {
+    "type": "ASCN",
+    "id": 26193,
+    "name": "rocky water",
+    "path": "archive/es/plates/ASCN-26193.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 9,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "There is no good place to land.",
+      "west": "There is no place to land."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The stream picks up speed to the south, quieter water lies north. Large rocks line the banks."
+  },
+  {
+    "type": "ASCN",
+    "id": 3617,
+    "name": "piranhas",
+    "path": "archive/es/plates/ASCN-3617.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 7,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "There is no place to land.",
+      "west": "The bank is too rocky."
+    },
+    "sound": "loon",
+    "soundFrequency": 6,
+    "soundType": 1,
+    "text": "The stream flows south. There is an inviting bank north. You notice many piranhas darting about below."
+  },
+  {
+    "type": "ASCN",
+    "id": 20168,
+    "name": "magic hut",
+    "path": "archive/es/plates/ASCN-20168.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 9,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "There is a wall north.",
+      "south": "There is a wall south.",
+      "east": "There is a wall east.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You are inside a grass hut. There are two large urns here."
+  },
+  {
+    "type": "ASCN",
+    "id": 28370,
+    "name": "jungle path",
+    "path": "archive/es/plates/ASCN-28370.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 8,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "drum",
+    "soundFrequency": 5,
+    "soundType": 0,
+    "text": "The path runs east-west. "
+  },
+  {
+    "type": "ASCN",
+    "id": 12217,
+    "name": "riverside",
+    "path": "archive/es/plates/ASCN-12217.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 7,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The water is east.",
+      "west": ""
+    },
+    "sound": "drum",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "A peaceful stream runs by to the east."
+  },
+  {
+    "type": "ASCN",
+    "id": 19497,
+    "name": "tree path",
+    "path": "archive/es/plates/ASCN-19497.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 8,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "drum",
+    "soundFrequency": 5,
+    "soundType": 0,
+    "text": "You are walking along a north-south path. Another trail branches east."
+  },
+  {
+    "type": "ASCN",
+    "id": 9387,
+    "name": "jungle clearing",
+    "path": "archive/es/plates/ASCN-9387.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 7,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "drum",
+    "soundFrequency": 5,
+    "soundType": 0,
+    "text": "The jungle surrounds a small clearing. There is a tall cliff north."
+  },
+  {
+    "type": "ASCN",
+    "id": 4957,
+    "name": "slip",
+    "path": "archive/es/plates/ASCN-4957.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 8,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "drum",
+    "soundFrequency": 10,
+    "soundType": 0,
+    "text": "You are in a lower, swampy area of the jungle."
+  },
+  {
+    "type": "ASCN",
+    "id": 27293,
+    "name": "corner",
+    "path": "archive/es/plates/ASCN-27293.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 7,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "song bird",
+    "soundFrequency": 6,
+    "soundType": 1,
+    "text": "You are surrounded by a misty jungle. There is a door north."
+  },
+  {
+    "type": "ASCN",
+    "id": 28995,
+    "name": "lab",
+    "path": "archive/es/plates/ASCN-28995.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 5,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "There is a wall there.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "This room has recently been changed into an alchemist's lab. Passages lead east, west, and south."
+  },
+  {
+    "type": "ASCN",
+    "id": 17888,
+    "name": "throne room",
+    "path": "archive/es/plates/ASCN-17888.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 3,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "The throne is south.",
+      "east": "There is a wall east.",
+      "west": "There is a wall west."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A massive obsidian throne stands against the south wall."
+  },
+  {
+    "type": "ASCN",
+    "id": 12795,
+    "name": "well tunnel",
+    "path": "archive/es/plates/ASCN-12795.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 3,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "The door is closed.",
+      "south": "There is a rock wall.",
+      "east": "",
+      "west": "There is a rock wall."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "North is a heavy oaken door, the path winds to the east."
+  },
+  {
+    "type": "ASCN",
+    "id": 1186,
+    "name": "cavern pool",
+    "path": "archive/es/plates/ASCN-1186.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 3,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "There is a rock wall.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "drip",
+    "soundFrequency": 10,
+    "soundType": 1,
+    "text": "A shaft of light from above breaks the darkness. A tunnel runs east-west and dark stairs lead down to the south."
+  },
+  {
+    "type": "ASCN",
+    "id": 25054,
+    "name": "gate",
+    "path": "archive/es/plates/ASCN-25054.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 3,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A gateway of ancient construction spans the east-west tunnel. There are strange inscriptions on the gate."
+  },
+  {
+    "type": "ASCN",
+    "id": 4684,
+    "name": "boiling pool",
+    "path": "archive/es/plates/ASCN-4684.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 4,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "The boiling pool blocks southward movement.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You stand on the north side of a boiling pool. A narrow tunnel winds eastward."
+  },
+  {
+    "type": "ASCN",
+    "id": 4874,
+    "name": "landing",
+    "path": "archive/es/plates/ASCN-4874.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 4,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "drip",
+    "soundFrequency": 5,
+    "soundType": 1,
+    "text": "Dark stone steps lead up to the north. A tunnel extends from east to west."
+  },
+  {
+    "type": "ASCN",
+    "id": 16121,
+    "name": "lonely hall",
+    "path": "archive/es/plates/ASCN-16121.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 4,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The hallway runs east-west."
+  },
+  {
+    "type": "ASCN",
+    "id": 20791,
+    "name": "mirror room",
+    "path": "archive/es/plates/ASCN-20791.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 4,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The mirror cannot be moved.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The hallway is cut from smooth stone."
+  },
+  {
+    "type": "ASCN",
+    "id": 5196,
+    "name": "music room",
+    "path": "archive/es/plates/ASCN-5196.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 4,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Instruments and other musical equipment lie scattered about. A hallway leads south, there is a small passage west."
+  },
+  {
+    "type": "ASCN",
+    "id": 1725,
+    "name": "back room",
+    "path": "archive/es/plates/ASCN-1725.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 3,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "This room contains a rough straw bed."
+  },
+  {
+    "type": "ASCN",
+    "id": 27610,
+    "name": "troll's lair",
+    "path": "archive/es/plates/ASCN-27610.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 3,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Judging from the smell of things you are in a Troll's den. The cave gets deeper to the west, there is an exit to the north."
+  },
+  {
+    "type": "ASCN",
+    "id": 10919,
+    "name": "post",
+    "path": "archive/es/plates/ASCN-10919.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 4,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "The wall is too high.",
+      "east": "The mountainside is too steep.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The camp lies west and a road climbs north."
+  },
+  {
+    "type": "ASCN",
+    "id": 26748,
+    "name": "camp",
+    "path": "archive/es/plates/ASCN-26748.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 4,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The ramparts are to the west and a path climbs east."
+  },
+  {
+    "type": "ASCN",
+    "id": 12197,
+    "name": "rampart",
+    "path": "archive/es/plates/ASCN-12197.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 4,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Two huge rampart doors lead south into the desert battlefield. The outer defenses continue east and west. "
+  },
+  {
+    "type": "ASCN",
+    "id": 2464,
+    "name": "spiral stairs",
+    "path": "archive/es/plates/ASCN-2464.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 4,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "Stairs only lead up.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Steps lead up to the top of the battlements. There is a path on the east wall."
+  },
+  {
+    "type": "ASCN",
+    "id": 27740,
+    "name": "desert vista",
+    "path": "archive/es/plates/ASCN-27740.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 4,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "The wall is too high.",
+      "east": "The wall ends to the east.",
+      "west": "The wall does not go farther west."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Far below you can see thousands of Hurk soldiers moving huge war machines into place.  The ocean sparkles to the south. Steps lead down."
+  },
+  {
+    "type": "ASCN",
+    "id": 10850,
+    "name": "cave entrance",
+    "path": "archive/es/plates/ASCN-10850.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 2,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "Mountains block your way.",
+      "west": ""
+    },
+    "sound": "loon",
+    "soundFrequency": 20,
+    "soundType": 1,
+    "text": "The forest surrounds you. A small cave opens in the cliff wall to the south."
+  },
+  {
+    "type": "ASCN",
+    "id": 20359,
+    "name": "forest clearing",
+    "path": "archive/es/plates/ASCN-20359.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 2,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "Thorns block the south.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "loon",
+    "soundFrequency": 20,
+    "soundType": 1,
+    "text": "You arrive at a peaceful forest clearing."
+  },
+  {
+    "type": "ASCN",
+    "id": 32624,
+    "name": "mountain spring",
+    "path": "archive/es/plates/ASCN-32624.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 1,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "Mountains block your way.",
+      "south": "",
+      "east": "Mountains block your way.",
+      "west": ""
+    },
+    "sound": "loon",
+    "soundFrequency": 20,
+    "soundType": 1,
+    "text": "A mountain spring bubbles from the rocky ground and runs south. There is forest to the west and south."
+  },
+  {
+    "type": "ASCN",
+    "id": 14279,
+    "name": "beaten path",
+    "path": "archive/es/plates/ASCN-14279.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 2,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "Thorns block the south.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You are on a well worn path that runs from east to west."
+  },
+  {
+    "type": "ASCN",
+    "id": 4658,
+    "name": "dark woods",
+    "path": "archive/es/plates/ASCN-4658.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 1,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "Mountains block the way.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "cricket",
+    "soundFrequency": 40,
+    "soundType": 1,
+    "text": "The forest here is overcast and damp. Shadows lurk everywhere."
+  },
+  {
+    "type": "ASCN",
+    "id": 14435,
+    "name": "grave",
+    "path": "archive/es/plates/ASCN-14435.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 1,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "Mountains block your way.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "cricket",
+    "soundFrequency": 40,
+    "soundType": 1,
+    "text": "A lonely grave marks the roadside."
+  },
+  {
+    "type": "ASCN",
+    "id": 7132,
+    "name": "well",
+    "path": "archive/es/plates/ASCN-7132.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 2,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "The terrain is too rugged.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A well sits by the side of the path."
+  },
+  {
+    "type": "ASCN",
+    "id": 327,
+    "name": "castle road",
+    "path": "archive/es/plates/ASCN-327.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 2,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "The terrain is too rugged.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The castle road stretches from east to west. A sign says there is a spring two miles away."
+  },
+  {
+    "type": "ASCN",
+    "id": 19597,
+    "name": "valley vista",
+    "path": "archive/es/plates/ASCN-19597.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 1,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "The cliffs are too steep.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "loon",
+    "soundFrequency": 20,
+    "soundType": 1,
+    "text": "The path rises to the west and falls east. A valley of unparalled beauty lies before you. The sparkle of a river can be seen east through the woods. Steep cliffs rise to the south. "
+  },
+  {
+    "type": "ASCN",
+    "id": 9497,
+    "name": "cliff side",
+    "path": "archive/es/plates/ASCN-9497.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 1,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "Mountains block your way.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You are walking along a steep mountain trail. The path runs east-west."
+  },
+  {
+    "type": "ASCN",
+    "id": 12321,
+    "name": "pedestal",
+    "path": "archive/es/plates/ASCN-12321.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 5,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "There is a boiling pool to the north.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a boiling pool north and a door east. There is a knob on the wall."
+  },
+  {
+    "type": "ASCN",
+    "id": 17639,
+    "name": "altar",
+    "path": "archive/es/plates/ASCN-17639.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 6,
+    "worldY": 6,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A beautiful altar has been cut from the rough stone of the cavern. There is a narrow tunnel leading south and a path east."
+  },
+  {
+    "type": "ASCN",
+    "id": 18391,
+    "name": "cavern",
+    "path": "archive/es/plates/ASCN-18391.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 7,
+    "worldY": 6,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "There is a rock wall south.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The path runs higher to the west and widens to the east. A room is to the north."
+  },
+  {
+    "type": "ASCN",
+    "id": 25308,
+    "name": "art",
+    "path": "archive/es/plates/ASCN-25308.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 5,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "This room once held many paintings. There are doorways east and west."
+  },
+  {
+    "type": "ASCN",
+    "id": 23813,
+    "name": "chasm view",
+    "path": "archive/es/plates/ASCN-23813.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 8,
+    "worldY": 6,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The path continues east to a deep canyon. There is a walkway west."
+  },
+  {
+    "type": "ASCN",
+    "id": 23147,
+    "name": "chasm",
+    "path": "archive/es/plates/ASCN-23147.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 6,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The first step is a doozey!",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You are standing on the west side of a deep chasm. Across the chasm you can see a tunnel."
+  },
+  {
+    "type": "ASCN",
+    "id": 21083,
+    "name": "great hall",
+    "path": "archive/es/plates/ASCN-21083.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 9,
+    "worldY": 5,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "An ancient hall of Elven make lies before you. There are exits east and west."
+  },
+  {
+    "type": "ASCN",
+    "id": 20598,
+    "name": "elven throne",
+    "path": "archive/es/plates/ASCN-20598.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 6,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You stand in the spacious throne room of the Elven King."
+  },
+  {
+    "type": "ASCN",
+    "id": 28106,
+    "name": "fountain",
+    "path": "archive/es/plates/ASCN-28106.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 10,
+    "worldY": 5,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "An ancient fountain still dribbles water in the center of the room. There is a smaller room north and a doorway west."
+  },
+  {
+    "type": "ASCN",
+    "id": 29926,
+    "name": "south road",
+    "path": "archive/es/plates/ASCN-29926.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 3,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The gravel road winds down to the south, the castle is northward. Across the desert is a large volcano."
+  },
+  {
+    "type": "ASCN",
+    "id": 11124,
+    "name": "upward path",
+    "path": "archive/es/plates/ASCN-11124.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 1,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "Mountains block your way.",
+      "south": "",
+      "east": "",
+      "west": "The castle cliff is too steep."
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The path climbs to the east and falls to the south."
+  },
+  {
+    "type": "ASCN",
+    "id": 21798,
+    "name": "crossroads",
+    "path": "archive/es/plates/ASCN-21798.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 5,
+    "worldY": 2,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You are at a crossroad. A path rises to the north, the castle road winds to the east and the outer defenses are south."
+  },
+  {
+    "type": "ASCN",
+    "id": 12615,
+    "name": "dungeon",
+    "path": "archive/es/plates/ASCN-12615.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 3,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "The door is closed.",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There are prison cells down the hallway to the east. There is a door south and an armory west."
+  },
+  {
+    "type": "ASCN",
+    "id": 7395,
+    "name": "bridge room",
+    "path": "archive/es/plates/ASCN-7395.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 2,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "The drawbridge is closed.",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a courtyard to the west and a moat to the east. The drawbridge crank is on the south wall. "
+  },
+  {
+    "type": "ASCN",
+    "id": 18366,
+    "name": "Finale",
+    "path": "archive/es/plates/ASCN-18366.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 1,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Elron quickly takes the four scepters and holds them high overhead. As the aged wizard chants you can feel the ground shake and the winds howl."
+  },
+  {
+    "type": "ASCN",
+    "id": 8807,
+    "name": "banquet hall",
+    "path": "archive/es/plates/ASCN-8807.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 2,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "A large banquet hall lies before you. There are doors at the east and west ends of the hall, a small room is to the south."
+  },
+  {
+    "type": "ASCN",
+    "id": 10021,
+    "name": "courtyard",
+    "path": "archive/es/plates/ASCN-10021.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 2,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "loon",
+    "soundFrequency": 20,
+    "soundType": 1,
+    "text": "A stately courtyard lies before you. The Wizard's Sanctum is north. There is a bridge room east and a banquet hall west."
+  },
+  {
+    "type": "ASCN",
+    "id": 29408,
+    "name": "Wizard's Sanctum",
+    "path": "archive/es/plates/ASCN-29408.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 3,
+    "worldY": 1,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "The north wall is lined with books.",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "The room is filled with books, potions and spells. There is a small alcove to the west."
+  },
+  {
+    "type": "ASCN",
+    "id": 20357,
+    "name": "armory",
+    "path": "archive/es/plates/ASCN-20357.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 3,
+    "blocked": {
+      "north": false,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "\u0000",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "Empty racks stand against the south wall. There is a banquet hall north, steps lead down to the east."
+  },
+  {
+    "type": "ASCN",
+    "id": 9232,
+    "name": "cell",
+    "path": "archive/es/plates/ASCN-9232.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 4,
+    "worldY": 3,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": true,
+      "west": false
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "\u0000\u0000\u0000",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "There is a hallway west."
+  },
+  {
+    "type": "ASCN",
+    "id": 17568,
+    "name": "map room",
+    "path": "archive/es/plates/ASCN-17568.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 2,
+    "worldY": 1,
+    "blocked": {
+      "north": true,
+      "south": true,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "An ornate map is painted on the west wall of this small room. The sanctum is east."
+  },
+  {
+    "type": "ASCN",
+    "id": 21149,
+    "name": "quarters",
+    "path": "archive/es/plates/ASCN-21149.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 1,
+    "blocked": {
+      "north": true,
+      "south": false,
+      "east": true,
+      "west": true
+    },
+    "messages": {
+      "north": "There is a wall north. ",
+      "south": "",
+      "east": "There is a wall east.",
+      "west": "That window is three stories up!"
+    },
+    "sound": "\n\u0003\u00c4\u0000\u0000\u001e\u0000\u0000\u0006d\u0000(\u0000\u001e\u0001B\u0001\u201a\u0000\u0001\u02c7\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0003\u00e9\u0000",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "This room contains a simple wooden bed. There is a doorway south."
+  },
+  {
+    "type": "ASCN",
+    "id": 22844,
+    "name": "marble hall",
+    "path": "archive/es/plates/ASCN-22844.png",
+    "x": 0,
+    "y": 0,
+    "width": 338,
+    "height": 314,
+    "worldX": 1,
+    "worldY": 2,
+    "blocked": {
+      "north": false,
+      "south": false,
+      "east": false,
+      "west": true
+    },
+    "messages": {
+      "north": "",
+      "south": "",
+      "east": "",
+      "west": ""
+    },
+    "sound": "",
+    "soundFrequency": 0,
+    "soundType": 0,
+    "text": "You are walking along a polished marble hallway. The Throne Room is south, there is a walkway east, and a small bedroom north."
+  },
+  {
+    "type": "AOBJ",
+    "id": 22475,
+    "name": "can.1",
+    "path": "archive/es/plates/AOBJ-22475.png",
+    "x": 81,
+    "y": 84,
+    "width": 151,
+    "height": 228,
+    "initialLocation": "cannon"
+  },
+  {
+    "type": "AOBJ",
+    "id": 8826,
+    "name": "ice spell",
+    "path": "archive/es/plates/AOBJ-8826.png",
+    "x": 85,
+    "y": 246,
+    "width": 93,
+    "height": 50,
+    "initialLocation": "ghoul"
+  },
+  {
+    "type": "AOBJ",
+    "id": 21864,
+    "name": "lobb.2",
+    "path": "archive/es/plates/AOBJ-21864.png",
+    "x": 134,
+    "y": 98,
+    "width": 54,
+    "height": 93,
+    "initialLocation": "lobby"
+  },
+  {
+    "type": "AOBJ",
+    "id": 29543,
+    "name": "osir.1",
+    "path": "archive/es/plates/AOBJ-29543.png",
+    "x": 166,
+    "y": 42,
+    "width": 7,
+    "height": 7,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 1143,
+    "name": "bomb",
+    "path": "archive/es/plates/AOBJ-1143.png",
+    "x": 190,
+    "y": 223,
+    "width": 47,
+    "height": 70,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 23965,
+    "name": "cat.2",
+    "path": "archive/es/plates/AOBJ-23965.png",
+    "x": 80,
+    "y": 95,
+    "width": 160,
+    "height": 90,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 29527,
+    "name": "cat.1",
+    "path": "archive/es/plates/AOBJ-29527.png",
+    "x": 74,
+    "y": 78,
+    "width": 149,
+    "height": 149,
+    "initialLocation": "CATAPULT"
+  },
+  {
+    "type": "AOBJ",
+    "id": 6495,
+    "name": "ram.2",
+    "path": "archive/es/plates/AOBJ-6495.png",
+    "x": 59,
+    "y": 148,
+    "width": 265,
+    "height": 104,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 24181,
+    "name": "vest",
+    "path": "archive/es/plates/AOBJ-24181.png",
+    "x": 117,
+    "y": 217,
+    "width": 129,
+    "height": 79,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 12897,
+    "name": "battle helmet",
+    "path": "archive/es/plates/AOBJ-12897.png",
+    "x": 174,
+    "y": 232,
+    "width": 55,
+    "height": 53,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 24183,
+    "name": "rope",
+    "path": "archive/es/plates/AOBJ-24183.png",
+    "x": 97,
+    "y": 230,
+    "width": 106,
+    "height": 59,
+    "initialLocation": "office"
+  },
+  {
+    "type": "AOBJ",
+    "id": 30444,
+    "name": "top.1",
+    "path": "archive/es/plates/AOBJ-30444.png",
+    "x": 28,
+    "y": 140,
+    "width": 97,
+    "height": 81,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 3806,
+    "name": "lobb.1",
+    "path": "archive/es/plates/AOBJ-3806.png",
+    "x": 109,
+    "y": 87,
+    "width": 79,
+    "height": 119,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 27985,
+    "name": "phoenix.2",
+    "path": "archive/es/plates/AOBJ-27985.png",
+    "x": 54,
+    "y": 3,
+    "width": 231,
+    "height": 207,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 21135,
+    "name": "phoenix.1",
+    "path": "archive/es/plates/AOBJ-21135.png",
+    "x": 159,
+    "y": 47,
+    "width": 19,
+    "height": 10,
+    "initialLocation": "phoenix"
+  },
+  {
+    "type": "AOBJ",
+    "id": 18172,
+    "name": "gold lion",
+    "path": "archive/es/plates/AOBJ-18172.png",
+    "x": 81,
+    "y": 209,
+    "width": 133,
+    "height": 78,
+    "initialLocation": "treasury"
+  },
+  {
+    "type": "AOBJ",
+    "id": 22771,
+    "name": "death mask",
+    "path": "archive/es/plates/AOBJ-22771.png",
+    "x": 220,
+    "y": 149,
+    "width": 83,
+    "height": 97,
+    "initialLocation": "treasury"
+  },
+  {
+    "type": "AOBJ",
+    "id": 11133,
+    "name": "diamond",
+    "path": "archive/es/plates/AOBJ-11133.png",
+    "x": 165,
+    "y": 268,
+    "width": 21,
+    "height": 16,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 18497,
+    "name": "sep.1",
+    "path": "archive/es/plates/AOBJ-18497.png",
+    "x": 144,
+    "y": 109,
+    "width": 58,
+    "height": 116,
+    "initialLocation": "sepulchre"
+  },
+  {
+    "type": "AOBJ",
+    "id": 10771,
+    "name": "shrine.2",
+    "path": "archive/es/plates/AOBJ-10771.png",
+    "x": 144,
+    "y": 83,
+    "width": 55,
+    "height": 160,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 21164,
+    "name": "shrine.1",
+    "path": "archive/es/plates/AOBJ-21164.png",
+    "x": 132,
+    "y": 76,
+    "width": 82,
+    "height": 174,
+    "initialLocation": "SHRINE"
+  },
+  {
+    "type": "AOBJ",
+    "id": 23530,
+    "name": "pistol",
+    "path": "archive/es/plates/AOBJ-23530.png",
+    "x": 118,
+    "y": 226,
+    "width": 116,
+    "height": 63,
+    "initialLocation": "HURK TROOPER"
+  },
+  {
+    "type": "AOBJ",
+    "id": 24885,
+    "name": "scimitar",
+    "path": "archive/es/plates/AOBJ-24885.png",
+    "x": 163,
+    "y": 246,
+    "width": 128,
+    "height": 56,
+    "initialLocation": "ghoul"
+  },
+  {
+    "type": "AOBJ",
+    "id": 4500,
+    "name": "Fire Scepter",
+    "path": "archive/es/plates/AOBJ-4500.png",
+    "x": 156,
+    "y": 245,
+    "width": 95,
+    "height": 46,
+    "initialLocation": "FIRE DEMON"
+  },
+  {
+    "type": "AOBJ",
+    "id": 28995,
+    "name": "ram.1",
+    "path": "archive/es/plates/AOBJ-28995.png",
+    "x": 76,
+    "y": 65,
+    "width": 225,
+    "height": 182,
+    "initialLocation": "RAM"
+  },
+  {
+    "type": "AOBJ",
+    "id": 21386,
+    "name": "cure spell",
+    "path": "archive/es/plates/AOBJ-21386.png",
+    "x": 85,
+    "y": 246,
+    "width": 93,
+    "height": 50,
+    "initialLocation": "storage@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 12545,
+    "name": "sphinx.1",
+    "path": "archive/es/plates/AOBJ-12545.png",
+    "x": 128,
+    "y": 108,
+    "width": 90,
+    "height": 93,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 14499,
+    "name": "grenade",
+    "path": "archive/es/plates/AOBJ-14499.png",
+    "x": 156,
+    "y": 251,
+    "width": 66,
+    "height": 35,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 11828,
+    "name": "blaster",
+    "path": "archive/es/plates/AOBJ-11828.png",
+    "x": 67,
+    "y": 222,
+    "width": 139,
+    "height": 72,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 6436,
+    "name": "machine gun",
+    "path": "archive/es/plates/AOBJ-6436.png",
+    "x": 173,
+    "y": 230,
+    "width": 143,
+    "height": 62,
+    "initialLocation": "HURK SOLDIER"
+  },
+  {
+    "type": "AOBJ",
+    "id": 16192,
+    "name": "view.1",
+    "path": "archive/es/plates/AOBJ-16192.png",
+    "x": 70,
+    "y": 19,
+    "width": 200,
+    "height": 91,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 11543,
+    "name": "view.2",
+    "path": "archive/es/plates/AOBJ-11543.png",
+    "x": 70,
+    "y": 19,
+    "width": 200,
+    "height": 91,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 3992,
+    "name": "view.3",
+    "path": "archive/es/plates/AOBJ-3992.png",
+    "x": 70,
+    "y": 19,
+    "width": 200,
+    "height": 91,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 4051,
+    "name": "view.4",
+    "path": "archive/es/plates/AOBJ-4051.png",
+    "x": 70,
+    "y": 19,
+    "width": 200,
+    "height": 91,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 4876,
+    "name": "sub.l",
+    "path": "archive/es/plates/AOBJ-4876.png",
+    "x": 76,
+    "y": 174,
+    "width": 44,
+    "height": 14,
+    "initialLocation": "control"
+  },
+  {
+    "type": "AOBJ",
+    "id": 13165,
+    "name": "sub.g",
+    "path": "archive/es/plates/AOBJ-13165.png",
+    "x": 150,
+    "y": 174,
+    "width": 44,
+    "height": 14,
+    "initialLocation": "control"
+  },
+  {
+    "type": "AOBJ",
+    "id": 20759,
+    "name": "sub.r",
+    "path": "archive/es/plates/AOBJ-20759.png",
+    "x": 225,
+    "y": 174,
+    "width": 43,
+    "height": 14,
+    "initialLocation": "control"
+  },
+  {
+    "type": "AOBJ",
+    "id": 4879,
+    "name": "queen.2",
+    "path": "archive/es/plates/AOBJ-4879.png",
+    "x": 127,
+    "y": 85,
+    "width": 93,
+    "height": 118,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 3509,
+    "name": "queen.1",
+    "path": "archive/es/plates/AOBJ-3509.png",
+    "x": 287,
+    "y": 55,
+    "width": 46,
+    "height": 144,
+    "initialLocation": "queen"
+  },
+  {
+    "type": "AOBJ",
+    "id": 5563,
+    "name": "rob.1",
+    "path": "archive/es/plates/AOBJ-5563.png",
+    "x": 106,
+    "y": 20,
+    "width": 126,
+    "height": 189,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 15009,
+    "name": "stor.2",
+    "path": "archive/es/plates/AOBJ-15009.png",
+    "x": 127,
+    "y": 27,
+    "width": 106,
+    "height": 118,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 9812,
+    "name": "stor.1",
+    "path": "archive/es/plates/AOBJ-9812.png",
+    "x": 132,
+    "y": 119,
+    "width": 97,
+    "height": 44,
+    "initialLocation": "store room"
+  },
+  {
+    "type": "AOBJ",
+    "id": 25068,
+    "name": "airl.3",
+    "path": "archive/es/plates/AOBJ-25068.png",
+    "x": 264,
+    "y": 96,
+    "width": 33,
+    "height": 144,
+    "initialLocation": "airlock"
+  },
+  {
+    "type": "AOBJ",
+    "id": 1174,
+    "name": "airl.2",
+    "path": "archive/es/plates/AOBJ-1174.png",
+    "x": 195,
+    "y": 88,
+    "width": 109,
+    "height": 161,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 7301,
+    "name": "hatch.2",
+    "path": "archive/es/plates/AOBJ-7301.png",
+    "x": 114,
+    "y": 172,
+    "width": 112,
+    "height": 64,
+    "initialLocation": "HATCH"
+  },
+  {
+    "type": "AOBJ",
+    "id": 2984,
+    "name": "clos.2",
+    "path": "archive/es/plates/AOBJ-2984.png",
+    "x": 4,
+    "y": 52,
+    "width": 81,
+    "height": 121,
+    "initialLocation": "gambling"
+  },
+  {
+    "type": "AOBJ",
+    "id": 16830,
+    "name": "glass",
+    "path": "archive/es/plates/AOBJ-16830.png",
+    "x": 127,
+    "y": 262,
+    "width": 21,
+    "height": 27,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 22835,
+    "name": "drink.1",
+    "path": "archive/es/plates/AOBJ-22835.png",
+    "x": 173,
+    "y": 32,
+    "width": 115,
+    "height": 106,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 5809,
+    "name": "goblet",
+    "path": "archive/es/plates/AOBJ-5809.png",
+    "x": 205,
+    "y": 235,
+    "width": 29,
+    "height": 52,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 25536,
+    "name": "lair.1",
+    "path": "archive/es/plates/AOBJ-25536.png",
+    "x": 58,
+    "y": 39,
+    "width": 227,
+    "height": 179,
+    "initialLocation": "lair"
+  },
+  {
+    "type": "AOBJ",
+    "id": 25961,
+    "name": "trident",
+    "path": "archive/es/plates/AOBJ-25961.png",
+    "x": 83,
+    "y": 231,
+    "width": 188,
+    "height": 49,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 12960,
+    "name": "scyth",
+    "path": "archive/es/plates/AOBJ-12960.png",
+    "x": 165,
+    "y": 247,
+    "width": 134,
+    "height": 47,
+    "initialLocation": "skeleton"
+  },
+  {
+    "type": "AOBJ",
+    "id": 19566,
+    "name": "Water Scepter",
+    "path": "archive/es/plates/AOBJ-19566.png",
+    "x": 104,
+    "y": 249,
+    "width": 136,
+    "height": 37,
+    "initialLocation": "Queen's Chamber"
+  },
+  {
+    "type": "AOBJ",
+    "id": 17391,
+    "name": "bar.2",
+    "path": "archive/es/plates/AOBJ-17391.png",
+    "x": 149,
+    "y": 92,
+    "width": 71,
+    "height": 96,
+    "initialLocation": "salty bar"
+  },
+  {
+    "type": "AOBJ",
+    "id": 4091,
+    "name": "iron key",
+    "path": "archive/es/plates/AOBJ-4091.png",
+    "x": 169,
+    "y": 281,
+    "width": 37,
+    "height": 14,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 32057,
+    "name": "oyster",
+    "path": "archive/es/plates/AOBJ-32057.png",
+    "x": 64,
+    "y": 35,
+    "width": 214,
+    "height": 193,
+    "initialLocation": "shell"
+  },
+  {
+    "type": "AOBJ",
+    "id": 19491,
+    "name": "pearl",
+    "path": "archive/es/plates/AOBJ-19491.png",
+    "x": 130,
+    "y": 274,
+    "width": 19,
+    "height": 17,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 12669,
+    "name": "spear gun",
+    "path": "archive/es/plates/AOBJ-12669.png",
+    "x": 102,
+    "y": 259,
+    "width": 149,
+    "height": 32,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 26728,
+    "name": "hatch.4",
+    "path": "archive/es/plates/AOBJ-26728.png",
+    "x": 108,
+    "y": 173,
+    "width": 121,
+    "height": 63,
+    "initialLocation": "SUB DECK"
+  },
+  {
+    "type": "AOBJ",
+    "id": 2718,
+    "name": "comp.1",
+    "path": "archive/es/plates/AOBJ-2718.png",
+    "x": 223,
+    "y": 94,
+    "width": 8,
+    "height": 14,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 23402,
+    "name": "airl.1",
+    "path": "archive/es/plates/AOBJ-23402.png",
+    "x": 26,
+    "y": 118,
+    "width": 45,
+    "height": 47,
+    "initialLocation": "airlock"
+  },
+  {
+    "type": "AOBJ",
+    "id": 23374,
+    "name": "oil can",
+    "path": "archive/es/plates/AOBJ-23374.png",
+    "x": 260,
+    "y": 245,
+    "width": 32,
+    "height": 39,
+    "initialLocation": "dock"
+  },
+  {
+    "type": "AOBJ",
+    "id": 12911,
+    "name": "grate.1",
+    "path": "archive/es/plates/AOBJ-12911.png",
+    "x": 77,
+    "y": 18,
+    "width": 173,
+    "height": 138,
+    "initialLocation": "grate"
+  },
+  {
+    "type": "AOBJ",
+    "id": 13010,
+    "name": "chip",
+    "path": "archive/es/plates/AOBJ-13010.png",
+    "x": 187,
+    "y": 266,
+    "width": 25,
+    "height": 13,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 5524,
+    "name": "hatch.1",
+    "path": "archive/es/plates/AOBJ-5524.png",
+    "x": 100,
+    "y": 92,
+    "width": 147,
+    "height": 154,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 12344,
+    "name": "hatch.3",
+    "path": "archive/es/plates/AOBJ-12344.png",
+    "x": 100,
+    "y": 92,
+    "width": 147,
+    "height": 154,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 25124,
+    "name": "bar.1",
+    "path": "archive/es/plates/AOBJ-25124.png",
+    "x": 135,
+    "y": 92,
+    "width": 103,
+    "height": 96,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 29729,
+    "name": "clos.1",
+    "path": "archive/es/plates/AOBJ-29729.png",
+    "x": -6,
+    "y": 44,
+    "width": 109,
+    "height": 145,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 14702,
+    "name": "diving suit",
+    "path": "archive/es/plates/AOBJ-14702.png",
+    "x": 103,
+    "y": 238,
+    "width": 212,
+    "height": 56,
+    "initialLocation": "closet"
+  },
+  {
+    "type": "AOBJ",
+    "id": 12855,
+    "name": "air tank",
+    "path": "archive/es/plates/AOBJ-12855.png",
+    "x": 119,
+    "y": 218,
+    "width": 123,
+    "height": 62,
+    "initialLocation": "closet"
+  },
+  {
+    "type": "AOBJ",
+    "id": 28702,
+    "name": "diving helmet",
+    "path": "archive/es/plates/AOBJ-28702.png",
+    "x": 78,
+    "y": 212,
+    "width": 72,
+    "height": 77,
+    "initialLocation": "closet"
+  },
+  {
+    "type": "AOBJ",
+    "id": 23636,
+    "name": "voodoo spell",
+    "path": "archive/es/plates/AOBJ-23636.png",
+    "x": 113,
+    "y": 228,
+    "width": 96,
+    "height": 60,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 19486,
+    "name": "amulet",
+    "path": "archive/es/plates/AOBJ-19486.png",
+    "x": 120,
+    "y": 250,
+    "width": 89,
+    "height": 37,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 8362,
+    "name": "pot.1",
+    "path": "archive/es/plates/AOBJ-8362.png",
+    "x": 123,
+    "y": 132,
+    "width": 97,
+    "height": 63,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 251,
+    "name": "slip.2",
+    "path": "archive/es/plates/AOBJ-251.png",
+    "x": 9,
+    "y": 91,
+    "width": 286,
+    "height": 121,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 25069,
+    "name": "blowgun",
+    "path": "archive/es/plates/AOBJ-25069.png",
+    "x": 81,
+    "y": 251,
+    "width": 146,
+    "height": 30,
+    "initialLocation": "magic hut"
+  },
+  {
+    "type": "AOBJ",
+    "id": 23017,
+    "name": "jd.2",
+    "path": "archive/es/plates/AOBJ-23017.png",
+    "x": 158,
+    "y": 138,
+    "width": 40,
+    "height": 58,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 15767,
+    "name": "sand.1",
+    "path": "archive/es/plates/AOBJ-15767.png",
+    "x": 122,
+    "y": 66,
+    "width": 202,
+    "height": 192,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 14168,
+    "name": "high.1",
+    "path": "archive/es/plates/AOBJ-14168.png",
+    "x": 160,
+    "y": 165,
+    "width": 45,
+    "height": 31,
+    "initialLocation": "high altar"
+  },
+  {
+    "type": "AOBJ",
+    "id": 29571,
+    "name": "slip.1",
+    "path": "archive/es/plates/AOBJ-29571.png",
+    "x": 155,
+    "y": 7,
+    "width": 103,
+    "height": 213,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 16582,
+    "name": "egg",
+    "path": "archive/es/plates/AOBJ-16582.png",
+    "x": 179,
+    "y": 235,
+    "width": 61,
+    "height": 40,
+    "initialLocation": "alcove"
+  },
+  {
+    "type": "AOBJ",
+    "id": 7002,
+    "name": "keep door",
+    "path": "archive/es/plates/AOBJ-7002.png",
+    "x": 134,
+    "y": 41,
+    "width": 191,
+    "height": 175,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 491,
+    "name": "button",
+    "path": "archive/es/plates/AOBJ-491.png",
+    "x": 169,
+    "y": 102,
+    "width": 17,
+    "height": 17,
+    "initialLocation": "SAND ROOM"
+  },
+  {
+    "type": "AOBJ",
+    "id": 28002,
+    "name": "spear",
+    "path": "archive/es/plates/AOBJ-28002.png",
+    "x": 114,
+    "y": 229,
+    "width": 177,
+    "height": 56,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 11319,
+    "name": "river.1",
+    "path": "archive/es/plates/AOBJ-11319.png",
+    "x": 148,
+    "y": 161,
+    "width": 128,
+    "height": 44,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 23213,
+    "name": "Air Scepter",
+    "path": "archive/es/plates/AOBJ-23213.png",
+    "x": 124,
+    "y": 242,
+    "width": 107,
+    "height": 33,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 10836,
+    "name": "spikes.4",
+    "path": "archive/es/plates/AOBJ-10836.png",
+    "x": 126,
+    "y": 157,
+    "width": 87,
+    "height": 59,
+    "initialLocation": "spikes"
+  },
+  {
+    "type": "AOBJ",
+    "id": 5800,
+    "name": "web.1",
+    "path": "archive/es/plates/AOBJ-5800.png",
+    "x": 43,
+    "y": 34,
+    "width": 265,
+    "height": 199,
+    "initialLocation": "web"
+  },
+  {
+    "type": "AOBJ",
+    "id": 11056,
+    "name": "river.2",
+    "path": "archive/es/plates/AOBJ-11056.png",
+    "x": 172,
+    "y": 129,
+    "width": 127,
+    "height": 58,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 1872,
+    "name": "canoe",
+    "path": "archive/es/plates/AOBJ-1872.png",
+    "x": 83,
+    "y": 216,
+    "width": 213,
+    "height": 69,
+    "initialLocation": "RIVERSIDE"
+  },
+  {
+    "type": "AOBJ",
+    "id": 24917,
+    "name": "squash door",
+    "path": "archive/es/plates/AOBJ-24917.png",
+    "x": 162,
+    "y": 101,
+    "width": 28,
+    "height": 56,
+    "initialLocation": "SQUASHER"
+  },
+  {
+    "type": "AOBJ",
+    "id": 32064,
+    "name": "spikes.1",
+    "path": "archive/es/plates/AOBJ-32064.png",
+    "x": 16,
+    "y": 89,
+    "width": 155,
+    "height": 48,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 31950,
+    "name": "spikes.2",
+    "path": "archive/es/plates/AOBJ-31950.png",
+    "x": 16,
+    "y": 89,
+    "width": 243,
+    "height": 49,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 13727,
+    "name": "spikes.3",
+    "path": "archive/es/plates/AOBJ-13727.png",
+    "x": 16,
+    "y": 90,
+    "width": 310,
+    "height": 49,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 18305,
+    "name": "jd.1",
+    "path": "archive/es/plates/AOBJ-18305.png",
+    "x": 279,
+    "y": 141,
+    "width": 25,
+    "height": 81,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 2618,
+    "name": "sand.2",
+    "path": "archive/es/plates/AOBJ-2618.png",
+    "x": 17,
+    "y": 66,
+    "width": 329,
+    "height": 239,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 22856,
+    "name": "jd.3",
+    "path": "archive/es/plates/AOBJ-22856.png",
+    "x": 49,
+    "y": 143,
+    "width": 22,
+    "height": 76,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 18900,
+    "name": "ball.1",
+    "path": "archive/es/plates/AOBJ-18900.png",
+    "x": 96,
+    "y": 3,
+    "width": 162,
+    "height": 160,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 30073,
+    "name": "ball.2",
+    "path": "archive/es/plates/AOBJ-30073.png",
+    "x": 41,
+    "y": -14,
+    "width": 272,
+    "height": 280,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 1323,
+    "name": "priests door",
+    "path": "archive/es/plates/AOBJ-1323.png",
+    "x": 5,
+    "y": 85,
+    "width": 52,
+    "height": 136,
+    "initialLocation": "priest's room"
+  },
+  {
+    "type": "AOBJ",
+    "id": 22103,
+    "name": "arena door",
+    "path": "archive/es/plates/AOBJ-22103.png",
+    "x": 59,
+    "y": 51,
+    "width": 132,
+    "height": 149,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 29156,
+    "name": "nest.dk",
+    "path": "archive/es/plates/AOBJ-29156.png",
+    "x": -3,
+    "y": -7,
+    "width": 356,
+    "height": 117,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 1548,
+    "name": "club",
+    "path": "archive/es/plates/AOBJ-1548.png",
+    "x": 120,
+    "y": 238,
+    "width": 150,
+    "height": 46,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 22595,
+    "name": "squash.3",
+    "path": "archive/es/plates/AOBJ-22595.png",
+    "x": -4,
+    "y": 2,
+    "width": 356,
+    "height": 314,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 8658,
+    "name": "squash.2",
+    "path": "archive/es/plates/AOBJ-8658.png",
+    "x": 1,
+    "y": -16,
+    "width": 406,
+    "height": 366,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 27105,
+    "name": "squash.1",
+    "path": "archive/es/plates/AOBJ-27105.png",
+    "x": 160,
+    "y": 5,
+    "width": 28,
+    "height": 65,
+    "initialLocation": "SQUASHER"
+  },
+  {
+    "type": "AOBJ",
+    "id": 25171,
+    "name": "dogleg door",
+    "path": "archive/es/plates/AOBJ-25171.png",
+    "x": 206,
+    "y": 52,
+    "width": 63,
+    "height": 126,
+    "initialLocation": "DOGLEG"
+  },
+  {
+    "type": "AOBJ",
+    "id": 1148,
+    "name": "floor.2",
+    "path": "archive/es/plates/AOBJ-1148.png",
+    "x": 4,
+    "y": 190,
+    "width": 359,
+    "height": 155,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 26522,
+    "name": "floor.1",
+    "path": "archive/es/plates/AOBJ-26522.png",
+    "x": -14,
+    "y": 191,
+    "width": 401,
+    "height": 143,
+    "initialLocation": "SLIDE FLOOR"
+  },
+  {
+    "type": "AOBJ",
+    "id": 13044,
+    "name": "lightning spell",
+    "path": "archive/es/plates/AOBJ-13044.png",
+    "x": 137,
+    "y": 223,
+    "width": 96,
+    "height": 55,
+    "initialLocation": "ALCHEMIST"
+  },
+  {
+    "type": "AOBJ",
+    "id": 12129,
+    "name": "dung.1",
+    "path": "archive/es/plates/AOBJ-12129.png",
+    "x": 271,
+    "y": 55,
+    "width": 22,
+    "height": 146,
+    "initialLocation": "DUNGEON"
+  },
+  {
+    "type": "AOBJ",
+    "id": 30205,
+    "name": "skull",
+    "path": "archive/es/plates/AOBJ-30205.png",
+    "x": 257,
+    "y": 165,
+    "width": 41,
+    "height": 40,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 23941,
+    "name": "Mirror",
+    "path": "archive/es/plates/AOBJ-23941.png",
+    "x": 116,
+    "y": 54,
+    "width": 91,
+    "height": 171,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 24033,
+    "name": "gold coins",
+    "path": "archive/es/plates/AOBJ-24033.png",
+    "x": 215,
+    "y": 258,
+    "width": 69,
+    "height": 25,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 28261,
+    "name": "lock pick",
+    "path": "archive/es/plates/AOBJ-28261.png",
+    "x": 130,
+    "y": 256,
+    "width": 25,
+    "height": 30,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 15435,
+    "name": "crank",
+    "path": "archive/es/plates/AOBJ-15435.png",
+    "x": 116,
+    "y": 119,
+    "width": 59,
+    "height": 60,
+    "initialLocation": "Bridge room"
+  },
+  {
+    "type": "AOBJ",
+    "id": 608,
+    "name": "Earth Scepter",
+    "path": "archive/es/plates/AOBJ-608.png",
+    "x": 114,
+    "y": 225,
+    "width": 132,
+    "height": 58,
+    "initialLocation": "Elven Throne"
+  },
+  {
+    "type": "AOBJ",
+    "id": 23092,
+    "name": "Elron",
+    "path": "archive/es/plates/AOBJ-23092.png",
+    "x": 36,
+    "y": 100,
+    "width": 201,
+    "height": 209,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 28414,
+    "name": "puff",
+    "path": "archive/es/plates/AOBJ-28414.png",
+    "x": 3,
+    "y": 71,
+    "width": 244,
+    "height": 247,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 5435,
+    "name": "strongbox",
+    "path": "archive/es/plates/AOBJ-5435.png",
+    "x": 265,
+    "y": 106,
+    "width": 55,
+    "height": 53,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 6727,
+    "name": "painting",
+    "path": "archive/es/plates/AOBJ-6727.png",
+    "x": 256,
+    "y": 94,
+    "width": 82,
+    "height": 74,
+    "initialLocation": "art"
+  },
+  {
+    "type": "AOBJ",
+    "id": 3095,
+    "name": "tree",
+    "path": "archive/es/plates/AOBJ-3095.png",
+    "x": 168,
+    "y": 5,
+    "width": 167,
+    "height": 196,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 12607,
+    "name": "ram door",
+    "path": "archive/es/plates/AOBJ-12607.png",
+    "x": 107,
+    "y": 75,
+    "width": 89,
+    "height": 150,
+    "initialLocation": "RAMPART"
+  },
+  {
+    "type": "AOBJ",
+    "id": 28118,
+    "name": "chain mail",
+    "path": "archive/es/plates/AOBJ-28118.png",
+    "x": 131,
+    "y": 219,
+    "width": 122,
+    "height": 66,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 18456,
+    "name": "fireball spell",
+    "path": "archive/es/plates/AOBJ-18456.png",
+    "x": 112,
+    "y": 221,
+    "width": 94,
+    "height": 56,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 10521,
+    "name": "long sword",
+    "path": "archive/es/plates/AOBJ-10521.png",
+    "x": 81,
+    "y": 257,
+    "width": 121,
+    "height": 33,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 5907,
+    "name": "dagger",
+    "path": "archive/es/plates/AOBJ-5907.png",
+    "x": 207,
+    "y": 256,
+    "width": 95,
+    "height": 27,
+    "initialLocation": "ALCHEMIST"
+  },
+  {
+    "type": "AOBJ",
+    "id": 25681,
+    "name": "eyes",
+    "path": "archive/es/plates/AOBJ-25681.png",
+    "x": 105,
+    "y": 118,
+    "width": 13,
+    "height": 9,
+    "initialLocation": "cavern"
+  },
+  {
+    "type": "AOBJ",
+    "id": 6496,
+    "name": "flute",
+    "path": "archive/es/plates/AOBJ-6496.png",
+    "x": 168,
+    "y": 244,
+    "width": 72,
+    "height": 44,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 2976,
+    "name": "pillow",
+    "path": "archive/es/plates/AOBJ-2976.png",
+    "x": 113,
+    "y": 225,
+    "width": 97,
+    "height": 40,
+    "initialLocation": "fountain"
+  },
+  {
+    "type": "AOBJ",
+    "id": 13029,
+    "name": "orb",
+    "path": "archive/es/plates/AOBJ-13029.png",
+    "x": 136,
+    "y": 182,
+    "width": 54,
+    "height": 55,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 19589,
+    "name": "sphere",
+    "path": "archive/es/plates/AOBJ-19589.png",
+    "x": 111,
+    "y": 75,
+    "width": 110,
+    "height": 86,
+    "initialLocation": "pedestal"
+  },
+  {
+    "type": "AOBJ",
+    "id": 15627,
+    "name": "ice path",
+    "path": "archive/es/plates/AOBJ-15627.png",
+    "x": 116,
+    "y": 189,
+    "width": 100,
+    "height": 78,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 30636,
+    "name": "freeze spell",
+    "path": "archive/es/plates/AOBJ-30636.png",
+    "x": 57,
+    "y": 223,
+    "width": 94,
+    "height": 55,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 17298,
+    "name": "lantern",
+    "path": "archive/es/plates/AOBJ-17298.png",
+    "x": 229,
+    "y": 211,
+    "width": 29,
+    "height": 70,
+    "initialLocation": "well tunnel"
+  },
+  {
+    "type": "AOBJ",
+    "id": 9925,
+    "name": "jewels",
+    "path": "archive/es/plates/AOBJ-9925.png",
+    "x": 119,
+    "y": 248,
+    "width": 66,
+    "height": 41,
+    "initialLocation": "Troll"
+  },
+  {
+    "type": "AOBJ",
+    "id": 16788,
+    "name": "cell bars",
+    "path": "archive/es/plates/AOBJ-16788.png",
+    "x": 107,
+    "y": 44,
+    "width": 139,
+    "height": 186,
+    "initialLocation": "cell"
+  },
+  {
+    "type": "AOBJ",
+    "id": 27297,
+    "name": "King",
+    "path": "archive/es/plates/AOBJ-27297.png",
+    "x": 121,
+    "y": 82,
+    "width": 74,
+    "height": 125,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 13051,
+    "name": "stone2",
+    "path": "archive/es/plates/AOBJ-13051.png",
+    "x": 40,
+    "y": 152,
+    "width": 196,
+    "height": 132,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 31635,
+    "name": "stone1",
+    "path": "archive/es/plates/AOBJ-31635.png",
+    "x": -1,
+    "y": 125,
+    "width": 110,
+    "height": 94,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 21870,
+    "name": "dung.2",
+    "path": "archive/es/plates/AOBJ-21870.png",
+    "x": 244,
+    "y": 54,
+    "width": 49,
+    "height": 151,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 19657,
+    "name": "key ring",
+    "path": "archive/es/plates/AOBJ-19657.png",
+    "x": 176,
+    "y": 260,
+    "width": 62,
+    "height": 16,
+    "initialLocation": "cell"
+  },
+  {
+    "type": "AOBJ",
+    "id": 13057,
+    "name": "crossbow",
+    "path": "archive/es/plates/AOBJ-13057.png",
+    "x": 185,
+    "y": 205,
+    "width": 115,
+    "height": 86,
+    "initialLocation": "forest clearing"
+  },
+  {
+    "type": "AOBJ",
+    "id": 3818,
+    "name": "helmet",
+    "path": "archive/es/plates/AOBJ-3818.png",
+    "x": 205,
+    "y": 237,
+    "width": 43,
+    "height": 40,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 1855,
+    "name": "heal spell",
+    "path": "archive/es/plates/AOBJ-1855.png",
+    "x": 62,
+    "y": 223,
+    "width": 93,
+    "height": 55,
+    "initialLocation": "ALCHEMIST"
+  },
+  {
+    "type": "AOBJ",
+    "id": 21538,
+    "name": "axe",
+    "path": "archive/es/plates/AOBJ-21538.png",
+    "x": 164,
+    "y": 244,
+    "width": 121,
+    "height": 45,
+    "initialLocation": "troll"
+  },
+  {
+    "type": "AOBJ",
+    "id": 15391,
+    "name": "shield",
+    "path": "archive/es/plates/AOBJ-15391.png",
+    "x": 38,
+    "y": 265,
+    "width": 92,
+    "height": 28,
+    "initialLocation": "armory"
+  },
+  {
+    "type": "AOBJ",
+    "id": 1420,
+    "name": "sword",
+    "path": "archive/es/plates/AOBJ-1420.png",
+    "x": 85,
+    "y": 260,
+    "width": 108,
+    "height": 30,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 17963,
+    "name": "wand",
+    "path": "archive/es/plates/AOBJ-17963.png",
+    "x": 140,
+    "y": 254,
+    "width": 90,
+    "height": 26,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 1255,
+    "name": "chasm bridge",
+    "path": "archive/es/plates/AOBJ-1255.png",
+    "x": 20,
+    "y": 67,
+    "width": 311,
+    "height": 197,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 28890,
+    "name": "guard",
+    "path": "archive/es/plates/AOBJ-28890.png",
+    "x": 249,
+    "y": 81,
+    "width": 63,
+    "height": 130,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "AOBJ",
+    "id": 8320,
+    "name": "drawbridge",
+    "path": "archive/es/plates/AOBJ-8320.png",
+    "x": 273,
+    "y": 86,
+    "width": 56,
+    "height": 172,
+    "initialLocation": "bridge room"
+  },
+  {
+    "type": "ACHR",
+    "id": 9384,
+    "name": "Hurk Gunner",
+    "path": "archive/es/plates/ACHR-9384.png",
+    "x": 25,
+    "y": 114,
+    "width": 205,
+    "height": 200,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 25019,
+    "name": "mummy",
+    "path": "archive/es/plates/ACHR-25019.png",
+    "x": 97,
+    "y": 132,
+    "width": 158,
+    "height": 184,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 24571,
+    "name": "Hurk Trooper",
+    "path": "archive/es/plates/ACHR-24571.png",
+    "x": 82,
+    "y": 94,
+    "width": 255,
+    "height": 228,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 10366,
+    "name": "ghoul",
+    "path": "archive/es/plates/ACHR-10366.png",
+    "x": 59,
+    "y": 56,
+    "width": 240,
+    "height": 261,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 28937,
+    "name": "Fire Demon",
+    "path": "archive/es/plates/ACHR-28937.png",
+    "x": 23,
+    "y": 56,
+    "width": 293,
+    "height": 254,
+    "initialLocation": "DEVIL'S SANCTUM"
+  },
+  {
+    "type": "ACHR",
+    "id": 1671,
+    "name": "giant scorpion",
+    "path": "archive/es/plates/ACHR-1671.png",
+    "x": 35,
+    "y": 57,
+    "width": 281,
+    "height": 242,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 15894,
+    "name": "Hurk Soldier",
+    "path": "archive/es/plates/ACHR-15894.png",
+    "x": 105,
+    "y": 115,
+    "width": 209,
+    "height": 200,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 9069,
+    "name": "robot",
+    "path": "archive/es/plates/ACHR-9069.png",
+    "x": 75,
+    "y": 79,
+    "width": 226,
+    "height": 234,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 29732,
+    "name": "skeleton",
+    "path": "archive/es/plates/ACHR-29732.png",
+    "x": 39,
+    "y": 51,
+    "width": 247,
+    "height": 266,
+    "initialLocation": "SEA CLIFF"
+  },
+  {
+    "type": "ACHR",
+    "id": 29194,
+    "name": "shark",
+    "path": "archive/es/plates/ACHR-29194.png",
+    "x": 50,
+    "y": 21,
+    "width": 221,
+    "height": 215,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 28427,
+    "name": "eel",
+    "path": "archive/es/plates/ACHR-28427.png",
+    "x": 105,
+    "y": 47,
+    "width": 150,
+    "height": 221,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 20762,
+    "name": "octopus",
+    "path": "archive/es/plates/ACHR-20762.png",
+    "x": -1,
+    "y": 57,
+    "width": 396,
+    "height": 249,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 18927,
+    "name": "Water Demon",
+    "path": "archive/es/plates/ACHR-18927.png",
+    "x": 59,
+    "y": 24,
+    "width": 273,
+    "height": 268,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 6991,
+    "name": "river monster",
+    "path": "archive/es/plates/ACHR-6991.png",
+    "x": 128,
+    "y": 37,
+    "width": 137,
+    "height": 181,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 15976,
+    "name": "witch doctor",
+    "path": "archive/es/plates/ACHR-15976.png",
+    "x": 71,
+    "y": 107,
+    "width": 257,
+    "height": 214,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 7686,
+    "name": "cave man",
+    "path": "archive/es/plates/ACHR-7686.png",
+    "x": 67,
+    "y": 52,
+    "width": 264,
+    "height": 254,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 30432,
+    "name": "spider",
+    "path": "archive/es/plates/ACHR-30432.png",
+    "x": -16,
+    "y": 120,
+    "width": 354,
+    "height": 156,
+    "initialLocation": "dead end"
+  },
+  {
+    "type": "ACHR",
+    "id": 27783,
+    "name": "Air Demon",
+    "path": "archive/es/plates/ACHR-27783.png",
+    "x": 6,
+    "y": 8,
+    "width": 408,
+    "height": 241,
+    "initialLocation": "nest"
+  },
+  {
+    "type": "ACHR",
+    "id": 5605,
+    "name": "chief",
+    "path": "archive/es/plates/ACHR-5605.png",
+    "x": 43,
+    "y": 107,
+    "width": 290,
+    "height": 196,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 27230,
+    "name": "tyrannosaurus",
+    "path": "archive/es/plates/ACHR-27230.png",
+    "x": 22,
+    "y": 20,
+    "width": 262,
+    "height": 300,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 1238,
+    "name": "cyclops",
+    "path": "archive/es/plates/ACHR-1238.png",
+    "x": 58,
+    "y": 77,
+    "width": 220,
+    "height": 234,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 19177,
+    "name": "Hurk Captain",
+    "path": "archive/es/plates/ACHR-19177.png",
+    "x": 98,
+    "y": 103,
+    "width": 176,
+    "height": 202,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 8529,
+    "name": "Saber",
+    "path": "archive/es/plates/ACHR-8529.png",
+    "x": 0,
+    "y": 0,
+    "width": 1,
+    "height": 1,
+    "initialLocation": "quarters"
+  },
+  {
+    "type": "ACHR",
+    "id": 17175,
+    "name": "Alchemist",
+    "path": "archive/es/plates/ACHR-17175.png",
+    "x": 69,
+    "y": 80,
+    "width": 188,
+    "height": 261,
+    "initialLocation": "lab"
+  },
+  {
+    "type": "ACHR",
+    "id": 13357,
+    "name": "Earth Demon",
+    "path": "archive/es/plates/ACHR-13357.png",
+    "x": 75,
+    "y": 19,
+    "width": 243,
+    "height": 297,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 17327,
+    "name": "Priest",
+    "path": "archive/es/plates/ACHR-17327.png",
+    "x": 85,
+    "y": 83,
+    "width": 217,
+    "height": 230,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 16393,
+    "name": "Black Knight",
+    "path": "archive/es/plates/ACHR-16393.png",
+    "x": 49,
+    "y": 66,
+    "width": 257,
+    "height": 248,
+    "initialLocation": "STORAGE@"
+  },
+  {
+    "type": "ACHR",
+    "id": 6060,
+    "name": "Troll",
+    "path": "archive/es/plates/ACHR-6060.png",
+    "x": 62,
+    "y": 49,
+    "width": 186,
+    "height": 260,
+    "initialLocation": "STORAGE@"
+  }
+]

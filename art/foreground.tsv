@@ -1,0 +1,25 @@
+# ASCN | group | label | one-based drawing commands | volume | depth in metres | contact anchor across image (0–1)
+26550|cactus|The lone cactus|16|trunk|0.32|0.55
+12523|cactus|Cactus in cracked mud|5|trunk|0.30|0.51
+20359|tree|Tree at clearing edge|6-10|trunk|0.64|0.30
+25694|snag|Swamp snag|18|trunk|0.43|0.38
+14279|tree|Crooked trail tree|6|trunk|0.62|0.48
+2577|tree-left|Near bog tree|9|trunk|0.60|0.34
+2577|tree-right|Far bog tree|11|trunk|0.45|0.60
+14969|spire|Cave-mouth rock spire|7|rock|0.90|0.53
+14969|crag|Crag beside the spire|8-9|rock|0.66|0.57
+7820|hatch|Sea-floor hatch|4-5|low|0.56|0.50
+2352|kelp|Kelp on right of channel|6|frond|0.25|0.53
+31555|rock|Sea-floor rock|4|rock|0.42|0.49
+31555|kelp|Sea-floor grass|7|frond|0.30|0.52
+26847|rock|Rock on sand bar|3|rock|0.40|0.5
+26847|kelp|Kelp on sand bar|7|frond|0.32|0.45
+15776|rock|Tidewater rock|4|rock|0.55|0.5
+15776|kelp|Tidewater kelp|5|frond|0.34|0.52
+8642|kelp|Deep-water kelp|4|frond|0.32|0.53
+8642|rock|Deep-water rock|8|rock|0.55|0.50
+63|rock|Volcanic rock|14|rock|0.50|0.55
+30379|cannon|Coral-encrusted cannon|8-10,18-21|rock|0.80|0.51
+17473|pot|Pot and kindling|9-12|rock|0.82|0.48
+12321|pedestal|Raised stone pedestal|5-8|rock|0.64|0.50
+2818|basin|Hallway basin|2-3,11-13|low|0.68|0.50

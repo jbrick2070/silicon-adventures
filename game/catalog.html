@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>The Disk Cabinet · Enchanted Scepters &amp; Dark Castle</title>
+  <link rel="stylesheet" href="catalog.css">
+</head>
+<body>
+  <header class="mast">
+    <div class="binding" aria-hidden="true"></div>
+    <div>
+      <p class="overline">FIELD COLLECTION &nbsp; / &nbsp; MACINTOSH</p>
+      <h1>The Disk Cabinet</h1>
+      <p class="subtitle"><i>Enchanted Scepters</i> &amp; <i>Dark Castle</i></p>
+    </div>
+    <a id="back" class="return" href="../index.html">← Return to game</a>
+  </header>
+  <main>
+    <nav id="shelves" aria-label="Collection shelves"></nav>
+    <section class="tools" aria-label="Filter collection">
+      <label>Find a record <input id="search" type="search" placeholder="Name, file, type or ID" autocomplete="off"></label>
+      <label>Filter <select id="filter"></select></label>
+    </section>
+    <div class="spread">
+      <section class="index" aria-labelledby="indexTitle">
+        <div class="indexHead"><h2 id="indexTitle">Shelf index</h2><span id="count" aria-live="polite"></span></div>
+        <div id="records" class="records"></div>
+        <div class="pager"><button id="prev" aria-label="Previous page">←</button><span id="page"></span><button id="next" aria-label="Next page">→</button></div>
+      </section>
+      <article id="specimen" aria-label="Selected record">
+        <p id="eyebrow" class="overline"></p>
+        <h2 id="title"></h2>
+        <div id="stage" class="stage"></div>
+        <div id="transport"></div>
+        <dl id="info"></dl>
+      </article>
+    </div>
+  </main>
+  <footer>THE DISK CABINET &nbsp; · &nbsp; LOCAL COLLECTION &nbsp; · &nbsp; VOL. I–II</footer>
+  <script src="../archive/es/designs.js"></script>
+  <script src="../archive/es/sounds.js"></script>
+  <script src="../archive/es/catalog.js"></script>
+  <script src="../art/castle-index.js"></script>
+  <script src="../archive/dc/paper.js"></script>
+  <script src="../archive/dc/catalog.js"></script>
+  <script src="../audio/dark-castle-bank.js"></script>
+  <script src="catalog-waves.js"></script>
+  <script src="catalog.js"></script>
+</body>
+</html>

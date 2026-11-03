@@ -1,0 +1,365 @@
+event	input	resulting_scene
+start	new	quarters
+turn	south	marble hall
+turn	south	throne room
+turn	yes	throne room
+turn	yes	throne room
+turn	get sword	throne room
+turn	north	marble hall
+turn	east	banquet hall
+turn	east	courtyard
+turn	north	Wizard's Sanctum
+turn	read book	Wizard's Sanctum
+turn	swing sword	Wizard's Sanctum
+turn	get freeze spell	Wizard's Sanctum
+turn	south	courtyard
+turn	west	banquet hall
+turn	south	armory
+turn	get shield	armory
+turn	east	dungeon
+turn	east	cell
+turn	get key ring	cell
+turn	west	dungeon
+turn	open	dungeon
+turn	south	well tunnel
+turn	get lantern	well tunnel
+turn	east	cavern pool
+turn	south	landing
+turn	west	boiling pool
+turn	cast freeze	boiling pool
+turn	south	pedestal
+turn	east	lab
+turn	east	art
+turn	east	great hall
+turn	east	fountain
+turn	north	music room
+turn	search	music room
+turn	get flute	music room
+turn	south	fountain
+turn	west	great hall
+turn	west	art
+turn	west	lab
+turn	south	cavern
+turn	play flute	cavern
+turn	west	altar
+turn	pray	altar
+turn	get wand	altar
+turn	get wand	altar
+turn	east	cavern
+turn	east	chasm view
+turn	east	chasm
+turn	wave wand	chasm
+turn	east	chasm
+turn	rainbow	chasm
+turn	east	elven throne
+turn	get earth scepter	elven throne
+turn	sit	corner
+turn	south	tree path
+turn	south	temple vista
+turn	south	temple stairs
+turn	up	priest's room
+turn	open	priest's room
+turn	east	priest's room
+turn	open	priest's room
+turn	east	sand room
+turn	push	sand room
+turn	push	sand room
+turn	push	sand room
+turn	push	sand room
+turn	north	dogleg
+turn	open	dogleg
+turn	east	slide floor
+turn	east	jumping door
+turn	south	jumping door
+turn	south	ball
+turn	south	spikes
+click	AOBJ/10836	spikes
+turn	west	web
+turn	cut	web
+turn	west	web
+turn	west	web
+turn	west	web
+turn	west	web
+turn	west	web
+turn	cut	web
+turn	west	squasher
+click	AOBJ/27105	squasher
+turn	west	high altar
+turn	read	high altar
+turn	pray	high altar
+turn	get air scepter	high altar
+turn	move altar	high altar
+turn	down	marsh
+turn	get sword	marsh
+turn	south	slough
+turn	south	cliff road
+turn	west	ledge
+turn	south	lava path
+turn	south	lava tunnel
+turn	south	sea cliff
+turn	west	dunes
+turn	west	salty bar
+turn	open	salty bar
+turn	west	drinks
+turn	south	gambling
+turn	open	gambling
+turn	west	closet
+turn	get diving suit	closet
+turn	get diving helmet	closet
+turn	get air tank	closet
+turn	rest	closet
+turn	rest	closet
+turn	rest	closet
+turn	rest	closet
+turn	rest	closet
+turn	rest	closet
+turn	rest	closet
+turn	rest	closet
+turn	rest	closet
+turn	rest	closet
+turn	east	gambling
+turn	north	drinks
+turn	east	salty bar
+turn	south	dock
+turn	get oil can	dock
+turn	east	seaside
+turn	east	silicon beach
+turn	search	silicon beach
+turn	get chip	silicon beach
+turn	south	clear water
+turn	south	seaweed
+turn	south	trench
+turn	west	south sea
+turn	west	galleon
+turn	west	wheel
+turn	north	deck
+turn	down	hold
+turn	south	cannon
+turn	south	store room
+turn	open	store room
+turn	get pearl	store room
+turn	get pearl	store room
+turn	get pearl	store room
+turn	cast freeze spell	store room
+turn	open	store room
+turn	get pearl	store room
+turn	north	cannon
+turn	north	hold
+turn	up	deck
+turn	south	wheel
+turn	east	galleon
+turn	east	south sea
+turn	east	trench
+turn	east	shell
+turn	give pearl	shell
+turn	north	murals
+turn	north	palace
+turn	east	Neptune's Throne
+turn	search	Neptune's Throne
+turn	get trident	Neptune's Throne
+turn	south	hatch
+turn	open	hatch
+turn	down	airlock
+turn	close hatch	airlock
+turn	turn	airlock
+turn	oil airlock	airlock
+turn	open airlock	airlock
+turn	east	greeting
+turn	wait	greeting
+turn	drop	greeting
+turn	north	court
+turn	east	court
+turn	east	queen
+turn	wait	queen
+turn	scepter	queen
+turn	get iron key	queen
+turn	west	court
+turn	south	greeting
+turn	get diving suit	greeting
+turn	get diving helmet	greeting
+turn	get air tank	greeting
+turn	get air tank	greeting
+turn	get air tank	greeting
+turn	drop wand	greeting
+turn	drop flute	greeting
+turn	drop key ring	greeting
+turn	drop lantern	greeting
+turn	get air tank	greeting
+turn	west	greeting
+turn	open	greeting
+turn	west	airlock
+turn	up	airlock
+turn	close airlock	airlock
+turn	open hatch	airlock
+turn	up	hatch
+turn	north	Neptune's Throne
+turn	west	palace
+turn	south	murals
+turn	south	shell
+turn	east	bend
+turn	south	hook
+turn	west	grate
+turn	west	grate
+turn	open	grate
+turn	west	crawl tunnel
+turn	west	sea room
+turn	west	lair
+turn	throw trident	lair
+turn	east	sea room
+turn	east	crawl tunnel
+turn	east	grate
+turn	east	hook
+turn	north	bend
+turn	west	shell
+turn	north	murals
+turn	north	palace
+turn	east	Neptune's Throne
+turn	south	hatch
+turn	down	airlock
+turn	east	airlock
+turn	close hatch	airlock
+turn	turn	airlock
+turn	open airlock	airlock
+turn	east	greeting
+turn	wait	greeting
+turn	drop	greeting
+turn	north	court
+turn	east	court
+turn	east	queen
+turn	wait	queen
+turn	south	Queen's Chamber
+turn	get water scepter	Queen's Chamber
+turn	south	meager room
+turn	west	computer
+turn	insert chip	computer
+turn	west	submarine
+turn	west	sub deck
+turn	open	sub deck
+turn	down	helm room
+turn	close	helm room
+turn	west	control
+click	AOBJ/13165	control
+click	AOBJ/13165	control
+click	AOBJ/4876	control
+click	AOBJ/20759	control
+click	AOBJ/13165	control
+turn	east	helm room
+turn	open	helm room
+turn	up	sub deck
+turn	north	silicon beach
+turn	north	sea cliff
+turn	north	lava tunnel
+turn	north	lava path
+turn	north	ledge
+turn	north	volcano vista
+turn	north	narrow pass
+turn	north	mud
+turn	north	butte
+turn	west	mesa
+turn	west	mesa
+turn	west	desert
+turn	north	ram
+turn	north	center
+turn	west	bunker
+turn	west	lobby
+turn	north	lobby
+turn	north	lobby
+turn	north	lobby
+turn	north	lobby
+turn	north	lobby
+turn	open	lobby
+turn	north	office
+turn	cast freeze spell	office
+turn	get rope	office
+turn	cast freeze spell	office
+turn	cast freeze spell	office
+turn	swing sword	office
+turn	swing sword	office
+turn	swing sword	office
+turn	swing sword	office
+turn	swing sword	office
+turn	swing sword	office
+turn	swing sword	office
+turn	swing sword	office
+turn	get rope	office
+turn	get bomb	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	rest	office
+turn	open	office
+turn	south	lobby
+turn	east	bunker
+turn	east	center
+turn	south	ram
+turn	south	desert
+turn	south	trail
+turn	south	ravine
+turn	west	cactus
+turn	west	sphinx vista
+turn	south	sphinx
+turn	search	sphinx
+turn	down	stair entrance
+turn	south	passage
+turn	south	annex
+turn	east	basin
+turn	north	phoenix
+turn	eye	phoenix
+turn	east	ante chamber
+turn	north	sepulchre
+turn	break	sepulchre
+turn	open	sepulchre
+turn	north	shrine
+turn	open	shrine
+turn	unwrap	shrine
+turn	north	cliff path
+turn	north	snake trail
+turn	north	volcano top
+turn	tie rope	volcano top
+turn	down	devil's sanctum
+turn	cast freeze spell	devil's sanctum
+turn	cast freeze spell	devil's sanctum
+turn	swing sword	devil's sanctum
+turn	swing sword	devil's sanctum
+turn	swing sword	devil's sanctum
+turn	get fire scepter	devil's sanctum
+turn	up	volcano top
+turn	get rope	volcano top
+turn	drop rope	volcano top
+turn	down	devil's sanctum
+turn	up	volcano top
+turn	down	devil's sanctum
+turn	up	volcano top
+turn	get rope	volcano top
+turn	south	snake trail
+turn	drop rope	snake trail
+turn	north	volcano top
+turn	down	butte
+turn	west	mesa
+turn	west	desert
+turn	north	ram
+turn	north	center
+turn	north	main road
+turn	saber	main road
+turn	north	rampart
+turn	east	rampart
+turn	east	camp
+turn	east	post
+turn	north	south road
+turn	north	crossroads
+turn	saber	crossroads
+turn	west	bridge room
+turn	west	courtyard
+turn	north	Finale
+turn	wait	Finale
+turn	wait	Finale
