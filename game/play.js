@@ -538,7 +538,7 @@
   // Hold-to-walk buttons feed the same key set as the keyboard, so walking and step sounds need no change.
   for(const b of document.querySelectorAll('.touch-walk button')){
     const k=b.dataset.key,release=()=>{keys.delete(k);b.classList.remove('held');};
-    b.addEventListener('pointerdown',e=>{if(!playing)return;e.preventDefault();b.setPointerCapture(e.pointerId);keys.add(k);b.classList.add('held');});
+    b.addEventListener('pointerdown',e=>{if(!playing)return;e.preventDefault();try{b.setPointerCapture(e.pointerId);}catch{}keys.add(k);b.classList.add('held');});
     for(const ev of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(ev,release);
     b.addEventListener('contextmenu',e=>e.preventDefault());
   }
