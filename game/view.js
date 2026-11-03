@@ -88,6 +88,8 @@ class PlateView {
     if (!this.origRig) return;
     this.rig = this.refreshed ? this.refreshRig : this.origRig;
     this.solids = this.refreshed ? this.refreshSolids : this.origSolids;
+    this.rear = this.rig.rear ?? -1.75;
+    if (this.pose.z < this.rear + 0.14) this.pose.z = this.rear + 0.14;
     this.env = this.rig.environment || (this.outsideByName ? 'open' : 'chamber');
     this.outside = this.env === 'open' || this.env === 'submerged';
     for (const s of this.sprites) {
@@ -116,7 +118,7 @@ class PlateView {
     const origRig = (meta.id === 7990 && window.AltarLayout) || window.RoomLayouts?.[meta.id] || fallbackRig;
     // Refreshed landmark rigs layer over the original rig and never replace separated originals.
     // Rooms without a rig of their own take the hand-checked environment table's box in refreshed mode.
-    const layout = window.RefreshRoomLayouts?.[meta.id];
+    const layout = window.RefreshRoomLayouts?.[meta.id] || (origRig === fallbackRig ? window.RefreshRigs?.[meta.id] : null);
     const env = window.RefreshEnvironments?.[meta.id];
     const wide = env === 'open' || env === 'submerged';
     const envRig = env && origRig === fallbackRig
@@ -145,7 +147,7 @@ class PlateView {
       origSolids, refreshSolids: refreshSolids || origSolids,
       outsideByName: outside, exits, sideDoorZ: 1.15, shadowSpots: []
     });
-    this.rear = -1.75; this.reset(); this.sprites = [];
+    this.reset(); this.sprites = [];
     this.syncMode();
   }
   solidAt(x,z,radius) {
