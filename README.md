@@ -15,6 +15,7 @@ Double-click **Play Enchanted Scepters.exe** on 64-bit Windows. The launcher ope
 | I or M | Open your pack or the travel controls |
 | L or Refreshed in the title bar | Switch live between the refreshed 1-bit layers and untouched disk plates |
 | R | Repeat the last attack while someone stands against you |
+| Where next? | One more clue toward the next scepter, from a nudge to the exact inputs of a winning run (an addition of this edition) |
 | Up arrow in the command line | Recall the last command |
 | ⌖ in the picture title bar | Return to the original doorway viewpoint |
 

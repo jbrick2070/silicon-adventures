@@ -39,6 +39,20 @@
     const n=visited.reduce((a,b)=>a+b,0);$('mapNote').textContent=n+(n===1?' room charted':' rooms charted')+' · ink edges are walls on the map, gaps are openings';
   }
   $('map').onpointermove=e=>{const r=$('map').getBoundingClientRect();const room=worldMap.roomAt((e.clientX-r.left)*worldMap.w/r.width,(e.clientY-r.top)*worldMap.h/r.height);$('map').title=room&&visited[roomIndex.get(room.id)]?title(room.name):'';};
+  // Where next? One more tier of the current milestone per press; the tier resets when the goal changes.
+  let hintGoal=-1,hintTier=0,hintsUsed=0;
+  function whereNext(){
+    if(!playing||!state||state.ended||!window.ScepterHints)return;
+    const {index,milestone,count}=ScepterHints.current(state,id=>visited[roomIndex.get(id)]);
+    if(index<0||!milestone)return;
+    if(index!==hintGoal){hintGoal=index;hintTier=0;}
+    if(hintTier>=3){line('No more clues for this step: '+milestone.tiers[2].join(' · ')+'.','aside hint');tabs('journal');return;}
+    const tier=milestone.tiers[hintTier];hintsUsed++;
+    const text=Array.isArray(tier)?'Exactly: '+tier.join(' · ')+'.':tier;
+    tabs('journal');line('Step '+(index+1)+' of '+count+' · '+milestone.title+(hintTier?' · clue '+(hintTier+1):'')+'. '+text,'aside hint');
+    hintTier++;controls();
+  }
+  $('hint').onclick=whereNext;
   function rememberSeen(){try{sessionStorage.setItem('scepters-seen',JSON.stringify({session:state?.session,seen:packSeen()}));}catch{}}
   const condition=p=>p<.40?'very bad':p<.55?'bad':p<.70?'average':p<.85?'good':'very good';
   const whom=s=>s==='them'?'them':/^the\b/i.test(s)?s:'the '+s;
@@ -162,6 +176,7 @@
     $('health').classList.toggle('danger',!state.ended&&share<.40);
     $('itemCount').textContent=state.inventory.length;
     $('save').disabled=state.ended;$('load').disabled=!state.saved;
+    $('hint').disabled=state.ended;$('hint').textContent=hintsUsed?'Where next? · '+hintsUsed:'Where next?';
     // Who stands against Saber, in the engine's own condition words, from each inhabitant's first-seen HP.
     let foe=$('foe');
     if(!foe){foe=para('','subtext');foe.id='foe';$('roomTitle').after(foe);}
@@ -235,7 +250,7 @@
       scene=designs.get('ASCN/'+next.scene);
       if(!scene)throw new Error('Missing room plate '+next.scene);
       await view.load(scene);sound.scene(scene);
-      if(opts.fresh) {$('log').replaceChildren();wizardRead=false;prayed=false;enemyBase.clear();checkpointNoted=false;if(!opts.keepSeen)visited=new Uint8Array(roomList.length);}
+      if(opts.fresh) {$('log').replaceChildren();wizardRead=false;prayed=false;enemyBase.clear();checkpointNoted=false;hintGoal=-1;hintTier=0;hintsUsed=0;if(!opts.keepSeen)visited=new Uint8Array(roomList.length);}
       if(roomIndex.has(scene.id)){visited[roomIndex.get(scene.id)]=1;rememberSeen();drawChart();}
       if(!opts.fresh && playing)line('— '+title(scene.name)+' —','entry');
       if(scene.id!==7990)shortcut=false;
@@ -359,7 +374,7 @@
       para('When someone stands against you, your weapons join the action row. Press R to repeat the last attack and the up arrow in the command line to recall the last command.'),
       para('The ⌖ button returns you to the illustrator’s viewpoint. Press L or click Refreshed in the window bar to compare the separate refresh layers against the untouched disk plates. Save keeps your place between launches. The game keeps one save: with doorway checkpoints on, each new room you enter on your own journey saves there, so turn them off to keep a hand-placed save.'),
       button(checkpointsOn?'Turn doorway checkpoints off':'Turn doorway checkpoints on',()=>{checkpointsOn=!checkpointsOn;try{localStorage.setItem('scepters-checkpoints',checkpointsOn?'on':'off');}catch{}fieldGuide();}),
-      para('The full journey begins in Saber’s quarters. All 200 Macintosh scene scripts run locally. The High Altar excursion starts you inside a later puzzle. The Dark Castle visitors and their placement are new to this edition.'),
+      para('The full journey begins in Saber’s quarters. All 200 Macintosh scene scripts run locally. The High Altar excursion starts you inside a later puzzle. The Dark Castle visitors, their placement, and the Where next? clues are new to this edition: each press gives one more clue toward the next scepter, from a nudge to the exact words of a winning run.'),
       button(view.refreshed?'Show original plates':'Show refreshed layers',()=>{toggleLayers();fieldGuide();}),
       button(captions?'Hide sound captions':'Show sound captions',()=>{captions=!captions;localStorage.setItem('scepters-captions',captions?'on':'off');fieldGuide();}),
       button('Disk bookmarks',adventures));
