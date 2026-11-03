@@ -8,7 +8,21 @@
   let state,scene,playing=false,busy=false,muted=false,captions=true,drag=null;
   let shortcut=false,wizardRead=false,prayed=false,npc=null,combatant=null,knightReel=908;
   // A scripted question waiting for its answer, slot ownership for doorway checkpoints, and combat recall.
-  let pending=null,owner=false,checkpoint=null,checkpointsOn=true,checkpointNoted=false,lastCommand='',lastAttack='';
+  let pending=null,owner=false,checkpoint=null,checkpointsOn=true,checkpointNoted=false,lastCommand='',lastAttack='',parserHelp=0;
+  const history=[];let histAt=0;
+  // Click targets: the disk's names are terse (dung.1, stor.2); only stems the room text itself names get a word.
+  const STEMS={high:'altar',stor:'chest',can:'cannon',sub:'control',dung:'door',squash:'door',jd:'door',lobb:'door',clos:'closet',airl:'airlock',comp:'computer',hatch:'hatch',shrine:'shrine',spikes:'spikes',web:'web',grate:'grate',floor:'floor',river:'river',nest:'nest',ram:'ram',bar:'bars',sand:'sand',slip:'slip',ball:'ball',queen:'queen',cat:'catapult',view:'view',sep:'sepulchre',osir:'osiris',phoenix:'phoenix',sphinx:'sphinx',top:'top',drink:'drink',lair:'lair',pot:'pot',rob:'robot'};
+  function labelFor(key){
+    const m=designs.get(key);if(!m)return 'the drawing here';
+    if(!/\.[a-z0-9]+$/i.test(m.name))return m.name;
+    return STEMS[m.name.replace(/\.[a-z0-9]+$/i,'').toLowerCase()]||'the drawing here';
+  }
+  // A click is a whole turn on the disk: it takes anything movable, so say so.
+  function verbFor(key){
+    if(key.startsWith('ACHR/'))return 'Face the '+labelFor(key);
+    const o=state.objects.find(x=>x.id===+key.slice(5)),name=labelFor(key);
+    return o&&o.type!==9?'Take the '+name:'Click '+name;
+  }
   const enemyBase=new Map();
   const condition=p=>p<.40?'very bad':p<.55?'bad':p<.70?'average':p<.85?'good':'very good';
   const whom=s=>s==='them'?'them':/^the\b/i.test(s)?s:'the '+s;
@@ -164,8 +178,13 @@
       $('travel').replaceChildren(...['west','north','east','up','south','down'].map(d=>button(d,()=>command(d),'travel-key')));
       return;
     }
-    let verbs=['Look','Search'];
-    if(state.characters.length)verbs.push(...state.weapons);
+    // The disk's own Commands menu (MENU 2004), in its original order, minus the six directions.
+    const menu=state.menu.split(';').filter(a=>a&&!a.startsWith('(')).map(a=>a.split('/')[0].split('<')[0]);
+    const directions=['north','south','east','west','up','down'];
+    const fighting=state.characters.length>0;
+    let verbs=menu.filter(a=>!directions.includes(a.toLowerCase())&&!(fighting&&a.toLowerCase()==='rest'));
+    if(!fighting&&state.maxHp&&state.maxHp-state.hp>=8)verbs.splice(verbs.findIndex(v=>v.toLowerCase()==='rest')+1,0,'Rest until healed');
+    if(fighting)verbs.push(...state.weapons);
     if(scene.id===7990){
       if(wizardRead)verbs.push('Pray');
       if(state.objects.some(o=>o.id===23213))verbs.push('Get Air Scepter');
@@ -174,14 +193,11 @@
     }
     if(scene.id===29408)verbs.push('Read book','Swing sword');
     if(scene.name==='bridge room')verbs.push('Turn crank');
-    // A scene may replace the Macintosh Commands menu during a turn.
-    const special=state.menu.split(';').filter(a=>a&&!a.startsWith('(')).map(a=>a.split('/')[0].split('<')[0]);
-    const common=['north','south','east','west','up','down','look','rest','status','inventory','search','open','close'];
-    verbs.push(...special.filter(a=>!common.includes(a.toLowerCase())));
-    $('actions').append(...[...new Set(verbs)].map(v=>button(v,()=>command(v))));
-    $('travel').replaceChildren(...['west','north','east','up','south','down'].map(d=>button(d,()=>command(d),'travel-key')));
-    const free=Object.keys(scene.blocked||{}).filter(d=>!scene.blocked[d]);
-    $('routeNote').textContent=free.length?'Map openings · '+free.join(' / '):'Listen for clues in the room description.';
+    $('actions').append(...[...new Set(verbs)].map(v=>button(v,()=>v==='Rest until healed'?restUntilHealed():command(v))));
+    $('travel').replaceChildren(...['west','north','east','up','south','down'].map(d=>{const b=button(d,()=>command(d),'travel-key');b.title=scene.messages?.[d]||'';return b;}));
+    // Doorways the renderer draws: the map's open bearings or an exit the room text names.
+    const open=['north','east','south','west'].filter(d=>view.exits?.[d]);
+    $('routeNote').textContent=open.length?'Doorways · '+open.join(' / '):'Listen for clues in the room description.';
   }
   async function apply(next,opts={}) {
     const changed=next.scene!==state?.scene||opts.fresh;
@@ -209,6 +225,10 @@
     }
     if(opts.echo)line('› '+opts.echo,'entry');
     line(next.output || (changed?scene.text:''));
+    if(/^(what|huh)\?\s*$/i.test(next.output||'')&&parserHelp<3){
+      parserHelp++;
+      line('The disk understands its Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, WEAR, and a weapon’s own verb. Press ? for the field guide.','aside');
+    }
     if(scene.id===7990) {
       if(/murals show/i.test(next.output))wizardRead=true;
       if(/materializes/i.test(next.output)||state.inventory.some(a=>a.id===23213))prayed=true;
@@ -230,15 +250,45 @@
       }catch{}
     }
   }
-  async function command(text,action='turn',point=null) {
+  async function command(text,action='turn',point=null,echo=null) {
     if(!playing||busy||state.ended)return;
+    let sent=text;
+    if(action==='turn'){
+      const t=text.trim();
+      if(/^(help|hint|\?|commands)$/i.test(t)){fieldGuide();return;}
+      if(/^(examine|x|inspect|check)\b/i.test(t))sent='look';
+      const useOf=t.match(/^use\s+(.+)$/i);
+      if(useOf){const item=state.inventory.find(o=>o.name.toLowerCase()===useOf[1].toLowerCase());if(item?.verb)sent=item.verb+' '+item.name;}
+      lastCommand=t;if(history[history.length-1]!==t)history.push(t);if(history.length>50)history.shift();histAt=history.length;
+      if(state.weapons.some(w=>w.toLowerCase()===t.toLowerCase()))lastAttack=t;
+    }
     busy=true;keys.clear();tabs('journal');
-    if(action==='turn'){lastCommand=text;if(state.weapons.some(w=>w.toLowerCase()===text.toLowerCase()))lastAttack=text;}
     try {
-      const next=await api(action,text);
-      await apply(next,{echo:action==='turn'?text:'Examine '+(designs.get(text)?.name||'object'),point});
+      const next=await api(action,sent);
+      await apply(next,{echo:echo||(action==='turn'?text:verbFor(text)),point});
     } catch(e){line(e.message,'aside');}
     finally {busy=false;dirty=true;}
+  }
+  // Rest turn after turn while no one is near, until the engine's regen stalls (it floors to 0 within 8 HP of max).
+  async function restUntilHealed(){
+    if(!playing||busy||state.ended||state.characters.length)return;
+    busy=true;keys.clear();tabs('journal');
+    const startHp=state.hp;let turns=0,stalled=0,last=null,stop=false;
+    const halt=()=>{stop=true;};
+    document.addEventListener('keydown',halt);document.addEventListener('pointerdown',halt);
+    try{
+      while(!stop&&turns<25){
+        const next=await api('turn','rest');turns++;
+        const gain=next.hp-(last?last.hp:state.hp);last=next;
+        $('health').textContent='HP '+next.hp+' / '+next.maxHp+' · '+condition(next.hp/next.maxHp);
+        if(next.ended||next.scene!==state.scene||next.characters.length||/no time to rest/i.test(next.output))break;
+        stalled=gain<=0?stalled+1:0;
+        if(stalled>=2)break;
+        await new Promise(r=>setTimeout(r,250));
+      }
+      if(last){await apply(last,{echo:'rest'});if(!last.ended&&!last.characters.length&&last.hp>=startHp)line('Rested '+turns+(turns===1?' turn':' turns')+' · HP '+startHp+' → '+last.hp,'aside');}
+    }catch(e){line(e.message,'aside');}
+    finally{document.removeEventListener('keydown',halt);document.removeEventListener('pointerdown',halt);busy=false;dirty=true;}
   }
   async function begin(entry){
     if(busy)return;busy=true;
@@ -285,7 +335,8 @@
     const h=document.createElement('h2');h.textContent='Field guide';
     openDialog('Field guide',h,
       para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around.'),
-      para('Click a drawn object or approach it and press E. Press / to type. Original commands include LOOK, READ, SEARCH, REST, and the six directions. Use the Pack tab for weapons and items. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
+      para('Click a drawn object or approach it and press E. A click is a turn in the original game: it may take, answer a question or spring a trap, so E offers the edition’s honest prompt (Take, Click, Face, Go). Press / to type. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
+      para('The disk’s vocabulary: the Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, ACCEPT, WEAR, and each weapon’s own verb. There is no EXAMINE, USE or TALK; this edition sends EXAMINE as Look and USE as the item’s verb. Status and Rest are turns of their own, so use them away from a fight.'),
       para('When someone stands against you, your weapons join the action row. Press R to repeat the last attack and the up arrow in the command line to recall the last command.'),
       para('The ⌖ button returns you to the illustrator’s viewpoint. Press L or click Refreshed in the window bar to compare the separate refresh layers against the untouched disk plates. Save keeps your place between launches. The game keeps one save: with doorway checkpoints on, each new room you enter on your own journey saves there, so turn them off to keep a hand-placed save.'),
       button(checkpointsOn?'Turn doorway checkpoints off':'Turn doorway checkpoints on',()=>{checkpointsOn=!checkpointsOn;try{localStorage.setItem('scepters-checkpoints',checkpointsOn?'on':'off');}catch{}fieldGuide();}),
@@ -302,9 +353,11 @@
   };
   $('homeView').onclick=()=>{view.reset();dirty=true;if(playing){message('Doorway viewpoint');$('world').focus({preventScroll:true});}else if(view.source)view.render(elapsed);};
   $('commandForm').onsubmit=e=>{e.preventDefault();const t=$('cmd').value.trim();if(!t)return;$('cmd').value='';$('cmd').blur();$('world').focus();command(t);};
-  function use(key){
+  function use(key,fromPointer=false){
     if(!playing||busy||state.ended)return;
     if(key==='answer'){tabs('journal');$('cmd').focus();return;}
+    if(key.startsWith('ACHR/')&&!fromPointer){tabs('journal');message('Choose a weapon from the journal');return;}
+    if(key==='AOBJ/14168'&&!wizardRead&&!fromPointer){command('read');return;}
     if(pending?.kind==='yesno'&&(key.startsWith('go/')||key.startsWith('AOBJ/')||key.startsWith('ACHR/'))){
       message(whom(pending.speaker).replace(/^the /,'The ')+' is waiting for an answer');tabs('journal');return;
     }
@@ -325,7 +378,8 @@
     if(key==='altar-down'){command('down');return;}
     if(key.startsWith('go/')){command(key.slice(3));return;}
     if(key==='AOBJ/14168'&&wizardRead){command(prayed?'move altar':'pray','turn',{x:.29,z:4.4});return;}
-    command(key,'click',view.sprites.find(s=>s.key===key));
+    const echo=key.startsWith('ACHR/')?'Provoke the '+labelFor(key)+' (the '+labelFor(key)+' acts)':verbFor(key);
+    command(key,'click',view.sprites.find(s=>s.key===key),echo);
   }
   for(const record of ES_SOUNDS)$('voice').add(new Option('Scepters · '+record.name,'es/'+record.name));
   for(const id of VaultAudio.archiveIds)$('voice').add(new Option('Dark Castle · SOUN '+id,'dc:'+id));
@@ -345,15 +399,15 @@
       if(k==='wizard')return [k,prayed&&!state.objects.some(o=>o.id===14168)?'Listen to the stone':'Speak to the wizard'];
       if(k==='knight')return [k,'Listen to the knight'];
       if(k==='bat')return [k,'Listen'];
-      if(k==='AOBJ/14168')return [k,wizardRead?(prayed?'Move the altar':'Kneel at the altar'):'Examine the altar'];
-      return [k,'Examine '+(designs.get(k)?.name||'object')];
+      if(k==='AOBJ/14168')return [k,wizardRead?(prayed?'Move the altar':'Kneel at the altar'):'Read the murals'];
+      return [k,verbFor(k)];
     }
     if(scene.id===7990&&Math.hypot(p.x-.3,p.z-4.42)<1.2) {
       if(!state.objects.some(o=>o.id===14168))return ['altar-down','Descend the passage'];
       if(wizardRead && !prayed)return ['altar-pray','Kneel at the altar'];
     }
     const r=view.rig,bearings=[['north',r.back-p.z,0],['east',r.right-p.x,Math.PI/2],['south',p.z-view.rear,Math.PI],['west',p.x-r.left,-Math.PI/2]];
-    for(const [name,d,a]of bearings)if(d<.65&&Math.cos(p.yaw-a)>.35)return ['go/'+name,'Go '+name];
+    for(const [name,d,a]of bearings)if(d<.65&&Math.cos(p.yaw-a)>.35&&view.exits?.[name])return ['go/'+name,'Go '+name];
     return null;
   }
   $('interact').onclick=()=>{const a=actionNear();if(a)use(a[0]);};
@@ -382,7 +436,7 @@
   };
   $('world').onpointerup=e=>{
     if(!drag)return;
-    if(drag.total<=4){const t=view.hit(...canvasPoint(e));if(t)use(t.key);}
+    if(drag.total<=4){const t=view.hit(...canvasPoint(e));if(t)use(t.key,true);}
     drag=null;hoverCursor(e);
   };
   $('world').onpointercancel=()=>{drag=null;$('world').style.cursor=playing?'grab':'';};
@@ -391,7 +445,10 @@
     if($('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
     if(e.target.tagName==='INPUT'){
       if(e.key==='Escape')$('world').focus();
-      else if(e.key==='ArrowUp'&&e.target.id==='cmd'&&lastCommand){e.preventDefault();e.target.value=lastCommand;}
+      else if((e.key==='ArrowUp'||e.key==='ArrowDown')&&e.target.id==='cmd'&&history.length){
+        e.preventDefault();histAt=Math.max(0,Math.min(history.length,histAt+(e.key==='ArrowUp'?-1:1)));
+        e.target.value=history[histAt]||'';
+      }
       return;
     }
     const k=e.key.toLowerCase();
