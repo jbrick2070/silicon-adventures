@@ -7,6 +7,24 @@
   const starts=['art','computer','dogleg','Finale','lava tunnel','main road','mirror room','office',"Queen's Chamber"];
   let state,scene,playing=false,busy=false,muted=false,captions=true,drag=null;
   let shortcut=false,wizardRead=false,prayed=false,npc=null,combatant=null,knightReel=908;
+  // A scripted question waiting for its answer, slot ownership for doorway checkpoints, and combat recall.
+  let pending=null,owner=false,checkpoint=null,checkpointsOn=true,checkpointNoted=false,lastCommand='',lastAttack='';
+  const enemyBase=new Map();
+  const condition=p=>p<.40?'very bad':p<.55?'bad':p<.70?'average':p<.85?'good':'very good';
+  const whom=s=>s==='them'?'them':/^the\b/i.test(s)?s:'the '+s;
+  // The last line of a turn that ends in a question mark is a scripted question (the King's
+  // "Will you go?", the Guard, the sentry on the main road). Everything but the answer counts as a refusal.
+  function detectPending(output){
+    if(!output)return null;
+    const lines=output.split('\n').map(s=>s.trim()).filter(Boolean),last=lines[lines.length-1]||'';
+    if(!last.endsWith('?')||/^(huh|what)\?$/i.test(last))return null;
+    const prefixes=[...output.matchAll(/(?:^|\n)([A-Z][A-Za-z' ]{0,24}):\s/g)];
+    const who=prefixes.length?prefixes[prefixes.length-1][1]:'';
+    const speaker=!who?'them':/calls out/i.test(who)?'the voice':who;
+    const body=last.replace(/^[^:?]*:\s*/,'');
+    const kind=/\bor\b/i.test(body)?'choice':(/^(do|did|will|would|are|is|can|could|were|have|has|should)\b/i.test(body)||/do you\?$/i.test(body))?'yesno':'free';
+    return {speaker,kind};
+  }
   let elapsed=0,oldTime=0,stepDistance=0,dirty=true,lastPaint=-1,captionUntil=0,viewScale=1;
   const actorPlace={x:-.94,z:5.14};
   function syncLayerUi(){
@@ -108,8 +126,20 @@
     $('roomTitle').textContent=state.ended?'Journey’s end':scene.name;
     $('chapterTag').textContent=state.ended?'END OF ADVENTURE':shortcut?'HIGH ALTAR EXCURSION':'SABER’S JOURNAL';
     $('windowName').textContent=title(scene.name);$('plateCode').textContent='ASCN · '+scene.id;
-    $('health').textContent='HP '+state.hp;$('itemCount').textContent=state.inventory.length;
+    const share=state.maxHp?state.hp/state.maxHp:1;
+    $('health').textContent=state.ended?'':'HP '+state.hp+(state.maxHp?' / '+state.maxHp+' · '+condition(share):'');
+    $('health').classList.toggle('danger',!state.ended&&share<.40);
+    $('itemCount').textContent=state.inventory.length;
     $('save').disabled=state.ended;$('load').disabled=!state.saved;
+    // Who stands against Saber, in the engine's own condition words, from each inhabitant's first-seen HP.
+    let foe=$('foe');
+    if(!foe){foe=para('','subtext');foe.id='foe';$('roomTitle').after(foe);}
+    const foes=state.ended?[]:state.characters.map(c=>{
+      const k=scene.id+'/'+c.id;if(!enemyBase.has(k))enemyBase.set(k,Math.max(1,c.hp));
+      return c.name+' · condition '+condition(c.hp/enemyBase.get(k));
+    });
+    foe.textContent=foes.join(' · ');foe.hidden=!foes.length;
+    $('cmd').placeholder=pending&&!state.ended?'Answer '+whom(pending.speaker)+'…':'Enter a command…';
     $('pack').replaceChildren();
     for(const it of state.inventory) {
       const m=designs.get(keyFor(it,'AOBJ'));
@@ -118,13 +148,24 @@
     }
     if(!state.inventory.length)$('pack').append(para('Your pack is empty.','subtext'));
     $('arms').replaceChildren(...state.weapons.map(s=>button(s,()=>command(s))));
-    if(state.characters.length)for(const [i,part] of ['head','chest','side'].entries()){
+    if(state.characters.length&&!state.ended)for(const [i,part] of ['head','chest','side'].entries()){
       $('arms').append(button('Aim '+part,async()=>{if(busy)return;busy=true;try{await api('aim',String(i+1));message('Aiming at '+part);}finally{busy=false;}}));
     }
     $('actions').replaceChildren();
-    if(state.ended){$('actions').append(button('Open adventures',adventures));return;}
-    let verbs=['Look','Search'];
+    if(state.ended){
+      if(state.saved)$('actions').append(button(checkpoint?'Return to '+checkpoint.room+' · HP '+checkpoint.hp:'Return to your last save',()=>begin('restore'),'mini primary-mini'));
+      $('actions').append(button('Begin again',()=>begin('new')),button('Adventures…',adventures));
+      return;
+    }
     $('listening').hidden=true;
+    if(pending?.kind==='yesno'){
+      // Look, Search, a click or a step all read as refusals here; only the answer is safe.
+      $('actions').append(button('Yes',()=>command('yes')),button('No',()=>command('no')));
+      $('travel').replaceChildren(...['west','north','east','up','south','down'].map(d=>button(d,()=>command(d),'travel-key')));
+      return;
+    }
+    let verbs=['Look','Search'];
+    if(state.characters.length)verbs.push(...state.weapons);
     if(scene.id===7990){
       if(wizardRead)verbs.push('Pray');
       if(state.objects.some(o=>o.id===23213))verbs.push('Get Air Scepter');
@@ -147,16 +188,21 @@
     const priorKnight=state?.characters.find(c=>c.name==='Black Knight');
     const followingKnight=next.characters.find(c=>c.name==='Black Knight');
     knightReel=!changed&&followingKnight&&priorKnight?(followingKnight.hp<priorKnight.hp?912:next.hp<state.hp?915:908):908;
+    const diedIn=scene?.name,priorShare=state?.maxHp?state.hp/state.maxHp:1;
     state=next;
+    pending=state.ended?null:detectPending(next.output);
     if(state.ended){
       if(!scene)scene=designs.get('ASCN/7990');
-      sourceEvents(next,opts.point);line(next.output);line('This adventure has ended. Restore a save or choose a new entry.','aside');controls();return;
+      sourceEvents(next,opts.point);line(next.output);
+      if(!/saved Callion/i.test(next.output)&&diedIn)line('Saber fell in '+diedIn+'.','aside');
+      line(state.saved?'Restore returns to '+(checkpoint?checkpoint.room+' with HP '+checkpoint.hp:'your last save')+'.':'This adventure has ended. Begin again or choose a new entry.','aside');
+      controls();return;
     }
     if(changed){
       scene=designs.get('ASCN/'+next.scene);
       if(!scene)throw new Error('Missing room plate '+next.scene);
       await view.load(scene);sound.scene(scene);
-      if(opts.fresh) {$('log').replaceChildren();wizardRead=false;prayed=false;}
+      if(opts.fresh) {$('log').replaceChildren();wizardRead=false;prayed=false;enemyBase.clear();checkpointNoted=false;}
       if(!opts.fresh && playing)line('— '+title(scene.name)+' —','entry');
       if(scene.id!==7990)shortcut=false;
       keys.clear();stepDistance=0;tabs('journal');
@@ -170,12 +216,24 @@
     if(scene.name.toLowerCase()==='finale' && /saved Callion/i.test(next.output)) {
       line('All four scepters have come home.','aside');
     }
+    const share=state.maxHp?state.hp/state.maxHp:1;
+    if(share<.40&&priorShare>=.40){message('Your physical condition is very bad.');line('Rest where no one is near, or retreat the way you came.','aside');}
     await populate();controls();sourceEvents(next,opts.point);
     $('resume').hidden=!state.saved;
+    // Doorway checkpoint: only a run that owns the save slot, only on a real turn, never mid-fight or at the altar.
+    if(owner&&checkpointsOn&&opts.echo&&changed&&scene.id!==7990&&!state.characters.length){
+      try{
+        const result=await api('save',JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut,auto:true,hp:state.hp}));
+        state.saved=result.saved;checkpoint={room:scene.name,hp:state.hp};
+        if(!checkpointNoted){checkpointNoted=true;line('Checkpoint at the doorway. Restore returns here; turn this off in the field guide to keep a hand-placed save.','aside');}
+        controls();
+      }catch{}
+    }
   }
   async function command(text,action='turn',point=null) {
     if(!playing||busy||state.ended)return;
     busy=true;keys.clear();tabs('journal');
+    if(action==='turn'){lastCommand=text;if(state.weapons.some(w=>w.toLowerCase()===text.toLowerCase()))lastAttack=text;}
     try {
       const next=await api(action,text);
       await apply(next,{echo:action==='turn'?text:'Examine '+(designs.get(text)?.name||'object'),point});
@@ -189,14 +247,17 @@
       if(location.protocol==='file:')throw new Error('Double-click Play Enchanted Scepters.exe in the game folder. It starts the local adventure engine and opens your browser.');
       await sound.start();sound.mute(muted);sound.pause(false);
       const next=await api('start',entry);
-      playing=true;shortcut=entry==='altar';$('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;fitViewport();
+      playing=true;shortcut=entry==='altar';owner=entry==='new'||entry==='restore';checkpoint=null;lastCommand=lastAttack='';
+      $('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;fitViewport();
       await apply(next,{fresh:true});sessionStorage.setItem('scepters-session',state.session);
       if(entry==='altar')line('A voice carries from the far side of the stone.','aside');
       if(entry==='restore'&&state.viewData){
         try{const v=JSON.parse(state.viewData);
           if(v.scene===scene.id && [v.x,v.z,v.yaw,v.pitch].every(Number.isFinite)) {
             Object.assign(view.pose,{x:v.x,z:v.z,yaw:v.yaw,pitch:v.pitch});
-            wizardRead=!!v.read;shortcut=!!v.shortcut;controls();
+            wizardRead=!!v.read;shortcut=!!v.shortcut;
+            if(v.auto)checkpoint={room:scene.name,hp:state.hp};
+            controls();
           }
         }catch{}
       }
@@ -208,8 +269,8 @@
   $('save').onclick=async()=>{
     if(busy||!playing)return;busy=true;
     try{
-      const result=await api('save',JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut}));
-      state.saved=result.saved;controls();line('Adventure saved.','aside');
+      const result=await api('save',JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut,hp:state.hp}));
+      state.saved=result.saved;owner=true;checkpoint={room:scene.name,hp:state.hp};controls();line('Adventure saved.','aside');
     }catch(e){line(e.message,'aside');}finally{busy=false;}
   };
   $('load').onclick=()=>openDialog('Restore adventure',para('Resume your last manual save?'),button('Restore saved adventure',()=>begin('restore')),button('Keep playing',()=>$('dialog').close()));
@@ -224,8 +285,10 @@
     const h=document.createElement('h2');h.textContent='Field guide';
     openDialog('Field guide',h,
       para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around.'),
-      para('Click a drawn object or approach it and press E. Press / to type. Original commands include LOOK, READ, SEARCH, REST, and the six directions. Use the Pack tab for weapons and items.'),
-      para('The ⌖ button returns you to the illustrator’s viewpoint. Press L or click Refreshed in the window bar to compare the separate refresh layers against the untouched disk plates. Save keeps your place between launches.'),
+      para('Click a drawn object or approach it and press E. Press / to type. Original commands include LOOK, READ, SEARCH, REST, and the six directions. Use the Pack tab for weapons and items. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
+      para('When someone stands against you, your weapons join the action row. Press R to repeat the last attack and the up arrow in the command line to recall the last command.'),
+      para('The ⌖ button returns you to the illustrator’s viewpoint. Press L or click Refreshed in the window bar to compare the separate refresh layers against the untouched disk plates. Save keeps your place between launches. The game keeps one save: with doorway checkpoints on, each new room you enter on your own journey saves there, so turn them off to keep a hand-placed save.'),
+      button(checkpointsOn?'Turn doorway checkpoints off':'Turn doorway checkpoints on',()=>{checkpointsOn=!checkpointsOn;try{localStorage.setItem('scepters-checkpoints',checkpointsOn?'on':'off');}catch{}fieldGuide();}),
       para('The full journey begins in Saber’s quarters. All 200 Macintosh scene scripts run locally. The High Altar excursion starts you inside a later puzzle. The Dark Castle visitors and their placement are new to this edition.'),
       button(view.refreshed?'Show original plates':'Show refreshed layers',()=>{toggleLayers();fieldGuide();}),
       button(captions?'Hide sound captions':'Show sound captions',()=>{captions=!captions;localStorage.setItem('scepters-captions',captions?'on':'off');fieldGuide();}),
@@ -241,6 +304,10 @@
   $('commandForm').onsubmit=e=>{e.preventDefault();const t=$('cmd').value.trim();if(!t)return;$('cmd').value='';$('cmd').blur();$('world').focus();command(t);};
   function use(key){
     if(!playing||busy||state.ended)return;
+    if(key==='answer'){tabs('journal');$('cmd').focus();return;}
+    if(pending?.kind==='yesno'&&(key.startsWith('go/')||key.startsWith('AOBJ/')||key.startsWith('ACHR/'))){
+      message(whom(pending.speaker).replace(/^the /,'The ')+' is waiting for an answer');tabs('journal');return;
+    }
     const p=npc?{x:npc.x,z:npc.z}:{x:0,z:3};
     if(key==='wizard'){
       if(Math.hypot(view.pose.x-p.x,view.pose.z-p.z)>2.15){message('Come closer to the wizard');return;}
@@ -270,6 +337,7 @@
   function actionNear(){
     const p=view.pose;
     if(!view.targets||!view.rig||!state||state.ended)return null;
+    if(pending?.kind==='yesno')return ['answer','Answer '+whom(pending.speaker)];
     const near=view.targets.map(t=>({t,d:Math.hypot(t.s.x-p.x,t.s.z-p.z)})).filter(q=>q.d<2.05 && q.t.left+q.t.sw>35 && q.t.left<303)
       .sort((a,b)=>a.d-b.d)[0];
     if(near) {
@@ -321,13 +389,18 @@
   $('world').onpointerleave=()=>{if(!drag)$('world').style.cursor='';};
   document.addEventListener('keydown',e=>{
     if($('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
-    if(e.target.tagName==='INPUT'){if(e.key==='Escape')$('world').focus();return;}
+    if(e.target.tagName==='INPUT'){
+      if(e.key==='Escape')$('world').focus();
+      else if(e.key==='ArrowUp'&&e.target.id==='cmd'&&lastCommand){e.preventDefault();e.target.value=lastCommand;}
+      return;
+    }
     const k=e.key.toLowerCase();
     if(k==='l'){e.preventDefault();if(!e.repeat)toggleLayers();return;}
     if(!playing)return;
-    if(['w','s','a','d','arrowup','arrowdown','arrowleft','arrowright','e','/','i','m','?'].includes(k)){
+    if(['w','s','a','d','arrowup','arrowdown','arrowleft','arrowright','e','r','/','i','m','?'].includes(k)){
       e.preventDefault();if(e.repeat)return;
-      if(k==='e'){const a=actionNear();if(a)use(a[0]);else message('Face an object, a visitor, or a room edge');}
+      if(k==='r'){if(lastAttack&&state.characters.length)command(lastAttack);else message(state.characters.length?'Choose a weapon first':'No one stands against you');}
+      else if(k==='e'){const a=actionNear();if(a)use(a[0]);else message('Face an object, a visitor, or a room edge');}
       else if(k==='/')$('cmd').focus();else if(k==='i')tabs('pack');else if(k==='m')tabs('route');else if(k==='?')fieldGuide();else keys.add(k);
     }
   });
@@ -397,7 +470,7 @@
     requestAnimationFrame(animate);
   }
   async function init(){
-    try{captions=localStorage.getItem('scepters-captions')!=='off';}catch{}
+    try{captions=localStorage.getItem('scepters-captions')!=='off';checkpointsOn=localStorage.getItem('scepters-checkpoints')!=='off';}catch{}
     fitViewport();
     scene=designs.get('ASCN/7990');
     if(location.protocol==='file:'){

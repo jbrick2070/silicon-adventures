@@ -14,11 +14,13 @@ Double-click **Play Enchanted Scepters.exe** on 64-bit Windows. The launcher ope
 | / and Enter | Type and submit an original adventure command |
 | I or M | Open your pack or the travel controls |
 | L or Refreshed in the title bar | Switch live between the refreshed 1-bit layers and untouched disk plates |
+| R | Repeat the last attack while someone stands against you |
+| Up arrow in the command line | Recall the last command |
 | ⌖ in the picture title bar | Return to the original doorway viewpoint |
 
 Read the journal after each action. You can travel by approaching a room edge and pressing E, using the **Travel** tab, or typing a direction. A physical step inside a room leaves the turn counter alone. An adventure command can advance an enemy, a trap or a puzzle.
 
-**Save** keeps the world state, inventory, and first-person viewpoint in `%USERPROFILE%\Saved Games\Silicon Adventures\adventure.sav`. Use **Restore** to return there. **Field guide** includes a sound-caption switch. The game runs a server on this PC’s loopback address and closes it after the browser has been gone for five minutes.
+**Save** keeps the world state, inventory, and first-person viewpoint in `%USERPROFILE%\Saved Games\Silicon Adventures\adventure.sav`. Use **Restore** to return there. On your own journey each new room you enter also saves there as a doorway checkpoint, and after a death the journal offers to return to it. The game keeps one save, so turn checkpoints off in the **Field guide** to keep a hand-placed save. When someone asks you a question, only the answer is safe: the journal offers Yes and No, and other actions count as a refusal. **Field guide** includes a sound-caption switch. The game runs a server on this PC’s loopback address and closes it after the browser has been gone for five minutes.
 
 ## What came from the disks
 
