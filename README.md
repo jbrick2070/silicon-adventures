@@ -13,7 +13,7 @@ Double-click **Play Enchanted Scepters.exe** on 64-bit Windows. The launcher ope
 | Click a drawn object | Send the original Macintosh click to the game |
 | / and Enter | Type and submit an original adventure command |
 | I or M | Open your pack or the travel controls |
-| L or Refreshed in the title bar | Switch live between the refreshed 1-bit layers and untouched disk plates |
+| L or Refreshed in the title bar | Switch live between the refreshed 1-bit layers and untouched disk plates (the refreshed layer also bends every weapon into a banana; they fight exactly as before) |
 | R | Repeat the last attack while someone stands against you |
 | Where next? | One more clue toward the next scepter, from a nudge to the exact inputs of a winning run (an addition of this edition) |
 | Up arrow in the command line | Recall the last command |

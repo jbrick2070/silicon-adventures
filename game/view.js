@@ -28,11 +28,12 @@ class PlateView {
   async texture(url) {
     if (!this.cache.has(url)) this.cache.set(url, (async () => {
       const R = window.RefreshEngine, P = window.RefreshPalette;
-      const tUrl = R?.toneUrl(url), rUrl = R?.spriteRimUrl(url);
-      const [base, toneData, rimData] = await Promise.all([
+      const tUrl = R?.toneUrl(url), rUrl = R?.spriteRimUrl(url), sUrl = window.RefreshBananas?.[url] || null;
+      const [base, toneData, rimData, swapData] = await Promise.all([
         this.decodeImage(url),
         tUrl && P ? this.decodeImage(tUrl).catch(() => null) : Promise.resolve(null),
-        rUrl ? this.decodeImage(rUrl).catch(() => null) : Promise.resolve(null)
+        rUrl ? this.decodeImage(rUrl).catch(() => null) : Promise.resolve(null),
+        sUrl ? this.decodeImage(sUrl).catch(() => null) : Promise.resolve(null)
       ]);
       const n = base.w * base.h;
       const bits = new Uint8Array(n);
@@ -56,7 +57,13 @@ class PlateView {
           if (rimData.rgba[i*4+3] >= 128) rimBits[i] = rimData.rgba[i*4] < 128 ? 1 : 2;
         }
       }
-      return {w:base.w, h:base.h, bits, tones, borders, fields, rimBits};
+      // A refreshed-layer stand-in at the same native size (the banana weapons); the original bits stay.
+      let swapBits = null;
+      if (swapData && swapData.w === base.w && swapData.h === base.h) {
+        swapBits = new Uint8Array(n);
+        for (let i = 0; i < n; i++) swapBits[i] = swapData.rgba[i*4+3] < 128 ? 0 : swapData.rgba[i*4] < 128 ? 1 : 2;
+      }
+      return {w:base.w, h:base.h, bits, tones, borders, fields, rimBits, swapBits};
     })());
     return this.cache.get(url);
   }
@@ -353,12 +360,17 @@ class PlateView {
     const actors=this.sprites.map(s=>({s,t:(s.x-p.x)*sn+(s.z-p.z)*cs})).sort((a,b)=>b.t-a.t);
     for(const {s,t} of actors) {
       if(t<=.08 || s.hidden)continue;
-      const lateral=(s.x-p.x)*cs-(s.z-p.z)*sn, middle=cx+lateral*f/t;
-      const sw=s.w*f/t,sh=s.h*f/t, left=middle-sw/2,top=horizon-(s.y+s.h-eye)*f/t;
-      if(left>=w||left+sw<=0||top>=h||top+sh<=0)continue;
       const tex=s.texture,fw=s.fw||Math.floor(tex.w/s.cols),fh=s.fh||tex.h;
+      const bits=(this.refreshed&&tex.swapBits)||tex.bits;
+      // A struck inhabitant flinches: a two-pixel shudder for a few frames.
+      const flinch=s.flinchUntil&&time<s.flinchUntil?((Math.floor(time*30)&1)?2:-2):0;
+      const lateral=(s.x-p.x)*cs-(s.z-p.z)*sn, middle=cx+lateral*f/t;
+      const sw=s.w*f/t,sh=s.h*f/t, top=horizon-(s.y+s.h-eye)*f/t;
+      let left=middle-sw/2;
+      if(left>=w||left+sw<=0||top>=h||top+sh<=0)continue;
       const offsetX=(s.frame%Math.max(1,s.cols))*fw,offsetY=s.row*fh;
-      const rim=this.refreshed?tex.rimBits:null;
+      const rim=this.refreshed&&!tex.swapBits?tex.rimBits:null;
+      left+=flinch;
       let plotted=0;
       for(let j=Math.max(0,Math.ceil(top-.5));j<Math.min(h,top+sh-.5);j++){
         const sy=offsetY+Math.min(fh-1,Math.floor((j+.5-top)*fh/sh));
@@ -367,7 +379,7 @@ class PlateView {
           if(t>depth[idx]+.025)continue;
           const sx=Math.min(fw-1,Math.floor((i+.5-left)*fw/sw));
           const tIdx=sy*tex.w+offsetX+(s.flip?fw-1-sx:sx);
-          const bit=tex.bits[tIdx] || (rim ? rim[tIdx] : 0);
+          const bit=bits[tIdx] || (rim ? rim[tIdx] : 0);
           if(bit){pix[idx]=bit===1?ink:paper;plotted++;}
         }
       }
@@ -380,7 +392,7 @@ class PlateView {
       const {left,top,sw,sh,s,t}=a;
       if(px<left||px>=left+sw||py<top||py>=top+sh)continue;
       const fw=s.fw||s.texture.w,fh=s.fh||s.texture.h, ix=Math.floor((px-left)*fw/sw);
-      const bit=s.texture.bits[(s.row*fh+Math.floor((py-top)*fh/sh))*s.texture.w+(s.frame%s.cols)*fw+(s.flip?fw-1-ix:ix)];
+      const bit=((this.refreshed&&s.texture.swapBits)||s.texture.bits)[(s.row*fh+Math.floor((py-top)*fh/sh))*s.texture.w+(s.frame%s.cols)*fw+(s.flip?fw-1-ix:ix)];
       if(bit && t<=this.depth[Math.floor(py)*this.w+Math.floor(px)]+.025)return a;
     }
     return null;

@@ -163,7 +163,19 @@ class SceneSound {
     return source;
   }
 
-  events(names, worldPoint) {
+  // A sound that happens to the listener: no panner, straight to the master bus.
+  emitDry(buffer, when, volume) {
+    const ctx = this.vault.ctx, source = ctx.createBufferSource(), gain = ctx.createGain();
+    gain.gain.value = volume;
+    source.buffer = buffer;
+    source.connect(gain);
+    gain.connect(this.vault.master);
+    source.onended = () => { source.disconnect(); gain.disconnect(); };
+    source.start(when);
+    return source;
+  }
+
+  events(names, worldPoint, opts = {}) {
     const list = (Array.isArray(names) ? names : [names])
       .map(s => this.library.get(String(s || '').trim().toLowerCase())).filter(Boolean);
     if (!list.length) return;
@@ -180,7 +192,7 @@ class SceneSound {
       let when = Math.max(this.vault.ctx.currentTime+0.005,this.queueEnd);
       buffers.forEach((buffer,i) => {
         if (!buffer) return;
-        this.emit(buffer,point,when,0.82);
+        if (opts.dry) this.emitDry(buffer,when,0.62); else this.emit(buffer,point,when,0.82);
         this.captions.push({when,name:list[i].name,point});
         when += buffer.duration;
       });

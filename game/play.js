@@ -97,6 +97,7 @@
   function toggleLayers(force){
     view.setRefreshed(typeof force==='boolean'?force:!view.refreshed);
     syncLayerUi();dirty=true;
+    if(playing&&state&&scene)controls();
     if(playing){message(view.refreshed?'Refreshed layers':'Original plate');$('world').focus({preventScroll:true});}
     else if(view.source)view.render(elapsed);
   }
@@ -136,10 +137,10 @@
     if(!r.ok)throw new Error(await r.text()||'The adventure could not process that action.');
     return r.json();
   }
-  function sourceEvents(next,point){
+  function sourceEvents(next,point,dry=false){
     if(!playing||!next.sounds?.length)return;
     const fallback=point||{x:.35,z:Math.max(1.7,(view.rig?.back??5)-.8)};
-    if(scene?.id!==18366){sound.events(next.sounds,fallback);return;}
+    if(scene?.id!==18366){sound.events(next.sounds,fallback,{dry});return;}
     // The Finale names its bearings: earthquakes north, tornadoes east, volcanoes west, the tidal wave
     // south, and Elron's horn from where he stands. Each run of cues plays from that side, in order.
     const p=view.pose,elron=view.sprites.find(s=>s.key==='AOBJ/23092');
@@ -215,7 +216,7 @@
     for(const it of state.inventory) {
       const m=designs.get(keyFor(it,'AOBJ'));
       const b=button(it.name,()=>{tabs('journal');$('cmd').value=(it.verb?it.verb+' ':'drop ')+it.name;$('cmd').focus();},'');
-      if(m){const img=new Image();img.src=m.path;img.alt='';b.prepend(img);}$('pack').append(b);
+      if(m){const img=new Image();img.src=(view.refreshed&&window.RefreshBananas?.[m.path])||m.path;img.alt='';b.prepend(img);}$('pack').append(b);
     }
     if(!state.inventory.length)$('pack').append(para('Your pack is empty.','subtext'));
     $('arms').replaceChildren(...state.weapons.map(s=>button(s,()=>command(s))));
@@ -262,6 +263,9 @@
     const followingKnight=next.characters.find(c=>c.name==='Black Knight');
     knightReel=!changed&&followingKnight&&priorKnight?(followingKnight.hp<priorKnight.hp?912:next.hp<state.hp?915:908):908;
     const diedIn=scene?.name,priorShare=state?.maxHp?state.hp/state.maxHp:1;
+    // Blows land where they land: an inhabitant whose HP fell is struck, Saber's own loss is felt here.
+    const struck=new Set((state?.characters||[]).filter(c=>{const n=next.characters.find(x=>x.id===c.id);return n&&n.hp<c.hp;}).map(c=>c.id));
+    const selfHurt=!!state&&next.hp<state.hp;
     state=next;
     pending=state.ended?null:detectPending(next.output);
     if(state.ended){
@@ -298,7 +302,11 @@
     }
     const share=state.maxHp?state.hp/state.maxHp:1;
     if(share<.40&&priorShare>=.40){message('Your physical condition is very bad.');line('Rest where no one is near, or retreat the way you came.','aside');}
-    await populate();controls();sourceEvents(next,opts.point);
+    await populate();controls();
+    const foe=view.sprites.find(s=>s.key.startsWith('ACHR/')&&struck.has(+s.key.slice(5)))||(struck.size?combatant:null);
+    for(const s of view.sprites)if(s.key.startsWith('ACHR/')&&struck.has(+s.key.slice(5)))s.flinchUntil=elapsed+.45;
+    if(combatant&&struck.size)combatant.flinchUntil=elapsed+.45;
+    sourceEvents(next,opts.point||(foe?{x:foe.x,z:foe.z}:null),selfHurt&&!struck.size);
     $('resume').hidden=!state.saved;
     // Doorway checkpoint: only a run that owns the save slot, only on a real turn, never mid-fight or at the altar.
     if(owner&&checkpointsOn&&opts.echo&&changed&&scene.id!==7990&&!state.characters.length){
@@ -402,7 +410,7 @@
       para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around. On a phone or tablet, hold the Walk, Back and turn buttons under the picture.'),
       para('Click a drawn object or approach it and press E. A click is a turn in the original game: it may take, answer a question or spring a trap, so E offers the edition’s honest prompt (Take, Click, Face, Go). Press / to type. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
       para('The disk’s vocabulary: the Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, ACCEPT, WEAR, and each weapon’s own verb. There is no EXAMINE, USE or TALK; this edition sends EXAMINE as Look and USE as the item’s verb. Status and Rest are turns of their own, so use them away from a fight.'),
-      para('When someone stands against you, your weapons join the action row. Press R to repeat the last attack and the up arrow in the command line to recall the last command.'),
+      para('In the refreshed layer every weapon is drawn as a banana; it swings, throws and fires exactly as the disk intends. Blows are heard where they land, and a struck inhabitant flinches. When someone stands against you, your weapons join the action row. Press R to repeat the last attack and the up arrow in the command line to recall the last command.'),
       para('The ⌖ button returns you to the illustrator’s viewpoint. Press L or click Refreshed in the window bar to compare the separate refresh layers against the untouched disk plates. Save keeps your place between launches. The game keeps one save: with doorway checkpoints on, each new room you enter on your own journey saves there, so turn them off to keep a hand-placed save.'),
       button(checkpointsOn?'Turn doorway checkpoints off':'Turn doorway checkpoints on',()=>{checkpointsOn=!checkpointsOn;try{localStorage.setItem('scepters-checkpoints',checkpointsOn?'on':'off');}catch{}fieldGuide();}),
       para('The full journey begins in Saber’s quarters. All 200 Macintosh scene scripts run locally. The High Altar excursion starts you inside a later puzzle. The Dark Castle visitors, their placement, and the Where next? clues are new to this edition: each press gives one more clue toward the next scepter, from a nudge to the exact words of a winning run.'),
@@ -587,6 +595,7 @@
           });
         }
       }
+      if(view.sprites.some(s=>s.flinchUntil>elapsed))dirty=true;
       sound.frame(p,actors);
       if($('cue').textContent && elapsed>captionUntil)$('cue').textContent='';
     }
