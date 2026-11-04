@@ -1,6 +1,7 @@
 (() => {
   'use strict';
   const $=id=>document.getElementById(id);
+  const browserEngine=window.BrowserEngine;
   const view=new PlateView($('world')), sound=new SceneSound();
   const designs=new Map(ES_DESIGNS.map(d=>[d.type+'/'+d.id,d]));
   const keys=new Set(), keyFor=(o,kind)=>kind+'/'+o.id;
@@ -140,6 +141,7 @@
   $('dialog').addEventListener('close',()=>{sound.pause(!playing||document.hidden||$('dialog').open);if(playing)$('world').focus({preventScroll:true});});
   $('dialog').addEventListener('click',e=>{if(e.target===$('dialog'))$('dialog').close();});
   async function api(action,arg=''){
+    if(browserEngine)return browserEngine.action(action,arg);
     const r=await fetch('/api/'+action,{method:'POST',headers:{'X-Scepters':'1'},body:arg});
     if(!r.ok)throw new Error(await r.text()||'The adventure could not process that action.');
     return r.json();
@@ -452,7 +454,7 @@
       para('The disk’s vocabulary: the Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, ACCEPT, WEAR, and each weapon’s own verb. There is no EXAMINE, USE or TALK; this edition sends EXAMINE as Look and USE as the item’s verb. Status and Rest are turns of their own, so use them away from a fight.'),
       para('Lit colour uses the disk’s weapon shapes. Refreshed 1-bit draws the weapons as bananas. Their attacks work the same in every picture mode. Blows are heard where they land, and a struck inhabitant flinches. When someone stands against you, your weapons join the action row. Press R to repeat the last attack and the up arrow in the command line to recall the last command.'),
       para('Choose Lit colour, Refreshed 1-bit or Original in the picture bar. Press L or click Classic B/W to see the disk plate. Press L again or use the same button to return to your chosen style. The ⌖ button returns you to the illustrator’s viewpoint.'),
-      para('Save keeps your place between launches. Doorway checkpoints use the same slot as a manual save. Turn them off to keep a hand-placed save.'),
+      para((browserEngine?'Save keeps your place in this browser on this device. ':'Save keeps your place between launches. ')+'Doorway checkpoints use the same slot as a manual save. Turn them off to keep a hand-placed save.'),
       button(checkpointsOn?'Turn doorway checkpoints off':'Turn doorway checkpoints on',()=>{checkpointsOn=!checkpointsOn;try{localStorage.setItem('scepters-checkpoints',checkpointsOn?'on':'off');}catch{}fieldGuide();}),
       para('The full journey begins in Saber’s quarters. All 200 Macintosh scene scripts run locally. The High Altar excursion starts you inside a later puzzle. The Dark Castle visitors, their placement, and the Where next? clues are new to this edition: each press gives one more clue toward the next scepter, from a nudge to the exact words of a winning run.'),
       button(view.refreshed?'Show Original':'Return to '+enhancedName(),()=>{toggleLayers();fieldGuide();}),
@@ -684,9 +686,20 @@
       const img=new Image();img.onload=()=>view.ctx.drawImage(img,0,0);img.src=scene.path;
       $('enter').textContent='Launch instructions →';return;
     }
-    // A quiet, open game (including time spent reading the journal) is still active.
-    setInterval(()=>api('state').catch(()=>{}),45000);
+    if(browserEngine){
+      $('browserStatus').hidden=false;
+      $('browserStatus').textContent='Loading the game engine. The first visit may take a moment…';
+    }else{
+      // Keep the Windows launcher's local server alive while the player is reading.
+      setInterval(()=>api('state').catch(()=>{}),45000);
+    }
+    busy=true;
+    $('enter').disabled=$('journey').disabled=true;
     try{
+      await view.load(scene);
+      const lid=designs.get('AOBJ/14168');
+      await view.add(lid,'AOBJ/14168',{x:(lid.x+lid.width/2-169)*4.18/215,z:4.18,y:1.8-(lid.y+lid.height-123)*4.18/215,w:lid.width*4.18/215,h:lid.height*4.18/215});
+      view.render(0);
       const snapshot=await api('state');
       const resumable=sessionStorage.getItem('scepters-session')===snapshot.session;
       if(resumable){
@@ -696,11 +709,18 @@
         try{const j=JSON.parse(sessionStorage.getItem('scepters-journal')||'null');if(j&&j.session===snapshot.session&&Array.isArray(j.journal)&&j.journal.length){replayJournal(j.journal);keptJournal=true;}}catch{}
         await apply(snapshot,{fresh:true,keepSeen:true,keepJournal:keptJournal});
       }else{
-        await view.load(scene);state=snapshot;$('resume').hidden=!snapshot.saved;
-        const lid=designs.get('AOBJ/14168');
-        await view.add(lid,'AOBJ/14168',{x:(lid.x+lid.width/2-169)*4.18/215,z:4.18,y:1.8-(lid.y+lid.height-123)*4.18/215,w:lid.width*4.18/215,h:lid.height*4.18/215});
+        state=snapshot;$('resume').hidden=!snapshot.saved;
       }
-    }catch(e){openDialog('Local engine',para(e.message));}
+      if(browserEngine)$('browserStatus').textContent='Ready to play. Your adventure saves in this browser.';
+    }catch(e){
+      if(browserEngine){
+        $('browserStatus').textContent='The game engine could not load. Check your connection and reload this page.';
+        openDialog('Browser edition',para(e.message),button('Reload the game',()=>location.reload()));
+      }else openDialog('Local engine',para(e.message));
+    }finally{
+      busy=false;
+      $('enter').disabled=$('journey').disabled=Boolean(browserEngine&&!state);
+    }
     fitViewport();
     requestAnimationFrame(animate);
   }

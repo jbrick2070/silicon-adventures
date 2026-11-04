@@ -1,6 +1,8 @@
 # Enchanted Scepters
 
-Double-click **Play Enchanted Scepters.exe** on 64-bit Windows. The launcher opens the game in your desktop browser. If you are using the ZIP, extract the whole folder first. The game, Macintosh disks, sound banks, and interpreter are included and work offline.
+[Play Enchanted Scepters in your browser](https://jbrick2070.github.io/silicon-adventures/). Open the link on your Mac or PC, let the game engine load, then choose **Begin the full adventure** or **Enter the High Altar**. The web edition loads its Java runtime over the internet and runs the original game scripts on your device. Saves stay in that browser profile. Clearing the site's data erases its save. [Built with CheerpJ](https://cheerpj.com/)
+
+For offline play on 64-bit Windows, extract the Windows ZIP and double-click **Play Enchanted Scepters.exe**. The launcher opens the game in your desktop browser. The game, Macintosh disks, sound banks, and interpreter are included.
 
 **Lit colour** paints all 200 rooms, their inhabitants and the objects in your pack. At the High Altar, the ochre pillars cast shadows onto the paving and the aubergine at the foot of the walls blends into the upper slate. The jungle, wreck, desert and palace have their own materials. Click **Classic B/W** or press **L** at any point to see the original Macintosh picture. Press it again to return. [Colour plates and comparison](art/colour/README.md)
 
@@ -27,7 +29,7 @@ Turn **Music on** in the top bar to hear *Hero's Quest* by jeffreyabrick alterna
 
 Read the journal after each action. It keeps the whole session, survives a reload within a launch, and comes back with a Restore; its heading counts the scepters you hold. You can travel by approaching a room edge and pressing E, using the **Travel** tab, or typing a direction. The Travel tab also keeps Saber’s chart, a map of the rooms you have seen drawn on the disk’s own room grid, with ink edges where the map blocks a bearing and gaps where it opens. A physical step inside a room leaves the turn counter alone. An adventure command can advance an enemy, a trap or a puzzle.
 
-**Save** keeps the world state, inventory, and first-person viewpoint in `%USERPROFILE%\Saved Games\Silicon Adventures\adventure.sav`. Use **Restore** to return there. On your own journey each new room you enter also saves there as a doorway checkpoint, and after a death the journal offers to return to it. The game keeps one save, so turn checkpoints off in the **Field guide** to keep a hand-placed save. When someone asks you a question, only the answer is safe: the journal offers Yes and No, and other actions count as a refusal. **Field guide** includes a sound-caption switch. The game runs a server on this PC’s loopback address and closes it after the browser has been gone for five minutes.
+**Save** keeps the world state, inventory, and first-person viewpoint. The web edition uses this site's browser storage. The Windows launcher uses `%USERPROFILE%\Saved Games\Silicon Adventures\adventure.sav`. Use **Restore** to return there. Each new room you enter on your own journey also saves a doorway checkpoint. After a death the journal offers to return to it. The game keeps one save, so turn checkpoints off in the **Field guide** to keep a hand-placed save. When someone asks you a question, only the answer is safe. The journal offers Yes and No, and other actions count as a refusal. **Field guide** includes a sound-caption switch. The Windows launcher's local server closes after the browser has been gone for five minutes.
 
 ## What came from the disks
 
