@@ -367,7 +367,7 @@
   }
 
   function draw(canvas,{stage,colour,elapsed=0,active=-1,flash=false,open=false,bearing='east',success=false}){
-    const ctx=canvas.getContext('2d');
+    const ctx=canvas.getContext('2d',{alpha:false,willReadFrequently:true});
     const key=stage+'-'+colour+'-'+open;
     let plate=cache.get(canvas);
     if(plate?.key!==key){
