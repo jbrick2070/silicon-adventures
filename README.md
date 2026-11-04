@@ -12,6 +12,12 @@ For offline play on 64-bit Windows, extract the Windows ZIP and double-click **P
 
 Beyond the watchtower, **Use the signal lamp** begins *The Eastern Beacon*, an original Airborne-inspired encounter. Aim the lantern, compose a reply to the circling aircraft, and open the courier’s message. Colour and Classic B/W work throughout. The signal card and flash captions support silent play, and Save here keeps an unfinished signal.
 
+**The Enchanted Castle** is a new game in this library, built from both disks. Enter the Black Knight's castle by the four doors of the Great Hall and bring out the four scepters. Its 14 rooms, floors, stairs, ladders, ropes, moving platforms, exits and creature placements are decoded from the 1986 Dark Castle code, not redrawn. All 172 sprite reels, 20 screens and 72 recordings on that disk appear in it. The rules follow the disk's manual cards and are rebuilt for this edition. Choose it on the cover, under **Adventures…**, or step through the glass in the mirror room. It runs in its own window and spends no turns in the adventure. Keyboard, mouse and touch all play it, sound captions cover every cue, and **Elron's ward** lets a blow cost bonus instead of a life.
+
+**Room edges** are physical. Outdoor and undersea rooms stop at a visible barrier of rock, reeds, hedge, wall, dune, bank or reef, chosen from the disk's words for that side. A real exit is a gap between two marker posts, with a worn trail leading to it. The line under the picture lists the ways out from where you face. Walking into an edge costs no turn and shows the disk's own blocked message.
+
+**Archive** also holds the **Chronicle**, which is all 987 lines of disk text, verbatim, filling in as you meet them. **Side quests** tracks 25 optional deeds and **Oddities** tracks 30 jokes and odd corners of the disk. **Cast** shows all 28 inhabitants. The **Try…** button offers the words a room's script listens for, so the whole game can be played without a keyboard. [`archive/PARITY.md`](archive/PARITY.md) records where every disk resource lives.
+
 **Archive** opens an illustrated folio of original Dark Castle manual cards, animated inhabitants, the Great Hall, and Enchanted Scepters credits and disk notes. The tree and stored night-sky comparisons are optional views of preserved artwork. In **Pack**, select an item to open its Study Card, read its original disk inscription where one exists, or choose an explicit action. Reading a Study Card or the submarine viewplate spends no game turn. The enhanced world also includes a dungeon rat, running-computer sparks, a flame in the Devil’s Sanctum, and the Black Knight’s entrance and shattering frames. These new touches use archived sprites; reduced-motion settings freeze the ambient additions.
 
 Sound and music start enabled on your first visit. Use the **Effects** and **Music** sliders to set their volumes independently. Both start at 60%. **Sound off** mutes everything, and your browser remembers your settings. In the castle and temple, *Hero's Quest* by jeffreyabrick alternates with *Violet Stone*. Underwater, *Submerged Bell* by jeffreyabrick alternates with *Soundings*. The title appears beneath the picture. Open **Field guide → Soundtrack credits** for the full list. [Soundtrack, credits and downloads](audio/soundtrack-studies/README.md)
@@ -58,6 +64,9 @@ The source images came from the Internet Archive. The source records include the
 | [Soundtrack and studies](audio/soundtrack-studies/README.md) | Four regional tracks and their credits, two MP3 sketches with Suno prompts and synth seeds, and a disk sampler |
 | `archive/es/PLAYTEST.md` | Complete four-scepter campaign verification |
 | `archive/es/campaign-trace.tsv` | Spoilers. Room-by-room commands and clicks from the winning run |
+| `archive/PARITY.md` | Where every resource on both disks lives in this edition |
+| `archive/es/chronicle.js` | Every line of disk text, verbatim, built by `archive/es/build_chronicle.py` |
+| `archive/dc/castle-data.js` | Rooms, paths, sound tables and scores decoded from Dark Castle by `archive/dc/tools/build_castle.py` |
 
 ## Runtime
 

@@ -1,0 +1,73 @@
+Independently QA the asset and feature parity build of Enchanted Scepters /
+Silicon Adventures in D:\silicon-adventures, branch feature/asset-parity.
+
+This is a read-only QA pass. Do not edit, commit, merge, or publish. Check the
+actual branch, HEAD, and working-tree status first; preserve other work. The
+work may be uncommitted. Treat the author's claims as claims, not proof.
+
+Hard rules:
+- Never play a cue through the user's speakers. Mute before any game starts and
+  launch Chrome with --mute-audio.
+- Never touch %USERPROFILE%\Saved Games\Silicon Adventures\adventure.sav. Use a
+  throwaway -Duser.home for the Java engine and a fresh browser profile. Prove
+  the isolation by writing a marker through /api/save and reading it back from
+  the throwaway home before anything else.
+- Stop only the test processes you created.
+- Do not modify sources/, archive/es/plates/, archive/dc/*.rsrc, art/castle/.
+
+Start with what already runs:
+  node --test --test-reporter=tap game/tests/*.test.js
+  node game/tests/castle_reach.js
+  python game/tests/polish_smoke.py
+  python game/tests/parity_smoke.py
+
+Then attack these player-visible scenarios.
+
+1. Physical edges. Walk to all four sides of open rooms and undersea rooms,
+   especially the marsh cluster (marsh, slough, bog, swamp, stagnant pool),
+   desert, main road, and sea rooms. Confirm that you cannot leave the drawn world
+   and can always tell why you stopped. Check Lit colour, Refreshed 1-bit and
+   Original. At the doorway viewpoint the plate must still match the disk exactly.
+   Refreshed 1-bit must stay strictly two-colour with CODE 1 patterns. Confirm that
+   an edge never spends a turn, that every exit is still reachable, and that any
+   object beyond the limit can still be reached. Try a touch-sized viewport and
+   prefers-reduced-motion.
+2. Verbatim text. Sample the Chronicle against archive/es/Scepters.rsrc. Disk
+   typos such as "disapears", "cannoe" and "You here someone cry" must survive.
+   Dialogue must never be rewritten. Edition text must be clearly separate.
+3. Side quests and oddities. Trigger several for real on the engine: the cannon,
+   the ram, the orb on the pillow, the Osiris diamond, EAT POWDER at the basin,
+   the skull in the mud, STATUS in the meager room. Confirm that each records once
+   and survives Save and Restore, including a native session reload. Check that a
+   save trailer stays under the engine's 2048-byte limit late in a long game.
+4. Verb parity. Wear from the Pack, Offer during a fight, Accept after an enemy
+   offers, and Try… filling the command line without sending. RAINBOW and SABER
+   must not be offered by Try….
+5. Staging. Summon Elron in the Wizard's Sanctum, have the Air Demon steal the
+   scepter, and defeat creatures with different dying lines. Nothing staged may
+   be clickable or spend a turn, and Original mode must stay honest. Check reduced
+   motion.
+6. The Enchanted Castle. Play all four wings from the Great Hall with real input.
+   Compare rooms against the disk: floors in archive/dc/castle-data.js come from
+   CODE 5. Hunt for places you can get stuck, soft locks, ropes that will not catch,
+   moving platforms that drop you, exits that fire too early, respawns inside
+   hazards, and scepters that cannot be collected. Finish a full game on Beginner
+   and on Advanced. Test Elron's ward, pause, Title, Demo, Scores of Merit, Info,
+   Options, game over, and the December 25 tree. Confirm that Demo scores are not
+   recorded and that nothing in the castle changes the adventure's state.
+7. Modes and inputs. Lit colour and strict 1-bit in the castle, keyboard, mouse
+   aim, vertical tracking, touch buttons on a phone-sized viewport, silent play
+   with captions, and reduced motion. Leaving the castle must return input to
+   the adventure, with no stuck keys.
+8. Hosted edition. Run web/stage.py to a new empty folder and check that all new
+   scripts and assets load. Report anything you cannot verify here, such as real
+   phones, real Safari, and real audio output.
+9. Regressions. Saves, checkpoints, bookmarks, the Answering Knock, the Beacon,
+   hints, the Archive and picture modes must behave as they did before this branch.
+
+Report findings ranked by severity. For each give exact reproduction steps,
+expected and actual behaviour, and the evidence. Say plainly what you did not
+test. Known and open before this branch, so do not re-report them unless they
+got worse: Windows settings lost per launch because the launcher binds port 0, a
+failed Archive image cached until reload, and rest-until-healed spending turns
+while the page is hidden.

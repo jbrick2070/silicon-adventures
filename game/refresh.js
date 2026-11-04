@@ -722,7 +722,53 @@
     return samplePattern(pat, sx, sy) ? 1 : 2;
   }
 
+  // The physical edge of an outdoor or undersea room, in CODE 1 tiles only.
+  // `y` is the height on the edge, `top` its skyline at this column.
+  function shadeBoundary(edge, along, y, top, t, focal, sx, sy) {
+    const pen = t / focal, rise = Math.max(0, top - y); // One screen pixel, in metres at this depth
+    const tag = edge.material << 2;
+    if (rise < 1.4 * pen) return 1 | tag; // Ink along the skyline
+    const pick = pat => (samplePattern(pat, sx, sy) ? 1 : 2) | tag;
+    switch (edge.style) {
+      case 'wall': {
+        const course = Math.floor(y / .34);
+        if (y % .34 < pen || (along + course * .45) % .9 < pen) return 1 | tag;
+        return pick(19);
+      }
+      case 'thicket': {
+        const leaf = Math.sin(along * 8.3 + y * 6.1) * Math.sin(along * 4.7 - y * 9.7);
+        return pick(leaf > .34 ? 7 : leaf > -.2 ? 5 : 4);
+      }
+      case 'reeds': {
+        const stem = ((along * 5.3 + y * .2) % 1 + 1) % 1;
+        if (stem < .12) return 1 | tag;
+        return pick(y < .34 ? 6 : stem < .55 ? 5 : 13);
+      }
+      case 'dune':
+        return pick(rise < .16 ? 3 : y < .3 ? 13 : 4);
+      case 'bank':
+        return pick(((y * 11 + Math.sin(along * 2.3) * .6) & 1) ? 5 : 13);
+      case 'reef': {
+        const band = Math.sin(along * 3.1 + y * 4.3);
+        return pick(band > .45 ? 7 : band > -.3 ? 6 : 5);
+      }
+      default: {
+        // Rock and cliff: strata that lean with the skyline, broken by a few cracks.
+        const strata = (y + .22 * Math.sin(along * 1.4)) / .46, band = Math.floor(strata);
+        if (((along * .7 + band * .37) % 1 + 1) % 1 < .018) return 1 | tag;
+        return pick(rise < .12 ? 3 : band & 1 ? 5 : 6);
+      }
+    }
+  }
+
+  // Worn ground: a lighter CODE 1 tile than the land around it.
+  function shadeTrail(sx, sy) {
+    return (samplePattern(3, sx, sy) ? 1 : 2) | (4 << 2);
+  }
+
   window.RefreshEngine = {
+    shadeBoundary,
+    shadeTrail,
     toneUrl,
     spriteRimUrl,
     prepareToneFields,

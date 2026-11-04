@@ -74,6 +74,7 @@ function harness() {
     window: { SiliconFolio }, $: get, keys: new Set(),
     audioSetting: () => null, saveAudioSetting() {}, playing: true, muted: false
   };
+  context.castleOpen = false; // The close handler also knows about The Enchanted Castle.
   vm.createContext(context);
   const actual = [
     section('  let folioVault=', '  async function api('),

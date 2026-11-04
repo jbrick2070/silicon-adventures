@@ -96,11 +96,12 @@ class PlateView {
     this.rig = this.refreshed ? this.refreshRig : this.origRig;
     this.solids = this.refreshed ? this.refreshSolids : this.origSolids;
     this.rear = this.rig.rear ?? -1.75;
+    this.fitBoundary();
     // At a wall the other box can be smaller. Keep the requested position
     // for the return toggle until the player actually walks or resets.
     const {x, z} = this.unclippedPosition || this.pose;
-    this.pose.x = Math.max(this.rig.left + .14, Math.min(this.rig.right - .14, x));
-    this.pose.z = Math.max(this.rear + .14, Math.min(this.rig.back - .14, z));
+    this.pose.x = Math.max(this.bounds.left + .14, Math.min(this.bounds.right - .14, x));
+    this.pose.z = Math.max(this.bounds.rear + .14, Math.min(this.bounds.back - .14, z));
     this.unclippedPosition = this.pose.x === x && this.pose.z === z ? null : {x, z};
     this.env = this.rig.environment || (this.outsideByName ? 'open' : 'chamber');
     this.outside = this.env === 'open' || this.env === 'submerged';
@@ -180,17 +181,31 @@ class PlateView {
     this.reset(); this.sprites = [];
     this.syncMode();
   }
+  // The walkable limit and visible edge for the active rig. Bounds never hide a drawn thing.
+  fitBoundary() {
+    const B = window.ScepterBoundary;
+    const env = this.rig.environment || (this.outsideByName ? 'open' : 'chamber');
+    this.boundary = B ? B.profile(this.meta || {}, this.exits, env, {...this.rig, rear: this.rear}) :
+      {bounds: {left: this.rig.left, right: this.rig.right, back: this.rig.back, rear: this.rear}, fence: null};
+    if (B) B.widen(this.boundary, {...this.rig, rear: this.rear}, this.sprites);
+    this.bounds = this.boundary.bounds;
+    this.fence = this.boundary.fence;
+  }
   solidAt(x,z,radius) {
     return this.solids.some(s=>!s.noCollision && s.y1>.62 && s.y0<1.9 &&
       s.planes.every(p=>p.nx*x+p.nz*z-p.offset>=-radius));
   }
   move(side,forward) {
-    const p=this.pose,r=this.rig,cos=Math.cos(p.yaw),sin=Math.sin(p.yaw),rad=.14;
+    const p=this.pose,b=this.bounds,cos=Math.cos(p.yaw),sin=Math.sin(p.yaw),rad=.14;
     const clamp=()=>{
-      x=Math.max(r.left+rad,Math.min(r.right-rad,x));
-      z=Math.max(this.rear+rad,Math.min(r.back-rad,z));
+      x=Math.max(b.left+rad,Math.min(b.right-rad,x));
+      z=Math.max(b.rear+rad,Math.min(b.back-rad,z));
     };
     let x=p.x+side*cos+forward*sin, z=p.z-side*sin+forward*cos;
+    // Which room edge this step pressed against, for the player's feedback.
+    const wantX=x,wantZ=z,over=[[wantZ-(b.back-rad),'north'],[wantX-(b.right-rad),'east'],
+      [(b.rear+rad)-wantZ,'south'],[(b.left+rad)-wantX,'west']].sort((m,n)=>n[0]-m[0])[0];
+    this.pressed=over[0]>1e-6?over[1]:'';
     // Slide along the nearest face of any convex footprint we would enter, so
     // walking diagonally past columns, basins and furniture never snags.
     for(let pass=0;pass<4;pass++){
@@ -213,8 +228,8 @@ class PlateView {
     clamp();
     if(this.solidAt(x,z,rad)){
       // Wedged between bodies: fall back to axis-separated stepping.
-      const ax=Math.max(r.left+rad,Math.min(r.right-rad,p.x+side*cos+forward*sin));
-      const az=Math.max(this.rear+rad,Math.min(r.back-rad,p.z-side*sin+forward*cos));
+      const ax=Math.max(b.left+rad,Math.min(b.right-rad,p.x+side*cos+forward*sin));
+      const az=Math.max(b.rear+rad,Math.min(b.back-rad,p.z-side*sin+forward*cos));
       x=p.x;z=p.z;
       if(!this.solidAt(ax,z,rad))x=ax;
       if(!this.solidAt(x,az,rad))z=az;
@@ -255,7 +270,9 @@ class PlateView {
     const C = this.refreshed && this.colour ? this.colourRoom : null;
     const diskEye = C && p.x===0 && p.z===0 && p.yaw===0 && p.pitch===0;
     const clean = this.refreshed ? this.refreshClean : this.origClean;
-    const eye=r.eye+this.steps(), horizon=cy+p.pitch;
+    const jolt=time<(this.bumpUntil||0)?Math.round(2*Math.sin((this.bumpUntil-time)*46)):0;
+    const eye=r.eye+this.steps(), horizon=cy+p.pitch+jolt;
+    const fence=R?this.fence:null, B=window.ScepterBoundary;
     const panX=Math.round(p.yaw*f), panY=Math.round(-p.pitch);
     const sn=Math.sin(p.yaw),cs=Math.cos(p.yaw), pix=this.pixels,depth=this.depth,source=this.source;
     const paper=this.paper,ink=this.ink,boxHits=[];
@@ -269,6 +286,16 @@ class PlateView {
       const inverseRayLength=C ? 1/Math.hypot(dx,dz) : 0;
       const tx=((dx>0?r.right:r.left)-p.x)/(dx||1e-10),tz=((dz>0?r.back:this.rear)-p.z)/(dz||1e-10);
       const wall=Math.min(tx,tz),side=tx<tz;
+      // One physical edge per column: where this ray leaves the walkable ground.
+      let fenceT=Infinity,fenceEdge=null,fenceAlong=0,fenceTop=0,fencePlateTop=0;
+      if(fence){
+        const ax=((dx>0?fence.right:fence.left)-p.x)/(dx||1e-10),az=((dz>0?fence.back:fence.rear)-p.z)/(dz||1e-10);
+        fenceT=Math.min(ax,az);
+        fenceEdge=fence.edges[ax<az?(dx>0?'east':'west'):(dz>0?'north':'south')];
+        fenceAlong=ax<az?p.z+dz*fenceT:p.x+dx*fenceT;
+        fenceTop=B.crest(fenceEdge,fenceAlong);
+        fencePlateTop=fenceEdge.overPlate?fenceTop*B.plateRise(fenceT,Math.hypot(p.x,p.z)):0;
+      }
       boxHits.length=0;
       for (const box of this.solids) {
         if(box.collisionOnly)continue;
@@ -348,8 +375,21 @@ class PlateView {
         depth[idx]=t;
         const x=p.x+dx*t, y=eye+dy*t,z=p.z+dz*t;
         const fx=cx+f*x/z, fy=cy-f*(y-r.eye)/z, px=Math.floor(fx), py=Math.floor(fy);
-        let unseenMaterial=0;
-        if(diskEye){
+        let unseenMaterial=0,fenced=false;
+        const plateHere=z>.02 && visible && !solid && px>=0&&px<w&&py>=0&&py<h;
+        if(fenceEdge && !diskEye && !layerBit && !solid && fenceT<=t+1e-4){
+          const fenceY=eye+dy*fenceT;
+          fenced=fenceY>=0 && fenceY<(plateHere?fencePlateTop:fenceTop);
+          if(fenced){
+            const sample=R.shadeBoundary(fenceEdge,fenceAlong,fenceY,plateHere?fencePlateTop:fenceTop,fenceT,f,sx,sy);
+            pix[idx]=(sample&3)===1?ink:paper;
+            unseenMaterial=sample>>>2;
+            depth[idx]=fenceT;
+          }
+        }
+        if(fenced){
+          // Drawn above. The colour pass below reads its material.
+        } else if(diskEye){
           // At registration the final ink comes directly from the drawing.
           pix[idx]=source.bits[idx]===1?ink:paper;
         } else if(!R && z>.02 && px>=0&&px<w&&py>=0&&py<h && Math.abs(p.x)+Math.abs(p.z)<.00001) {
@@ -366,7 +406,8 @@ class PlateView {
             : clean.bits[pIdx];
           pix[idx]=cBit===1?ink:paper;
         } else if(R){
-          const sample=R.shadeUnseenWorld(this,face,x,y,z,t,sx,sy,dx,dy,dz,C?.surround);
+          const trail=fence&&face===3&&B.onTrail(fence,x,z);
+          const sample=trail?R.shadeTrail(sx,sy):R.shadeUnseenWorld(this,face,x,y,z,t,sx,sy,dx,dy,dz,C?.surround);
           pix[idx]=(sample&3)===1?ink:paper;
           unseenMaterial=sample>>>2;
         } else {
@@ -400,7 +441,7 @@ class PlateView {
         if(C){
           let tex=null,uv=0;
           if(diskEye){tex=source;uv=idx;}
-          else if(z>.02 && visible && px>=0 && py>=0 && px<w && py<h && (!solid || layerBit)){
+          else if(!fenced && z>.02 && visible && px>=0 && py>=0 && px<w && py<h && (!solid || layerBit)){
             tex=solid ? solid.layer : clean;uv=py*w+px;
           }
           // Spikes has a 313-row plate in the 314-row viewport.
@@ -421,7 +462,13 @@ class PlateView {
       // A struck inhabitant flinches: a two-pixel shudder for a few frames.
       const flinch=s.flinchUntil&&time<s.flinchUntil?((Math.floor(time*30)&1)?2:-2):0;
       const lateral=(s.x-p.x)*cs-(s.z-p.z)*sn, middle=cx+lateral*f/t;
-      const sw=s.w*f/t,sh=s.h*f/t, top=horizon-(s.y+s.h-eye)*f/t;
+      // A defeated inhabitant leaves the way the disk's dying line says it does.
+      const parting=s.parting?Math.max(0,Math.min(1,(time-s.parting.start)/s.parting.span)):0;
+      const squash=s.parting?.style==='fall'||s.parting?.style==='spiral'?1-.82*parting*parting:1;
+      const sink=s.parting?.style==='sink'?parting:0;
+      const wither=s.parting&&!sink&&squash===1?parting:0;
+      const sw=s.w*f/t,sh=s.h*f/t*squash, top=horizon-(s.y+s.h*squash-eye)*f/t+sink*s.h*f/t;
+      const clipBottom=sink?horizon-(s.y-eye)*f/t:Infinity;
       let left=middle-sw/2;
       if(left>=w||left+sw<=0||top>=h||top+sh<=0)continue;
       const offsetX=(s.frame%Math.max(1,s.cols))*fw,offsetY=s.row*fh;
@@ -430,9 +477,11 @@ class PlateView {
       let plotted=0;
       for(let j=Math.max(0,Math.ceil(top-.5));j<Math.min(h,top+sh-.5);j++){
         const sy=offsetY+Math.min(fh-1,Math.floor((j+.5-top)*fh/sh));
+        if(j>clipBottom)break;
         for(let i=Math.max(0,Math.ceil(left-.5));i<Math.min(w,left+sw-.5);i++){
           const idx=i+j*w;
           if(t>depth[idx]+.025)continue;
+          if(wither && ((i*7919+j*104729)%97)/97<wither)continue;
           const sx=Math.min(fw-1,Math.floor((i+.5-left)*fw/sw));
           const tIdx=sy*tex.w+offsetX+(s.flip?fw-1-sx:sx);
           const bit=bits[tIdx] || (rim ? rim[tIdx] : 0);

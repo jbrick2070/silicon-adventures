@@ -122,6 +122,8 @@
       const cmd = item.verb + ' ' + item.name;
       return [cap(cmd), cmd];
     }
+    // Helmets, shields, chest armor and spiritual armor: the disk's WEAR.
+    if (item.type >= 4 && item.type <= 7) return ['Wear ' + item.name, 'wear ' + item.name];
     if (item.id === 6496) return ['Play flute', 'play flute'];
     if (item.id === 17963) return ['Wave wand', 'wave wand'];
     if (item.id === 13010 && sceneId === 9709) return ['Insert chip', 'insert chip'];
@@ -191,7 +193,11 @@
       ['manual', 'Manual cards'],
       ['bestiary', 'Bestiary'],
       ['hall', 'Great Hall'],
-      ['notes', 'Scepters notes']
+      ['notes', 'Scepters notes'],
+      ['deeds', 'Side quests'],
+      ['oddities', 'Oddities'],
+      ['chronicle', 'Chronicle'],
+      ['cast', 'Cast']
     ];
     const tabButtons = new Map();
 
@@ -424,7 +430,8 @@
       if (id === 'manual') renderManual();
       else if (id === 'bestiary') renderBestiary();
       else if (id === 'hall') renderGreatHall();
-      else renderNotes();
+      else if (id === 'notes') renderNotes();
+      else window.SiliconChronicle?.panels[id](stage);
     }
 
     for (const [id, label] of tabs) {

@@ -143,7 +143,7 @@
       !(p.kind==='yesno'&&p.speaker==='King'))return {speaker:p.speaker,kind:p.kind};
     return null;
   }
-  let elapsed=0,oldTime=0,stepDistance=0,dirty=true,lastPaint=-1,captionUntil=0,viewScale=1;
+  let elapsed=0,oldTime=0,stepDistance=0,dirty=true,lastPaint=-1,captionUntil=0,viewScale=1,offerWaiting=false,tryAt=0,castleOpen=false;
   const actorPlace={x:-.94,z:5.14};
   const enhancedName=()=>view.colour?'Lit colour':'Refreshed 1-bit';
   function syncLayerUi(){
@@ -236,7 +236,11 @@
     $('dialogBody').replaceChildren(...content);if(!$('dialog').open)$('dialog').showModal();
   }
   $('closeDialog').onclick=()=>$('dialog').close();
-  $('dialog').addEventListener('close',()=>{stopFolioAudio();sound.pause(!playing||document.hidden||$('dialog').open);if(playing)$('world').focus({preventScroll:true});});
+  $('dialog').addEventListener('close',()=>{
+    stopFolioAudio();sound.pause(castleOpen||!playing||document.hidden||$('dialog').open);
+    if(castleOpen)document.getElementById('castleCanvas')?.focus({preventScroll:true});
+    else if(playing)$('world').focus({preventScroll:true});
+  });
   $('dialog').addEventListener('click',e=>{if(e.target===$('dialog'))$('dialog').close();});
   async function api(action,arg=''){
     if(browserEngine)return browserEngine.action(action,arg);
@@ -321,7 +325,77 @@
         await view.add(meta,k,options);
       }
     }
-    await crossover();dirty=true;
+    await crossover();await passingLife();view.fitBoundary();dirty=true;
+  }
+  // Dark Castle's people and props as passing life in Scepters rooms. All of it is
+  // refreshed-layer decoration: nothing here can be clicked, so nothing spends a turn.
+  const VISITORS=[
+    {rooms:['desert','dunes','desert vista','butte','sphinx vista','oasis','outcrop','valley vista'],ppct:701,x:-1.6,z:6,y:3.1,w:.86,h:.58,fps:7,drift:1.9},
+    {rooms:['peak','mesa','cliff side','cliff road','volcano vista'],ppct:701,x:1.4,z:6.4,y:3.5,w:.8,h:.54,fps:7,drift:1.5},
+    {rooms:['rampart','courtyard','post'],ppct:906,x:1.5,z:4,y:2.25,w:.7,h:.52,fps:3},
+    {rooms:['great hall','marble hall','lonely hall'],ppct:425,x:-1.1,z:3.6,y:1.9,w:.42,h:.42,fps:7,drift:.5},
+    {rooms:['store room','weapons storage','barracks'],ppct:422,x:1,z:3.2,y:.02,w:.36,h:.72,fps:7,drift:.7},
+    {rooms:['well tunnel','bunker','back room'],ppct:434,x:-.8,z:3.4,y:.02,w:.55,h:.8,fps:4},
+    {rooms:['lava tunnel','lava path','volcano top'],ppct:433,x:1,z:3.2,y:.02,w:.56,h:.5,fps:6},
+    {rooms:['fountain','court'],ppct:420,x:0,z:3.4,y:.05,w:.74,h:.76,fps:5},
+    {rooms:['banquet hall','salty bar','drinks'],ppct:904,x:.5,z:2.6,y:.82,w:.12,h:.2,fps:3},
+    {rooms:['throne room','elven throne'],ppct:902,x:0,z:3.9,y:.02,w:.9,h:1.42,fps:1},
+    {rooms:['peak','high altar'],ppct:705,x:-2.2,z:8,y:3.2,w:.7,h:1.5,fps:0,flash:true},
+    {rooms:['vines','jungle path'],ppct:510,x:1.3,z:4.4,y:.5,w:1.4,h:1.95,fps:3}
+  ];
+  async function passingLife(){
+    for(const v of VISITORS){
+      if(!v.rooms.includes(scene.name))continue;
+      const reel=castleReel(v.ppct);if(!reel)continue;
+      const back=(view.rig?.back??5)-.5;
+      const s=await view.add({path:reel.path,x:0,y:0,width:reel.width,height:reel.height},'visitor',
+        {x:v.x,z:Math.min(v.z,back),y:v.y,w:v.w,h:v.h,fw:reel.width,fh:reel.height,cols:reel.frames,refreshedOnly:true,decorative:true});
+      if(s){s.fps=v.fps;s.drift=v.drift||0;s.baseX=v.x;s.flash=!!v.flash;fxSprites.push(s);}
+    }
+  }
+  // What the disk moves in and straight back out inside one turn never reaches a
+  // snapshot, so the player would only read about it. These lines put it on stage.
+  const STAGED=[
+    [/From sparks to flame, the Wizard Elron appears!/,[{key:'AOBJ/28414',span:.55},{key:'AOBJ/23092',from:.5,span:3.6}]],
+    [/snatches the Air Scepter/,[{chr:'Air Demon',span:1.5,fly:true}]],
+    [/The Demon looks stunned. He dives off the bridge!/,[{chr:'Earth Demon',span:1.1,style:'sink'}]],
+    [/You are crushed|You are crushed to death/,[]],
+  ];
+  const staged=[];
+  async function stage(output){
+    for(const [pattern,props] of STAGED){
+      if(!pattern.test(output||''))continue;
+      for(const prop of props){
+        const meta=prop.key?designs.get(prop.key):ES_DESIGNS.find(d=>d.type==='ACHR'&&d.name===prop.chr);
+        if(!meta||meta.width<2)continue;
+        const s=await view.add(meta,'staged',{decorative:true,hidden:!!prop.from});
+        if(!s)continue;
+        if(prop.fly&&!reducedMotion.matches){s.flyFrom=-4;s.flyTo=4;s.y=2.6;s.z=4.2;}
+        else if(prop.fly){s.y=2.6;s.z=4.2;s.x=0;}
+        s.showAt=elapsed+(prop.from||0);s.hideAt=s.showAt+prop.span;s.flySpan=prop.span;
+        if(prop.style&&!reducedMotion.matches)s.parting={style:prop.style,start:s.showAt,span:prop.span};
+        staged.push(s);
+      }
+    }
+    dirty=true;
+  }
+  async function stageDefeat(id){
+    const defeat=window.SiliconChronicle?.defeatOf(id),meta=designs.get('ACHR/'+id);
+    if(!defeat||!meta||meta.width<2)return;
+    const s=await view.add(meta,'staged',{decorative:true,flinchUntil:elapsed+.2});
+    if(!s)return;
+    const span=reducedMotion.matches?.7:defeat.style==='sink'?1.1:.9;
+    s.showAt=elapsed;s.hideAt=elapsed+span;
+    if(!reducedMotion.matches)s.parting={style:defeat.style,start:elapsed+.12,span:span-.12};
+    staged.push(s);
+    const dust={dust:416,burn:433,dissolve:417,fall:418,spiral:418}[defeat.style];
+    const reel=dust&&castleReel(dust);
+    if(reel&&!reducedMotion.matches){
+      const puff=await view.add({path:reel.path,x:0,y:0,width:reel.width,height:reel.height},'staged',
+        {x:s.x,z:Math.max(.6,s.z-.05),y:s.y,w:Math.max(.5,s.w*.9),h:.34,fw:reel.width,fh:reel.height,cols:reel.frames,refreshedOnly:true,decorative:true});
+      if(puff){puff.showAt=elapsed+.1;puff.hideAt=elapsed+span+.25;puff.fps=8;fxSprites.push(puff);staged.push(puff);}
+    }
+    dirty=true;
   }
   function tabs(which,focus=false){
     for(const id of ['journal','pack','route']){
@@ -359,7 +433,7 @@
   }
   function savedView(auto=false,saveId){
     return JSON.stringify({...view.pose,saveId,scene:scene.id,read:wizardRead,prayed:prayed||undefined,shortcut,
-      pending:pending||undefined,hp:state.hp,seen:packSeen(),
+      pending:pending||undefined,hp:state.hp,seen:packSeen(),chronicle:window.SiliconChronicle?.pack(),
       auto:auto||undefined,knock:knockProgress?{...knockProgress,open:knockOpen}:undefined});
   }
   function openKnock(){
@@ -463,6 +537,8 @@
       dropBtn.disabled=waiting;
       if(waiting)dropBtn.title='Answer the question in the Journal first.';
       row.append(dropBtn);
+      // The disk's OFFER: some enemies can be bought. Any object can be held out.
+      if(state.characters.length)row.append(button('Offer',()=>command('offer '+it.name)));
     }
     body.append(head,noteEl,row);
     box.append(art,body);
@@ -545,10 +621,33 @@
       if(!state.objects.some(o=>o.id===14168))verbs.push('Down');
     }
     if(scene.id===29408)verbs.push('Read book','Swing sword');
+    // The glass in the mirror room opens on the Black Knight's own castle.
+    if(scene.id===20791&&state.objects.some(o=>o.id===23941))$('actions').append(button('Step through the glass',openCastle,'mini primary-mini'));
     if(scene.name==='bridge room')verbs.push('Turn crank');
+    if(offerWaiting)verbs.unshift('Accept');
     $('actions').append(...[...new Set(verbs)].map(v=>button(v,()=>v==='Rest until healed'?restUntilHealed():command(v))));
+    // Everything a room's script listens for stays reachable without a keyboard.
+    // Each press only fills the command line, so it costs no turn.
+    const listens=window.SiliconChronicle?.verbsFor(scene.id)||[];
+    if(listens.length)$('actions').append(button('Try…',()=>{
+      const word=listens[tryAt++%listens.length].toLowerCase();
+      tabs('journal');$('cmd').value=word;draftCmd=word;
+      message('This room would hear: '+word);
+    }));
     // Doorways the renderer draws: the map's open bearings or an exit the room text names.
     renderTravel();
+  }
+  // The Chronicle reads the engine's own words after a turn. It never sends a command.
+  function recordChronicle(output,sceneId,roomText){
+    const fresh=window.SiliconChronicle?.note(output||'',sceneId,roomText);
+    if(!fresh)return;
+    for(const deed of fresh.deeds)line('Side quest recorded · '+deed.title,'aside');
+    for(const odd of fresh.oddities)line('Oddity found · see the Archive','aside');
+  }
+  function chronicleSummary(){
+    if(!window.SiliconChronicle)return;
+    const c=SiliconChronicle.counts();
+    line('The Chronicle holds '+c.read+' of '+c.all+' lines, '+c.deeds+' of '+SiliconChronicle.DEEDS.length+' side quests and '+c.oddities+' of '+SiliconChronicle.ODDITIES.length+' oddities.','aside');
   }
   async function apply(next,opts={}) {
     const changed=next.scene!==state?.scene||opts.fresh;
@@ -564,6 +663,10 @@
     // Blows land where they land: an inhabitant whose HP fell is struck, Saber's own loss is felt here.
     const struck=new Set((state?.characters||[]).filter(c=>{const n=next.characters.find(x=>x.id===c.id);return n&&n.hp<c.hp;}).map(c=>c.id));
     const selfHurt=!!state&&next.hp<state.hp;
+    const defeated=opts.reloading?[]:(state?.characters||[]).filter(c=>{
+      const defeat=window.SiliconChronicle?.defeatOf(c.id);
+      return defeat&&!next.characters.some(n=>n.id===c.id)&&String(next.output||'').includes(defeat.line);
+    }).map(c=>c.id);
     state=next;
     pending=state.ended?null:(opts.reloading?restoredPending(opts.live,next):null)||detectPending(next.output,next.scene);
     if(state.ended){
@@ -581,9 +684,11 @@
       }
       if(/saved Callion/i.test(next.output||''))callionSaved=true;
       else if(opts.live?.callionSaved)callionSaved=true;
+      if(!opts.reloading)recordChronicle(next.output,next.scene,'');
       if(!(opts.reloading&&opts.keepJournal)){
         sourceEvents(next,opts.point);line(next.output);
         if(!callionSaved&&diedIn)line('Saber fell in '+diedIn+'.','aside');
+        if(callionSaved)chronicleSummary();
         line(state.saved?'Restore returns to '+(checkpoint?checkpoint.room+' with HP '+checkpoint.hp:'the saved adventure')+'.':'This adventure has ended. Begin again or choose a new entry.','aside');
       }
       controls();rememberLive();return;
@@ -607,6 +712,8 @@
     }
     if(opts.echo)line('› '+opts.echo,'entry');
     if(!(opts.reloading&&opts.keepJournal))line(next.output || (changed?scene.text:''));
+    offerWaiting=!opts.reloading&&/ offers (a|an|some) /.test(next.output||'');
+    if(!opts.reloading)recordChronicle(next.output,scene.id,changed?scene.text:'');
     if(!opts.reloading&&/^(what|huh)\?\s*$/i.test(next.output||'')&&parserHelp<3){
       parserHelp++;
       line('The disk understands its Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, WEAR, and a weapon’s own verb. Press ? for the field guide.','aside');
@@ -617,7 +724,7 @@
     }
     if(scene.name.toLowerCase()==='finale' && /saved Callion/i.test(next.output)) {
       callionSaved=true;
-      if(!(opts.reloading&&opts.keepJournal))line('All four scepters have come home.','aside');
+      if(!(opts.reloading&&opts.keepJournal)){line('All four scepters have come home.','aside');chronicleSummary();}
     }
     const share=state.maxHp?state.hp/state.maxHp:1;
     if(!opts.reloading&&share<.40&&priorShare>=.40){message('Your physical condition is very bad.');line('Rest where no one is near, or retreat the way you came.','aside');}
@@ -625,6 +732,11 @@
       Object.assign(view.pose,opts.live.pose);view.syncMode();
     }
     await populate();controls();
+    staged.length=0;
+    if(!opts.reloading){
+      await stage(next.output);
+      for(const id of defeated)await stageDefeat(id);
+    }
     const foe=view.sprites.find(s=>s.key.startsWith('ACHR/')&&struck.has(+s.key.slice(5)))||(struck.size?combatant:null);
     for(const s of view.sprites)if(s.key.startsWith('ACHR/')&&struck.has(+s.key.slice(5)))s.flinchUntil=elapsed+.45;
     if(combatant&&struck.size)combatant.flinchUntil=elapsed+.45;
@@ -648,7 +760,7 @@
     rememberLive();
   }
   async function command(text,action='turn',point=null,echo=null) {
-    if(!playing||busy||knockOpen||state.ended)return;
+    if(!playing||busy||knockOpen||castleOpen||state.ended)return;
     let sent=text;
     if(action==='turn'){
       const t=text.trim();
@@ -737,6 +849,7 @@
       if(entry==='restore'&&state.viewData){
         try{const v=JSON.parse(state.viewData);
           knockProgress=readKnock(v.knock);enterKnock=!!(knockProgress&&v.knock.open&&scene.id===armory);
+          window.SiliconChronicle?.merge(v.chronicle);
           // Restore starts a new session, so re-key the progress or a reload forgets it.
           if(knockProgress)rememberKnock();
           if(typeof v.seen==='string'){visited=unpackSeen(v.seen);if(roomIndex.has(scene.id))visited[roomIndex.get(scene.id)]=1;rememberSeen();drawChart();}
@@ -764,6 +877,29 @@
   }
   $('enter').onclick=()=>begin('altar');$('journey').onclick=()=>begin('new');$('resume').onclick=()=>begin('restore');
   $('knockEntry').onclick=()=>begin('knock');
+  // The Enchanted Castle runs in its own window and sends the adventure nothing,
+  // so opening it from a game in progress costs no turn.
+  function openCastle(){
+    if(castleOpen||busy||!window.EnchantedCastle)return;
+    castleOpen=true;keys.clear();drag=null;
+    if($('dialog').open)$('dialog').close();
+    sound.pause(true);
+    EnchantedCastle.open({
+      colour:()=>view.refreshed&&view.colour,
+      onCue(id){
+        if(muted||document.hidden)return;
+        folioVault||=new VaultAudio();
+        folioVault.mute(false);folioVault.pause(false);
+        folioVault.setVolume('effects',sound.vault.volumes.effects);
+        folioVault.start().then(ok=>{if(ok&&castleOpen&&!muted&&!document.hidden)folioVault.play(id);}).catch(()=>{});
+      },
+      openInfo(){openFolio('manual');},
+      onScepter(event){if(playing)line('In the Enchanted Castle you recovered the '+event.name+'.','aside');},
+      onFinish(result){if(playing&&result.won)line('The Enchanted Castle has fallen. Final score '+result.score.toLocaleString('en-US')+'.','aside');},
+      onExit(){castleOpen=false;stopFolioAudio();sound.pause(document.hidden||!playing||$('dialog').open);dirty=true;if(playing)$('world').focus({preventScroll:true});}
+    });
+  }
+  $('castleEntry').onclick=openCastle;
   async function saveHere(){
     if(busy||!playing||state.ended)throw new Error('Wait for this turn to finish.');
     setBusy(true,'SAVING…');
@@ -785,7 +921,7 @@
   function adventures(){
     if(busy)return;
     const text=para('Begin in Saber’s quarters, visit the High Altar, or open one of the nine saved adventures found on the disk. Save your current progress first if you want to return.');
-    const buttons=[button('Saber’s quarters',()=>begin('new')),button('High Altar excursion',()=>begin('altar')),button('The Answering Knock',()=>begin('knock'))];
+    const buttons=[button('Saber’s quarters',()=>begin('new')),button('High Altar excursion',()=>begin('altar')),button('The Answering Knock',()=>begin('knock')),button('The Enchanted Castle',openCastle)];
     if(state?.saved)buttons.push(button('Your saved adventure',()=>begin('restore')));
     openDialog('Adventures',text,...buttons,para('Original disk bookmarks','eyebrow'),...starts.map(n=>button(title(n),()=>begin('bookmark/'+n))));
   }
@@ -836,6 +972,9 @@
       para('Two tracks alternate in the castle halls and temple, and another pair in underwater rooms with bubbles. The title appears below the picture.'),
       soundtrackCredits(),
       para('The Answering Knock is an optional Dark Castle excursion. From the quarters, go south, east, then south. In the armory choose Answer the knock. The shields show their rhythms even with Sound off.'),
+      para('The Enchanted Castle is a new game built from both disks. Find it under Adventures, or step through the glass in the mirror room. It spends no turns in this adventure.'),
+      para('Room edges are physical. Outdoors, a real exit is the gap between two marker posts, and worn ground leads to it. The line under the picture lists the ways out from where you face. Walking into an edge costs no turn and shows the disk’s own message.'),
+      para('The Archive keeps a Chronicle of every line of disk text you meet, with Side quests, Oddities and the Cast. The Try button fills the command line with a word this room listens for. Press Enter to send it.'),
       para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around. On a phone or tablet, hold the Walk, Back and turn buttons under the picture.'),
       ...extras,
       para('Click a drawn object or approach it and press E. A click is a turn in the original game: it may take, answer a question or spring a trap, so E offers the edition’s honest prompt (Take, Click, Face, Go). Press / to type. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
@@ -958,6 +1097,39 @@
     if(id.startsWith('es/'))sound.events([id.slice(3)],point);
     else sound.effect(id,point);
   };
+  // Outdoors a real exit is the gap between its posts. Indoors it is the side itself.
+  function atExit(direction){
+    if(!view.exits?.[direction])return false;
+    const edge=view.fence?.edges[direction],p=view.pose;
+    return !edge||ScepterBoundary.inGap(edge,direction==='north'||direction==='south'?p.x:p.z);
+  }
+  // Pressing against a room edge costs no turn. It reads out the disk's own
+  // blocked line, or the engine's, and gives a small shove the eye can feel.
+  let edgeAt=-9,edgeSide='';
+  const edgesRead=new Set();
+  function pressedEdge(direction){
+    if(!scene||atExit(direction)||(elapsed-edgeAt<1.5&&edgeSide===direction))return;
+    edgeAt=elapsed;edgeSide=direction;
+    const open=view.exits?.[direction];
+    const text=open?'The way '+direction+' lies between the posts.':ScepterBoundary.note(scene,direction);
+    message(text);
+    if(!open)recordChronicle(text,scene.id,'');
+    if(!reducedMotion.matches&&!open){view.bumpUntil=elapsed+.16;dirty=true;}
+    // A line the disk wrote for this side goes in the journal once. The engine's
+    // plain refusal stays a caption, or walking round a room would fill the page.
+    if(!open&&scene.messages?.[direction]&&!edgesRead.has(scene.id+'/'+direction)){
+      edgesRead.add(scene.id+'/'+direction);
+      line(text,'aside');
+    }
+  }
+  // Ways out of this room, read from where Saber faces. It costs no turn and keeps the marsh legible.
+  let waysShown='';
+  function showWays(){
+    const list=state?.ended?[]:ScepterBoundary.ways(view.exits,view.pose.yaw);
+    const text=list.length?'Ways out · '+list.map(w=>w.mark+' '+w.direction).join('   '):'No way out in sight';
+    if(text!==waysShown){waysShown=text;$('ways').textContent=text;}
+    $('ways').hidden=!playing||!!state?.ended;
+  }
   function actionNear(){
     const p=view.pose;
     if(!view.targets||!view.rig||!state||state.ended)return null;
@@ -978,8 +1150,8 @@
       if(!state.objects.some(o=>o.id===14168))return ['altar-down','Descend the passage'];
       if(wizardRead && !prayed)return ['altar-pray','Kneel at the altar'];
     }
-    const r=view.rig,bearings=[['north',r.back-p.z,0],['east',r.right-p.x,Math.PI/2],['south',p.z-view.rear,Math.PI],['west',p.x-r.left,-Math.PI/2]];
-    for(const [name,d,a]of bearings)if(d<.65&&Math.cos(p.yaw-a)>.35&&view.exits?.[name])return ['go/'+name,'Go '+name];
+    const b=view.bounds,bearings=[['north',b.back-p.z,0],['east',b.right-p.x,Math.PI/2],['south',p.z-b.rear,Math.PI],['west',p.x-b.left,-Math.PI/2]];
+    for(const [name,d,a]of bearings)if(d<.65&&Math.cos(p.yaw-a)>.35&&atExit(name))return ['go/'+name,'Go '+name];
     return null;
   }
   $('interact').onclick=()=>{const a=actionNear();if(a)use(a[0]);};
@@ -1036,7 +1208,7 @@
   $('world').onlostpointercapture=$('world').onpointercancel;
   $('world').onpointerleave=()=>{lastPointer=null;if(!drag)$('world').style.cursor='';setHoverPreview(null);};
   document.addEventListener('keydown',e=>{
-    if(e.defaultPrevented||knockOpen||$('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.defaultPrevented||knockOpen||castleOpen||$('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
     if(e.target.tagName==='SELECT')return;
     // The chart and the tabs handle their own keys and prevent the default, so
     // everything else stays with the game. A slider keeps only the keys that move it.
@@ -1079,7 +1251,7 @@
     if(!e.target.closest?.('#soundBtn,#musicBtn,#guideBtn,#folioBtn'))activateAudio();
   },true);
   document.addEventListener('visibilitychange',()=>{
-    keys.clear();sound.pause(document.hidden||!playing||$('dialog').open);
+    keys.clear();sound.pause(castleOpen||document.hidden||!playing||$('dialog').open);
     if(document.hidden)stopFolioAudio();
   });
   function direction(point) {
@@ -1103,7 +1275,7 @@
   };
   function animate(ms){
     const dt=Math.min(.05,Math.max(0,(ms-oldTime)/1000));oldTime=ms;elapsed+=dt;
-    if(playing && !busy && !knockOpen && !$('dialog').open && !state?.ended) {
+    if(playing && !busy && !knockOpen && !castleOpen && !$('dialog').open && !state?.ended) {
       let forward=+(keys.has('w')||keys.has('arrowup'))-+(keys.has('s')||keys.has('arrowdown'));
       let side=+keys.has('d')-+keys.has('a');
       const turn=+keys.has('arrowright')-+keys.has('arrowleft'),p=view.pose;
@@ -1111,6 +1283,7 @@
       if(forward||side){
         const norm=Math.hypot(side,forward),x=p.x,z=p.z;view.move(side/norm*dt*1.85,forward/norm*dt*1.85);
         stepDistance+=Math.hypot(x-p.x,z-p.z);if(stepDistance>.69){sound.effect('step',p);stepDistance=0;}
+        if(view.pressed)pressedEdge(view.pressed);
         dirty=true;
       }
       const actors={};
@@ -1130,8 +1303,18 @@
         if(npc.frame!==before)dirty=true;
       }
       for(const fx of fxSprites){
-        const f=reducedMotion.matches?0:Math.floor(elapsed*(fx.fps||6))%fx.cols;
+        const f=reducedMotion.matches||!fx.fps?0:Math.floor(elapsed*fx.fps)%fx.cols;
         if(fx.frame!==f){fx.frame=f;dirty=true;}
+        if(fx.drift&&!reducedMotion.matches){fx.x=fx.baseX+fx.drift*Math.sin(elapsed*.42+fx.baseX);dirty=true;}
+        if(fx.flash){const on=!reducedMotion.matches&&Math.floor(elapsed/7)%3===0&&elapsed%7<.24;if(fx.hidden===on){fx.hidden=!on;dirty=true;}}
+      }
+      for(const s of staged){
+        const showing=elapsed>=s.showAt&&elapsed<s.hideAt;
+        if(s.hidden===showing){s.hidden=!showing;dirty=true;}
+        if(showing&&(s.parting||s.flySpan)){
+          if(s.flyFrom!==undefined)s.x=s.flyFrom+(s.flyTo-s.flyFrom)*(elapsed-s.showAt)/s.flySpan;
+          dirty=true;
+        }
       }
       if(shatterSprite&&elapsed>=shatterUntil){
         view.sprites=view.sprites.filter(s=>s!==shatterSprite);
@@ -1149,15 +1332,16 @@
           });
         }
       }
-      if(view.sprites.some(s=>s.flinchUntil>elapsed))dirty=true;
+      if(view.sprites.some(s=>s.flinchUntil>elapsed)||view.bumpUntil>elapsed)dirty=true;
       sound.frame(p,actors);
       if($('cue').textContent && elapsed>captionUntil)$('cue').textContent='';
     }
     if(dirty && view.source && ms-lastPaint>=30) {
-      view.render(elapsed);lastPaint=ms;dirty=false;
+      view.render(elapsed);lastPaint=ms;dirty=view.bumpUntil>elapsed;
       if(playing){
         const a=actionNear();$('interact').hidden=!a;if(a)$('interact').textContent='E · '+a[1];
         $('compass').textContent=['N','NE','E','SE','S','SW','W','NW'][(Math.round(view.pose.yaw/(Math.PI/4))%8+8)%8];
+        showWays();
         if(refreshHover){refreshHover=false;if(lastPointer&&!drag&&!busy)hoverCursor(lastPointer);}
       }
     }
@@ -1165,6 +1349,7 @@
   }
   async function init(){
     initAudio();
+    window.SiliconChronicle?.load();
     let enterKnock=false;
     let pictureMode='colour';
     try{pictureMode=localStorage.getItem('scepters-picture-mode')||pictureMode;}catch{}

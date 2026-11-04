@@ -25,6 +25,34 @@ window.ScepterHints = (() => {
     23272, 23449, 23679, 24601, 25538, 26474, 26847, 27201, 28593, 29361, 30379, 31514,
     31555, 32256
   ]);
+  // The marsh rooms read alike and the bog is on a clock. Bearings below are the disk's map.
+  const MARSH_ROOMS = {
+    24338: ['Marsh · hidden valley', [
+      'Gather anything scattered here first. Canyon walls close this valley on two sides, and worn ground leads to each way out.',
+      'South leads into the slough. East leads to the port.',
+      'Go south to the slough, where the ground rises to the south and leads out of the marsh.'
+    ]],
+    25936: ['Slough · the marsh', [
+      'The ground is higher to the south, as the room says. East is the bog.',
+      'Do not linger in the bog to the east: it swallows anyone who stays.',
+      'South leaves the marsh for the cliff road. North returns to the hidden valley. East is the bog, and it is only worth crossing quickly.'
+    ]],
+    2577: ['Bog · sinking', [
+      'The mud is taking you. Every turn here counts.',
+      'The bog kills on its sixth turn. Walking around costs nothing, but any command spends a turn.',
+      'Leave now. North is the port, south the alcove, east the swamp and west the slough. Do not rest here.'
+    ]],
+    25694: ['Swamp · the marsh', [
+      'The ground gets wetter to the north. Rocks lie east and vegetation south, as the room says.',
+      'A great hunter wanders this ground, so keep your wits about you and your strength up.',
+      'West returns to the bog. South leads to the ferns and east to the gulley.'
+    ]],
+    4315: ['Stagnant pool · the marsh', [
+      'The only way out on foot is east. The west is shallow water and mud.',
+      'Tall cliffs close the north.',
+      'Go east to the mellow pond.'
+    ]]
+  };
   const TEMPLE_TRAPS = {
     32726: ['Sand room · sealed temple hall', [
       'The door behind you has locked; the only way out of the temple is forward to the High Altar.',
@@ -305,6 +333,10 @@ window.ScepterHints = (() => {
     }
     if (!has(AIR) && TEMPLE_TRAPS[state.scene]) {
       return templeHint(state.scene, objects);
+    }
+    if (MARSH_ROOMS[state.scene]) {
+      const [title, tiers] = MARSH_ROOMS[state.scene];
+      return local('local/marsh/' + state.scene, title, tiers);
     }
     if (index === 17) {
       const missing = [
