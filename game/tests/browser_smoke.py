@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
+from mixer_signal import check_mixer, install_meter
 
 
 def smoke(driver, url):
@@ -45,6 +46,7 @@ def smoke(driver, url):
         assert not element("dialog").is_displayed(), element("dialogBody").text
 
     open_muted(fresh=True)
+    install_meter(driver)
     volumes(60, 60)
     element("effectsVolume").send_keys(Keys.ARROW_LEFT)
     volumes(59, 60)
@@ -54,6 +56,7 @@ def smoke(driver, url):
     assert element("musicBtn").get_attribute("aria-pressed") == "false"
     element("journey").click()
     room("quarters")
+    check_mixer(driver)
     assert driver.execute_script("const c = document.querySelector('#world'); return [c.width, c.height]") == [338, 314]
     element("layerBtn").click()
     assert element("pictureMode").get_attribute("value") == "original"
