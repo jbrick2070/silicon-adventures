@@ -42,21 +42,31 @@ class SceneSound {
   }
 
   start() {
-    if (this.starting) return this.starting;
+    if (this.starting) {
+      // A blocked resume can remain pending until another user gesture.
+      const ctx = this.vault.ctx;
+      if (ctx && ctx.state !== 'running' && !this.paused) ctx.resume().catch(() => {});
+      return this.starting;
+    }
     this.starting = this.vault.start().then(async ready => {
       this.started = ready;
       if (!ready) return false;
       if (this.paused) await this.vault.ctx.suspend();
       this.music.sync();
-      for (const [names,point] of this.pending.splice(0)) this.events(names,point);
+      for (const [names,point,opts] of this.pending.splice(0)) this.events(names,point,opts);
       return true;
     }).finally(() => { this.starting = null; });
     return this.starting;
   }
 
   mute(value) {
+    if (value) this.pending.length = 0;
     this.vault.mute(value);
     this.music.sync();
+  }
+
+  setVolume(channel, value) {
+    this.vault.setVolume(channel, value);
   }
 
   pause(value) {
@@ -75,6 +85,7 @@ class SceneSound {
   scene(meta) {
     this.music.setRoom(meta);
     if (this.room && this.room.id === meta?.id) return;
+    this.pending.length = 0;
     this.generation++;
     for (const source of this.ambientSources) source.stop();
     this.ambientSources.clear();
@@ -170,13 +181,13 @@ class SceneSound {
     return source;
   }
 
-  // A sound that happens to the listener: no panner, straight to the master bus.
+  // A sound that happens to the listener goes directly to the effects bus.
   emitDry(buffer, when, volume) {
     const ctx = this.vault.ctx, source = ctx.createBufferSource(), gain = ctx.createGain();
     gain.gain.value = volume;
     source.buffer = buffer;
     source.connect(gain);
-    gain.connect(this.vault.master);
+    gain.connect(this.vault.buses.effects);
     source.onended = () => { source.disconnect(); gain.disconnect(); };
     source.start(when);
     return source;
@@ -188,7 +199,11 @@ class SceneSound {
     if (!list.length) return;
     const point = this.point(worldPoint);
     if (!this.started) {
-      this.pending.push([list.map(r => r.name),point]);
+      if (this.vault.muted) {
+        for (const r of list) this.onCaption?.(r.name,point);
+      } else {
+        this.pending.push([list.map(r => r.name),point,opts]);
+      }
       return;
     }
     // Request all sound bytes now, then schedule complete groups in the

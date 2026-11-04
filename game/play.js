@@ -383,7 +383,9 @@
     try {
       if(location.protocol==='file:')throw new Error('Double-click Play Enchanted Scepters.exe in the game folder. It starts the local adventure engine and opens your browser.');
       sound.music.setRoom(null);
-      await sound.start();sound.mute(muted);
+      sound.mute(muted);
+      // Request audio within the entry click. A blocked or suspended context mustn't delay play.
+      sound.start().catch(()=>{});
       const next=await api('start',entry);
       playing=true;shortcut=entry==='altar';owner=entry==='new'||entry==='restore';checkpoint=null;lastCommand=lastAttack='';
       sound.pause(document.hidden||$('dialog').open);
@@ -447,7 +449,8 @@
   function fieldGuide(){
     const h=document.createElement('h2');h.textContent='Field guide';
     openDialog('Field guide',h,
-      para('Turn Music on to hear two tracks alternate in the castle halls and temple, and another pair in the underwater rooms with bubbles. The title appears below the picture. Sound off mutes music and effects.'),
+      para('Sound and Music start on. Use the Effects slider for footsteps, voices and room sounds, and Music for the score. Sound off mutes both at once. Each control remembers your setting.'),
+      para('Two tracks alternate in the castle halls and temple, and another pair in underwater rooms with bubbles. The title appears below the picture.'),
       soundtrackCredits(),
       para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around. On a phone or tablet, hold the Walk, Back and turn buttons under the picture.'),
       para('Click a drawn object or approach it and press E. A click is a turn in the original game: it may take, answer a question or spring a trap, so E offers the edition’s honest prompt (Take, Click, Face, Go). Press / to type. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
@@ -468,9 +471,25 @@
     if(mode!=='original')view.setColour(mode==='colour');
     toggleLayers(mode!=='original');
   };
-  $('soundBtn').onclick=async()=>{
-    muted=!muted;sound.mute(muted);$('soundLabel').textContent=muted?'off':'on';$('soundBtn').setAttribute('aria-pressed',String(!muted));
-    if(playing&&!muted)await sound.start();
+  function audioSetting(key){
+    try{return localStorage.getItem('scepters-'+key);}catch{return null;}
+  }
+  function saveAudioSetting(key,value){
+    try{localStorage.setItem('scepters-'+key,value);}catch{}
+  }
+  function setMasterMute(value){
+    muted=value;sound.mute(muted);
+    $('soundLabel').textContent=muted?'off':'on';
+    $('soundBtn').setAttribute('aria-pressed',String(!muted));
+  }
+  function activateAudio(){
+    if(playing&&!muted&&!state?.ended&&!document.hidden&&!$('dialog').open&&
+        (!sound.started||sound.vault.ctx?.state!=='running'))sound.start().catch(()=>{});
+  }
+  $('soundBtn').onclick=()=>{
+    setMasterMute(!muted);
+    saveAudioSetting('sound',muted?'off':'on');
+    activateAudio();
   };
   function syncMusicButton(){
     const on=sound.music.enabled,track=sound.music.nowPlaying;
@@ -480,11 +499,30 @@
     if($('nowPlaying').textContent!==label)$('nowPlaying').textContent=label;
   }
   sound.music.onChange=syncMusicButton;
-  $('musicBtn').onclick=async()=>{
+  $('musicBtn').onclick=()=>{
     sound.music.setEnabled(!sound.music.enabled);
-    try{localStorage.setItem('scepters-music',sound.music.enabled?'on':'off');}catch{}
-    if(playing&&!state?.ended&&!muted&&sound.music.enabled&&!sound.started)await sound.start();
+    saveAudioSetting('music',sound.music.enabled?'on':'off');
+    if(sound.music.enabled)activateAudio();
   };
+  function initAudio(){
+    setMasterMute(audioSetting('sound')==='off');
+    sound.music.setEnabled(audioSetting('music')!=='off');
+    for(const channel of ['effects','music']){
+      const slider=$(channel+'Volume'),readout=$(channel+'Percent'),key=channel+'-volume';
+      const saved=audioSetting(key);
+      if(saved!==null&&/^\d{1,3}$/.test(saved)&&Number(saved)<=100)sound.setVolume(channel,Number(saved));
+      function showVolume(){
+        slider.value=sound.vault.volumes[channel];
+        readout.textContent=slider.value+'%';
+        slider.setAttribute('aria-valuetext',readout.textContent);
+      }
+      showVolume();
+      slider.oninput=()=>{
+        sound.setVolume(channel,slider.valueAsNumber);showVolume();
+        saveAudioSetting(key,slider.value);
+      };
+    }
+  }
   $('homeView').onclick=()=>{view.reset();dirty=true;if(playing){message('Doorway viewpoint');$('world').focus({preventScroll:true});}else if(view.source)view.render(elapsed);};
   $('commandForm').onsubmit=e=>{e.preventDefault();const t=$('cmd').value.trim();if(!t)return;$('cmd').value='';$('cmd').blur();$('world').focus();command(t);};
   function use(key,fromPointer=false){
@@ -605,8 +643,8 @@
     b.addEventListener('contextmenu',e=>e.preventDefault());
   }
   window.addEventListener('blur',()=>{keys.clear();drag=null;});
-  for(const event of ['pointerdown','keydown'])document.addEventListener(event,()=>{
-    if(playing&&!sound.started&&!muted)sound.start().catch(()=>{});
+  for(const event of ['pointerdown','keydown','click'])document.addEventListener(event,e=>{
+    if(!e.target.closest?.('#soundBtn,#musicBtn,#guideBtn'))activateAudio();
   },true);
   document.addEventListener('visibilitychange',()=>{keys.clear();sound.pause(document.hidden||!playing||$('dialog').open);});
   function direction(point) {
@@ -671,8 +709,7 @@
     requestAnimationFrame(animate);
   }
   async function init(){
-    try{sound.music.setEnabled(localStorage.getItem('scepters-music')==='on');}catch{}
-    syncMusicButton();
+    initAudio();
     let pictureMode='colour';
     try{pictureMode=localStorage.getItem('scepters-picture-mode')||pictureMode;}catch{}
     view.setColour(pictureMode!=='ink'&&pictureMode!=='original-ink');

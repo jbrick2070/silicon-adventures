@@ -138,6 +138,9 @@
       this.listener = {x: 0, z: 0, yaw: 0};
       this.muted = false;
       this.paused = false;
+      // 50 is the original mix. Both channels start 20% above that level.
+      this.volumes = {effects: 60, music: 60};
+      this.buses = {};
       this.onCue = null;
       this.walkPhase = 0;
       this.keeperDistance = 0;
@@ -152,7 +155,20 @@
         const ctx = this.ctx;
         this.master = ctx.createGain();
         this.master.gain.value = this.muted || this.paused ? 0 : 0.88;
-        this.master.connect(ctx.destination);
+        // Leave the mix linear below 90% of full scale. Round the last tenth
+        // to a flat slope at 95%, so overlapping peaks have a soft ceiling.
+        const peaks = ctx.createWaveShaper();
+        peaks.curve = Float32Array.from({length: 2049}, (_, i) => {
+          const x = i / 1024 - 1, excess = Math.max(0, Math.abs(x) - 0.90);
+          return x - Math.sign(x) * 5 * excess * excess;
+        });
+        this.master.connect(peaks);
+        peaks.connect(ctx.destination);
+        for (const [channel, percent] of Object.entries(this.volumes)) {
+          const bus = this.buses[channel] = ctx.createGain();
+          bus.gain.value = percent / 50;
+          bus.connect(this.master);
+        }
         for (const id of VaultAudio.archiveIds) {
           const pcm = global.atob(global.DarkCastlePCM[id]);
           const b = ctx.createBuffer(1, pcm.length, rate);
@@ -175,7 +191,7 @@
       node.distanceModel = 'inverse';
       node.refDistance = 2.5;
       node.rolloffFactor = 0.58;
-      node.connect(this.master);
+      node.connect(this.buses.effects);
       return node;
     }
 
@@ -188,6 +204,14 @@
     mute(value = true) {
       this.muted = Boolean(value);
       this.level();
+    }
+
+    setVolume(channel, value) {
+      const percent = Number(value);
+      if (!Object.hasOwn(this.volumes, channel) || !Number.isFinite(percent)) return;
+      this.volumes[channel] = Math.max(0, Math.min(100, percent));
+      const gain = this.buses[channel]?.gain;
+      if (gain) gain.setTargetAtTime(this.volumes[channel] / 50, this.ctx.currentTime, 0.018);
     }
 
     pause(value = true) {
@@ -257,7 +281,7 @@
       if (!this.ctx || this.paused || !this.buffers[id]) return;
       const source = this.ctx.createBufferSource();
       source.buffer = this.buffers[id];
-      let destination = this.master;
+      let destination = this.buses.effects;
       let temporary = null;
       let trim = null;
       if (validPoint(point) && Math.hypot(point.x - this.listener.x, point.z - this.listener.z) > 0.1) {

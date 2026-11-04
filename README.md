@@ -8,7 +8,7 @@ For offline play on 64-bit Windows, extract the Windows ZIP and double-click **P
 
 **Enter the High Altar** starts a short excursion at two granite columns. Headphones help. **Begin the full adventure** starts Saber in the quarters with the King’s summons. Both entries use the same 200-room game and allow you to continue exploring. In **Adventures…** you can also open the nine saved games that came with the archived image.
 
-Turn **Music on** in the top bar to hear *Hero's Quest* by jeffreyabrick alternate with *Violet Stone* in the castle and temple. Underwater, *Submerged Bell* by jeffreyabrick alternates with *Soundings*. The track title appears beneath the picture. Open **Field guide → Soundtrack credits** for the full list. Music starts off, and **Sound off** mutes music and effects together. [Soundtrack, credits and downloads](audio/soundtrack-studies/README.md)
+Sound and music start enabled on your first visit. Use the **Effects** and **Music** sliders to set their volumes independently. Both start at 60%. **Sound off** mutes everything, and your browser remembers your settings. In the castle and temple, *Hero's Quest* by jeffreyabrick alternates with *Violet Stone*. Underwater, *Submerged Bell* by jeffreyabrick alternates with *Soundings*. The title appears beneath the picture. Open **Field guide → Soundtrack credits** for the full list. [Soundtrack, credits and downloads](audio/soundtrack-studies/README.md)
 
 | Control | Action |
 | --- | --- |

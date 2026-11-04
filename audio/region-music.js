@@ -1,9 +1,9 @@
-/* Optional regional score. Each region keeps its place for the current journey. */
+/* Regional score. Each region keeps its place for the current journey. */
 class RegionMusic {
   constructor(vault, loadBuffer) {
     this.vault = vault;
     this.loadBuffer = loadBuffer;
-    this.enabled = false;
+    this.enabled = true;
     this.room = null;
     this.current = null;
     this.fading = null;
@@ -70,10 +70,10 @@ class RegionMusic {
       return;
     }
     try {
-      const {ctx, master} = this.vault;
+      const {ctx, buses} = this.vault;
       const gain = ctx.createGain();
       gain.gain.value = 0;
-      gain.connect(master);
+      gain.connect(buses.music);
       const source = ctx.createBufferSource();
       source.buffer = buffer;
       source.connect(gain);

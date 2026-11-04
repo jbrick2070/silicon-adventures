@@ -9,6 +9,10 @@ const vm = require('node:vm');
 const sandbox = {window: {}, console: {warn() {}, error() {}}};
 vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'region-music.js'), 'utf8'), sandbox);
 const {RegionMusic} = sandbox.window;
+vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'vault-audio.js'), 'utf8'), sandbox);
+sandbox.VaultAudio = sandbox.window.VaultAudio;
+vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../game/spatial.js'), 'utf8'), sandbox);
+const {SceneSound} = sandbox.window;
 const hall = {id: 22844, name: 'marble hall'};
 const throne = {id: 17888, name: 'throne room'};
 const altar = {id: 7990, name: 'high altar'};
@@ -51,7 +55,8 @@ function fixture() {
       return source;
     }
   };
-  const vault = {ctx, master: node(), muted: false, paused: false};
+  const vault = {ctx, master: node(), buses: {music: node()}, muted: false, paused: false};
+  vault.buses.music.connect(vault.master);
   // SceneSound.buffer() owns the decoded/pending cache and evicts failed reads.
   const cache = new Map();
   const load = resource => {
@@ -71,9 +76,10 @@ function fixture() {
   return {music, vault, ctx, voices, reads};
 }
 
-test('off is silent; an opted-in region plays one quiet track through master', async () => {
+test('score defaults on; switching it off is silent and on plays through the music bus', async () => {
   const {music, vault, ctx, voices, reads} = fixture();
-  assert.equal(music.enabled, false);
+  assert.equal(music.enabled, true);
+  music.setEnabled(false);
   assert.equal(music.nowPlaying, null);
   music.setRoom(hall);
   music.sync();
@@ -103,7 +109,8 @@ test('off is silent; an opted-in region plays one quiet track through master', a
   assert.equal(music.nowPlaying, reads[0].buffer.resource);
   const gain = voice.output;
   assert.ok(gain.gain.value > 0 && gain.gain.value < 1);
-  assert.equal(gain.output, vault.master);
+  assert.equal(gain.output, vault.buses.music);
+  assert.equal(vault.buses.music.output, vault.master);
 
   const normalVolume = gain.gain.value;
   music.setRoom(altar);
@@ -347,4 +354,83 @@ test('each region saves its own track and playhead until a fresh journey', async
   await settle();
   assert.equal(music.nowPlaying, reads[0].buffer.resource, 'new journey starts with the first track');
   assert.equal(voices[7].offset, 0);
+});
+
+test('independent levels trim dry, spatial and Vault effects separately from the regional score', async () => {
+  const {ctx, voices} = fixture();
+  const param = () => ({value: 0});
+  Object.assign(ctx, {
+    destination: node(),
+    createBuffer(channels, length) { return {getChannelData: () => new Float32Array(length)}; },
+    createPanner() { return node({positionX: param(), positionZ: param()}); },
+    createWaveShaper() { return node(); }
+  });
+  sandbox.window.AudioContext = function () { return ctx; };
+  const sound = new SceneSound(), vault = sound.vault;
+  assert.equal(vault.muted, false);
+  assert.equal(vault.volumes.effects, 60);
+  assert.equal(vault.volumes.music, 60);
+  sound.mute(true);
+  await sound.start();
+  const {effects, music} = vault.buses;
+  assert.equal(effects.gain.value, 1.2);
+  assert.equal(music.gain.value, 1.2);
+  assert.equal(vault.master.gain.value, 0, 'a previously muted tab starts its graph silently');
+  assert.equal(effects.output, vault.master);
+  assert.equal(music.output, vault.master);
+  assert.equal(vault.master.output.output, ctx.destination);
+  const peaks = vault.master.output.curve;
+  assert.equal(peaks[1024 + 256], 0.25, 'ordinary signals receive no peak makeup gain');
+  assert.ok(Math.abs(peaks.at(-1) - 0.95) < 1e-6, 'overlapping peaks leave output headroom');
+
+  sound.mute(false);
+  assert.equal(vault.master.gain.value, 0.88);
+  const buffer = {duration: 48};
+  const dry = sound.emitDry(buffer, 0, 0.62), spatial = sound.emit(buffer, {x:1,z:3}, 0, 0.82);
+  assert.equal(dry.output.output, effects, 'non-spatial disk cue');
+  assert.equal(spatial.output.output.output, effects, 'spatial disk cue');
+  sound.effect('bell');
+  assert.equal(voices.at(-1).output, effects, 'Vault cue at the listener');
+
+  sound.buffer = async () => buffer;
+  sound.music.setRoom(hall);
+  await settle();
+  const song = voices.at(-1);
+  assert.equal(song.output.output, music);
+  assert.equal(song.output.gain.value, 0.10);
+  sound.setVolume('effects', -1);
+  assert.equal(effects.gain.value, 0);
+  assert.equal(music.gain.value, 1.2);
+  sound.setVolume('music', 500);
+  assert.equal(music.gain.value, 2);
+  assert.equal(effects.gain.value, 0);
+  sound.music.setRoom(altar);
+  assert.equal(song.output.gain.value, 0.035, 'Altar ducking stays upstream of the slider');
+  sound.setVolume('music', 0);
+  sound.setVolume('effects', 50);
+  assert.equal(music.gain.value, 0);
+  assert.equal(effects.gain.value, 1);
+  assert.equal(song.stopAt, null, 'volume changes preserve the playhead');
+  sound.mute(true);
+  assert.equal(vault.master.gain.value, 0);
+  assert.equal(effects.gain.value, 1);
+  assert.equal(music.gain.value, 0);
+});
+
+test('a new gesture can unlock a pending resume without replaying an old room', async () => {
+  const sound = new SceneSound();
+  let unlock;
+  const blocked = new Promise(resolve => { unlock = resolve; });
+  sound.vault.ctx = {state:'suspended', resume() { this.state = 'running'; unlock(true); return blocked; }};
+  sound.vault.start = () => blocked;
+  sound.library.set('bell', {name:'Bell'});
+  sound.scene(hall);
+  const first = sound.start();
+  sound.events(['Bell'], {x:0,z:0});
+  assert.equal(sound.pending.length, 1);
+  sound.scene(sea);
+  assert.equal(sound.pending.length, 0);
+  const second = sound.start();
+  assert.equal(first, second);
+  assert.equal(await second, true);
 });

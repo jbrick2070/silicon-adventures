@@ -1,6 +1,6 @@
 # The Silicon Adventures soundtrack
 
-Select **Music on** in the game. Each region has two tracks, played in the order below. The current title appears beneath the picture. Open **Field guide → Soundtrack credits** to see the track list while playing.
+Begin an adventure to hear the score. Music and sound are enabled on your first visit. The **Music** slider sets the score level, and the **Effects** slider sets the level of voices, footsteps and other game sounds. Each region has two tracks, played in the order below. The current title appears beneath the picture. Open **Field guide → Soundtrack credits** to see the track list while playing.
 
 | Region | Track | Credit | In-game recording |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ Select **Music on** in the game. Each region has two tracks, played in the order
 
 The castle score follows Saber from the quarters through the marble and banquet halls, throne room and courtyard. It also plays in the Wizard’s Sanctum, map room, bridge room and temple stairs. At the High Altar the music drops in level so the wizard can be heard. The underwater score plays in the 28 rooms whose disk ambience is bubbles, including the wreck interiors. The submarine helm, controls, armory and Finale keep their own game cues.
 
-Moving to a neighbouring room within the same region keeps the track playing. Leaving a region fades out its music. On returning during the same journey, you pick up where you left off. Opening a dialog or hiding the tab pauses playback. **Sound off** mutes the full mix, and **Music off** switches off only the score. The game remembers your Music preference for the browser’s launch address.
+Moving to a neighbouring room within the same region keeps the track playing. Leaving a region fades out its music. On returning during the same journey, you pick up where you left off. Opening a dialog or hiding the tab pauses playback. **Sound off** mutes the full mix, and **Music off** switches off only the score. The game remembers both switches and volume levels for the browser’s launch address.
 
 ## Sketches and Suno prompts
 

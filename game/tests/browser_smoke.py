@@ -14,7 +14,7 @@ def smoke(driver, url):
     def element(element_id):
         return driver.find_element(By.ID, element_id)
 
-    def open_muted():
+    def open_muted(*, fresh=False):
         driver.get(url)
         driver.execute_script("""
             window.smokeErrors = [];
@@ -22,10 +22,19 @@ def smoke(driver, url):
             window.addEventListener('unhandledrejection', e => smokeErrors.push(String(e.reason)));
         """)
         wait.until(lambda _: element("soundBtn").is_displayed())
-        if element("soundBtn").get_attribute("aria-pressed") == "true":
+        if fresh:
+            assert element("soundBtn").get_attribute("aria-pressed") == "true"
+            assert element("musicBtn").get_attribute("aria-pressed") == "true"
             element("soundBtn").click()
         assert element("soundBtn").get_attribute("aria-pressed") == "false"
         wait.until(lambda _: element("journey").is_enabled() and "Ready" in element("browserStatus").text)
+
+    def volumes(effects, music):
+        for channel, number in [("effects", effects), ("music", music)]:
+            slider = element(channel + "Volume")
+            assert slider.is_displayed() and element(channel + "Percent").is_displayed()
+            assert int(slider.get_property("value")) == number
+            assert element(channel + "Percent").text == f"{number}%"
 
     def room(name):
         wait.until(lambda _: element("roomTitle").text.lower() == name)
@@ -35,14 +44,23 @@ def smoke(driver, url):
         assert not errors, errors
         assert not element("dialog").is_displayed(), element("dialogBody").text
 
-    open_muted()
+    open_muted(fresh=True)
+    volumes(60, 60)
+    element("effectsVolume").send_keys(Keys.ARROW_LEFT)
+    volumes(59, 60)
+    element("musicVolume").send_keys(Keys.ARROW_RIGHT)
+    volumes(59, 61)
+    element("musicBtn").click()
+    assert element("musicBtn").get_attribute("aria-pressed") == "false"
     element("journey").click()
     room("quarters")
     assert driver.execute_script("const c = document.querySelector('#world'); return [c.width, c.height]") == [338, 314]
     element("layerBtn").click()
     assert element("pictureMode").get_attribute("value") == "original"
+    classic_picture = element("world").screenshot_as_png
     element("layerBtn").click()
     assert element("pictureMode").get_attribute("value") == "colour"
+    wait.until(lambda _: element("world").screenshot_as_png != classic_picture)
 
     # A save made away from the starting room distinguishes restore from a fresh
     # game. Disable checkpoints so the return trip cannot replace that save.
@@ -61,6 +79,8 @@ def smoke(driver, url):
     # persistent browser save to get back to the marble hall.
     driver.execute_script("sessionStorage.clear()")
     open_muted()
+    volumes(59, 61)
+    assert element("musicBtn").get_attribute("aria-pressed") == "false"
     wait.until(lambda _: element("resume").is_displayed())
     element("resume").click()
     room("marble hall")
@@ -69,7 +89,7 @@ def smoke(driver, url):
 
 
 def diagnose(driver):
-    """Isolate cover rendering, browser storage and engine startup after a failure."""
+    """Report whether cover rendering or engine startup failed."""
     driver.set_script_timeout(45)
     print("Startup status:", driver.execute_script("""
         return {
@@ -90,49 +110,6 @@ def diagnose(driver):
             await view.add(lid, 'AOBJ/14168', {x:0,z:4.18,y:1.8,w:0.3,h:0.3});
             view.render(0);
             return 'rendered';
-        """,
-        "canvas readback": """
-            const image = new Image();
-            image.src = 'archive/es/plates/ASCN-7990.png';
-            await image.decode();
-            const report = {imageSize: [image.width, image.height, image.naturalWidth, image.naturalHeight]};
-            for (const [name, options, flags] of [
-                ['default', {}, ''], ['readOften', {willReadFrequently:true}, ''],
-                ['srgb', {colorSpace:'srgb', alpha:false, willReadFrequently:true}, ''],
-                ['offscreen', {willReadFrequently:true}, 'offscreen'],
-                ['attached', {willReadFrequently:true}, 'attached'],
-                ['bitmap', {willReadFrequently:true}, 'bitmap']
-            ]) {
-                const out = report[name] = {};
-                let c;
-                try {
-                    c = flags === 'offscreen' ? new OffscreenCanvas(338,314) : document.createElement('canvas');
-                    c.width = 338; c.height = 314;
-                    if (flags === 'attached') document.body.append(c);
-                    const ctx = c.getContext('2d', options);
-                    ctx.fillStyle = '#13579b'; ctx.fillRect(0,0,4,4);
-                    try { out.fill = [...ctx.getImageData(0,0,1,1).data]; }
-                    catch (e) { out.fill = [e.name, e.message]; }
-                    const source = flags === 'bitmap' ? await createImageBitmap(image) : image;
-                    ctx.drawImage(source,0,0);
-                    // The original contains opaque black at (0,0) and white at (4,107).
-                    const rgba = ctx.getImageData(0,0,338,314).data;
-                    const i = (107 * 338 + 4)*4;
-                    out.plate = [[...rgba.slice(0,4)], [...rgba.slice(i,i+4)]];
-                    if (flags === 'bitmap') source.close();
-                } catch (e) { out.error = [e.name, e.message]; }
-                finally { if (c) { c.width = c.height = 1; c.remove?.(); } }
-            }
-            return report;
-        """,
-        "quota": "return await navigator.storage.estimate();",
-        "storage": """
-            sessionStorage.setItem('smoke', '1'); sessionStorage.removeItem('smoke');
-            return await new Promise((resolve, reject) => {
-                const req = indexedDB.open('smoke');
-                req.onsuccess = () => { req.result.close(); resolve('available'); };
-                req.onerror = () => reject(req.error);
-            });
         """,
         "engine": "const snapshot = await BrowserEngine.action('state'); return snapshot.name;",
     }
@@ -163,4 +140,4 @@ if __name__ == "__main__":
             print("Current page:", driver.current_url)
             diagnose(driver)
             raise
-        print("New journey, travel, picture modes, save and restore passed.")
+        print("Audio controls, new journey, travel, rendered picture modes, save and restore passed.")
