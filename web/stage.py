@@ -1,7 +1,9 @@
 """Stage the playable GitHub Pages edition in an empty directory."""
 
 import argparse
+import hashlib
 from pathlib import Path
+import re
 from shutil import copyfile
 
 
@@ -20,6 +22,12 @@ ASSETS = (
 )
 
 
+def version_asset(match):
+    attribute, path = match.groups()
+    digest = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()[:16]
+    return f'{attribute}="{path}?v={digest}"'
+
+
 def stage(destination):
     if destination.exists() and (not destination.is_dir() or any(destination.iterdir())):
         raise SystemExit(f"Choose a new or empty output directory: {destination}")
@@ -35,6 +43,8 @@ def stage(destination):
     index = index.replace("LOCAL DISK EDITION",
                           '<a href="engine/vendor/LICENSE-WAGE.txt">WAGE engine credits</a> · '
                           '<a href="https://cheerpj.com/">Built with CheerpJ</a>')
+    # A returning player's cached scripts may predate the controls in this HTML.
+    index = re.sub(r'\b(src|href)="([\w./-]+\.(?:js|css))"', version_asset, index)
 
     for pattern in ASSETS:
         files = sorted(ROOT.glob(pattern))
