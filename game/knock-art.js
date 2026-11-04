@@ -263,21 +263,129 @@
     g.line(x+9,y,x+13,y,1,'iron');
   }
 
-  function draw(canvas,{stage,colour,elapsed=0,active=-1,flash=false,open=false}){
+  function beaconDesk(g){
+    // The signalling station occupies the near ledge. The sky stays open
+    // above it, so the waiting aircraft can be followed while reading the lamp.
+    g.poly([[0,230],[122,214],[338,235],[338,314],[0,314]],5,'shade');
+    g.poly([[0,224],[123,206],[338,228],[338,244],[122,224],[0,241]],2,'light');
+    g.path([[0,241],[122,224],[338,244]],8,'stone');
+    g.path([[0,244],[120,228],[338,248]],1,'light');
+    g.poly([[27,236],[141,220],[196,227],[175,249],[49,263]],8,'dark');
+    g.poly([[30,232],[143,216],[193,222],[171,242],[50,256]],3,'brass');
+    g.path([[34,233],[141,219],[186,223]],1,'light');
+    for(const [x,y] of [[43,237],[144,224],[61,248],[171,233]]){
+      g.oval(x,y,2,2,8,'iron');g.line(x-1,y-1,x+1,y-1,1,'brass');
+    }
+    // Tripod feet and the yawing lamp's heavy pedestal.
+    g.poly([[80,201],[88,200],[99,232],[91,235]],8,'iron');
+    g.poly([[118,198],[125,198],[148,225],[138,228]],8,'iron');
+    g.poly([[106,204],[112,204],[113,240],[105,242]],8,'iron');
+    g.oval(106,213,23,7,8,'iron');g.oval(106,210,23,7,3,'brass');
+    g.line(87,209,122,205,1,'light');
+    g.rect(100,185,13,25,8,'iron');g.rect(102,185,4,23,1,'brass');
+    // The crank is deliberately separate from the lamp's shutter lever.
+    g.path([[132,196],[145,201],[153,198],[153,186]],8,'iron');
+    g.path([[133,194],[145,199],[151,196],[151,185]],1,'brass');
+    g.oval(152,183,6,3,8,'wood');g.line(149,181,154,181,1,'wood');
+    // Three stamped code groups. These are ordinary pixel marks, like the
+    // shield dents, so the card remains legible with the sound switched off.
+    g.poly([[184,252],[267,256],[288,288],[193,285]],8,'wood');
+    g.poly([[188,254],[264,258],[282,283],[196,282]],1,'light');
+    g.line(196,260,258,263,8,'brass');
+    g.line(197,264,216,265,8,'iron');g.line(226,266,252,267,8,'iron');
+    g.rect(203,274,5,3,8,'iron');g.rect(222,275,19,3,8,'iron');g.rect(254,276,5,3,8,'iron');
+  }
+
+  function compass(g,bearing){
+    const x=274,y=229;
+    g.oval(x+2,y+4,35,14,8,'dark');
+    g.oval(x,y,35,14,8,'brass');g.oval(x,y-1,31,11,1,'light');
+    g.oval(x,y-1,28,9,3,'field');
+    g.line(x-25,y-1,x+25,y-1,8,'iron');g.line(x,y-10,x,y+8,8,'iron');
+    // Small engraved N and E. The east pointer also has a forked tail,
+    // distinguishing its heading by shape in the two-colour view.
+    g.path([[271,216],[271,211],[277,216],[277,211]],8,'iron');
+    g.path([[307,226],[303,226],[303,232],[307,232]],8,'iron');
+    g.line(303,229,306,229,8,'iron');
+    const tip=bearing==='north'?[274,220]:bearing==='west'?[250,228]:[299,228];
+    g.poly([[x-3,y+2],tip,[x+2,y-3],[x+8,y+4],[x,y+1],[x-8,y+5]],8,'iron');
+    g.oval(x,y,2,2,1,'brass');
+  }
+
+  function shutterLamp(g,bearing,flash){
+    // The housing turns in its cradle. The shutter is the only bright surface
+    // during a transmission; no anti-aliased glow is painted over the view.
+    const shift=bearing==='west'?-12:bearing==='north'?0:10,cx=100+shift,cy=159;
+    g.poly([[74,190],[74,149],[83,136],[124,132],[139,143],[139,183],[128,194],[84,198]],8,'iron');
+    g.poly([[78,187],[78,150],[86,140],[122,136],[134,145],[134,180],[125,188],[87,193]],3,'brass');
+    g.path([[80,150],[89,142],[122,138],[130,145]],1,'light');
+    g.poly([[111,137],[132,143],[140,154],[141,178],[132,191],[112,187]],6,'brass');
+    g.oval(cx,cy,30,32,8,'iron');
+    g.oval(cx,cy-1,26,28,1,'brass');
+    g.oval(cx,cy-1,22,24,flash?1:8,flash?'light':'dark');
+    g.oval(cx,cy-1,18,20,flash?1:5,flash?'light':'shade');
+    if(!flash){
+      for(const y of [143,153,163,173]){
+        g.line(cx-18,y,cx+18,y,8,'iron');
+        g.line(cx-17,y+1,cx+17,y+1,1,'brass');
+      }
+    }else{
+      g.oval(cx-4,cy-6,7,10,1,'light');
+      for(const [a,b,c,d] of [[-35,-9,-40,-11],[-35,9,-41,11],[31,-19,36,-23],[34,6,41,8]]){
+        g.line(cx+a,cy+b,cx+c,cy+d,1,'light');
+      }
+    }
+    g.poly([[71,165],[66,166],[66,185],[72,188],[77,183],[76,176],[72,179]],8,'iron');
+    g.line(68,169,68,181,1,'brass');
+  }
+
+  function courier(g,elapsed,success){
+    const cx=205+Math.round(32*Math.sin(elapsed*.24)),cy=78+Math.round(5*Math.sin(elapsed*.35));
+    // A little high-wing prop aircraft, banked toward the tower. Its belly
+    // and wing struts keep it distinct from the first distant silhouette.
+    const pts=a=>a.map(([x,y])=>[cx+x,cy+y]);
+    g.poly(pts([[-55,1],[-49,-4],[-25,-6],[-11,-9],[3,-10],[17,-6],[45,-4],[53,-1],
+      [47,4],[16,8],[-5,10],[-31,7],[-47,6]]),8,'iron');
+    g.poly(pts([[-24,-5],[-9,-11],[11,-10],[26,-4],[6,-2],[-12,-1]]),1,'light');
+    g.poly(pts([[-3,-7],[-34,-38],[-43,-36],[-19,-2],[7,5],[38,25],[49,26],[18,0]]),8,'dark');
+    g.poly(pts([[-30,-33],[-36,-34],[-13,-3],[-8,-3]]),1,'iron');
+    g.poly(pts([[10,5],[38,23],[43,23],[17,5]]),3,'iron');
+    g.path(pts([[-20,6],[-11,19],[-4,6]]),8,'iron');
+    g.path(pts([[9,7],[15,17],[21,7]]),8,'iron');
+    g.poly(pts([[36,-3],[43,-19],[49,-18],[46,-2],[57,5],[49,7],[38,3]]),8,'iron');
+    g.line(cx-54,cy-15,cx-54,cy+16,8,'iron');
+    g.line(cx-55,cy-12,cx-55,cy+12,3,'iron');
+    g.oval(cx-53,cy+1,3,3,1,'brass');
+    g.path(pts([[-47,-1],[-34,-2],[-26,0]]),1,'light');
+    if(success){
+      const drop=17+Math.floor((elapsed*7)%45),x=cx-7;
+      g.path([[x,cy+13],[x-2,cy+drop-5],[x+1,cy+drop+3]],8,'wood');
+      g.poly([[x,cy+drop-4],[x+10,cy+drop-7],[x+6,cy+drop-1],[x,cy+drop+1]],1,'brass');
+      g.poly([[x-3,cy+drop+3],[x+3,cy+drop+2],[x+5,cy+drop+10],[x-1,cy+drop+11]],8,'iron');
+      g.line(x,cy+drop+4,x+1,cy+drop+8,1,'brass');
+    }
+  }
+
+  function draw(canvas,{stage,colour,elapsed=0,active=-1,flash=false,open=false,bearing='east',success=false}){
     const ctx=canvas.getContext('2d');
     const key=stage+'-'+colour+'-'+open;
     let plate=cache.get(canvas);
     if(plate?.key!==key){
       const frame=ctx.createImageData(W,H),pixels=new Uint32Array(frame.data.buffer);
       const g=painter(pixels,colour);
-      if(stage==='tower')tower(g);
+      if(stage==='tower'||stage==='beacon'||stage==='approach')tower(g);
       else if(stage==='guardroom')guardroom(g,open);
       else threshold(g);
       plate={key,frame,pixels,base:pixels.slice(),g};
       cache.set(canvas,plate);
     }
     plate.pixels.set(plate.base);
-    if(stage==='tower')aircraft(plate.g,elapsed);
+    if(stage==='beacon'){
+      aircraft(plate.g,elapsed);beaconDesk(plate.g);compass(plate.g,bearing);shutterLamp(plate.g,bearing,flash);
+    }else if(stage==='approach'){
+      courier(plate.g,elapsed,success);
+      beaconDesk(plate.g);compass(plate.g,'east');shutterLamp(plate.g,'east',flash);
+    }else if(stage==='tower')aircraft(plate.g,elapsed);
     else if(stage==='guardroom')shields.forEach((_,i)=>shield(plate.g,i,i===active&&flash,elapsed));
     else knocker(plate.g,flash);
     ctx.putImageData(plate.frame,0,0);

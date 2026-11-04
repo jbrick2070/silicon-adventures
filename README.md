@@ -10,6 +10,8 @@ For offline play on 64-bit Windows, extract the Windows ZIP and double-click **P
 
 **Play The Answering Knock** takes you to an optional Dark Castle passage in the armory. During the full adventure, go **south, east, south** from the quarters and choose **Answer the knock**. Inspect the dents on three shields, compare their rhythms, and see what the knight is guarding. This excursion adds new artwork drawn with the Macintosh disk’s patterns. It works with sound off. **Save here** remembers your place in the passage, and **Return to the armory** continues the campaign.
 
+Beyond the watchtower, **Use the signal lamp** begins *The Eastern Beacon*, an original Airborne-inspired encounter. Aim the lantern, compose a reply to the circling aircraft, and open the courier’s message. Colour and Classic B/W work throughout. The signal card and flash captions support silent play, and Save here keeps an unfinished signal.
+
 Sound and music start enabled on your first visit. Use the **Effects** and **Music** sliders to set their volumes independently. Both start at 60%. **Sound off** mutes everything, and your browser remembers your settings. In the castle and temple, *Hero's Quest* by jeffreyabrick alternates with *Violet Stone*. Underwater, *Submerged Bell* by jeffreyabrick alternates with *Soundings*. The title appears beneath the picture. Open **Field guide → Soundtrack credits** for the full list. [Soundtrack, credits and downloads](audio/soundtrack-studies/README.md)
 
 | Control | Action |

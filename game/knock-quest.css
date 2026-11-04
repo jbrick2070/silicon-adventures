@@ -6,6 +6,7 @@
 #knockQuest .knock-story,#knockQuest .knock-feedback{font:16px/1.35 var(--serif);margin:8px 0}
 #knockQuest .knock-feedback:not(:empty){border-left:2px solid var(--line);padding-left:10px}
 #knockQuest .knock-feedback.knock-pulse{border-left-color:var(--ink)}
+#knockQuest .knock-signal{font:12px/1.5 var(--mono);border:1px solid var(--line);padding:8px}
 .knock-actions,.knock-choices,.knock-tools{display:flex;gap:6px;flex-wrap:wrap}
 .knock-actions,.knock-choices{margin-top:12px}
 #knockQuest button:not(.bar button){border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:6px 9px;font:12px var(--mono)}

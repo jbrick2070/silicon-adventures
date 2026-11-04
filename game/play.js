@@ -207,8 +207,14 @@
     return playing&&scene?.id===armory&&!state.ended&&!state.characters.length&&!pending;
   }
   function readKnock(saved){
-    if(!saved||!['door','guardroom','tower'].includes(saved.stage))return null;
-    return {stage:saved.stage,solved:saved.solved===true||saved.stage==='tower'};
+    if(!saved||!['door','guardroom','tower','beacon','approach'].includes(saved.stage))return null;
+    return {
+      stage:saved.stage,solved:saved.solved===true||['tower','beacon','approach'].includes(saved.stage),
+      bearing:['north','east','west'].includes(saved.bearing)?saved.bearing:'north',
+      signal:typeof saved.signal==='string'&&/^[.-]{0,3}$/.test(saved.signal)?saved.signal:'',
+      signalSolved:saved.signalSolved===true||saved.stage==='approach',
+      messageRead:saved.messageRead===true
+    };
   }
   function rememberKnock(){
     try{sessionStorage.setItem('scepters-knock',JSON.stringify({session:state.session,...knockProgress,open:knockOpen}));}catch{}
@@ -226,6 +232,8 @@
       onProgress(next){
         if(next.stage==='tower'&&knockProgress.stage!=='tower'&&!journal.some(e=>e.cls==='aside'&&e.text===towerSighting))
           line(towerSighting,'aside');
+        if(next.messageRead&&!knockProgress.messageRead)
+          line('A courier brought a brass wing and a message. The eastern field is clear; three aircraft together mean cover the beacon.','aside');
         knockProgress=next;rememberKnock();
       },
       onCue(id){if(!muted&&!document.hidden)sound.effect(id,{x:view.pose.x,z:view.pose.z});},
@@ -293,7 +301,12 @@
     const menu=state.menu.split(';').filter(a=>a&&!a.startsWith('(')).map(a=>a.split('/')[0].split('<')[0]);
     const directions=['north','south','east','west','up','down'];
     const fighting=state.characters.length>0;
-    if(canKnock())$('actions').append(button(knockProgress?.solved?'Revisit the watchtower':'Answer the knock',openKnock,'mini primary-mini'));
+    if(canKnock()){
+      const label=knockProgress?.stage==='approach'?'Revisit the courier’s message':
+        knockProgress?.stage==='beacon'?'Return to the signal lamp':
+        knockProgress?.solved?'Revisit the watchtower':'Answer the knock';
+      $('actions').append(button(label,openKnock,'mini primary-mini'));
+    }
     let verbs=menu.filter(a=>!directions.includes(a.toLowerCase())&&!(fighting&&a.toLowerCase()==='rest'));
     if(!fighting&&state.maxHp&&state.maxHp-state.hp>=8)verbs.splice(verbs.findIndex(v=>v.toLowerCase()==='rest')+1,0,'Rest until healed');
     if(fighting)verbs.push(...state.weapons);
