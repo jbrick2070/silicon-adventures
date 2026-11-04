@@ -100,7 +100,7 @@
       return null;
     }
     const c=document.createElement('canvas');c.width=w;c.height=h;
-    const ctx=c.getContext('2d');
+    const ctx=c.getContext('2d',{willReadFrequently:true});
     ctx.drawImage(img,slot.x,slot.y,w,h,0,0,w,h);
     const rgba=ctx.getImageData(0,0,w,h).data, result=new Uint8Array(w*h);
     for(let i=0;i<result.length;i++)result[i]=rgba[i*4];
