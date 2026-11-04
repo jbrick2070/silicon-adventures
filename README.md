@@ -40,6 +40,7 @@ The source images came from the Internet Archive. The source records include the
 | `game/map.js` | Saber’s chart: a 1-bit fog-of-war map of the room grid in the Travel tab, kept in the save |
 | `art/refresh/README.md` and `game/refresh.js` | Separate non-destructive 1-bit refresh layers, steady `CODE 1` halftones, High Altar geometry, landmark room rigs, and lifted forms |
 | `archive/dc/README.md` | Sound, motion and interface decoding |
+| [Soundtrack studies](audio/soundtrack-studies/README.md) | Two instrumental MP3 sketches, sample-free Suno seeds, a dry disk sampler and suggested room placements |
 | `archive/es/PLAYTEST.md` | Complete four-scepter campaign verification |
 | `archive/es/campaign-trace.tsv` | Spoilers. Room-by-room commands and clicks from the winning run |
 
