@@ -43,8 +43,8 @@ function fixture() {
     },
     createBufferSource() {
       const source = node({
-        starts: 0, stopAt: null,
-        start() { this.starts++; },
+        starts: 0, offset: null, stopAt: null, loop: false,
+        start(when = 0, offset = 0) { this.starts++; this.offset = offset; },
         stop(when = ctx.currentTime) { this.stopAt = when; }
       });
       voices.push(source);
@@ -71,9 +71,10 @@ function fixture() {
   return {music, vault, ctx, voices, reads};
 }
 
-test('off is silent; an opted-in region plays one quiet looping source through master', async () => {
+test('off is silent; an opted-in region plays one quiet track through master', async () => {
   const {music, vault, ctx, voices, reads} = fixture();
   assert.equal(music.enabled, false);
+  assert.equal(music.nowPlaying, null);
   music.setRoom(hall);
   music.sync();
   await settle();
@@ -90,14 +91,16 @@ test('off is silent; an opted-in region plays one quiet looping source through m
   music.sync();
   await settle();
   assert.equal(reads.length, 1);
-  assert.match(reads[0].buffer.resource.path, /\/violet-stone\.wav$/);
+  assert.match(reads[0].buffer.resource.path, /\/heros-quest\.wav$/);
+  assert.equal(music.nowPlaying, null, 'pending decode is not now playing');
   reads[0].complete();
   await settle();
   assert.equal(voices.length, 1);
   const voice = voices[0];
   assert.equal(voice.buffer, reads[0].buffer);
   assert.equal(voice.starts, 1);
-  assert.equal(voice.loop, true);
+  assert.equal(voice.loop, false);
+  assert.equal(music.nowPlaying, reads[0].buffer.resource);
   const gain = voice.output;
   assert.ok(gain.gain.value > 0 && gain.gain.value < 1);
   assert.equal(gain.output, vault.master);
@@ -114,6 +117,7 @@ test('off is silent; an opted-in region plays one quiet looping source through m
   assert.equal(voices.length, 1);
   music.setRoom(finale);
   await settle();
+  assert.equal(music.nowPlaying, null);
   assert.ok(voice.stopAt > ctx.currentTime, 'leaving a scored region fades before stopping');
   assert.ok(gain.gain.events.some(e => e.value === 0 && e.time >= ctx.currentTime));
   music.setRoom(throne);
@@ -136,13 +140,14 @@ test('an old decode completing after the new region cannot take over', async () 
   music.setRoom(sea);
   await settle();
   assert.equal(reads.length, 2);
-  assert.match(reads[1].buffer.resource.path, /\/soundings\.wav$/);
+  assert.match(reads[1].buffer.resource.path, /\/submerged-bell\.wav$/);
   reads[1].complete();
   await settle();
   reads[0].complete();
   await settle();
   assert.equal(voices.length, 1);
   assert.equal(voices[0].buffer, reads[1].buffer);
+  assert.equal(music.nowPlaying, reads[1].buffer.resource);
   assert.equal(voices[0].stopAt, null);
   music.setRoom(null);
   assert.notEqual(voices[0].stopAt, null);
@@ -157,12 +162,14 @@ test('switching off mid-load cannot start music after opt-out', async () => {
   reads[0].complete();
   await settle();
   assert.equal(voices.length, 0);
+  assert.equal(music.nowPlaying, null);
   music.setEnabled(true);
   await settle();
   assert.equal(reads.length, 1);
   assert.equal(voices.length, 1);
   music.setEnabled(false);
   assert.notEqual(voices[0].stopAt, null);
+  assert.equal(music.nowPlaying, null);
 });
 
 test('fast return across the hall/sea boundary retires the older fade', async () => {
@@ -182,10 +189,13 @@ test('fast return across the hall/sea boundary retires the older fade', async ()
   assert.equal(voices[0].stopAt, ctx.currentTime);
   assert.ok(voices[1].stopAt > ctx.currentTime);
   assert.equal(voices[2].buffer, reads[0].buffer);
-  voices[0].onended();
-  voices[1].onended();
+  voices[0].onended?.();
+  voices[1].onended?.();
   music.sync();
+  await settle();
   assert.equal(voices.length, 3);
+  assert.equal(reads.length, 2, 'stopped tracks must not advance their playlists');
+  assert.equal(music.nowPlaying, reads[0].buffer.resource);
   assert.equal(voices[2].stopAt, null);
 });
 
@@ -208,24 +218,33 @@ test('master mute and a suspended dialog suppress a pending start', async () => 
     reads[0].complete();
     await settle();
     assert.equal(voices.length, 0);
+    assert.equal(music.nowPlaying, null);
     vault[reason] = false;
     ctx.state = 'running';
     music.sync();
     await settle();
     assert.equal(voices.length, 1);
     assert.equal(reads.length, 1);
+    assert.equal(music.nowPlaying, reads[0].buffer.resource);
     vault[reason] = true;
     if (reason === 'paused') ctx.state = 'suspended';
     music.sync();
+    assert.equal(music.nowPlaying, null);
     if (reason === 'paused') {
-      assert.equal(voices[0].stopAt, null, 'context suspension preserves the loop position');
+      assert.equal(voices[0].stopAt, null, 'context suspension preserves the playhead');
+      vault.paused = false;
+      ctx.state = 'running';
+      music.sync();
+      await settle();
+      assert.equal(music.nowPlaying, reads[0].buffer.resource);
+      assert.equal(voices.length, 1);
     } else {
       assert.notEqual(voices[0].stopAt, null);
     }
   }
 });
 
-test('failed loading recovers on a later opt-in', async () => {
+test('a failed track falls back to its regional companion', async () => {
   const {music, voices, reads} = fixture();
   music.setRoom(hall);
   music.setEnabled(true);
@@ -233,11 +252,99 @@ test('failed loading recovers on a later opt-in', async () => {
   reads[0].fail();
   await settle();
   assert.equal(voices.length, 0);
-  music.setEnabled(false);
-  music.setEnabled(true);
-  await settle();
   assert.equal(reads.length, 2);
+  assert.match(reads[1].buffer.resource.path, /\/violet-stone\.wav$/);
   reads[1].complete();
   await settle();
   assert.equal(voices.length, 1);
+  assert.equal(music.nowPlaying, reads[1].buffer.resource);
+});
+
+test('two failed decodes terminate the rotation and a later opt-in retries', async () => {
+  const {music, voices, reads} = fixture();
+  music.setRoom(hall);
+  music.setEnabled(true);
+  await settle();
+  reads[0].fail();
+  await settle();
+  reads[1].fail();
+  await settle();
+  assert.equal(voices.length, 0);
+  assert.equal(music.nowPlaying, null);
+  assert.equal(reads.length, 2, 'do not loop through failed tracks indefinitely');
+  music.setEnabled(false);
+  music.setEnabled(true);
+  await settle();
+  assert.equal(reads.length, 3);
+  reads[2].complete();
+  await settle();
+  assert.equal(voices.length, 1);
+  assert.equal(music.nowPlaying, reads[2].buffer.resource);
+});
+
+test('a natural ending advances and wraps each regional pair', async () => {
+  for (const [room, names] of [[hall, ["Hero's Quest", 'Violet Stone']], [sea, ['Submerged Bell', 'Soundings']]]) {
+    const {music, ctx, voices, reads} = fixture();
+    music.setRoom(room);
+    music.setEnabled(true);
+    await settle();
+    for (let i = 0; i < 3; i++) {
+      if (i < 2) reads[i].complete();
+      await settle();
+      const track = music.nowPlaying;
+      assert.equal(track.title.replace(/’/g, "'"), names[i % 2]);
+      assert.ok(track.credit);
+      assert.equal(voices[i].buffer.resource, track);
+      assert.equal(voices[i].loop, false);
+      assert.equal(voices[i].offset, 0, 'each new song starts at the beginning');
+      if (i < 2) {
+        ctx.currentTime += voices[i].buffer.duration;
+        voices[i].onended();
+        await settle();
+      }
+    }
+    assert.equal(reads.length, 2, 'wrapping reuses the decoded resource');
+  }
+});
+
+test('each region saves its own track and playhead until a fresh journey', async () => {
+  const {music, ctx, voices, reads} = fixture();
+  music.setEnabled(true);
+  music.setRoom(hall);
+  await settle();
+  reads[0].complete();
+  await settle();
+  ctx.currentTime += voices[0].buffer.duration;
+  voices[0].onended();
+  await settle();
+  reads[1].complete();
+  await settle();
+  ctx.currentTime += 12;
+  music.setRoom(sea);
+  await settle();
+  reads[2].complete();
+  await settle();
+  ctx.currentTime += 7;
+  music.setRoom(throne);
+  await settle();
+  assert.equal(music.nowPlaying, reads[1].buffer.resource, 'return to the second hall track');
+  assert.equal(voices[3].offset, 12);
+  ctx.currentTime += 2;
+  music.setRoom(sea);
+  await settle();
+  assert.equal(music.nowPlaying, reads[2].buffer.resource);
+  assert.equal(voices[4].offset, 7);
+  music.setRoom(hall);
+  await settle();
+  assert.equal(voices[5].offset, 14, 'accumulate time across separate visits');
+
+  music.setRoom(null);
+  assert.equal(music.nowPlaying, null);
+  music.setRoom(sea);
+  await settle();
+  assert.equal(voices[6].offset, 0);
+  music.setRoom(hall);
+  await settle();
+  assert.equal(music.nowPlaying, reads[0].buffer.resource, 'new journey starts with the first track');
+  assert.equal(voices[7].offset, 0);
 });

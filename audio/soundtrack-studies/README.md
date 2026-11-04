@@ -1,6 +1,21 @@
-# Soundtrack studies
+# The Silicon Adventures soundtrack
 
-Two instrumental arrangements for Silicon Adventures. Start with the **synth seeds** for Suno. They use a newly synthesized instrument kit and the same written scores as the disk mixes. The disk mixes let you compare the arrangements with the original Macintosh recordings.
+Select **Music on** in the game. Each region has two tracks, played in the order below. The current title appears beneath the picture. Open **Field guide → Soundtrack credits** to see the track list while playing.
+
+| Region | Track | Credit | In-game recording |
+| --- | --- | --- | --- |
+| Castle and temple | Hero's Quest | jeffreyabrick | [WAV · 3:08](../music/heros-quest.wav) |
+| Castle and temple | Violet Stone | Silicon Adventures arrangement using Enchanted Scepters and Dark Castle sounds | [WAV · 0:48](../music/violet-stone.wav) |
+| Sea floor and wreck | Submerged Bell | jeffreyabrick | [WAV · 2:55](../music/submerged-bell.wav) |
+| Sea floor and wreck | Soundings | Silicon Adventures arrangement using Enchanted Scepters sounds | [WAV · 0:51](../music/soundings.wav) |
+
+The castle score follows Saber from the quarters through the marble and banquet halls, throne room and courtyard. It also plays in the Wizard’s Sanctum, map room, bridge room and temple stairs. At the High Altar the music drops in level so the wizard can be heard. The underwater score plays in the 28 rooms whose disk ambience is bubbles, including the wreck interiors. The submarine helm, controls, armory and Finale keep their own game cues.
+
+Moving to a neighbouring room within the same region keeps the track playing. Leaving a region fades out its music. On returning during the same journey, you pick up where you left off. Opening a dialog or hiding the tab pauses playback. **Sound off** mutes the full mix, and **Music off** switches off only the score. The game remembers your Music preference for the browser’s launch address.
+
+## Sketches and Suno prompts
+
+Violet Stone and Soundings began as instrumental studies for this edition. The **synth seeds** use a newly synthesized instrument kit and the same written scores as the disk mixes. The disk mixes let you hear the arrangements with the original Macintosh recordings.
 
 | Cue | Suno seed | Mix using disk recordings | Placement |
 | --- | --- | --- | --- |
@@ -42,14 +57,10 @@ A slower six-beat sway for the sea floor. A metal strike sounds much lower than 
 | 13.85 s | Chain | ASND 32414 |
 | 15.55 s | Clank | ASND 31726 |
 
-The arranged disk mixes repitch and filter these cues. Sustained notes use partials measured from the flute, horn, drip and ping. The synth seeds instead use their own generated tones, noise and resonators. All files are stereo MP3 at 44.1 kHz and 192 kb/s. [Disk provenance](../../sources/README.md) · [Dark Castle sound assignments](../../archive/dc/README.md)
+The arranged disk mixes repitch and filter these cues. Sustained notes use partials measured from the flute, horn, drip and ping. The synth seeds use their own generated tones, noise and resonators. The MP3 studies, seeds and sampler are stereo at 44.1 kHz and 192 kb/s. [Disk provenance](../../sources/README.md) · [Dark Castle sound assignments](../../archive/dc/README.md)
 
-## Playing the sketches in the game
+## Game audio files
 
-Choose **Music on** in the top bar. The two in-game loops use the arrangements with actual disk samples. Each closes on a 48-beat boundary, with its tail folded into the opening. The WAVs are 22,050 Hz, 16-bit stereo. [Violet Stone game loop · 48 seconds](../music/violet-stone.wav) · [Soundings game loop · 51.43 seconds](../music/soundings.wav)
-
-Violet Stone follows the quarters, marble and banquet halls, throne room, courtyard, Wizard’s Sanctum, map room, bridge room and temple stairs. At the High Altar its gain drops from 10% to 3.5% so the wizard is easier to hear. Soundings follows the 28 rooms whose original ambient cue is bubbles, including the wreck interiors. Music fades out on leaving a scored region. The submarine helm, controls, armory and Finale have their own game cues.
-
-The Music preference is saved for the browser’s launch address. It takes no adventure turn. Sound off mutes the whole mix, and opening a dialog or hiding the tab pauses the audio context. Resume within the same region continues the loop. Generate just the game WAVs with `python audio/soundtrack-studies/render.py --game-loops`; the downloadable MP3 arrangements keep their original endings.
+Hero's Quest and Submerged Bell use the full recordings supplied for this edition. Both source MP3s credit jeffreyabrick. Their game copies are 32,000 Hz, 16-bit stereo WAVs. The game versions of Violet Stone and Soundings use disk samples at 22,050 Hz, 16-bit stereo. Each closes on a 48-beat boundary with its tail folded into the opening. Regenerate these two WAVs with `python audio/soundtrack-studies/render.py --game-loops`. The downloadable MP3 studies keep their original endings.
 
 Rebuild with `python audio/soundtrack-studies/render.py` from the repository root with NumPy, SciPy, and FFmpeg with libmp3lame on PATH. Supply an output directory to keep a separate render, or add `--synth-only` for just the two seeds.

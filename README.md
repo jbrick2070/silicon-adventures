@@ -6,7 +6,7 @@ Double-click **Play Enchanted Scepters.exe** on 64-bit Windows. The launcher ope
 
 **Enter the High Altar** starts a short excursion at two granite columns. Headphones help. **Begin the full adventure** starts Saber in the quarters with the King’s summons. Both entries use the same 200-room game and allow you to continue exploring. In **Adventures…** you can also open the nine saved games that came with the archived image.
 
-**Music** in the top bar turns on the optional regional score. *Violet Stone* follows the castle halls and drops in level at the High Altar. *Soundings* follows the sea floor and the wreck. The loop continues across neighbouring rooms in the same region. **Sound** mutes the score and the original effects together. Music starts off on a new browser launch address. [Soundtrack sketches and downloads](audio/soundtrack-studies/README.md)
+Turn **Music on** in the top bar to hear *Hero's Quest* by jeffreyabrick alternate with *Violet Stone* in the castle and temple. Underwater, *Submerged Bell* by jeffreyabrick alternates with *Soundings*. The track title appears beneath the picture. Open **Field guide → Soundtrack credits** for the full list. Music starts off, and **Sound off** mutes music and effects together. [Soundtrack, credits and downloads](audio/soundtrack-studies/README.md)
 
 | Control | Action |
 | --- | --- |
@@ -45,7 +45,7 @@ The source images came from the Internet Archive. The source records include the
 | `game/map.js` | Saber’s chart: a 1-bit fog-of-war map of the room grid in the Travel tab, kept in the save |
 | `art/refresh/README.md` and `game/refresh.js` | Separate non-destructive 1-bit refresh layers, steady `CODE 1` halftones, High Altar geometry, landmark room rigs, and lifted forms |
 | `archive/dc/README.md` | Sound, motion and interface decoding |
-| [Soundtrack studies](audio/soundtrack-studies/README.md) | Two instrumental MP3 sketches, sample-free Suno seeds, a dry disk sampler and suggested room placements |
+| [Soundtrack and studies](audio/soundtrack-studies/README.md) | Four regional tracks and their credits, two MP3 sketches with Suno prompts and synth seeds, and a disk sampler |
 | `archive/es/PLAYTEST.md` | Complete four-scepter campaign verification |
 | `archive/es/campaign-trace.tsv` | Spoilers. Room-by-room commands and clicks from the winning run |
 

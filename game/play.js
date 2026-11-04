@@ -424,10 +424,29 @@
     openDialog('Adventures',text,...buttons,para('Original disk bookmarks','eyebrow'),...starts.map(n=>button(title(n),()=>begin('bookmark/'+n))));
   }
   $('bookmarks').onclick=adventures;
+  function soundtrackCredits(){
+    const credits=document.createElement('details'),summary=document.createElement('summary');
+    credits.className='soundtrack-credits';
+    summary.textContent='Soundtrack credits';
+    credits.append(summary);
+    function region(name,tracks,note){
+      const list=document.createElement('ol');
+      for(const track of tracks){
+        const item=document.createElement('li');
+        item.textContent=track.title+' · '+track.credit;
+        list.append(item);
+      }
+      credits.append(para(name,'eyebrow'),list,para(note));
+    }
+    region('Castle and temple',RegionMusic.stone,'Violet Stone pairs the flute, horn and drum from Enchanted Scepters with a wooden knock from Dark Castle.');
+    region('Sea floor and wreck',RegionMusic.water,'Soundings sets metal strikes, drips and bubbles from the Enchanted Scepters disk to a slow six-beat sway.');
+    return credits;
+  }
   function fieldGuide(){
     const h=document.createElement('h2');h.textContent='Field guide';
     openDialog('Field guide',h,
-      para('Music in the top bar turns on the optional score. Violet Stone follows the castle halls and plays softly at the High Altar. Soundings follows the underwater bubbles. Sound off mutes both music and effects.'),
+      para('Turn Music on to hear two tracks alternate in the castle halls and temple, and another pair in the underwater rooms with bubbles. The title appears below the picture. Sound off mutes music and effects.'),
+      soundtrackCredits(),
       para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around. On a phone or tablet, hold the Walk, Back and turn buttons under the picture.'),
       para('Click a drawn object or approach it and press E. A click is a turn in the original game: it may take, answer a question or spring a trap, so E offers the edition’s honest prompt (Take, Click, Face, Go). Press / to type. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
       para('The disk’s vocabulary: the Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, ACCEPT, WEAR, and each weapon’s own verb. There is no EXAMINE, USE or TALK; this edition sends EXAMINE as Look and USE as the item’s verb. Status and Rest are turns of their own, so use them away from a fight.'),
@@ -452,13 +471,15 @@
     if(playing&&!muted)await sound.start();
   };
   function syncMusicButton(){
-    const on=sound.music.enabled;
+    const on=sound.music.enabled,track=sound.music.nowPlaying;
     $('musicLabel').textContent=on?'on':'off';
     $('musicBtn').setAttribute('aria-pressed',String(on));
+    const label=track?'Now playing · '+track.title:'';
+    if($('nowPlaying').textContent!==label)$('nowPlaying').textContent=label;
   }
+  sound.music.onChange=syncMusicButton;
   $('musicBtn').onclick=async()=>{
     sound.music.setEnabled(!sound.music.enabled);
-    syncMusicButton();
     try{localStorage.setItem('scepters-music',sound.music.enabled?'on':'off');}catch{}
     if(playing&&!state?.ended&&!muted&&sound.music.enabled&&!sound.started)await sound.start();
   };
