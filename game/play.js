@@ -5,10 +5,12 @@
   const view=new PlateView($('world')), sound=new SceneSound();
   const designs=new Map(ES_DESIGNS.map(d=>[d.type+'/'+d.id,d]));
   const keys=new Set(), keyFor=(o,kind)=>kind+'/'+o.id;
+  const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
   const starts=['art','computer','dogleg','Finale','lava tunnel','main road','mirror room','office',"Queen's Chamber"];
   let state,scene,playing=false,busy=false,muted=false,captions=true,drag=null;
   let shortcut=false,wizardRead=false,prayed=false,npc=null,combatant=null,knightReel=908;
   let knockProgress=null,knockOpen=false;
+  let selectedItemId=null,shatterSprite=null,shatterUntil=0,fxSprites=[],draftCmd='';
   const armory=20357;
   // A scripted question waiting for its answer, slot ownership for doorway checkpoints, and combat recall.
   let callionSaved=false;
@@ -16,7 +18,16 @@
   const history=[];let histAt=0;
   // Click targets: the disk's names are terse (dung.1, stor.2); only stems the room text itself names get a word.
   const STEMS={high:'altar',stor:'chest',can:'cannon',sub:'control',dung:'door',squash:'door',jd:'door',lobb:'door',clos:'closet',airl:'airlock',comp:'computer',hatch:'hatch',shrine:'shrine',spikes:'spikes',web:'web',grate:'grate',floor:'floor',river:'river',nest:'nest',ram:'ram',bar:'bars',sand:'sand',slip:'slip',ball:'ball',queen:'queen',cat:'catapult',view:'view',sep:'sepulchre',osir:'osiris',phoenix:'phoenix',sphinx:'sphinx',top:'top',drink:'drink',lair:'lair',pot:'pot',rob:'robot'};
-  const TARGET_NAMES={'AOBJ/4876':'left control','AOBJ/13165':'centre control','AOBJ/20759':'right control'};
+  const TARGET_NAMES={'AOBJ/4876':'left control','AOBJ/13165':'centre control','AOBJ/20759':'right control','AOBJ/2718':'installed silicon chip','AOBJ/16192':'submarine viewplate','AOBJ/11543':'submarine viewplate','AOBJ/3992':'submarine viewplate','AOBJ/4051':'submarine viewplate'};
+  const VIEWPLATE_KEYS=new Set(['AOBJ/16192','AOBJ/11543','AOBJ/3992','AOBJ/4051']);
+  function viewplateSummary(){
+    const ids=new Set((state?.objects||[]).map(o=>o.id));
+    if(ids.has(4051))return 'Viewplate · grounded on Silicon Beach (return east to hatch)';
+    if(ids.has(3992))return 'Viewplate · reef on the left (steer right)';
+    if(ids.has(11543))return 'Viewplate · cliff on the right (steer left)';
+    if(ids.has(16192))return 'Viewplate · open water ahead (centre control advances)';
+    return 'Viewplate · dark glass (check computer and hatch)';
+  }
   function labelFor(key){
     if(TARGET_NAMES[key])return TARGET_NAMES[key];
     const m=designs.get(key);if(!m)return 'the drawing here';
@@ -25,6 +36,8 @@
   }
   // A click is a whole turn on the disk: it takes anything movable, so say so.
   function verbFor(key){
+    if(key==='AOBJ/2718')return 'Remove the silicon chip';
+    if(VIEWPLATE_KEYS.has(key))return 'Read viewplate';
     if(key.startsWith('ACHR/'))return 'Face the '+labelFor(key);
     const o=state.objects.find(x=>x.id===+key.slice(5)),name=labelFor(key);
     return o&&o.type!==9?'Take the '+name:'Click '+name;
@@ -64,7 +77,7 @@
   // puzzle guidance starts over when its particular room/state changes.
   let hintGoal='',hintTier=0,hintsUsed=0;
   function whereNext(){
-    if(!playing||!state||state.ended||!window.ScepterHints)return;
+    if(busy||!playing||!state||state.ended||!window.ScepterHints)return;
     const {index,milestone,count,key}=ScepterHints.current(state,id=>visited[roomIndex.get(id)]);
     if(index<0||!milestone)return;
     const goal=key||'chapter/'+index;
@@ -76,15 +89,38 @@
     const heading=local?milestone.title:'Step '+(index+1)+' of '+count+' · '+milestone.title;
     tabs('journal');line(heading+(tierIndex?' · clue '+(tierIndex+1):'')+'. '+text,'aside hint');
     if(!exhausted){hintsUsed++;hintTier++;}
-    controls();
+    controls();rememberLive();
   }
   $('hint').onclick=whereNext;
   function rememberSeen(){try{sessionStorage.setItem('scepters-seen',JSON.stringify({session:state?.session,seen:packSeen()}));}catch{}}
+  function rememberLive(){
+    if(!playing||!state)return;
+    try{
+      sessionStorage.setItem('scepters-live',JSON.stringify({
+        session:state.session,owner,shortcut,wizardRead,prayed,pending,callionSaved,
+        hintsUsed,hintGoal,hintTier,pose:{...view.pose},scene:scene?.id,sceneName:scene?.name||''
+      }));
+    }catch{}
+  }
+  function persistSavedMeta(meta){
+    checkpoint=meta;
+    try{
+      localStorage.setItem('scepters-saved-journal',JSON.stringify({saveId:meta.saveId,entries:journal}));
+      localStorage.setItem('scepters-saved-meta',JSON.stringify(meta));
+    }catch{}
+  }
+  function loadSavedMeta(){
+    try{
+      const m=JSON.parse(localStorage.getItem('scepters-saved-meta')||'null');
+      return m&&typeof m.room==='string'&&Number.isFinite(m.hp)?m:null;
+    }catch{return null;}
+  }
   const condition=p=>p<.40?'very bad':p<.55?'bad':p<.70?'average':p<.85?'good':'very good';
   const whom=s=>s==='them'?'them':/^the\b/i.test(s)?s:'the '+s;
   // The last line of a turn that ends in a question mark is a scripted question (the King's
-  // "Will you go?", the Guard, the sentry on the main road). Everything but the answer counts as a refusal.
-  function detectPending(output){
+  // "Will you go?", the Guard, the sentry on the main road). Only the Throne Room (ASCN 17888)
+  // demands a strict YES/NO before moving; rhetorical questions elsewhere remain free-form.
+  function detectPending(output,sceneId){
     if(!output)return null;
     const lines=output.split('\n').map(s=>s.trim()).filter(Boolean),last=lines[lines.length-1]||'';
     if(!last.endsWith('?')||/^(huh|what)\?$/i.test(last))return null;
@@ -92,8 +128,20 @@
     const who=prefixes.length?prefixes[prefixes.length-1][1]:'';
     const speaker=!who?'them':/calls out/i.test(who)?'the voice':who;
     const body=last.replace(/^[^:?]*:\s*/,'');
-    const kind=/\bor\b/i.test(body)?'choice':(/^(do|did|will|would|are|is|can|could|were|have|has|should)\b/i.test(body)||/do you\?$/i.test(body))?'yesno':'free';
+    const yesno=sceneId===17888&&(/^(do|did|will|would|are|is|can|could|were|have|has|should)\b/i.test(body)||/do you\?$/i.test(body));
+    const kind=/\bor\b/i.test(body)?'choice':yesno?'yesno':'free';
     return {speaker,kind};
+  }
+  function restoredPending(saved,snapshot){
+    const p=saved?.pending;
+    // The original room script puts KING in the room only while asking
+    // "Will you go?" and removes him on acceptance. This observable state
+    // also recovers saves written before this edition stored pending replies.
+    if(snapshot.scene===17888&&snapshot.objects.some(o=>o.id===27297))
+      return {speaker:'King',kind:'yesno'};
+    if(p&&['yesno','choice','free'].includes(p.kind)&&typeof p.speaker==='string'&&
+      !(p.kind==='yesno'&&p.speaker==='King'))return {speaker:p.speaker,kind:p.kind};
+    return null;
   }
   let elapsed=0,oldTime=0,stepDistance=0,dirty=true,lastPaint=-1,captionUntil=0,viewScale=1;
   const actorPlace={x:-.94,z:5.14};
@@ -128,7 +176,7 @@
     if(on!==view.refreshed)view.setRefreshed(on);
     const style=view.colour?'colour':'ink';
     try{localStorage.setItem('scepters-picture-mode',(on?'':'original-')+style);}catch{}
-    syncLayerUi();drawChart();dirty=true;
+    syncLayerUi();drawChart();dirty=true;refreshHover=true;
     if(playing&&state&&scene)controls();
     if(playing){message(on?enhancedName():'Original plate');$('world').focus({preventScroll:true});}
     else if(view.source)view.render(elapsed);
@@ -159,19 +207,36 @@
   function message(s){ $('cue').textContent=s;captionUntil=elapsed+3.3; }
   // Browser-engine turns can take a moment. The state guard was already here;
   // make it visible without changing the disk turn cadence or button meaning.
+  let lastPointer=null,refreshHover=false;
   function setBusy(value,label='WORKING…'){
     busy=value;
     const status=$('working'),panel=$('playing');
     if(status){status.textContent=value?label:'';status.hidden=!value;}
-    if(value){const hover=$('hoverCue');if(hover){hover.hidden=true;hover.textContent='';}}
+    if(value){
+      const hover=$('hoverCue');if(hover){hover.hidden=true;hover.textContent='';}
+      for(const id of ['hint','save','load','bookmarks']){const b=$(id);if(b)b.disabled=true;}
+    }else{
+      refreshHover=true;
+      if(playing&&state&&scene){
+        $('save').disabled=state.ended;$('load').disabled=!state.saved;
+        $('bookmarks').disabled=false;$('hint').disabled=state.ended;
+      }
+    }
     if(panel){panel.setAttribute('aria-busy',String(value));panel.classList.toggle('is-busy',value);}
   }
+  let folioVault=null,folioCueGeneration=0;
+  function stopFolioAudio(){
+    folioCueGeneration++;
+    if(folioVault){folioVault.pause(true);folioVault.leaveRoom();}
+  }
   function openDialog(name,...content){
+    stopFolioAudio();
+    if(!content.some(node=>node.classList?.contains('folio')))window.SiliconFolio?.clearLoop();
     keys.clear();sound.pause(true);$('dialogName').textContent=name;
     $('dialogBody').replaceChildren(...content);if(!$('dialog').open)$('dialog').showModal();
   }
   $('closeDialog').onclick=()=>$('dialog').close();
-  $('dialog').addEventListener('close',()=>{sound.pause(!playing||document.hidden||$('dialog').open);if(playing)$('world').focus({preventScroll:true});});
+  $('dialog').addEventListener('close',()=>{stopFolioAudio();sound.pause(!playing||document.hidden||$('dialog').open);if(playing)$('world').focus({preventScroll:true});});
   $('dialog').addEventListener('click',e=>{if(e.target===$('dialog'))$('dialog').close();});
   async function api(action,arg=''){
     if(browserEngine)return browserEngine.action(action,arg);
@@ -193,18 +258,48 @@
     flush();
   }
   async function crossover(){
-    npc=null;
+    npc=null;fxSprites=[];shatterSprite=null;
     if(scene.id===7990){
       npc=await view.add({path:'art/castle-wizard.png',x:0,y:0,width:48,height:46},'wizard',{
         ...actorPlace,y:1.36,w:.83,h:.80,cols:8,fw:48,fh:46});
     } else if(['large cave','cavern','cave entrance'].includes(scene.name)){
-      const bat=CastleGraphics.find(a=>a.type==='PPCT' && a.id===300 && a.fork==='Data B');
+      const bat=castleReel(300);
       if(bat)npc=await view.add({path:bat.path,x:0,y:0,width:bat.width,height:bat.height},'bat',
         {x:-1.1,z:3.4,y:2,w:.54,h:.45,fw:bat.width,fh:bat.height,cols:bat.frames});
     } else if(scene.name==='armory'&&!combatant){
-      const knight=CastleGraphics.find(a=>a.type==='PPCT'&&a.id===908&&a.fork==='Data B');
+      const knight=castleReel(908);
       if(knight)npc=await view.add({path:knight.path,x:0,y:0,width:knight.width,height:knight.height},'knight',
         {x:.7,z:3,y:0,w:1.22,h:1.65,fw:knight.width,fh:knight.height,cols:knight.frames});
+    } else if((scene.id===12615||scene.id===9232)&&!combatant&&!state.characters.length){
+      const rat=castleReel(310),rz=Math.min(2.25,(view.rig?.back??5)-.65);
+      if(rat){
+        npc=await view.add({path:rat.path,x:0,y:0,width:rat.width,height:rat.height},'rat',
+          {x:0,z:rz,y:0,w:.52,h:.20,fw:rat.width,fh:rat.height,cols:rat.frames,refreshedOnly:true,solidHit:true});
+        npc.baseZ=rz;
+      }
+    }
+    if(scene.id===9709&&state.objects.some(o=>o.id===2718)){
+      const spark=castleReel(919),sz=Math.min(2.9,(view.rig?.back??5)-.5);
+      if(spark){
+        const s=await view.add({path:spark.path,x:0,y:0,width:spark.width,height:spark.height},'spark',
+          {x:.68,z:sz,y:1.45,w:.22,h:.36,fw:spark.width,fh:spark.height,cols:spark.frames,refreshedOnly:true,decorative:true});
+        s.fps=8;fxSprites.push(s);
+      }
+    }
+    if(scene.id===14750){
+      const flame=castleReel(424),fz=Math.min(3.1,(view.rig?.back??5)-.55);
+      if(flame){
+        const s=await view.add({path:flame.path,x:0,y:0,width:flame.width,height:flame.height},'flame',
+          {x:-.82,z:fz,y:.05,w:.46,h:.58,fw:flame.width,fh:flame.height,cols:flame.frames,refreshedOnly:true,decorative:true});
+        s.fps=5;fxSprites.push(s);
+      }
+    }
+    if(scene.id===20791&&shatterUntil>elapsed){
+      const sh=castleReel(914),mz=Math.min(3.1,(view.rig?.back??5)-.5);
+      if(sh){
+        shatterSprite=await view.add({path:sh.path,x:0,y:0,width:sh.width,height:sh.height},'shatter',
+          {x:0,z:mz,y:.65,w:.92,h:1.09,fw:sh.width,fh:sh.height,cols:sh.frames,refreshedOnly:true,decorative:true});
+      }
     }
   }
   async function populate(){
@@ -220,9 +315,10 @@
           combatant.until=elapsed+1.5;
           continue;
         }
-        const options={};
+        const k=keyFor(item,kind),options={};
+        if(VIEWPLATE_KEYS.has(k))options.solidHit=true;
         if(scene.id===7990&&item.id===14168)Object.assign(options,{x:(meta.x+meta.width/2-169)*4.18/215,z:4.18,y:1.8-(meta.y+meta.height-123)*4.18/215,w:meta.width*4.18/215,h:meta.height*4.18/215});
-        await view.add(meta,keyFor(item,kind),options);
+        await view.add(meta,k,options);
       }
     }
     await crossover();dirty=true;
@@ -261,8 +357,9 @@
   function rememberKnock(){
     try{sessionStorage.setItem('scepters-knock',JSON.stringify({session:state.session,...knockProgress,open:knockOpen}));}catch{}
   }
-  function savedView(auto=false){
-    return JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut,hp:state.hp,seen:packSeen(),
+  function savedView(auto=false,saveId){
+    return JSON.stringify({...view.pose,saveId,scene:scene.id,read:wizardRead,prayed:prayed||undefined,shortcut,
+      pending:pending||undefined,hp:state.hp,seen:packSeen(),
       auto:auto||undefined,knock:knockProgress?{...knockProgress,open:knockOpen}:undefined});
   }
   function openKnock(){
@@ -314,7 +411,61 @@
     if(!state?.saved)return 'No saved adventure.';
     if(!checkpoint)return 'Saved adventure available.';
     const kind=checkpoint.kind==='checkpoint'?'Doorway checkpoint':'Manual save';
-    return kind+' · '+title(checkpoint.room)+' · HP '+checkpoint.hp;
+    const exc=checkpoint.excursion?' · Eastern Beacon':'';
+    return kind+' · '+title(checkpoint.room)+exc+' · HP '+checkpoint.hp;
+  }
+  function renderSaveBadge(){
+    const el=$('saveState');if(!el)return;
+    el.replaceChildren();
+    const desc=saveDescription();
+    if(state?.saved&&checkpoint&&window.SiliconFolio){
+      const img=new Image();img.className='save-icon';img.alt='';
+      img.src=checkpoint.kind==='checkpoint'?SiliconFolio.ICONS.checkpointSave:SiliconFolio.ICONS.manualSave;
+      el.append(img);
+    }
+    el.append(document.createTextNode(desc));
+  }
+  function renderPackCard(){
+    const box=$('packCard');if(!box)return;
+    const it=state?.inventory.find(o=>o.id===selectedItemId);
+    if(!it||!window.SiliconFolio){selectedItemId=it?selectedItemId:null;box.hidden=true;box.replaceChildren();return;}
+    box.hidden=false;box.replaceChildren();
+    const m=designs.get(keyFor(it,'AOBJ'));
+    const art=document.createElement('div');art.className='pack-card-art';
+    if(m){
+      const img=new Image();img.alt='';
+      if(view.refreshed&&view.colour){
+        img.src=m.path;img.className='colour-icon';
+        view.colourIcon(m).then(url=>{if(img.isConnected)img.src=url;}).catch(()=>{});
+      }else img.src=(view.refreshed&&window.RefreshBananas?.[m.path])||m.path;
+      art.append(img);
+    }
+    const body=document.createElement('div');body.className='pack-card-body';
+    const head=document.createElement('div');head.className='pack-card-head';
+    const nameEl=document.createElement('span');nameEl.textContent=it.name;
+    const info=SiliconFolio.itemNote(it);
+    const srcEl=document.createElement('span');srcEl.className='pack-card-source';
+    srcEl.textContent=info.fromDisk?'1986 disk note':'Edition note';
+    head.append(nameEl,srcEl);
+    const noteEl=para(info.text,'pack-card-note');
+    const row=document.createElement('div');row.className='pack-card-actions';
+    if(!state.ended){
+      const waiting=pending?.kind==='yesno';
+      const act=SiliconFolio.contextAction(it,scene?.id);
+      if(act){
+        const useBtn=button(act[0],()=>command(act[1]),'mini primary-mini');
+        useBtn.disabled=waiting;
+        if(waiting)useBtn.title='Answer the question in the Journal first.';
+        row.append(useBtn);
+      }
+      row.append(button('Type…',()=>{tabs('journal');$('cmd').value=(it.verb?it.verb+' ':'')+it.name;draftCmd=$('cmd').value;$('cmd').focus();}));
+      const dropBtn=button('Drop',()=>command('drop '+it.name));
+      dropBtn.disabled=waiting;
+      if(waiting)dropBtn.title='Answer the question in the Journal first.';
+      row.append(dropBtn);
+    }
+    body.append(head,noteEl,row);
+    box.append(art,body);
   }
   function controls(){
     $('roomTitle').textContent=state.ended?'Journey’s end':scene.name;
@@ -325,10 +476,10 @@
     $('health').textContent=state.ended?'':'HP '+state.hp+(state.maxHp?' / '+state.maxHp+' · '+condition(share):'');
     $('health').classList.toggle('danger',!state.ended&&share<.40);
     $('itemCount').textContent=state.inventory.length;
-    $('save').disabled=state.ended;$('load').disabled=!state.saved;
-    $('saveState').textContent=saveDescription();
+    $('save').disabled=busy||state.ended;$('load').disabled=busy||!state.saved;
+    renderSaveBadge();
     $('load').title=state.saved?'Resume the saved adventure. This may be a manual save or doorway checkpoint.':'No saved adventure yet.';
-    $('hint').disabled=state.ended;$('hint').textContent=hintsUsed?'Where next? · '+hintsUsed:'Where next?';
+    $('hint').disabled=busy||state.ended;$('hint').textContent=hintsUsed?'Where next? · '+hintsUsed:'Where next?';
     // Who stands against Saber, in the engine's own condition words, from each inhabitant's first-seen HP.
     let foe=$('foe');
     if(!foe){foe=para('','subtext');foe.id='foe';$('roomTitle').after(foe);}
@@ -341,7 +492,8 @@
     $('pack').replaceChildren();
     for(const it of state.inventory) {
       const m=designs.get(keyFor(it,'AOBJ'));
-      const b=button(it.name,()=>{tabs('journal');$('cmd').value=(it.verb?it.verb+' ':'drop ')+it.name;$('cmd').focus();},'');
+      const b=button(it.name,()=>{selectedItemId=selectedItemId===it.id?null:it.id;controls();},'');
+      b.setAttribute('aria-pressed',String(it.id===selectedItemId));
       if(m){
         const img=new Image();
         img.alt='';
@@ -353,7 +505,8 @@
       }
       $('pack').append(b);
     }
-    if(!state.inventory.length)$('pack').append(para('Your pack is empty.','subtext'));
+    if(!state.inventory.length){selectedItemId=null;$('pack').append(para('Your pack is empty.','subtext'));}
+    renderPackCard();
     $('arms').replaceChildren(...state.weapons.map(s=>button(s,()=>command(s))));
     if(state.characters.length&&!state.ended)for(const [i,part] of ['head','chest','side'].entries()){
       $('arms').append(button('Aim '+part,async()=>{if(busy)return;setBusy(true,'AIMING…');try{await api('aim',String(i+1));message('Aiming at '+part);}finally{setBusy(false);}}));
@@ -401,26 +554,51 @@
     const changed=next.scene!==state?.scene||opts.fresh;
     const priorKnight=state?.characters.find(c=>c.name==='Black Knight');
     const followingKnight=next.characters.find(c=>c.name==='Black Knight');
-    knightReel=!changed&&followingKnight&&priorKnight?(followingKnight.hp<priorKnight.hp?912:next.hp<state.hp?915:908):908;
-    const diedIn=scene?.name,priorShare=state?.maxHp?state.hp/state.maxHp:1;
+    const steppedOut=!opts.reloading&&next.scene===20791&&/steps out of the mirror/i.test(next.output||'');
+    const mirrorShattered=!opts.reloading&&next.scene===20791&&/shatters into a thousand pieces/i.test(next.output||'');
+    const chipInstalled=!opts.reloading&&next.scene===9709&&state?.scene===9709&&
+      !state.objects.some(o=>o.id===2718)&&next.objects.some(o=>o.id===2718);
+    knightReel=steppedOut?913:(!changed&&followingKnight&&priorKnight?(followingKnight.hp<priorKnight.hp?912:next.hp<state.hp?915:908):908);
+    if(mirrorShattered)shatterUntil=elapsed+.95;
+    const diedIn=opts.live?.sceneName||scene?.name,priorShare=state?.maxHp?state.hp/state.maxHp:1;
     // Blows land where they land: an inhabitant whose HP fell is struck, Saber's own loss is felt here.
     const struck=new Set((state?.characters||[]).filter(c=>{const n=next.characters.find(x=>x.id===c.id);return n&&n.hp<c.hp;}).map(c=>c.id));
     const selfHurt=!!state&&next.hp<state.hp;
     state=next;
-    pending=state.ended?null:detectPending(next.output);
+    pending=state.ended?null:(opts.reloading?restoredPending(opts.live,next):null)||detectPending(next.output,next.scene);
     if(state.ended){
-      if(!scene)scene=designs.get('ASCN/7990');
-      sourceEvents(next,opts.point);line(next.output);
-      if(/saved Callion/i.test(next.output))callionSaved=true;
-      else if(diedIn)line('Saber fell in '+diedIn+'.','aside');
-      line(state.saved?'Restore returns to '+(checkpoint?checkpoint.room+' with HP '+checkpoint.hp:'the saved adventure')+'.':'This adventure has ended. Begin again or choose a new entry.','aside');
-      controls();return;
+      const endScene=designs.get('ASCN/'+next.scene)||designs.get('ASCN/'+opts.live?.scene)||
+        (opts.live?.sceneName&&roomList.find(r=>r.name===opts.live.sceneName));
+      if(endScene)scene=endScene; else if(!scene)scene=designs.get('ASCN/7990');
+      if(opts.reloading){
+        // WAGE moves a dead player into STORAGE, which has no drawing. Reopen
+        // the remembered room instead of leaving the title-screen altar up.
+        sound.scene(scene);await view.load(scene);view.sprites=[];
+        if(opts.live?.pose&&[opts.live.pose.x,opts.live.pose.z,opts.live.pose.yaw,opts.live.pose.pitch].every(Number.isFinite)){
+          Object.assign(view.pose,opts.live.pose);view.syncMode();
+        }
+        dirty=true;
+      }
+      if(/saved Callion/i.test(next.output||''))callionSaved=true;
+      else if(opts.live?.callionSaved)callionSaved=true;
+      if(!(opts.reloading&&opts.keepJournal)){
+        sourceEvents(next,opts.point);line(next.output);
+        if(!callionSaved&&diedIn)line('Saber fell in '+diedIn+'.','aside');
+        line(state.saved?'Restore returns to '+(checkpoint?checkpoint.room+' with HP '+checkpoint.hp:'the saved adventure')+'.':'This adventure has ended. Begin again or choose a new entry.','aside');
+      }
+      controls();rememberLive();return;
     }
     if(changed){
       scene=designs.get('ASCN/'+next.scene);
       if(!scene)throw new Error('Missing room plate '+next.scene);
       sound.scene(scene);await view.load(scene);
-      if(opts.fresh) {if(!opts.keepJournal){$('log').replaceChildren();journal.length=0;rememberJournal();}wizardRead=false;prayed=false;callionSaved=false;enemyBase.clear();checkpointNoted=false;hintGoal='';hintTier=0;hintsUsed=0;if(!opts.keepSeen)visited=new Uint8Array(roomList.length);}
+      if(opts.fresh) {
+        if(!opts.keepJournal){$('log').replaceChildren();journal.length=0;rememberJournal();}
+        wizardRead=!!opts.live?.wizardRead;prayed=!!opts.live?.prayed;callionSaved=!!opts.live?.callionSaved;
+        enemyBase.clear();checkpointNoted=false;selectedItemId=null;
+        hintGoal=opts.live?.hintGoal||'';hintTier=opts.live?.hintTier||0;hintsUsed=opts.live?.hintsUsed||0;
+        if(!opts.keepSeen)visited=new Uint8Array(roomList.length);
+      }
       else if(hintGoal.startsWith('local/')){hintGoal='';hintTier=0;}
       if(roomIndex.has(scene.id)){visited[roomIndex.get(scene.id)]=1;rememberSeen();drawChart();}
       if(!opts.fresh && playing)line('— '+title(scene.name)+' —','entry');
@@ -428,8 +606,8 @@
       keys.clear();stepDistance=0;tabs('journal');
     }
     if(opts.echo)line('› '+opts.echo,'entry');
-    line(next.output || (changed?scene.text:''));
-    if(/^(what|huh)\?\s*$/i.test(next.output||'')&&parserHelp<3){
+    if(!(opts.reloading&&opts.keepJournal))line(next.output || (changed?scene.text:''));
+    if(!opts.reloading&&/^(what|huh)\?\s*$/i.test(next.output||'')&&parserHelp<3){
       parserHelp++;
       line('The disk understands its Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, WEAR, and a weapon’s own verb. Press ? for the field guide.','aside');
     }
@@ -439,25 +617,35 @@
     }
     if(scene.name.toLowerCase()==='finale' && /saved Callion/i.test(next.output)) {
       callionSaved=true;
-      line('All four scepters have come home.','aside');
+      if(!(opts.reloading&&opts.keepJournal))line('All four scepters have come home.','aside');
     }
     const share=state.maxHp?state.hp/state.maxHp:1;
-    if(share<.40&&priorShare>=.40){message('Your physical condition is very bad.');line('Rest where no one is near, or retreat the way you came.','aside');}
+    if(!opts.reloading&&share<.40&&priorShare>=.40){message('Your physical condition is very bad.');line('Rest where no one is near, or retreat the way you came.','aside');}
+    if(opts.reloading&&opts.live?.pose&&[opts.live.pose.x,opts.live.pose.z,opts.live.pose.yaw,opts.live.pose.pitch].every(Number.isFinite)){
+      Object.assign(view.pose,opts.live.pose);view.syncMode();
+    }
     await populate();controls();
     const foe=view.sprites.find(s=>s.key.startsWith('ACHR/')&&struck.has(+s.key.slice(5)))||(struck.size?combatant:null);
     for(const s of view.sprites)if(s.key.startsWith('ACHR/')&&struck.has(+s.key.slice(5)))s.flinchUntil=elapsed+.45;
     if(combatant&&struck.size)combatant.flinchUntil=elapsed+.45;
-    sourceEvents(next,opts.point||(foe?{x:foe.x,z:foe.z}:null),selfHurt&&!struck.size);
+    if(!opts.reloading){
+      sourceEvents(next,opts.point||(foe?{x:foe.x,z:foe.z}:null),selfHurt&&!struck.size);
+      if(mirrorShattered)sound.effect('dc:39',{x:0,z:3.2});
+      if(chipInstalled)sound.effect('dc:52',{x:.72,z:3.1});
+      if(scene.id===14750&&selfHurt&&state.characters.some(c=>c.id===28937))sound.effect('dc:95',{x:0,z:3.2});
+    }
     $('resume').hidden=!state.saved;
     // Doorway checkpoint: only a run that owns the save slot, only on a real turn, never mid-fight or at the altar.
     if(owner&&checkpointsOn&&opts.echo&&changed&&scene.id!==7990&&!state.characters.length){
       try{
-        const result=await api('save',savedView(true));
-        state.saved=result.saved;checkpoint={room:scene.name,hp:state.hp,kind:'checkpoint'};
+        const saveId=crypto.randomUUID();
+        const result=await api('save',savedView(true,saveId));
+        state.saved=result.saved;persistSavedMeta({room:scene.name,hp:state.hp,kind:'checkpoint',saveId});
         if(!checkpointNoted){checkpointNoted=true;line('Checkpoint at the doorway. Restore returns here; turn this off in the field guide to keep a hand-placed save.','aside');}
         controls();
       }catch{}
     }
+    rememberLive();
   }
   async function command(text,action='turn',point=null,echo=null) {
     if(!playing||busy||knockOpen||state.ended)return;
@@ -500,6 +688,13 @@
     }catch(e){line(e.message,'aside');}
     finally{document.removeEventListener('keydown',halt);document.removeEventListener('pointerdown',halt);setBusy(false);dirty=true;}
   }
+  function errorBody(text){
+    if(!window.SiliconFolio)return para(text);
+    const wrap=document.createElement('div');wrap.className='sad-castle-note';
+    const img=new Image();img.src=SiliconFolio.ICONS.sadCastle;img.alt='Dark Castle diagnostic icon';
+    wrap.append(img,para(text));
+    return wrap;
+  }
   async function begin(entry){
     if(busy)return;setBusy(true,'LOADING…');
     let enterKnock=false;
@@ -521,11 +716,17 @@
         enterKnock=next.scene===armory;
       }
       knockProgress=null;
-      playing=true;shortcut=entry==='altar';owner=entry==='new'||entry==='restore';checkpoint=null;lastCommand=lastAttack='';
+      playing=true;shortcut=entry==='altar';owner=entry==='new'||entry==='restore';checkpoint=next.saved?loadSavedMeta():null;lastCommand=lastAttack='';
       sound.pause(document.hidden||$('dialog').open);
       $('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;fitViewport();
       let kept=null;
-      if(entry==='restore'){try{kept=JSON.parse(localStorage.getItem('scepters-saved-journal')||'null');}catch{}}
+      if(entry==='restore'){
+        try{
+          const trailer=JSON.parse(next.viewData||'null');
+          const stored=JSON.parse(localStorage.getItem('scepters-saved-journal')||'null');
+          if(trailer?.saveId&&trailer.saveId===stored?.saveId&&Array.isArray(stored.entries))kept=stored.entries;
+        }catch{}
+      }
       if(Array.isArray(kept)&&kept.length){replayJournal(kept);line('— Restored —','entry');}
       await apply(next,{fresh:true,keepJournal:Array.isArray(kept)&&kept.length>0});sessionStorage.setItem('scepters-session',state.session);
       if(entry==='altar')line('A voice carries from the far side of the stone.','aside');
@@ -536,14 +737,22 @@
           if(v.scene===scene.id && [v.x,v.z,v.yaw,v.pitch].every(Number.isFinite)) {
             Object.assign(view.pose,{x:v.x,z:v.z,yaw:v.yaw,pitch:v.pitch});
             view.syncMode();
-            wizardRead=!!v.read;shortcut=!!v.shortcut;
-            checkpoint={room:scene.name,hp:state.hp,kind:v.auto?'checkpoint':'manual'};
-            controls();
+            wizardRead=!!v.read;prayed=!!v.prayed||state.inventory.some(a=>a.id===23213);shortcut=!!v.shortcut;
+            pending=restoredPending(v,state)||pending;
+            if(!v.pending&&pending?.kind==='yesno')
+              line('King: Will you go? Your saved answer is still due.','aside');
+            checkpoint={room:scene.name,hp:state.hp,kind:v.auto?'checkpoint':'manual',saveId:v.saveId,excursion:knockProgress&&v.knock?.open?knockProgress.stage:undefined};
+            try{localStorage.setItem('scepters-saved-meta',JSON.stringify(checkpoint));}catch{}
+            controls();rememberLive();
           }
         }catch{}
       }
+      if(entry==='restore'&&!pending){
+        pending=restoredPending(null,state);
+        if(pending){line('King: Will you go? Your saved answer is still due.','aside');controls();rememberLive();}
+      }
       $('world').focus({preventScroll:true});
-    } catch(e){openDialog('Launch the adventure',para(e.message));}
+    } catch(e){openDialog('Launch the adventure',errorBody(e.message));}
     finally{setBusy(false);dirty=true;}
     if(enterKnock)openKnock();
   }
@@ -553,20 +762,48 @@
     if(busy||!playing||state.ended)throw new Error('Wait for this turn to finish.');
     setBusy(true,'SAVING…');
     try{
-      const result=await api('save',savedView());
-      state.saved=result.saved;owner=true;checkpoint={room:scene.name,hp:state.hp,kind:'manual'};controls();line('Adventure saved.','aside');
-      try{localStorage.setItem('scepters-saved-journal',JSON.stringify(journal));}catch{}
+      const saveId=crypto.randomUUID();
+      const result=await api('save',savedView(false,saveId));
+      state.saved=result.saved;owner=true;
+      line('Adventure saved.','aside');
+      persistSavedMeta({room:scene.name,hp:state.hp,kind:'manual',saveId,excursion:knockOpen&&knockProgress?knockProgress.stage:undefined});
+      controls();rememberLive();
     }finally{setBusy(false);}
   }
   $('save').onclick=()=>saveHere().catch(e=>line(e.message,'aside'));
-  $('load').onclick=()=>openDialog('Restore adventure',para('Resume the saved adventure? It may be your manual save or a doorway checkpoint.'),button('Restore saved adventure',()=>begin('restore')),button('Keep playing',()=>$('dialog').close()));
+  $('load').onclick=()=>{
+    if(busy)return;
+    const detail=checkpoint?saveDescription()+'.':'It may be your manual save or a doorway checkpoint.';
+    openDialog('Restore adventure',para('Resume the saved adventure? '+detail),button('Restore saved adventure',()=>begin('restore')),button('Keep playing',()=>$('dialog').close()));
+  };
   function adventures(){
+    if(busy)return;
     const text=para('Begin in Saber’s quarters, visit the High Altar, or open one of the nine saved adventures found on the disk. Save your current progress first if you want to return.');
     const buttons=[button('Saber’s quarters',()=>begin('new')),button('High Altar excursion',()=>begin('altar')),button('The Answering Knock',()=>begin('knock'))];
     if(state?.saved)buttons.push(button('Your saved adventure',()=>begin('restore')));
     openDialog('Adventures',text,...buttons,para('Original disk bookmarks','eyebrow'),...starts.map(n=>button(title(n),()=>begin('bookmark/'+n))));
   }
   $('bookmarks').onclick=adventures;
+  function openFolio(initialTab='manual'){
+    if(!window.SiliconFolio)return;
+    SiliconFolio.open({
+      openDialog,dialogEl:$('dialog'),
+      initialTab:typeof initialTab==='string'?initialTab:'manual',
+      onStopCue:stopFolioAudio,
+      onCue(id){
+        if(muted||document.hidden)return;
+        stopFolioAudio();
+        const generation=folioCueGeneration;
+        folioVault||=new VaultAudio();
+        folioVault.mute(false);folioVault.pause(false);
+        folioVault.setVolume('effects',sound.vault.volumes.effects);
+        folioVault.start().then(ok=>{
+          if(ok&&generation===folioCueGeneration&&!muted&&!document.hidden&&
+            !folioVault.paused&&$('dialog').open&&$('dialogBody').querySelector('.folio'))folioVault.play(id);
+        }).catch(()=>{});
+      }
+    });
+  }
   function soundtrackCredits(){
     const credits=document.createElement('details'),summary=document.createElement('summary');
     credits.className='soundtrack-credits';
@@ -587,12 +824,14 @@
   }
   function fieldGuide(){
     const h=document.createElement('h2');h.textContent='Field guide';
+    const extras=window.SiliconFolio?[SiliconFolio.keycapStrip()]:[];
     openDialog('Field guide',h,
       para('Sound and Music start on. Use the Effects slider for footsteps, voices and room sounds, and Music for the score. Sound off mutes both at once. Each control remembers your setting.'),
       para('Two tracks alternate in the castle halls and temple, and another pair in underwater rooms with bubbles. The title appears below the picture.'),
       soundtrackCredits(),
       para('The Answering Knock is an optional Dark Castle excursion. From the quarters, go south, east, then south. In the armory choose Answer the knock. The shields show their rhythms even with Sound off.'),
       para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around. On a phone or tablet, hold the Walk, Back and turn buttons under the picture.'),
+      ...extras,
       para('Click a drawn object or approach it and press E. A click is a turn in the original game: it may take, answer a question or spring a trap, so E offers the edition’s honest prompt (Take, Click, Face, Go). Press / to type. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
       para('The disk’s vocabulary: the Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, ACCEPT, WEAR, and each weapon’s own verb. There is no EXAMINE, USE or TALK; this edition sends EXAMINE as Look and USE as the item’s verb. Status and Rest are turns of their own, so use them away from a fight.'),
       para('Lit colour uses the disk’s weapon shapes. Refreshed 1-bit draws the weapons as bananas. Their attacks work the same in every picture mode. Blows are heard where they land, and a struck inhabitant flinches. When someone stands against you, your weapons join the action row. Press R to repeat the last attack and the up arrow in the command line to recall the last command.'),
@@ -602,9 +841,11 @@
       para('The full journey begins in Saber’s quarters. All 200 Macintosh scene scripts run locally. The High Altar excursion starts you inside a later puzzle. The Dark Castle visitors, their placement, and the Where next? clues are new to this edition: each press gives one more clue toward the next scepter, from a nudge to the exact words of a winning run.'),
       button(view.refreshed?'Show Original':'Return to '+enhancedName(),()=>{toggleLayers();fieldGuide();}),
       button(captions?'Hide sound captions':'Show sound captions',()=>{captions=!captions;localStorage.setItem('scepters-captions',captions?'on':'off');fieldGuide();}),
+      button('Archive folio (1986 disks)',()=>openFolio('manual')),
       button('Disk bookmarks',adventures));
   }
   $('guideBtn').onclick=fieldGuide;
+  if($('folioBtn'))$('folioBtn').onclick=()=>openFolio('manual');
   $('layerBtn').onclick=()=>toggleLayers();
   $('pictureMode').onchange=e=>{
     const mode=e.target.value;
@@ -618,7 +859,8 @@
     try{localStorage.setItem('scepters-'+key,value);}catch{}
   }
   function setMasterMute(value){
-    muted=value;sound.mute(muted);
+    muted=value;sound.mute(muted);if(folioVault)folioVault.mute(muted);
+    if(muted)stopFolioAudio();
     $('soundLabel').textContent=muted?'off':'on';
     $('soundBtn').setAttribute('aria-pressed',String(!muted));
   }
@@ -660,17 +902,25 @@
       showVolume();
       slider.oninput=()=>{
         sound.setVolume(channel,slider.valueAsNumber);showVolume();
+        if(channel==='effects'&&folioVault)folioVault.setVolume(channel,slider.valueAsNumber);
         saveAudioSetting(key,slider.value);
       };
     }
   }
-  $('homeView').onclick=()=>{view.reset();dirty=true;if(playing){message('Doorway viewpoint');$('world').focus({preventScroll:true});}else if(view.source)view.render(elapsed);};
-  $('commandForm').onsubmit=e=>{e.preventDefault();const t=$('cmd').value.trim();if(!t)return;$('cmd').value='';$('cmd').blur();$('world').focus();command(t);};
+  $('homeView').onclick=()=>{view.reset();dirty=true;refreshHover=true;rememberLive();if(playing){message('Doorway viewpoint');$('world').focus({preventScroll:true});}else if(view.source)view.render(elapsed);};
+  $('commandForm').onsubmit=e=>{
+    e.preventDefault();
+    const t=$('cmd').value.trim();if(!t)return;
+    if(busy){message('Wait for this turn to finish. Your command is still here.');return;}
+    if(!playing||knockOpen||state.ended)return;
+    $('cmd').value='';draftCmd='';$('cmd').blur();$('world').focus();command(t);
+  };
   function use(key,fromPointer=false){
     if(!playing||busy||state.ended)return;
     if(key==='answer'){tabs('journal');$('cmd').focus();return;}
+    if(VIEWPLATE_KEYS.has(key)){message(viewplateSummary());return;}
     if(key.startsWith('ACHR/')&&!fromPointer){tabs('journal');message('Choose a weapon from the journal');return;}
-    if(key==='AOBJ/14168'&&!wizardRead&&!fromPointer){command('read');return;}
+    if(key==='AOBJ/14168'&&!wizardRead){command('read');return;}
     if(pending?.kind==='yesno'&&(key.startsWith('go/')||key.startsWith('AOBJ/')||key.startsWith('ACHR/'))){
       message(whom(pending.speaker).replace(/^the /,'The ')+' is waiting for an answer');tabs('journal');return;
     }
@@ -686,6 +936,7 @@
       command(prayed?'move altar':'read','turn',p);return;
     }
     if(key==='bat'){sound.effect('dc:70',p);message('The bat wheels away');return;}
+    if(key==='rat'){sound.effect('dc:66',p);message('The dungeon rat darts into a crack in the stone');return;}
     if(key==='knight'){line('The Black Knight strikes his shield. A knock answers from the doorway.','aside');openKnock();return;}
     if(key==='altar-pray'){command('pray','turn',{x:.2,z:4.42});return;}
     if(key==='altar-down'){command('down');return;}
@@ -712,6 +963,8 @@
       if(k==='wizard')return [k,prayed&&!state.objects.some(o=>o.id===14168)?'Listen to the stone':'Speak to the wizard'];
       if(k==='knight')return [k,'Answer the knock'];
       if(k==='bat')return [k,'Listen'];
+      if(k==='rat')return [k,'Startle the rat'];
+      if(VIEWPLATE_KEYS.has(k))return [k,'Read viewplate'];
       if(k==='AOBJ/14168')return [k,wizardRead?(prayed?'Move the altar':'Kneel at the altar'):'Read the murals'];
       return [k,verbFor(k)];
     }
@@ -733,7 +986,9 @@
     if(key==='wizard')return 'Click to speak to the wizard · takes a turn';
     if(key==='knight')return 'Click to answer the knock';
     if(key==='bat')return 'Click to listen';
-    if(key==='AOBJ/14168')return 'Click to read the murals · takes a turn';
+    if(key==='rat')return 'Click to startle the rat · no turn';
+    if(VIEWPLATE_KEYS.has(key))return 'Click to read viewplate · no turn';
+    if(key==='AOBJ/14168')return 'Click to '+(wizardRead?(prayed?'move the altar':'kneel at the altar'):'read the murals')+' · takes a turn';
     const action=verbFor(key);
     if(/^click\s/i.test(action))return action+' · takes a turn';
     return 'Click to '+action.charAt(0).toLowerCase()+action.slice(1)+' · takes a turn';
@@ -756,6 +1011,7 @@
     world.style.cursor=target?'pointer':'grab';setHoverPreview(target);
   }
   $('world').onpointermove=e=>{
+    lastPointer={clientX:e.clientX,clientY:e.clientY};
     if(!drag){hoverCursor(e);return;}
     const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
     drag.total+=Math.abs(dx)+Math.abs(dy);
@@ -764,20 +1020,30 @@
     hoverCursor(e);
   };
   $('world').onpointerup=e=>{
+    lastPointer={clientX:e.clientX,clientY:e.clientY};
     if(!drag)return;
+    const moved=drag.total>3;
     if(drag.total<=4){const t=view.hit(...canvasPoint(e));if(t)use(t.key,true);}
-    drag=null;hoverCursor(e);
+    drag=null;if(moved)rememberLive();hoverCursor(e);
   };
   $('world').onpointercancel=()=>{drag=null;$('world').style.cursor=playing?'grab':'';setHoverPreview(null);};
-  $('world').onpointerleave=()=>{if(!drag)$('world').style.cursor='';setHoverPreview(null);};
+  $('world').onlostpointercapture=$('world').onpointercancel;
+  $('world').onpointerleave=()=>{lastPointer=null;if(!drag)$('world').style.cursor='';setHoverPreview(null);};
   document.addEventListener('keydown',e=>{
-    if(knockOpen||$('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.defaultPrevented||knockOpen||$('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
     if(e.target.tagName==='SELECT')return;
+    if(e.target.id==='map'){
+      if(e.key==='Escape')$('world').focus();
+      return;
+    }
+    if(e.target.closest?.('.tabs,.folio-tabs'))return;
     if(e.target.tagName==='INPUT'){
       if(e.key==='Escape')$('world').focus();
       else if((e.key==='ArrowUp'||e.key==='ArrowDown')&&e.target.id==='cmd'&&history.length){
-        e.preventDefault();histAt=Math.max(0,Math.min(history.length,histAt+(e.key==='ArrowUp'?-1:1)));
-        e.target.value=history[histAt]||'';
+        e.preventDefault();
+        if(e.key==='ArrowUp'&&histAt===history.length)draftCmd=e.target.value;
+        histAt=Math.max(0,Math.min(history.length,histAt+(e.key==='ArrowUp'?-1:1)));
+        e.target.value=histAt===history.length?draftCmd:(history[histAt]||'');
       }
       return;
     }
@@ -791,19 +1057,25 @@
       else if(k==='/')$('cmd').focus();else if(k==='i')tabs('pack');else if(k==='m')tabs('route');else if(k==='?')fieldGuide();else keys.add(k);
     }
   });
-  document.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
+  document.addEventListener('keyup',e=>{
+    const k=e.key.toLowerCase();
+    if(keys.delete(k))rememberLive();
+  });
   // Hold-to-walk buttons feed the same key set as the keyboard, so walking and step sounds need no change.
   for(const b of document.querySelectorAll('.touch-walk button')){
-    const k=b.dataset.key,release=()=>{keys.delete(k);b.classList.remove('held');};
+    const k=b.dataset.key,release=()=>{if(keys.delete(k))rememberLive();b.classList.remove('held');};
     b.addEventListener('pointerdown',e=>{if(!playing)return;e.preventDefault();try{b.setPointerCapture(e.pointerId);}catch{}keys.add(k);b.classList.add('held');});
     for(const ev of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(ev,release);
     b.addEventListener('contextmenu',e=>e.preventDefault());
   }
   window.addEventListener('blur',()=>{keys.clear();drag=null;});
   for(const event of ['pointerdown','keydown','click'])document.addEventListener(event,e=>{
-    if(!e.target.closest?.('#soundBtn,#musicBtn,#guideBtn'))activateAudio();
+    if(!e.target.closest?.('#soundBtn,#musicBtn,#guideBtn,#folioBtn'))activateAudio();
   },true);
-  document.addEventListener('visibilitychange',()=>{keys.clear();sound.pause(document.hidden||!playing||$('dialog').open);});
+  document.addEventListener('visibilitychange',()=>{
+    keys.clear();sound.pause(document.hidden||!playing||$('dialog').open);
+    if(document.hidden)stopFolioAudio();
+  });
   function direction(point) {
     if(!point)return '';
     const dx=point.x-view.pose.x,dz=point.z-view.pose.z;if(Math.hypot(dx,dz)<.2)return '';
@@ -816,6 +1088,13 @@
     if(text)message(text+direction(p));
   };
   sound.geometry=()=>({rig:view.rig,exits:view.exits,sideDoorZ:view.sideDoorZ,rear:view.rear});
+  sound.ambientOverride=room=>{
+    if(!room||!state)return null;
+    const ids=new Set((state.objects||[]).map(o=>o.id));
+    if(room.id===9709&&ids.has(2718))return {sound:'ping',soundFrequency:3,soundType:0,soundPosition:{x:.72,z:3.1}};
+    if(room.id===23272)return {soundPosition:ids.has(3992)?{x:-2.2,z:3.2}:ids.has(11543)?{x:2.2,z:3.2}:{x:0,z:3.6}};
+    return null;
+  };
   function animate(ms){
     const dt=Math.min(.05,Math.max(0,(ms-oldTime)/1000));oldTime=ms;elapsed+=dt;
     if(playing && !busy && !knockOpen && !$('dialog').open && !state?.ended) {
@@ -837,8 +1116,20 @@
           if(!wizardRead)actors.bird={x:-1.29,z:4.98};
         }else if(npc.key==='bat'){
           npc.frame=Math.floor(elapsed*8)%npc.cols;npc.x=1.35*Math.sin(elapsed*.85);npc.z=3.1+Math.cos(elapsed*.85);actors.bird=npc;
+        }else if(npc.key==='rat'){
+          npc.frame=reducedMotion.matches?0:Math.floor(elapsed*7)%npc.cols;
+          npc.x=reducedMotion.matches?0:.14*Math.sin(elapsed*.65);
+          npc.z=(npc.baseZ||2.25)+(reducedMotion.matches?0:.05*Math.cos(elapsed*.65));
         }else{npc.frame=Math.floor(elapsed*5)%npc.cols;actors[npc.key==='knight'?'knight':'keeper']=npc;}
         if(npc.frame!==before)dirty=true;
+      }
+      for(const fx of fxSprites){
+        const f=reducedMotion.matches?0:Math.floor(elapsed*(fx.fps||6))%fx.cols;
+        if(fx.frame!==f){fx.frame=f;dirty=true;}
+      }
+      if(shatterSprite&&elapsed>=shatterUntil){
+        view.sprites=view.sprites.filter(s=>s!==shatterSprite);
+        shatterSprite=null;dirty=true;
       }
       if(combatant){
         const frame=Math.floor(elapsed*5)%combatant.cols;
@@ -861,6 +1152,7 @@
       if(playing){
         const a=actionNear();$('interact').hidden=!a;if(a)$('interact').textContent='E · '+a[1];
         $('compass').textContent=['N','NE','E','SE','S','SW','W','NW'][(Math.round(view.pose.yaw/(Math.PI/4))%8+8)%8];
+        if(refreshHover){refreshHover=false;if(lastPointer&&!drag&&!busy)hoverCursor(lastPointer);}
       }
     }
     requestAnimationFrame(animate);
@@ -896,9 +1188,21 @@
       await view.add(lid,'AOBJ/14168',{x:(lid.x+lid.width/2-169)*4.18/215,z:4.18,y:1.8-(lid.y+lid.height-123)*4.18/215,w:lid.width*4.18/215,h:lid.height*4.18/215});
       view.render(0);
       const snapshot=await api('state');
+      checkpoint=snapshot.saved?loadSavedMeta():null;
       const resumable=sessionStorage.getItem('scepters-session')===snapshot.session;
       if(resumable){
         playing=true;sound.pause(document.hidden||$('dialog').open);$('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;
+        let live=null;
+        try{
+          const raw=JSON.parse(sessionStorage.getItem('scepters-live')||'null');
+          if(raw?.session===snapshot.session){
+            // A reload can race the response to a room-changing command.
+            // Never put the old room's pose or reply lock onto the new room.
+            live=!snapshot.ended&&raw.scene&&raw.scene!==snapshot.scene
+              ? {...raw,pending:null,pose:null,wizardRead:false,prayed:false,hintGoal:'',hintTier:0}:raw;
+          }
+        }catch{}
+        owner=!!live?.owner;shortcut=!!live?.shortcut;
         try{
           const saved=JSON.parse(sessionStorage.getItem('scepters-knock'));
           if(saved?.session===snapshot.session){knockProgress=readKnock(saved);enterKnock=!!(knockProgress&&saved.open);}
@@ -906,7 +1210,7 @@
         try{const kept=JSON.parse(sessionStorage.getItem('scepters-seen')||'null');if(kept&&kept.session===snapshot.session)visited=unpackSeen(kept.seen);}catch{}
         let keptJournal=false;
         try{const j=JSON.parse(sessionStorage.getItem('scepters-journal')||'null');if(j&&j.session===snapshot.session&&Array.isArray(j.journal)&&j.journal.length){replayJournal(j.journal);keptJournal=true;}}catch{}
-        await apply(snapshot,{fresh:true,keepSeen:true,keepJournal:keptJournal});
+        await apply(snapshot,{fresh:true,reloading:true,keepSeen:true,keepJournal:keptJournal,live});
       }else{
         state=snapshot;$('resume').hidden=!snapshot.saved;
       }
@@ -914,8 +1218,8 @@
     }catch(e){
       if(browserEngine){
         $('browserStatus').textContent='The game engine could not load. Check your connection and reload this page.';
-        openDialog('Browser edition',para(e.message),button('Reload the game',()=>location.reload()));
-      }else openDialog('Local engine',para(e.message));
+        openDialog('Browser edition',errorBody(e.message),button('Reload the game',()=>location.reload()));
+      }else openDialog('Local engine',errorBody(e.message));
     }finally{
       setBusy(false);
       $('enter').disabled=$('journey').disabled=$('knockEntry').disabled=Boolean(browserEngine&&!state);

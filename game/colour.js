@@ -193,7 +193,8 @@
       return mat===M.wall?this.walls[tint*5+level]:this.papers[mat*5+level];
     }
     spriteMaterial(key,tex){
-      return tex.dominant || (key==='wizard'?M.cloth:key==='bat'?M.accent:M.metal);
+      return tex.dominant || (key==='wizard'?M.cloth:key==='bat'?M.accent:
+        key==='spark'?M.ice:key==='flame'?M.fire:key==='rat'?M.earth:M.metal);
     }
     spritePixel(bit,tag,fallback,level){
       if(bit===1)return INK;

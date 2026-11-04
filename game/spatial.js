@@ -10,6 +10,7 @@ class SceneSound {
     };
     // Room geometry for ambient placement, supplied by the view so it follows the L toggle.
     this.geometry = null;
+    this.ambientOverride = null;
     this.ambientTurn = 0;
     this.onCaption = null;
     this.library = new Map((window.ES_SOUNDS || []).map(r => [r.name.trim().toLowerCase(), r]));
@@ -33,7 +34,11 @@ class SceneSound {
     const names = {
       keeper: 'A voice', bird: 'Two short notes', knight: 'A shield blow', bell: 'A bell', gate: 'A mechanism',
       call: 'A call', answer: 'An answer', pickup: 'A chime',
-      'dc:0': 'A shield blow', 'dc:1': 'A voice', 'dc:69': 'A knock from the doorway', 'dc:70': 'Two short notes'
+      'dc:0': 'A shield blow', 'dc:1': 'A voice', 'dc:32': 'A vulture cry', 'dc:39': 'Shattering armour',
+      'dc:46': 'Stone wings', 'dc:52': 'An electric arc', 'dc:60': 'A whirling broom',
+      'dc:64': 'A burning eye', 'dc:66': 'Claws on stone', 'dc:69': 'A knock from the doorway',
+      'dc:70': 'Two short notes', 'dc:73': 'A whip crack', 'dc:88': 'Marching boots',
+      'dc:91': 'A rolling boulder', 'dc:94': 'Pipe organ fanfare', 'dc:95': 'A dragon’s roar'
     };
     if (id === 'step' || id === 'keeperStep' || id === 'dc:84') return '';
     if (names[id]) return names[id];
@@ -113,7 +118,15 @@ class SceneSound {
   }
 
   ambientFrame(now) {
-    const room = this.room;
+    if (!this.room) return;
+    // Rooms whose own disk prose names a continuous sound source, plus live machinery overrides.
+    const proseAmbient = {
+      1193: {sound: 'ocean', soundFrequency: 3, soundType: 0, soundPosition: {x: 0, z: -2.2}},
+      28106: {sound: 'drip', soundFrequency: 4, soundType: 0, soundPosition: {x: 0, z: 2.6}}
+    };
+    const extra = (proseAmbient[this.room.id] && !this.room.sound ? proseAmbient[this.room.id] : null);
+    const dyn = this.ambientOverride ? this.ambientOverride(this.room) : null;
+    const room = (extra || dyn) ? Object.assign({}, this.room, extra, dyn) : this.room;
     if (!room || !room.sound || !(room.soundFrequency > 0)) return;
     // The disk names an ambient the ASND list lacks: 'song bird' in the jungle corner (27293).
     // It borrows the Dark Castle cave bat's two notes rather than inventing a recording.
@@ -224,6 +237,10 @@ class SceneSound {
 
   effect(id, point) {
     if (this.started && !this.paused) this.vault.play(id,point);
+    else if (this.vault.muted && !this.paused && this.onCaption) {
+      const text = SceneSound.caption(id);
+      if (text) this.onCaption(text, this.point(point));
+    }
   }
 }
 window.SceneSound = SceneSound;

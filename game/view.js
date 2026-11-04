@@ -260,7 +260,8 @@ class PlateView {
     const sn=Math.sin(p.yaw),cs=Math.cos(p.yaw), pix=this.pixels,depth=this.depth,source=this.source;
     const paper=this.paper,ink=this.ink,boxHits=[];
     // Grounded contact shadows: floor-standing sprites darken the CODE 1 floor tone beneath them.
-    this.shadowSpots=R?this.sprites.filter(s=>!s.hidden && Math.abs(s.y-this.steps())<.12 && s.key!=='wizard' && s.key!=='bat')
+    this.shadowSpots=R?this.sprites.filter(s=>!s.hidden && !(s.refreshedOnly && !this.refreshed) &&
+      Math.abs(s.y-this.steps())<.12 && s.key!=='wizard' && s.key!=='bat' && !s.decorative)
       .map(s=>({x:s.x,z:s.z+s.w*.12,rx:Math.max(.2,s.w*.42),rz:Math.max(.12,s.w*.16)})):[];
     for(let i=0;i<w;i++) {
       const sx = i + panX;
@@ -412,7 +413,7 @@ class PlateView {
     this.targets=[];
     const actors=this.sprites.map(s=>({s,t:(s.x-p.x)*sn+(s.z-p.z)*cs})).sort((a,b)=>b.t-a.t);
     for(const {s,t} of actors) {
-      if(t<=.08 || s.hidden)continue;
+      if(t<=.08 || s.hidden || (s.refreshedOnly && !this.refreshed))continue;
       const tex=s.texture,fw=s.fw||Math.floor(tex.w/s.cols),fh=s.fh||tex.h;
       const swapped=this.refreshed && !C && tex.swapBits;
       const bits=swapped||tex.bits;
@@ -441,7 +442,7 @@ class PlateView {
           }
         }
       }
-      if(plotted>1)this.targets.push({key:s.key,s,left,top,sw,sh,t});
+      if(plotted>1 && !s.decorative)this.targets.push({key:s.key,s,left,top,sw,sh,t});
     }
     this.ctx.putImageData(this.frame,0,0);
   }
@@ -451,7 +452,7 @@ class PlateView {
       if(px<left||px>=left+sw||py<top||py>=top+sh)continue;
       const fw=s.fw||s.texture.w,fh=s.fh||s.texture.h, ix=Math.floor((px-left)*fw/sw);
       const bit=((this.refreshed&&!this.colour&&s.texture.swapBits)||s.texture.bits)[(s.row*fh+Math.floor((py-top)*fh/sh))*s.texture.w+(s.frame%s.cols)*fw+(s.flip?fw-1-ix:ix)];
-      if(bit && t<=this.depth[Math.floor(py)*this.w+Math.floor(px)]+.025)return a;
+      if((s.solidHit||bit) && t<=this.depth[Math.floor(py)*this.w+Math.floor(px)]+.025)return a;
     }
     return null;
   }

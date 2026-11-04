@@ -4,6 +4,12 @@
   'use strict';
   const W=338,H=314;
   const shields=[{x:48,y:104,w:60,h:84},{x:139,y:98,w:60,h:86},{x:230,y:104,w:60,h:84}];
+  const beaconRegions={
+    lamp:{x:64,y:126,w:82,h:78},
+    card:{x:184,y:252,w:104,h:38},
+    compass:{x:238,y:210,w:74,h:34},
+    sky:{x:20,y:36,w:298,h:82}
+  };
   const cache=new WeakMap();
   const pack=hex=>0xff000000|((hex&255)<<16)|(hex&0xff00)|(hex>>16);
   // Each material has an ink and a paper. In Classic, all map to the same two pens.
@@ -390,5 +396,5 @@
     else knocker(plate.g,flash);
     ctx.putImageData(plate.frame,0,0);
   }
-  window.KnockArt={draw,shields};
+  window.KnockArt={draw,shields,beaconRegions};
 })();

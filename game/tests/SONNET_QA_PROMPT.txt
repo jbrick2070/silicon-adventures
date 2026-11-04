@@ -1,0 +1,64 @@
+Independently QA Enchanted Scepters / Silicon Adventures in D:\silicon-adventures.
+
+This is a read-only QA pass. Do not edit, commit, merge, or publish. Check the
+actual branch, HEAD, and working-tree status first; preserve other work.
+Read the current README and the relevant code. Treat earlier review logs and
+DESIGN_PRIORITIES.md as historical claims, not proof that a bug exists or is fixed.
+
+Prioritize these player-visible scenarios:
+
+1. Temple: use the Dogleg bookmark and the actual original scripts. Slide floor
+   exits east on first entry; the boulder room's immediate safe exit is south.
+   Read hints repeatedly without spending a turn. Check advanced trap states,
+   completed doors, and a spider encounter interrupting CUT: verify the web is
+   really gone before travelling west. Do not suppress original random enemies.
+2. Saves: manual save A, doorway checkpoint B, Restore, native-session reload,
+   death then reload. Compare room, HP, inventory, pose, journal, and ownership.
+   Restore a published eb863f3-shaped King save without pending/saveId fields:
+   the King still requires Yes/No, Travel is paused, and YES survives. Imported
+   or legacy saves must not replay an unrelated saved journal.
+3. Slow turns: type a second command while an engine response is delayed. It
+   must stay in the command line. Check rapid clicks, input focus, tab arrows,
+   map keys, interrupted touches, and recovery after hiding the page.
+4. Eastern Beacon: compose east + short/long/short and send it. Click the
+   aircraft, compass, lamp and card during transmission. The correct outgoing
+   signal must finish; reading the card is safe. Close/hide must cancel pending
+   cues and completion. Restore partial and completed signals.
+5. Archive: inspect all four tabs, rapidly toggle the tree/night-sky overlays
+   during slow image loading, switch tabs, close and reopen. Picture, label and
+   toggle state must agree. Bestiary and Great Hall audio must honor Sound,
+   Effects volume, hidden tabs and dialog lifetime, including delayed starts.
+6. Pack: open Study Cards and read inscriptions without spending a turn. Check
+   explicit context actions and Drop. Compare colour, refreshed monochrome and
+   Original. Check new rat/spark/flame additions with reduced motion enabled.
+
+SAFE EXECUTION
+Keep sound muted before starting any game and use a fresh browser profile.
+Never play a cue through the user's speakers. Audio-on tests require a hard-zero
+output node or a simulated audio graph. For native tests, use the bundled JVM:
+engine\runtime\bin\java.exe -Duser.home=<unique-temp-home> -jar engine\adventure.jar --test <unused-port>
+Confirm a marker save lands under that temporary home before relying on the
+server. Never touch %USERPROFILE%\Saved Games\Silicon Adventures\adventure.sav.
+Stop only the test processes you created.
+
+Preserve 338x314 rendering, native sprite frames, strict two-colour monochrome,
+CODE 1 patterns 1..29, honest Original comparisons, and protected source assets.
+No Java/JAR changes. Use scratch PlateView canvases for render inspection.
+
+Relevant checks, run from D:\silicon-adventures:
+node --test game/tests/hints_state.test.js game/tests/folio.test.js game/tests/folio_audio.test.js game/tests/knock_quest.test.js audio/test_music.js
+python game/tests/polish_smoke.py
+python art/verify_layers.py
+python archive/es/check_hints.py
+python art/verify_colour.py http://127.0.0.1:<isolated-port>/
+
+The native acceptance script requires Windows, Chrome, Playwright and Pillow.
+For the hosted CheerpJ game, inspect game/tests/browser_smoke.py and the Mac
+Safari/Chrome workflow. Native-session F5 and browser-engine reload have different
+lifetimes: do not assume that one platform's result proves the other.
+
+Deliver prioritized reproducible bugs with steps, expected/actual behavior,
+absolute source paths and lines, and minimal fix recommendations. Separate live
+reproduction, code-traced risks, and design opinions. Include commands/results,
+console errors, platform coverage, and a plain list of anything unverified.
+Do not treat passing tests or an earlier completion report as proof of coverage.

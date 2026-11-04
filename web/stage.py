@@ -22,10 +22,13 @@ ASSETS = (
 )
 
 
-def version_asset(match):
-    attribute, path = match.groups()
-    digest = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()[:16]
-    return f'{attribute}="{path}?v={digest}"'
+def version_asset(base):
+    def replace(match):
+        attribute, path = match.groups()
+        resolved = (base / path).resolve()
+        digest = hashlib.sha256(resolved.read_bytes()).hexdigest()[:16]
+        return f'{attribute}="{path}?v={digest}"'
+    return replace
 
 
 def stage(destination):
@@ -44,7 +47,11 @@ def stage(destination):
                           '<a href="engine/vendor/LICENSE-WAGE.txt">WAGE engine credits</a> · '
                           '<a href="https://cheerpj.com/">Built with CheerpJ</a>')
     # A returning player's cached scripts may predate the controls in this HTML.
-    index = re.sub(r'\b(src|href)="([\w./-]+\.(?:js|css))"', version_asset, index)
+    asset_pattern = r'\b(src|href)="([\w./-]+\.(?:js|css))"'
+    index = re.sub(asset_pattern, version_asset(ROOT), index)
+    catalog_source = ROOT / "game/catalog.html"
+    catalog = re.sub(asset_pattern, version_asset(catalog_source.parent),
+                     catalog_source.read_text(encoding="utf-8"))
 
     for pattern in ASSETS:
         files = sorted(ROOT.glob(pattern))
@@ -55,6 +62,7 @@ def stage(destination):
             target.parent.mkdir(parents=True, exist_ok=True)
             copyfile(source, target)
     (destination / "index.html").write_text(index, encoding="utf-8")
+    (destination / "game/catalog.html").write_text(catalog, encoding="utf-8")
 
 
 if __name__ == "__main__":

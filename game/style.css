@@ -42,7 +42,7 @@
 #layerBtn{white-space:nowrap}
 @media(max-width:610px){
   .mast-in{flex-wrap:wrap;row-gap:0}
-  .mast nav{margin-left:auto}
+  .mast nav{margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
   .mast nav>*{white-space:nowrap}
 }
 @media(max-width:610px) and (pointer:coarse){.mast nav>*{min-height:44px;align-content:center}}
@@ -53,3 +53,49 @@
   #windowName{grid-column:1}
   .image-leaf .bar .barlines{grid-column:2 / 4}
 }
+.save-state img.save-icon{width:14px;height:14px;image-rendering:pixelated;vertical-align:-3px;margin-right:4px;mix-blend-mode:multiply}
+.pack button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pack button[aria-pressed=true] img:not(.colour-icon){filter:invert(1);mix-blend-mode:normal}
+.pack-card{border:1px solid var(--ink);background:#fbfaf4;padding:8px 10px;margin:0 0 8px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 10px;align-items:center}
+.pack-card-art{width:64px;height:48px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);background:var(--paper)}
+.pack-card-art img{width:56px;height:42px;object-fit:contain;image-rendering:pixelated;mix-blend-mode:multiply}
+.pack-card-art img.colour-icon{mix-blend-mode:normal}
+.pack-card-body{min-width:0}
+.pack-card-head{display:flex;align-items:baseline;justify-content:space-between;gap:6px;font:600 12px var(--mono);text-transform:capitalize}
+.pack-card-source{font:9px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pack-card-note{font:italic 14px/1.35 var(--serif);margin:3px 0 6px}
+.pack-card-actions{display:flex;flex-wrap:wrap;gap:5px}
+.pack-card-actions button{border:1px solid var(--line);background:transparent;font:11px var(--mono);padding:4px 7px}
+.pack-card-actions button.primary-mini{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pack-card-actions button:hover{background:var(--light)}
+.pack-card-actions button.primary-mini:hover{background:#3e463b}
+dialog:has(.folio){max-width:min(660px,95vw);width:660px}
+.folio-tabs{display:flex;flex-wrap:wrap;gap:14px;border-bottom:1px solid var(--line);margin-bottom:12px}
+#dialogBody .folio-tabs button.folio-tab{margin:0;border:0;border-bottom:3px solid transparent;background:none;padding:6px 2px;font:bold 12px var(--mono)}
+#dialogBody .folio-tabs button.folio-tab[aria-selected=true]{border-color:var(--ink)}
+.folio-controls{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 10px}
+#dialogBody .folio-controls button,#dialogBody .bestiary-grid button,#dialogBody .specimen-info button{margin:0;border:1px solid var(--line);background:transparent;font:11px var(--mono);padding:5px 8px}
+#dialogBody .folio-controls button[aria-pressed=true],#dialogBody .bestiary-grid button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.folio-meta{font:11px var(--mono);color:var(--muted)}
+.folio-sheet{border:1px solid var(--ink);background:#fff;padding:6px;display:flex;justify-content:center;overflow:hidden}
+.folio-pict,.folio-canvas{max-width:100%;height:auto;display:block;image-rendering:crisp-edges;image-rendering:pixelated}
+.folio-caption{font:13px/1.4 var(--serif);color:#4e554b;margin:8px 0}
+.bestiary-specimen{border:1px solid var(--ink);background:#fbfaf4;padding:10px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;margin-bottom:10px}
+.specimen-canvas{border:1px solid var(--line);background:var(--paper);image-rendering:pixelated;max-width:160px;height:auto}
+.specimen-info{display:grid;gap:4px;justify-items:start}
+.specimen-title{font:bold 14px var(--mono)}
+.specimen-sound{font:italic 14px/1.35 var(--serif);margin:2px 0 4px!important}
+.bestiary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:5px;margin-bottom:10px}
+.bestiary-card-sheet{margin-top:8px;border-top:1px solid var(--line);padding-top:8px}
+.bestiary-card-sheet summary{cursor:pointer;font:600 11px var(--mono);margin-bottom:8px}
+.gothic-numerals{display:flex;align-items:center;gap:8px;margin-top:6px}
+.gothic-numerals img{height:21px;image-rendering:pixelated;mix-blend-mode:multiply}
+.vers-credits{border:1px solid var(--line);background:#fbfaf4;padding:8px 11px;margin-bottom:10px}
+#dialogBody .vers-credits p.vers-line{margin:2px 0;font:13px/1.35 var(--mono)}
+.keycap-strip{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0;padding:7px 9px;border:1px solid var(--line);background:#fbfaf4}
+.keycap-tag{font:10px var(--mono);letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.keycap-row{display:flex;gap:5px;align-items:center}
+.keycap-row img{width:24px;height:24px;image-rendering:pixelated;mix-blend-mode:multiply}
+.sad-castle-note{display:flex;align-items:center;gap:12px}
+.sad-castle-note img{width:32px;height:32px;flex:none;image-rendering:pixelated;mix-blend-mode:multiply}
+@media(max-width:520px){.bestiary-specimen{grid-template-columns:1fr;justify-items:center}.specimen-info{justify-items:center;text-align:center}}

@@ -98,7 +98,8 @@
     }
     function syncTools(){
       const pic=find('[data-action="colour"]');pic.textContent=colour?'Classic B/W':'Lit colour';
-      const mute=find('[data-action="mute"]');mute.textContent=muted?'Sound off':'Sound on';
+      const mute=find('[data-action="mute"]');
+      mute.innerHTML='Sound <b aria-hidden="true">'+(muted?'off':'on')+'</b>';
       mute.setAttribute('aria-pressed',String(!muted));
     }
     function showSignal(){
@@ -110,6 +111,7 @@
       if(send)send.disabled=transmitting||signal.length!==3;
     }
     function aim(next){
+      if(transmitting)return;
       stopBeats();bearing=next;persist();showSignal();draw();
       feedback.textContent='The lantern is aimed '+bearing+'.';
     }
@@ -118,10 +120,12 @@
       signal+=flash;persist();showSignal();
     }
     function clearSignal(){
+      if(transmitting)return;
       stopBeats();signal='';persist();showSignal();draw();
       feedback.textContent='The shutter is ready for a new signal.';
     }
     function incoming(){
+      if(transmitting)return;
       flashCode('.-.',()=>{});
       feedback.textContent='From the aircraft: one short flash, one long flash, one short flash. The pilot waits above the river.';
     }
@@ -210,13 +214,50 @@
       syncTools();draw();
       if(flying()&&!reduced.matches&&!document.hidden)frame=requestAnimationFrame(fly);
     }
-    canvas.onclick=e=>{
-      if(stage==='door'){clue();return;}
-      if(stage!=='guardroom'||solved)return;
+    function canvasTarget(e){
       const rect=canvas.getBoundingClientRect(),x=(e.clientX-rect.left)*338/rect.width,y=(e.clientY-rect.top)*314/rect.height;
-      const i=KnockArt.shields.findIndex(b=>x>=b.x&&x<b.x+b.w&&y>=b.y&&y<b.y+b.h);
-      if(i>=0)choose(i);
+      const inBox=b=>b&&x>=b.x&&x<b.x+b.w&&y>=b.y&&y<b.y+b.h;
+      if(stage==='door')return {label:'Hear the knock',act:clue};
+      if(stage==='guardroom'){
+        if(solved&&x>=145&&x<193&&y>=48&&y<100)return {label:'Climb to the watchtower',act:()=>change('tower')};
+        if(!solved){
+          const i=KnockArt.shields.findIndex(inBox);
+          if(i>=0)return {label:'Inspect '+shields[i].name+' shield',act:()=>choose(i)};
+        }
+        return null;
+      }
+      if(stage==='tower'){
+        if(y>=200)return {label:'Use the signal lamp',act:()=>change('beacon')};
+        if(y>=36&&y<130)return {label:'Use the signal lamp',act:()=>change('beacon')};
+        return null;
+      }
+      if(stage==='beacon'){
+        const R=KnockArt.beaconRegions||{};
+        if(inBox(R.card))return {label:'Read the signal card',act:signalCard};
+        // Match the disabled composing buttons while an incoming or outgoing
+        // sequence owns the timers. Reading the card remains available.
+        if(transmitting)return null;
+        if(inBox(R.compass)){
+          const order=['north','east','west'],next=order[(order.indexOf(bearing)+1)%order.length];
+          return {label:'Turn lantern '+next,act:()=>{if(!transmitting)aim(next);}};
+        }
+        if(inBox(R.lamp)){
+          return signal.length===3
+            ? {label:'Send signal',act:sendSignal}
+            : {label:'Add short flash (or use buttons to compose)',act:()=>compose('.')};
+        }
+        if(inBox(R.sky))return {label:'Watch the aircraft',act:incoming};
+        return null;
+      }
+      if(stage==='approach'&&y<210)return {label:'Open the message tube',act:readMessage};
+      return null;
+    }
+    canvas.onpointermove=e=>{
+      const hit=canvasTarget(e);
+      canvas.style.cursor=hit?'pointer':'default';
+      canvas.title=hit?hit.label:'';
     };
+    canvas.onclick=e=>{const hit=canvasTarget(e);if(hit)hit.act();};
     function picture(){colour=!colour;syncTools();draw();}
     find('[data-action="colour"]').onclick=picture;
     find('[data-action="mute"]').onclick=()=>{muted=onToggleSound();syncTools();};

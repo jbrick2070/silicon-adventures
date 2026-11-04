@@ -209,6 +209,51 @@ def smoke(driver, url):
     click_button("Return to the armory")
     check_page()
 
+    # New archive views are inspection only, with the campaign untouched.
+    before_archive = campaign_snapshot()
+    element("folioBtn").click()
+    for label in ("Manual cards", "Bestiary", "Great Hall", "Scepters notes"):
+        driver.find_element(By.XPATH, f"//button[@role='tab' and .='{label}']").click()
+        assert driver.find_element(By.XPATH, f"//button[@role='tab' and .='{label}']").get_attribute("aria-selected") == "true"
+    element("closeDialog").click()
+    wait.until(EC.invisibility_of_element_located((By.ID, "dialog")))
+    assert campaign_snapshot() == before_archive
+
+    # Exercise the new Study Card on the original computer bookmark.
+    element("bookmarks").click()
+    driver.find_element(By.XPATH, "//button[.='Computer']").click()
+    room("computer")
+    element("packTab").click()
+    driver.find_element(By.XPATH, "//div[@id='pack']/button[normalize-space(.)='chip']").click()
+    assert "68000" in element("packCard").text
+
+    # Recreate a published eb863f3 save: its trailer has a pose but no pending
+    # reply metadata. The original KING object must recover the lethal question.
+    element("bookmarks").click()
+    driver.find_element(By.XPATH, "//button[.='Saber’s quarters']").click()
+    room("quarters")
+    for text, name in (("south", "marble hall"), ("south", "throne room")):
+        element("cmd").send_keys(text, Keys.ENTER)
+        room(name)
+    element("cmd").send_keys("yes", Keys.ENTER)
+    wait.until(lambda _: "Will you go?" in element("log").text)
+    wait.until(EC.invisibility_of_element_located((By.ID, "working")))
+    legacy_king = driver.execute_async_script("""
+        const done = arguments[0];
+        BrowserEngine.action('save', JSON.stringify({
+            x:0,z:0,yaw:0,pitch:0,scene:17888,read:false,shortcut:false,hp:178
+        })).then(() => done(null), error => done(String(error)));
+    """)
+    assert legacy_king is None, legacy_king
+    element("load").click()
+    driver.find_element(By.XPATH, "//button[.='Restore saved adventure']").click()
+    wait.until(lambda _: "Your saved answer is still due" in element("log").text)
+    element("routeTab").click()
+    assert all(not b.is_enabled() for b in driver.find_elements(By.CSS_SELECTOR, "#travel button"))
+    element("cmd").send_keys("yes", Keys.ENTER)
+    wait.until(lambda _: "The King leaves the room" in element("log").text)
+    check_page()
+
 
 def diagnose(driver):
     """Report whether cover rendering or engine startup failed."""
