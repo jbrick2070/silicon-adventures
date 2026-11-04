@@ -102,9 +102,13 @@
     switch (h.state) {
       case 'walk': p.reel(left ? 'A101' : 'A100', step, x, y); break;
       case 'air': {
-        if (h.vx === 0) p.reel(left ? 'A118' : 'A117', h.vy < -3 ? 1 : h.vy < 2 ? 2 : 3, x, y - 10);
-        else p.reel(left ? 'A105' : 'A104', h.vy < -3 ? 0 : h.vy < 0 ? 1 : h.vy < 3 ? 2 : h.vy < 6 ? 3 : 4, x, y - 5);
-        if (h.vy > 8) p.reel('B132', 0, x, y - 11);
+        if (h.arc) {
+          // Reel frame and draw offset come from the same disk table as the jump's path.
+          const row = h.arc.rows[Math.min(h.arc.rows.length - 1, Math.floor(h.arc.t))];
+          const reel = h.arc.kind === 'running' ? (left ? 'A105' : 'A104') : (left ? 'A118' : 'A117');
+          p.reel(reel, row[2], x, y + row[3]);
+        } else if (h.vy > 10) p.reel('B132', 0, x, y - 11);
+        else p.reel(left ? 'A105' : 'A104', 4, x, y - 5);
         break;
       }
       case 'duck': p.reel(core.powers.has('air') ? 'A149' : left ? 'A120' : 'A119', 0, x, y + (core.powers.has('air') ? 14 : 8)); break;

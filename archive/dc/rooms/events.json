@@ -1,0 +1,2970 @@
+{
+  "method": "PROVEN: CODE 0 jump table $52 maps to CODE 1 $118; CODE 1 $118-$14e uses nonnegative D0 as an index for loaded SOUN resources. CODE 1 $24a-$2a4 loads SOUN resources by those IDs. Records are literal linear-disassembly call sites, not verified runtime reachability; embedded data may disassemble as instructions and unreachable or unaligned code may be missing.",
+  "offset_convention": "CODE segment body offsets exclude the four-byte segment header.",
+  "calls": [
+    {
+      "segment": 2,
+      "offset": "$48",
+      "soun_id": 2,
+      "event": "Animation stream marker $d6",
+      "condition": "The byte just read from the animation stream equals $d6.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000048  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000030  206dffa8         movea.l -$58(a5), a0",
+          "000034  2449             movea.l a1, a2",
+          "000036  4ead0212         jsr $212(a5)",
+          "00003a  141b             move.b (a3)+, d2",
+          "00003c  0c0200d6         cmpi.b #$d6, d2",
+          "000040  6610             bne.b $52",
+          "000042  3f00             move.w d0, -(a7)",
+          "000044  303c0002         move.w #$2, d0",
+          "00004c  301f             move.w (a7)+, d0",
+          "00004e  4202             clr.b d2",
+          "000050  6018             bra.b $6a",
+          "000052  0c0200d5         cmpi.b #$d5, d2"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$5e",
+      "soun_id": 3,
+      "event": "Animation stream marker $d5",
+      "condition": "The byte just read from the animation stream equals $d5.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00005e  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000048  4ead0052         jsr $52(a5)",
+          "00004c  301f             move.w (a7)+, d0",
+          "00004e  4202             clr.b d2",
+          "000050  6018             bra.b $6a",
+          "000052  0c0200d5         cmpi.b #$d5, d2",
+          "000056  660e             bne.b $66",
+          "000058  3f00             move.w d0, -(a7)",
+          "00005a  303c0003         move.w #$3, d0",
+          "000062  301f             move.w (a7)+, d0",
+          "000064  601c             bra.b $82",
+          "000066  4a02             tst.b d2",
+          "000068  6d18             blt.b $82"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$28a",
+      "soun_id": 78,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00028a  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000272  6d08             blt.b $27c",
+          "000274  47fa00ac         lea.l $322(pc), a3",
+          "000278  5840             addq.w #$4, d0",
+          "00027a  6008             bra.b $284",
+          "00027c  47fa0080         lea.l $2fe(pc), a3",
+          "000280  04400018         subi.w #$18, d0",
+          "000284  3f00             move.w d0, -(a7)",
+          "000286  303c004e         move.w #$4e, d0",
+          "00028e  301f             move.w (a7)+, d0",
+          "000290  3d40000c         move.w d0, $c(a6)",
+          "000294  4efa00ca         jmp $360(pc)",
+          "000298  206dffa8         movea.l -$58(a5), a0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$340",
+      "soun_id": 83,
+      "event": "Hero field $12 changes to $0d",
+      "condition": "The prior value at $12(a6) is not $0d.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000340  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000326  000000ff         ori.b #$ff, d0",
+          "00032a  081f             .byte 0x08, 0x1f",
+          "00032c  3801             move.w d1, d4",
+          "00032e  0c6e000d0012     cmpi.w #$d, $12(a6)",
+          "000334  6604             bne.b $33a",
+          "000336  4efa0044         jmp $37c(pc)",
+          "00033a  3f00             move.w d0, -(a7)",
+          "00033c  303c0053         move.w #$53, d0",
+          "000344  301f             move.w (a7)+, d0",
+          "000346  3d7c000d0012     move.w #$d, $12(a6)",
+          "00034c  47fa019a         lea.l $4e8(pc), a3",
+          "000350  2d4b002c         move.l a3, $2c(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$54a",
+      "soun_id": 12,
+      "event": "Counter at A5-$33c is decremented",
+      "condition": "A5-$33c is positive after the preceding tests.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00054a  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000530  b1fc05000000     cmpa.l #$5000000, a0",
+          "000536  662a             bne.b $562",
+          "000538  4a6e002a         tst.w $2a(a6)",
+          "00053c  6e28             bgt.b $566",
+          "00053e  4a6dfcc4         tst.w -$33c(a5)",
+          "000542  6f1e             ble.b $562",
+          "000544  3f00             move.w d0, -(a7)",
+          "000546  303c000c         move.w #$c, d0",
+          "00054e  301f             move.w (a7)+, d0",
+          "000550  536dfcc4         subq.w #$1, -$33c(a5)",
+          "000554  3d7c0014002a     move.w #$14, $2a(a6)",
+          "00055a  4ead035a         jsr $35a(a5)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$5a0",
+      "soun_id": 12,
+      "event": "Counter at A5-$33c is decremented",
+      "condition": "A5-$33c is positive after the preceding tests.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0005a0  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000582  0c6d0001fda2     cmpi.w #$1, -$25e(a5)",
+          "000588  6d000196         blt.w $720",
+          "00058c  4a6e002a         tst.w $2a(a6)",
+          "000590  6e00018e         bgt.w $720",
+          "000594  4a6dfcc4         tst.w -$33c(a5)",
+          "000598  6f1e             ble.b $5b8",
+          "00059a  3f00             move.w d0, -(a7)",
+          "00059c  303c000c         move.w #$c, d0",
+          "0005a4  301f             move.w (a7)+, d0",
+          "0005a6  536dfcc4         subq.w #$1, -$33c(a5)",
+          "0005aa  3d7c0014002a     move.w #$14, $2a(a6)",
+          "0005b0  4ead035a         jsr $35a(a5)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$5c4",
+      "soun_id": 10,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0005c4  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0005a6  536dfcc4         subq.w #$1, -$33c(a5)",
+          "0005aa  3d7c0014002a     move.w #$14, $2a(a6)",
+          "0005b0  4ead035a         jsr $35a(a5)",
+          "0005b4  6000016a         bra.w $720",
+          "0005b8  4240             clr.w d0",
+          "0005ba  60000002         bra.w $5be",
+          "0005be  3f00             move.w d0, -(a7)",
+          "0005c0  303c000a         move.w #$a, d0",
+          "0005c8  301f             move.w (a7)+, d0",
+          "0005ca  3e2e0012         move.w $12(a6), d7",
+          "0005ce  e547             asl.w #$2, d7",
+          "0005d0  4efb7002         jmp $5d4(pc, d7.w)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$87a",
+      "soun_id": 86,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00087a  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000860  600c             bra.b $86e",
+          "000862  6000004c         bra.w $8b0",
+          "000866  00000000         ori.b #$0, d0",
+          "00086a  60000060         bra.w $8cc",
+          "00086e  426e002c         clr.w $2c(a6)",
+          "000872  4e75             rts ",
+          "000874  3f00             move.w d0, -(a7)",
+          "000876  303c0056         move.w #$56, d0",
+          "00087e  301f             move.w (a7)+, d0",
+          "000880  47fafc4a         lea.l $4cc(pc), a3",
+          "000884  3d40000c         move.w d0, $c(a6)",
+          "000888  3d41000e         move.w d1, $e(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$9d0",
+      "soun_id": 79,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0009d0  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0009b6  3d7c000a002e     move.w #$a, $2e(a6)",
+          "0009bc  4e75             rts ",
+          "0009be  4a6dfd80         tst.w -$280(a5)",
+          "0009c2  6668             bne.b $a2c",
+          "0009c4  0c4100c6         cmpi.w #$c6, d1",
+          "0009c8  6e0c             bgt.b $9d6",
+          "0009ca  3f00             move.w d0, -(a7)",
+          "0009cc  303c004f         move.w #$4f, d0",
+          "0009d4  301f             move.w (a7)+, d0",
+          "0009d6  206dffa8         movea.l -$58(a5), a0",
+          "0009da  286e0016         movea.l $16(a6), a4",
+          "0009de  226c00d0         movea.l $d0(a4), a1"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$a5a",
+      "soun_id": 83,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000a5a  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000a38  32324008         move.w $8(a2, d4.w), d1",
+          "000a3c  3d41000e         move.w d1, $e(a6)",
+          "000a40  3d72400a0004     move.w $a(a2, d4.w), $4(a6)",
+          "000a46  3d72400c0006     move.w $c(a2, d4.w), $6(a6)",
+          "000a4c  382e0004         move.w $4(a6), d4",
+          "000a50  4efa021a         jmp $c6c(pc)",
+          "000a54  3f00             move.w d0, -(a7)",
+          "000a56  303c0053         move.w #$53, d0",
+          "000a5e  301f             move.w (a7)+, d0",
+          "000a60  47fa0090         lea.l $af2(pc), a3",
+          "000a64  2d4b002c         move.l a3, $2c(a6)",
+          "000a68  3d7c002c0012     move.w #$2c, $12(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$d9e",
+      "soun_id": 0,
+      "event": "Animation step at index 0 or 3",
+      "condition": "D2 equals 0 or 3.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000d9e  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000d86  3d420010         move.w d2, $10(a6)",
+          "000d8a  206dffa8         movea.l -$58(a5), a0",
+          "000d8e  0c420000         cmpi.w #$0, d2",
+          "000d92  6706             beq.b $d9a",
+          "000d94  0c420003         cmpi.w #$3, d2",
+          "000d98  660a             bne.b $da4",
+          "000d9a  3f00             move.w d0, -(a7)",
+          "000d9c  4240             clr.w d0",
+          "000da2  301f             move.w (a7)+, d0",
+          "000da4  4ead0212         jsr $212(a5)",
+          "000da8  4efaf76a         jmp $514(pc)",
+          "000dac  342e0010         move.w $10(a6), d2"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$de8",
+      "soun_id": 14,
+      "event": "Hero timer at $30(a6) resets to 8",
+      "condition": "After decrementing, the signed timer is at most 0.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000de8  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000dce  4ead005a         jsr $5a(a5)",
+          "000dd2  301f             move.w (a7)+, d0",
+          "000dd4  426e0030         clr.w $30(a6)",
+          "000dd8  600000e4         bra.w $ebe",
+          "000ddc  536e0030         subq.w #$1, $30(a6)",
+          "000de0  6e12             bgt.b $df4",
+          "000de2  3f00             move.w d0, -(a7)",
+          "000de4  303c000e         move.w #$e, d0",
+          "000dec  301f             move.w (a7)+, d0",
+          "000dee  3d7c00080030     move.w #$8, $30(a6)",
+          "000df4  4a6e002e         tst.w $2e(a6)",
+          "000df8  6d6e             blt.b $e68"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$e0c",
+      "soun_id": 14,
+      "event": "Hero timer at $30(a6) resets to 8",
+      "condition": "After decrementing, the signed timer is at most 0.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000e0c  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000df4  4a6e002e         tst.w $2e(a6)",
+          "000df8  6d6e             blt.b $e68",
+          "000dfa  6e22             bgt.b $e1e",
+          "000dfc  426e002e         clr.w $2e(a6)",
+          "000e00  536e0030         subq.w #$1, $30(a6)",
+          "000e04  6e12             bgt.b $e18",
+          "000e06  3f00             move.w d0, -(a7)",
+          "000e08  303c000e         move.w #$e, d0",
+          "000e10  301f             move.w (a7)+, d0",
+          "000e12  3d7c00080030     move.w #$8, $30(a6)",
+          "000e18  4a6e000a         tst.w $a(a6)",
+          "000e1c  6d4a             blt.b $e68"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$105c",
+      "soun_id": 0,
+      "event": "Animation step at index 0 or 3",
+      "condition": "D2 equals 0 or 3.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00105c  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001046  600000c0         bra.w $1108",
+          "00104a  5242             addq.w #$1, d2",
+          "00104c  0c420000         cmpi.w #$0, d2",
+          "001050  6706             beq.b $1058",
+          "001052  0c420003         cmpi.w #$3, d2",
+          "001056  660a             bne.b $1062",
+          "001058  3f00             move.w d0, -(a7)",
+          "00105a  4240             clr.w d0",
+          "001060  301f             move.w (a7)+, d0",
+          "001062  b4690002         cmp.w $2(a1), d2",
+          "001066  6d000082         blt.w $10ea",
+          "00106a  d047             add.w d7, d0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$10d0",
+      "soun_id": 0,
+      "event": "Animation step at index 0 or 3",
+      "condition": "D2 equals 0 or 3.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0010d0  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0010ba  6000004c         bra.w $1108",
+          "0010be  5242             addq.w #$1, d2",
+          "0010c0  0c420000         cmpi.w #$0, d2",
+          "0010c4  6706             beq.b $10cc",
+          "0010c6  0c420003         cmpi.w #$3, d2",
+          "0010ca  660a             bne.b $10d6",
+          "0010cc  3f00             move.w d0, -(a7)",
+          "0010ce  4240             clr.w d0",
+          "0010d4  301f             move.w (a7)+, d0",
+          "0010d6  b4690002         cmp.w $2(a1), d2",
+          "0010da  6d0e             blt.b $10ea",
+          "0010dc  4242             clr.w d2"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$12bc",
+      "soun_id": 4,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0012bc  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0012a4  b0724002         cmp.w $2(a2, d4.w), d0",
+          "0012a8  6e1e             bgt.b $12c8",
+          "0012aa  b0724000         cmp.w (a2, d4.w), d0",
+          "0012ae  6de8             blt.b $1298",
+          "0012b0  3a04             move.w d4, d5",
+          "0012b2  32323000         move.w (a2, d3.w), d1",
+          "0012b6  3f00             move.w d0, -(a7)",
+          "0012b8  303c0004         move.w #$4, d0",
+          "0012c0  301f             move.w (a7)+, d0",
+          "0012c2  4ebaf45e         jsr $722(pc)",
+          "0012c6  6064             bra.b $132c",
+          "0012c8  06440012         addi.w #$12, d4"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$1314",
+      "soun_id": 4,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001314  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0012fc  b0724002         cmp.w $2(a2, d4.w), d0",
+          "001300  6e1e             bgt.b $1320",
+          "001302  b0724000         cmp.w (a2, d4.w), d0",
+          "001306  6de6             blt.b $12ee",
+          "001308  3a04             move.w d4, d5",
+          "00130a  32323000         move.w (a2, d3.w), d1",
+          "00130e  3f00             move.w d0, -(a7)",
+          "001310  303c0004         move.w #$4, d0",
+          "001318  301f             move.w (a7)+, d0",
+          "00131a  4ebaf406         jsr $722(pc)",
+          "00131e  600c             bra.b $132c",
+          "001320  06440012         addi.w #$12, d4"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$1522",
+      "soun_id": 86,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001522  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001506  60da             bra.b $14e2",
+          "001508  3d41000e         move.w d1, $e(a6)",
+          "00150c  3d440004         move.w d4, $4(a6)",
+          "001510  3d430006         move.w d3, $6(a6)",
+          "001514  0c7200164004     cmpi.w #$16, $4(a2, d4.w)",
+          "00151a  6614             bne.b $1530",
+          "00151c  3f00             move.w d0, -(a7)",
+          "00151e  303c0056         move.w #$56, d0",
+          "001526  301f             move.w (a7)+, d0",
+          "001528  47faef9e         lea.l $4c8(pc), a3",
+          "00152c  4efaee32         jmp $360(pc)",
+          "001530  0c72001d4004     cmpi.w #$1d, $4(a2, d4.w)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$1590",
+      "soun_id": 6,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001590  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001572  0c470050         cmpi.w #$50, d7",
+          "001576  6e12             bgt.b $158a",
+          "001578  3d7c000c0012     move.w #$c, $12(a6)",
+          "00157e  47faeb16         lea.l $96(pc), a3",
+          "001582  2d4b002c         move.l a3, $2c(a6)",
+          "001586  4efaea78         jmp $0(pc)",
+          "00158a  3f00             move.w d0, -(a7)",
+          "00158c  303c0006         move.w #$6, d0",
+          "001594  301f             move.w (a7)+, d0",
+          "001596  47faeea8         lea.l $440(pc), a3",
+          "00159a  4efaedc4         jmp $360(pc)",
+          "00159e  3f00             move.w d0, -(a7)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$15a4",
+      "soun_id": 4,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0015a4  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "00158a  3f00             move.w d0, -(a7)",
+          "00158c  303c0006         move.w #$6, d0",
+          "001590  4ead0052         jsr $52(a5)",
+          "001594  301f             move.w (a7)+, d0",
+          "001596  47faeea8         lea.l $440(pc), a3",
+          "00159a  4efaedc4         jmp $360(pc)",
+          "00159e  3f00             move.w d0, -(a7)",
+          "0015a0  303c0004         move.w #$4, d0",
+          "0015a8  301f             move.w (a7)+, d0",
+          "0015aa  3a04             move.w d4, d5",
+          "0015ac  4ebaf174         jsr $722(pc)",
+          "0015b0  4efa14ce         jmp $2a80(pc)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$1632",
+      "soun_id": 5,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001632  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "00161c  141b             move.b (a3)+, d2",
+          "00161e  4882             ext.w d2",
+          "001620  6c04             bge.b $1626",
+          "001622  4efafe58         jmp $147c(pc)",
+          "001626  0c42002a         cmpi.w #$2a, d2",
+          "00162a  6610             bne.b $163c",
+          "00162c  3f00             move.w d0, -(a7)",
+          "00162e  303c0005         move.w #$5, d0",
+          "001636  301f             move.w (a7)+, d0",
+          "001638  343c0002         move.w #$2, d2",
+          "00163c  206dffa8         movea.l -$58(a5), a0",
+          "001640  3d40000c         move.w d0, $c(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$1712",
+      "soun_id": 78,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001712  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0016f8  661e             bne.b $1718",
+          "0016fa  342e0006         move.w $6(a6), d2",
+          "0016fe  32322000         move.w (a2, d2.w), d1",
+          "001702  3d41000e         move.w d1, $e(a6)",
+          "001706  d243             add.w d3, d1",
+          "001708  343c0002         move.w #$2, d2",
+          "00170c  3f00             move.w d0, -(a7)",
+          "00170e  303c004e         move.w #$4e, d0",
+          "001716  301f             move.w (a7)+, d0",
+          "001718  226e0030         movea.l $30(a6), a1",
+          "00171c  206dffa8         movea.l -$58(a5), a0",
+          "001720  3d40000c         move.w d0, $c(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$18b8",
+      "soun_id": 14,
+      "event": "Hero timer at $2c(a6) resets to 8",
+      "condition": "After decrementing, the signed timer is negative.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0018b8  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0018a0  b272400a         cmp.w $a(a2, d4.w), d1",
+          "0018a4  6e06             bgt.b $18ac",
+          "0018a6  322e000e         move.w $e(a6), d1",
+          "0018aa  605a             bra.b $1906",
+          "0018ac  536e002c         subq.w #$1, $2c(a6)",
+          "0018b0  6c12             bge.b $18c4",
+          "0018b2  3f00             move.w d0, -(a7)",
+          "0018b4  303c000e         move.w #$e, d0",
+          "0018bc  301f             move.w (a7)+, d0",
+          "0018be  3d7c0008002c     move.w #$8, $2c(a6)",
+          "0018c4  5342             subq.w #$1, d2",
+          "0018c6  6c3e             bge.b $1906"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$18f0",
+      "soun_id": 14,
+      "event": "Hero timer at $2c(a6) resets to 8",
+      "condition": "After decrementing, the signed timer is negative.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0018f0  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0018d6  6f0c             ble.b $18e4",
+          "0018d8  3232400c         move.w $c(a2, d4.w), d1",
+          "0018dc  3d41000e         move.w d1, $e(a6)",
+          "0018e0  4efafb9a         jmp $147c(pc)",
+          "0018e4  536e002c         subq.w #$1, $2c(a6)",
+          "0018e8  6c12             bge.b $18fc",
+          "0018ea  3f00             move.w d0, -(a7)",
+          "0018ec  303c000e         move.w #$e, d0",
+          "0018f4  301f             move.w (a7)+, d0",
+          "0018f6  3d7c0008002c     move.w #$8, $2c(a6)",
+          "0018fc  5242             addq.w #$1, d2",
+          "0018fe  0c420003         cmpi.w #$3, d2"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$1ad4",
+      "soun_id": 4,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001ad4  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001ab4  600000ba         bra.w $1b70",
+          "001ab8  08ae00000014     bclr.b #$0, $14(a6)",
+          "001abe  286e0016         movea.l $16(a6), a4",
+          "001ac2  226c0040         movea.l $40(a4), a1",
+          "001ac6  4242             clr.w d2",
+          "001ac8  2d6dfdd6002c     move.l -$22a(a5), $2c(a6)",
+          "001ace  3f00             move.w d0, -(a7)",
+          "001ad0  303c0004         move.w #$4, d0",
+          "001ad8  301f             move.w (a7)+, d0",
+          "001ada  60000082         bra.w $1b5e",
+          "001ade  286e0016         movea.l $16(a6), a4",
+          "001ae2  226c0068         movea.l $68(a4), a1"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$1b48",
+      "soun_id": 4,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001b48  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001b2c  286e0016         movea.l $16(a6), a4",
+          "001b30  226c0040         movea.l $40(a4), a1",
+          "001b34  4242             clr.w d2",
+          "001b36  06410010         addi.w #$10, d1",
+          "001b3a  5040             addq.w #$8, d0",
+          "001b3c  2d6dfdda002c     move.l -$226(a5), $2c(a6)",
+          "001b42  3f00             move.w d0, -(a7)",
+          "001b44  303c0004         move.w #$4, d0",
+          "001b4c  301f             move.w (a7)+, d0",
+          "001b4e  6000000e         bra.w $1b5e",
+          "001b52  286e0016         movea.l $16(a6), a4",
+          "001b56  226c0064         movea.l $64(a4), a1"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$1e3e",
+      "soun_id": 14,
+      "event": "Hero timer at $2c(a6) resets to 8",
+      "condition": "After decrementing, the signed timer is negative.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001e3e  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001e24  3d440004         move.w d4, $4(a6)",
+          "001e28  6008             bra.b $1e32",
+          "001e2a  322e000e         move.w $e(a6), d1",
+          "001e2e  600000b2         bra.w $1ee2",
+          "001e32  536e002c         subq.w #$1, $2c(a6)",
+          "001e36  6c12             bge.b $1e4a",
+          "001e38  3f00             move.w d0, -(a7)",
+          "001e3a  303c000e         move.w #$e, d0",
+          "001e42  301f             move.w (a7)+, d0",
+          "001e44  3d7c0008002c     move.w #$8, $2c(a6)",
+          "001e4a  5342             subq.w #$1, d2",
+          "001e4c  6c000094         bge.w $1ee2"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$1eca",
+      "soun_id": 14,
+      "event": "Hero timer at $2c(a6) resets to 8",
+      "condition": "After decrementing, the signed timer is negative.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001eca  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001eb0  3d460006         move.w d6, $6(a6)",
+          "001eb4  5840             addq.w #$4, d0",
+          "001eb6  3d40000c         move.w d0, $c(a6)",
+          "001eba  4efaf5c0         jmp $147c(pc)",
+          "001ebe  536e002c         subq.w #$1, $2c(a6)",
+          "001ec2  6c12             bge.b $1ed6",
+          "001ec4  3f00             move.w d0, -(a7)",
+          "001ec6  303c000e         move.w #$e, d0",
+          "001ece  301f             move.w (a7)+, d0",
+          "001ed0  3d7c0008002c     move.w #$8, $2c(a6)",
+          "001ed6  5242             addq.w #$1, d2",
+          "001ed8  0c420003         cmpi.w #$3, d2"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$1f26",
+      "soun_id": 73,
+      "event": "Hero field $12 changes to $1d",
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001f26  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001f04  4efae60e         jmp $514(pc)",
+          "001f08  4e75             rts ",
+          "001f0a  3d7c00050034     move.w #$5, $34(a6)",
+          "001f10  2d5f0030         move.l (a7)+, $30(a6)",
+          "001f14  3d6e00120036     move.w $12(a6), $36(a6)",
+          "001f1a  3d7c001d0012     move.w #$1d, $12(a6)",
+          "001f20  3f00             move.w d0, -(a7)",
+          "001f22  303c0049         move.w #$49, d0",
+          "001f2a  301f             move.w (a7)+, d0",
+          "001f2c  206dffa8         movea.l -$58(a5), a0",
+          "001f30  286e0016         movea.l $16(a6), a4",
+          "001f34  226c0090         movea.l $90(a4), a1"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$1fb2",
+      "soun_id": 32,
+      "event": "Hero timer reaches zero",
+      "condition": "The decremented signed word at $2c(a6) is exactly 0.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001fb2  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001f9a  322e0030         move.w $30(a6), d1",
+          "001f9e  4242             clr.w d2",
+          "001fa0  4ead0212         jsr $212(a5)",
+          "001fa4  536e002c         subq.w #$1, $2c(a6)",
+          "001fa8  6e16             bgt.b $1fc0",
+          "001faa  6d1c             blt.b $1fc8",
+          "001fac  3f00             move.w d0, -(a7)",
+          "001fae  303c0020         move.w #$20, d0",
+          "001fb6  301f             move.w (a7)+, d0",
+          "001fb8  3d7c011c0030     move.w #$11c, $30(a6)",
+          "001fbe  6014             bra.b $1fd4",
+          "001fc0  066e00140030     addi.w #$14, $30(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$20f2",
+      "soun_id": 84,
+      "event": "Hero input bit 1 is cleared and field $12 changes to $1b",
+      "condition": "Bit 1 of $14(a6) is set.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0020f2  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0020d2  3d7c001c0012     move.w #$1c, $12(a6)",
+          "0020d8  4efae43a         jmp $514(pc)",
+          "0020dc  4e75             rts ",
+          "0020de  082e00010014     btst.b #$1, $14(a6)",
+          "0020e4  6734             beq.b $211a",
+          "0020e6  08ae00010014     bclr.b #$1, $14(a6)",
+          "0020ec  3f00             move.w d0, -(a7)",
+          "0020ee  303c0054         move.w #$54, d0",
+          "0020f6  301f             move.w (a7)+, d0",
+          "0020f8  3d7c001b0012     move.w #$1b, $12(a6)",
+          "0020fe  206dffa8         movea.l -$58(a5), a0",
+          "002102  286e0016         movea.l $16(a6), a4"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$2276",
+      "soun_id": 73,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002276  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002258  4efaea12         jmp $c6c(pc)",
+          "00225c  082e00020015     btst.b #$2, $15(a6)",
+          "002262  6604             bne.b $2268",
+          "002264  4efaea06         jmp $c6c(pc)",
+          "002268  303c0002         move.w #$2, d0",
+          "00226c  4ead0362         jsr $362(a5)",
+          "002270  3f00             move.w d0, -(a7)",
+          "002272  303c0049         move.w #$49, d0",
+          "00227a  301f             move.w (a7)+, d0",
+          "00227c  4ead043a         jsr $43a(a5)",
+          "002280  303c000c         move.w #$c, d0",
+          "002284  4ead03ea         jsr $3ea(a5)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$2318",
+      "soun_id": 3,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002318  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0022f8  4ead036a         jsr $36a(a5)",
+          "0022fc  303c001a         move.w #$1a, d0",
+          "002300  4ead03ea         jsr $3ea(a5)",
+          "002304  4c9f0003         movem.w (a7)+, d0-d1",
+          "002308  3d7c0008002c     move.w #$8, $2c(a6)",
+          "00230e  426e002e         clr.w $2e(a6)",
+          "002312  3f00             move.w d0, -(a7)",
+          "002314  303c0003         move.w #$3, d0",
+          "00231c  301f             move.w (a7)+, d0",
+          "00231e  6020             bra.b $2340",
+          "002320  5341             subq.w #$1, d1",
+          "002322  4ead0212         jsr $212(a5)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$2444",
+      "soun_id": 73,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002444  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002426  286e0016         movea.l $16(a6), a4",
+          "00242a  226c00b8         movea.l $b8(a4), a1",
+          "00242e  206dffa8         movea.l -$58(a5), a0",
+          "002432  5541             subq.w #$2, d1",
+          "002434  4ead0212         jsr $212(a5)",
+          "002438  3d7c0008002c     move.w #$8, $2c(a6)",
+          "00243e  3f00             move.w d0, -(a7)",
+          "002440  303c0049         move.w #$49, d0",
+          "002448  301f             move.w (a7)+, d0",
+          "00244a  60000126         bra.w $2572",
+          "00244e  286e0016         movea.l $16(a6), a4",
+          "002452  226c00b8         movea.l $b8(a4), a1"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$2510",
+      "soun_id": 50,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002510  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0024f6  3f00             move.w d0, -(a7)",
+          "0024f8  303c0001         move.w #$1, d0",
+          "0024fc  4ead036a         jsr $36a(a5)",
+          "002500  303c001c         move.w #$1c, d0",
+          "002504  4ead03ea         jsr $3ea(a5)",
+          "002508  301f             move.w (a7)+, d0",
+          "00250a  3f00             move.w d0, -(a7)",
+          "00250c  303c0032         move.w #$32, d0",
+          "002514  301f             move.w (a7)+, d0",
+          "002516  3d7c0018002c     move.w #$18, $2c(a6)",
+          "00251c  3d7c001e002e     move.w #$1e, $2e(a6)",
+          "002522  6000004e         bra.w $2572"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$2598",
+      "soun_id": 99,
+      "event": "Hero timer at $2c(a6) is set to 30",
+      "condition": "Bit 1 of $15(a6) is set.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002598  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "00257c  6e0a             bgt.b $2588",
+          "00257e  3b7cffd6fe76     move.w #$ffd6, -$18a(a5)",
+          "002584  50edfe7d         st.b -$183(a5)",
+          "002588  4e75             rts ",
+          "00258a  082e00010015     btst.b #$1, $15(a6)",
+          "002590  6722             beq.b $25b4",
+          "002592  3f00             move.w d0, -(a7)",
+          "002594  303c0063         move.w #$63, d0",
+          "00259c  301f             move.w (a7)+, d0",
+          "00259e  3d7c001e002c     move.w #$1e, $2c(a6)",
+          "0025a4  3d6e0012002e     move.w $12(a6), $2e(a6)",
+          "0025aa  3d7c00250012     move.w #$25, $12(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$26ec",
+      "soun_id": 11,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0026ec  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0026d0  0641000e         addi.w #$e, d1",
+          "0026d4  4ead0212         jsr $212(a5)",
+          "0026d8  4a6e002c         tst.w $2c(a6)",
+          "0026dc  6e4c             bgt.b $272a",
+          "0026de  0c2d007ffd3e     cmpi.b #$7f, -$2c2(a5)",
+          "0026e4  6234             bhi.b $271a",
+          "0026e6  3f00             move.w d0, -(a7)",
+          "0026e8  303c000b         move.w #$b, d0",
+          "0026f0  301f             move.w (a7)+, d0",
+          "0026f2  3b7c0002fd38     move.w #$2, -$2c8(a5)",
+          "0026f8  3f06             move.w d6, -(a7)",
+          "0026fa  1c3c0010         move.b #$10, d6"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$2720",
+      "soun_id": 13,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002720  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002706  cf06             abcd.b d6, d7",
+          "002708  1b47fd3e         move.b d7, -$2c2(a5)",
+          "00270c  3c1f             move.w (a7)+, d6",
+          "00270e  35bc00014004     move.w #$1, $4(a2, d4.w)",
+          "002714  426e0012         clr.w $12(a6)",
+          "002718  6010             bra.b $272a",
+          "00271a  3f00             move.w d0, -(a7)",
+          "00271c  303c000d         move.w #$d, d0",
+          "002724  301f             move.w (a7)+, d0",
+          "002726  426e0012         clr.w $12(a6)",
+          "00272a  4efadde8         jmp $514(pc)",
+          "00272e  4efae53c         jmp $c6c(pc)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$2790",
+      "soun_id": 11,
+      "event": "Counter at A5-$33c is incremented",
+      "condition": "Signed word at $2c(a6) is at most 0.",
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002790  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002774  30324000         move.w (a2, d4.w), d0",
+          "002778  343c0001         move.w #$1, d2",
+          "00277c  0641000e         addi.w #$e, d1",
+          "002780  4ead0212         jsr $212(a5)",
+          "002784  4a6e002c         tst.w $2c(a6)",
+          "002788  6e1e             bgt.b $27a8",
+          "00278a  3f00             move.w d0, -(a7)",
+          "00278c  303c000b         move.w #$b, d0",
+          "002794  301f             move.w (a7)+, d0",
+          "002796  526dfcc4         addq.w #$1, -$33c(a5)",
+          "00279a  4ead035a         jsr $35a(a5)",
+          "00279e  35bc00014004     move.w #$1, $4(a2, d4.w)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$2822",
+      "soun_id": 42,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002822  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002808  4242             clr.w d2",
+          "00280a  30324008         move.w $8(a2, d4.w), d0",
+          "00280e  5640             addq.w #$3, d0",
+          "002810  3d40000c         move.w d0, $c(a6)",
+          "002814  0441000b         subi.w #$b, d1",
+          "002818  4ead0212         jsr $212(a5)",
+          "00281c  3f00             move.w d0, -(a7)",
+          "00281e  303c002a         move.w #$2a, d0",
+          "002826  301f             move.w (a7)+, d0",
+          "002828  60000062         bra.w $288c",
+          "00282c  536e002e         subq.w #$1, $2e(a6)",
+          "002830  6e22             bgt.b $2854"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$34f0",
+      "soun_id": 7,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0034f0  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0034d4  4ead0212         jsr $212(a5)",
+          "0034d8  082e00000015     btst.b #$0, $15(a6)",
+          "0034de  6618             bne.b $34f8",
+          "0034e0  206c0050         movea.l $50(a4), a0",
+          "0034e4  4a2dfd3e         tst.b -$2c2(a5)",
+          "0034e8  6724             beq.b $350e",
+          "0034ea  3f00             move.w d0, -(a7)",
+          "0034ec  303c0007         move.w #$7, d0",
+          "0034f4  301f             move.w (a7)+, d0",
+          "0034f6  6016             bra.b $350e",
+          "0034f8  206c00ac         movea.l $ac(a4), a0",
+          "0034fc  4a2dfd3e         tst.b -$2c2(a5)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 2,
+      "offset": "$3508",
+      "soun_id": 9,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003508  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0034f0  4ead0052         jsr $52(a5)",
+          "0034f4  301f             move.w (a7)+, d0",
+          "0034f6  6016             bra.b $350e",
+          "0034f8  206c00ac         movea.l $ac(a4), a0",
+          "0034fc  4a2dfd3e         tst.b -$2c2(a5)",
+          "003500  670c             beq.b $350e",
+          "003502  3f00             move.w d0, -(a7)",
+          "003504  303c0009         move.w #$9, d0",
+          "00350c  301f             move.w (a7)+, d0",
+          "00350e  43edfe6c         lea.l -$194(a5), a1",
+          "003512  342e0020         move.w $20(a6), d2",
+          "003516  ec42             asr.w #$6, d2"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$a0c",
+      "soun_id": 65,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000a0c  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0009f4  6c20             bge.b $a16",
+          "0009f6  0c42ffff         cmpi.w #$ffff, d2",
+          "0009fa  670000f0         beq.w $aec",
+          "0009fe  4442             neg.w d2",
+          "000a00  0c42002c         cmpi.w #$2c, d2",
+          "000a04  6610             bne.b $a16",
+          "000a06  3f00             move.w d0, -(a7)",
+          "000a08  303c0041         move.w #$41, d0",
+          "000a10  301f             move.w (a7)+, d0",
+          "000a12  343c0004         move.w #$4, d2",
+          "000a16  526e0004         addq.w #$1, $4(a6)",
+          "000a1a  183b2034         move.b $a50(pc, d2.w), d4"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$a7a",
+      "soun_id": 65,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000a7a  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000a62  6c2e             bge.b $a92",
+          "000a64  0c42ffff         cmpi.w #$ffff, d2",
+          "000a68  67000082         beq.w $aec",
+          "000a6c  4442             neg.w d2",
+          "000a6e  0c42002c         cmpi.w #$2c, d2",
+          "000a72  6612             bne.b $a86",
+          "000a74  3f00             move.w d0, -(a7)",
+          "000a76  303c0041         move.w #$41, d0",
+          "000a7e  301f             move.w (a7)+, d0",
+          "000a80  343c0004         move.w #$4, d2",
+          "000a84  600c             bra.b $a92",
+          "000a86  3f00             move.w d0, -(a7)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$a8c",
+      "soun_id": 47,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000a8c  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000a74  3f00             move.w d0, -(a7)",
+          "000a76  303c0041         move.w #$41, d0",
+          "000a7a  4ead0052         jsr $52(a5)",
+          "000a7e  301f             move.w (a7)+, d0",
+          "000a80  343c0004         move.w #$4, d2",
+          "000a84  600c             bra.b $a92",
+          "000a86  3f00             move.w d0, -(a7)",
+          "000a88  303c002f         move.w #$2f, d0",
+          "000a90  301f             move.w (a7)+, d0",
+          "000a92  526e0004         addq.w #$1, $4(a6)",
+          "000a96  0c420004         cmpi.w #$4, d2",
+          "000a9a  660e             bne.b $aaa"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$b72",
+      "soun_id": 56,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000b72  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000b56  322e0002         move.w $2(a6), d1",
+          "000b5a  04410021         subi.w #$21, d1",
+          "000b5e  226dfdfc         movea.l -$204(a5), a1",
+          "000b62  41edfe6c         lea.l -$194(a5), a0",
+          "000b66  4eba4d68         jsr $58d0(pc)",
+          "000b6a  6734             beq.b $ba0",
+          "000b6c  3f00             move.w d0, -(a7)",
+          "000b6e  303c0038         move.w #$38, d0",
+          "000b76  301f             move.w (a7)+, d0",
+          "000b78  2e280010         move.l $10(a0), d7",
+          "000b7c  4487             neg.l d7",
+          "000b7e  e487             asr.l #$2, d7"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$c00",
+      "soun_id": 57,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000c00  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000be2  41ee0016         lea.l $16(a6), a0",
+          "000be6  4eba4d94         jsr $597c(pc)",
+          "000bea  41ee000e         lea.l $e(a6), a0",
+          "000bee  4eba4d8c         jsr $597c(pc)",
+          "000bf2  303c0002         move.w #$2, d0",
+          "000bf6  4eba501c         jsr $5c14(pc)",
+          "000bfa  3f00             move.w d0, -(a7)",
+          "000bfc  303c0039         move.w #$39, d0",
+          "000c04  301f             move.w (a7)+, d0",
+          "000c06  4e75             rts ",
+          "000c08  00000000         ori.b #$0, d0",
+          "000c0c  0101             btst.l d0, d1"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$cf4",
+      "soun_id": 66,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000cf4  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000cdc  6348             bls.b $d26",
+          "000cde  d06e0004         add.w $4(a6), d0",
+          "000ce2  b06e0006         cmp.w $6(a6), d0",
+          "000ce6  6e1c             bgt.b $d04",
+          "000ce8  4a6e0004         tst.w $4(a6)",
+          "000cec  6e0c             bgt.b $cfa",
+          "000cee  3f00             move.w d0, -(a7)",
+          "000cf0  303c0042         move.w #$42, d0",
+          "000cf8  301f             move.w (a7)+, d0",
+          "000cfa  3d7c00040004     move.w #$4, $4(a6)",
+          "000d00  600000ce         bra.w $dd0",
+          "000d04  b06e0008         cmp.w $8(a6), d0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$d16",
+      "soun_id": 66,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000d16  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000cfa  3d7c00040004     move.w #$4, $4(a6)",
+          "000d00  600000ce         bra.w $dd0",
+          "000d04  b06e0008         cmp.w $8(a6), d0",
+          "000d08  6d30             blt.b $d3a",
+          "000d0a  4a6e0004         tst.w $4(a6)",
+          "000d0e  6d0c             blt.b $d1c",
+          "000d10  3f00             move.w d0, -(a7)",
+          "000d12  303c0042         move.w #$42, d0",
+          "000d1a  301f             move.w (a7)+, d0",
+          "000d1c  3d7cfffc0004     move.w #$fffc, $4(a6)",
+          "000d22  600000ac         bra.w $dd0",
+          "000d26  446e0004         neg.w $4(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$d30",
+      "soun_id": 66,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000d30  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000d12  303c0042         move.w #$42, d0",
+          "000d16  4ead0052         jsr $52(a5)",
+          "000d1a  301f             move.w (a7)+, d0",
+          "000d1c  3d7cfffc0004     move.w #$fffc, $4(a6)",
+          "000d22  600000ac         bra.w $dd0",
+          "000d26  446e0004         neg.w $4(a6)",
+          "000d2a  3f00             move.w d0, -(a7)",
+          "000d2c  303c0042         move.w #$42, d0",
+          "000d34  301f             move.w (a7)+, d0",
+          "000d36  60000098         bra.w $dd0",
+          "000d3a  536e0010         subq.w #$1, $10(a6)",
+          "000d3e  6e000090         bgt.w $dd0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$dc0",
+      "soun_id": 58,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000dc0  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000da2  600c             bra.b $db0",
+          "000da4  243c00100000     move.l #$100000, d2",
+          "000daa  5a40             addq.w #$5, d0",
+          "000dac  206dfe1c         movea.l -$1e4(a5), a0",
+          "000db0  283c00004000     move.l #$4000, d4",
+          "000db6  4ead01fa         jsr $1fa(a5)",
+          "000dba  3f00             move.w d0, -(a7)",
+          "000dbc  303c003a         move.w #$3a, d0",
+          "000dc4  301f             move.w (a7)+, d0",
+          "000dc6  3d7c00280010     move.w #$28, $10(a6)",
+          "000dcc  4cdf0007         movem.l (a7)+, d0-d2",
+          "000dd0  4a6e0004         tst.w $4(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$e5e",
+      "soun_id": 82,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000e5e  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000e40  6608             bne.b $e4a",
+          "000e42  3d6e0016000a     move.w $16(a6), $a(a6)",
+          "000e48  6006             bra.b $e50",
+          "000e4a  3d7c0014000a     move.w #$14, $a(a6)",
+          "000e50  526e000a         addq.w #$1, $a(a6)",
+          "000e54  446e000a         neg.w $a(a6)",
+          "000e58  3f00             move.w d0, -(a7)",
+          "000e5a  303c0052         move.w #$52, d0",
+          "000e62  301f             move.w (a7)+, d0",
+          "000e64  41d6             lea.l (a6), a0",
+          "000e66  4eba4b14         jsr $597c(pc)",
+          "000e6a  303c0004         move.w #$4, d0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$fd6",
+      "soun_id": 60,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000fd6  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000fb8  42680016         clr.w $16(a0)",
+          "000fbc  42680018         clr.w $18(a0)",
+          "000fc0  42680012         clr.w $12(a0)",
+          "000fc4  214e001a         move.l a6, $1a(a0)",
+          "000fc8  20adfe7e         move.l -$182(a5), (a0)",
+          "000fcc  2b48fe7e         move.l a0, -$182(a5)",
+          "000fd0  3f00             move.w d0, -(a7)",
+          "000fd2  303c003c         move.w #$3c, d0",
+          "000fda  301f             move.w (a7)+, d0",
+          "000fdc  41e80008         lea.l $8(a0), a0",
+          "000fe0  2e3c02000000     move.l #$2000000, d7",
+          "000fe6  4eba4962         jsr $594a(pc)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$110a",
+      "soun_id": 69,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00110a  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0010ee  3605             move.w d5, d3",
+          "0010f0  246b001a         movea.l $1a(a3), a2",
+          "0010f4  d46a000a         add.w $a(a2), d2",
+          "0010f8  d66a000c         add.w $c(a2), d3",
+          "0010fc  536e0012         subq.w #$1, $12(a6)",
+          "001100  6e0000e8         bgt.w $11ea",
+          "001104  3f00             move.w d0, -(a7)",
+          "001106  303c0045         move.w #$45, d0",
+          "00110e  301f             move.w (a7)+, d0",
+          "001110  3d6e000e0012     move.w $e(a6), $12(a6)",
+          "001116  3f00             move.w d0, -(a7)",
+          "001118  4eba4b4e         jsr $5c68(pc)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$132c",
+      "soun_id": 85,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00132c  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001310  60000048         bra.w $135a",
+          "001314  4ebaecea         jsr $0(pc)",
+          "001318  41edfe6c         lea.l -$194(a5), a0",
+          "00131c  4eba45b2         jsr $58d0(pc)",
+          "001320  6738             beq.b $135a",
+          "001322  42a80008         clr.l $8(a0)",
+          "001326  3f00             move.w d0, -(a7)",
+          "001328  303c0055         move.w #$55, d0",
+          "001330  301f             move.w (a7)+, d0",
+          "001332  4a6e0014         tst.w $14(a6)",
+          "001336  6704             beq.b $133c",
+          "001338  536dfda2         subq.w #$1, -$25e(a5)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$1542",
+      "soun_id": 70,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001542  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001524  3d470012         move.w d7, $12(a6)",
+          "001528  342e0014         move.w $14(a6), d2",
+          "00152c  d06e0008         add.w $8(a6), d0",
+          "001530  b06e0004         cmp.w $4(a6), d0",
+          "001534  6e14             bgt.b $154a",
+          "001536  3d7c00020008     move.w #$2, $8(a6)",
+          "00153c  3f00             move.w d0, -(a7)",
+          "00153e  303c0046         move.w #$46, d0",
+          "001546  301f             move.w (a7)+, d0",
+          "001548  6040             bra.b $158a",
+          "00154a  b06e0006         cmp.w $6(a6), d0",
+          "00154e  6d3a             blt.b $158a"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$1584",
+      "soun_id": 70,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001584  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001564  4eba4416         jsr $597c(pc)",
+          "001568  42aefffc         clr.l -$4(a6)",
+          "00156c  246e0016         movea.l $16(a6), a2",
+          "001570  526a0016         addq.w #$1, $16(a2)",
+          "001574  6000008a         bra.w $1600",
+          "001578  3d7cfffe0008     move.w #$fffe, $8(a6)",
+          "00157e  3f00             move.w d0, -(a7)",
+          "001580  303c0046         move.w #$46, d0",
+          "001588  301f             move.w (a7)+, d0",
+          "00158a  4a6e0008         tst.w $8(a6)",
+          "00158e  6e0e             bgt.b $159e",
+          "001590  226e000a         movea.l $a(a6), a1"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$15e0",
+      "soun_id": 87,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0015e0  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0015c4  506e0028         addq.w #$8, $28(a6)",
+          "0015c8  5c6e002a         addq.w #$6, $2a(a6)",
+          "0015cc  41edfe6c         lea.l -$194(a5), a0",
+          "0015d0  4eba42fe         jsr $58d0(pc)",
+          "0015d4  672a             beq.b $1600",
+          "0015d6  42a80008         clr.l $8(a0)",
+          "0015da  3f00             move.w d0, -(a7)",
+          "0015dc  303c0057         move.w #$57, d0",
+          "0015e4  301f             move.w (a7)+, d0",
+          "0015e6  41ee0028         lea.l $28(a6), a0",
+          "0015ea  4eba4390         jsr $597c(pc)",
+          "0015ee  42aefffc         clr.l -$4(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$16ca",
+      "soun_id": 70,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0016ca  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0016aa  ce6e0014         and.w $14(a6), d7",
+          "0016ae  de6e0012         add.w $12(a6), d7",
+          "0016b2  3d470026         move.w d7, $26(a6)",
+          "0016b6  41e80030         lea.l $30(a0), a0",
+          "0016ba  2e3c05000000     move.l #$5000000, d7",
+          "0016c0  4eba4288         jsr $594a(pc)",
+          "0016c4  3f00             move.w d0, -(a7)",
+          "0016c6  303c0046         move.w #$46, d0",
+          "0016ce  301f             move.w (a7)+, d0",
+          "0016d0  4e75             rts ",
+          "0016d2  48a70600         movem.w d5-d6, -(a7)",
+          "0016d6  2848             movea.l a0, a4"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$17c8",
+      "soun_id": 48,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0017c8  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0017b0  141b             move.b (a3)+, d2",
+          "0017b2  4882             ext.w d2",
+          "0017b4  206dffa8         movea.l -$58(a5), a0",
+          "0017b8  4ebae846         jsr $0(pc)",
+          "0017bc  0c420003         cmpi.w #$3, d2",
+          "0017c0  6644             bne.b $1806",
+          "0017c2  3f00             move.w d0, -(a7)",
+          "0017c4  303c0030         move.w #$30, d0",
+          "0017cc  301f             move.w (a7)+, d0",
+          "0017ce  206e0002         movea.l $2(a6), a0",
+          "0017d2  342e0006         move.w $6(a6), d2",
+          "0017d6  06400028         addi.w #$28, d0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$1840",
+      "soun_id": 32,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001840  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001822  0c410049         cmpi.w #$49, d1",
+          "001826  6c34             bge.b $185c",
+          "001828  066e000e0018     addi.w #$e, $18(a6)",
+          "00182e  0c41002b         cmpi.w #$2b, d1",
+          "001832  6d28             blt.b $185c",
+          "001834  3d7c00080008     move.w #$8, $8(a6)",
+          "00183a  3f00             move.w d0, -(a7)",
+          "00183c  303c0020         move.w #$20, d0",
+          "001844  301f             move.w (a7)+, d0",
+          "001846  303c001e         move.w #$1e, d0",
+          "00184a  4eba43c8         jsr $5c14(pc)",
+          "00184e  600c             bra.b $185c"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$1936",
+      "soun_id": 35,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001936  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "00191a  506e0008         addq.w #$8, $8(a6)",
+          "00191e  3d41000a         move.w d1, $a(a6)",
+          "001922  506e000a         addq.w #$8, $a(a6)",
+          "001926  0c400004         cmpi.w #$4, d0",
+          "00192a  6e12             bgt.b $193e",
+          "00192c  44ae0014         neg.l $14(a6)",
+          "001930  3f00             move.w d0, -(a7)",
+          "001932  303c0023         move.w #$23, d0",
+          "00193a  301f             move.w (a7)+, d0",
+          "00193c  6010             bra.b $194e",
+          "00193e  0c4001ea         cmpi.w #$1ea, d0",
+          "001942  6d0a             blt.b $194e"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$1a06",
+      "soun_id": 35,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001a06  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0019e8  67d0             beq.b $19ba",
+          "0019ea  60da             bra.b $19c6",
+          "0019ec  0c72001d4004     cmpi.w #$1d, $4(a2, d4.w)",
+          "0019f2  67000036         beq.w $1a2a",
+          "0019f6  0cae000155540018 cmpi.l #$15554, $18(a6)",
+          "0019fe  6f0c             ble.b $1a0c",
+          "001a00  3f00             move.w d0, -(a7)",
+          "001a02  303c0023         move.w #$23, d0",
+          "001a0a  301f             move.w (a7)+, d0",
+          "001a0c  4841             swap d1",
+          "001a0e  4241             clr.w d1",
+          "001a10  2d410004         move.l d1, $4(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$1afe",
+      "soun_id": 30,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001afe  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001ade  4ebae520         jsr $0(pc)",
+          "001ae2  526e000a         addq.w #$1, $a(a6)",
+          "001ae6  0c430008         cmpi.w #$8, d3",
+          "001aea  6d0001b4         blt.w $1ca0",
+          "001aee  3d7c00040004     move.w #$4, $4(a6)",
+          "001af4  426e000a         clr.w $a(a6)",
+          "001af8  3f00             move.w d0, -(a7)",
+          "001afa  303c001e         move.w #$1e, d0",
+          "001b02  301f             move.w (a7)+, d0",
+          "001b04  3d7c03840006     move.w #$384, $6(a6)",
+          "001b0a  41ee0006         lea.l $6(a6), a0",
+          "001b0e  2e3c04000000     move.l #$4000000, d7"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$1c66",
+      "soun_id": 31,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001c66  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001c48  4eba3d32         jsr $597c(pc)",
+          "001c4c  41ee0010         lea.l $10(a6), a0",
+          "001c50  4eba3d2a         jsr $597c(pc)",
+          "001c54  303c0018         move.w #$18, d0",
+          "001c58  4eba3fba         jsr $5c14(pc)",
+          "001c5c  206dffa8         movea.l -$58(a5), a0",
+          "001c60  3f00             move.w d0, -(a7)",
+          "001c62  303c001f         move.w #$1f, d0",
+          "001c6a  301f             move.w (a7)+, d0",
+          "001c6c  60000002         bra.w $1c70",
+          "001c70  226dfd18         movea.l -$2e8(a5), a1",
+          "001c74  206dffa8         movea.l -$58(a5), a0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$1ddc",
+      "soun_id": 86,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001ddc  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001dbe  0c4100a2         cmpi.w #$a2, d1",
+          "001dc2  6c0a             bge.b $1dce",
+          "001dc4  066e000e000a     addi.w #$e, $a(a6)",
+          "001dca  6000009c         bra.w $1e68",
+          "001dce  0c6d0001fce4     cmpi.w #$1, -$31c(a5)",
+          "001dd4  661c             bne.b $1df2",
+          "001dd6  3f00             move.w d0, -(a7)",
+          "001dd8  303c0056         move.w #$56, d0",
+          "001de0  301f             move.w (a7)+, d0",
+          "001de2  3d7c0004000c     move.w #$4, $c(a6)",
+          "001de8  3b7cfffffce4     move.w #$ffff, -$31c(a5)",
+          "001dee  60000078         bra.w $1e68"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$1dfe",
+      "soun_id": 86,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001dfe  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001ddc  4ead0052         jsr $52(a5)",
+          "001de0  301f             move.w (a7)+, d0",
+          "001de2  3d7c0004000c     move.w #$4, $c(a6)",
+          "001de8  3b7cfffffce4     move.w #$ffff, -$31c(a5)",
+          "001dee  60000078         bra.w $1e68",
+          "001df2  3d7c0008000c     move.w #$8, $c(a6)",
+          "001df8  3f00             move.w d0, -(a7)",
+          "001dfa  303c0056         move.w #$56, d0",
+          "001e02  301f             move.w (a7)+, d0",
+          "001e04  60000062         bra.w $1e68",
+          "001e08  323c00a2         move.w #$a2, d1",
+          "001e0c  0440000e         subi.w #$e, d0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$20d4",
+      "soun_id": 68,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0020d4  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0020b8  60000158         bra.w $2212",
+          "0020bc  3f00             move.w d0, -(a7)",
+          "0020be  4eba3ba8         jsr $5c68(pc)",
+          "0020c2  0c404650         cmpi.w #$4650, d0",
+          "0020c6  6d14             blt.b $20dc",
+          "0020c8  3d7c0004000a     move.w #$4, $a(a6)",
+          "0020ce  3f00             move.w d0, -(a7)",
+          "0020d0  303c0044         move.w #$44, d0",
+          "0020d8  301f             move.w (a7)+, d0",
+          "0020da  6018             bra.b $20f4",
+          "0020dc  0c40f060         cmpi.w #$f060, d0",
+          "0020e0  6d04             blt.b $20e6"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$21ae",
+      "soun_id": 61,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0021ae  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "00218c  0641000f         addi.w #$f, d1",
+          "002190  b26e0016         cmp.w $16(a6), d1",
+          "002194  6d0000ea         blt.w $2280",
+          "002198  3d7c0014000a     move.w #$14, $a(a6)",
+          "00219e  322e0016         move.w $16(a6), d1",
+          "0021a2  3d7c0002000c     move.w #$2, $c(a6)",
+          "0021a8  3f00             move.w d0, -(a7)",
+          "0021aa  303c003d         move.w #$3d, d0",
+          "0021b2  301f             move.w (a7)+, d0",
+          "0021b4  600000ca         bra.w $2280",
+          "0021b8  d06e0008         add.w $8(a6), d0",
+          "0021bc  4a6e0008         tst.w $8(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$222a",
+      "soun_id": 67,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00222a  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002210  07ff             .byte 0x07, 0xff",
+          "002212  48a7c000         movem.w d0-d1, -(a7)",
+          "002216  41edfe6c         lea.l -$194(a5), a0",
+          "00221a  4eba36b4         jsr $58d0(pc)",
+          "00221e  6742             beq.b $2262",
+          "002220  42a80008         clr.l $8(a0)",
+          "002224  3f00             move.w d0, -(a7)",
+          "002226  303c0043         move.w #$43, d0",
+          "00222e  301f             move.w (a7)+, d0",
+          "002230  303c0016         move.w #$16, d0",
+          "002234  4eba39de         jsr $5c14(pc)",
+          "002238  41ee001e         lea.l $1e(a6), a0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$2542",
+      "soun_id": 29,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002542  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "00252a  343c0004         move.w #$4, d2",
+          "00252e  4ebadad0         jsr $0(pc)",
+          "002532  6024             bra.b $2558",
+          "002534  526c0006         addq.w #$1, $6(a4)",
+          "002538  5342             subq.w #$1, d2",
+          "00253a  660c             bne.b $2548",
+          "00253c  3f00             move.w d0, -(a7)",
+          "00253e  303c001d         move.w #$1d, d0",
+          "002546  301f             move.w (a7)+, d0",
+          "002548  0c420004         cmpi.w #$4, d2",
+          "00254c  6606             bne.b $2554",
+          "00254e  397cffff0006     move.w #$ffff, $6(a4)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$268e",
+      "soun_id": 39,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00268e  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002674  60bc             bra.b $2632",
+          "002676  3d7c00080010     move.w #$8, $10(a6)",
+          "00267c  426e0012         clr.w $12(a6)",
+          "002680  60000086         bra.w $2708",
+          "002684  4a44             tst.w d4",
+          "002686  660c             bne.b $2694",
+          "002688  3f00             move.w d0, -(a7)",
+          "00268a  303c0027         move.w #$27, d0",
+          "002692  301f             move.w (a7)+, d0",
+          "002694  546e0012         addq.w #$2, $12(a6)",
+          "002698  4eba053a         jsr $2bd4(pc)",
+          "00269c  302e0014         move.w $14(a6), d0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$2718",
+      "soun_id": 55,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002718  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0026fe  00000001         ori.b #$1, d0",
+          "002702  0001ffff         ori.b #$ff, d1",
+          "002706  ffff             .byte 0xff, 0xff",
+          "002708  382e0012         move.w $12(a6), d4",
+          "00270c  0c440010         cmpi.w #$10, d4",
+          "002710  6616             bne.b $2728",
+          "002712  3f00             move.w d0, -(a7)",
+          "002714  303c0037         move.w #$37, d0",
+          "00271c  301f             move.w (a7)+, d0",
+          "00271e  3d7c00140004     move.w #$14, $4(a6)",
+          "002724  426e0006         clr.w $6(a6)",
+          "002728  343b4056         move.w $2780(pc, d4.w), d2"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$2734",
+      "soun_id": 36,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002734  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002718  4ead0052         jsr $52(a5)",
+          "00271c  301f             move.w (a7)+, d0",
+          "00271e  3d7c00140004     move.w #$14, $4(a6)",
+          "002724  426e0006         clr.w $6(a6)",
+          "002728  343b4056         move.w $2780(pc, d4.w), d2",
+          "00272c  6c1a             bge.b $2748",
+          "00272e  3f00             move.w d0, -(a7)",
+          "002730  303c0024         move.w #$24, d0",
+          "002738  301f             move.w (a7)+, d0",
+          "00273a  3d7c000c0010     move.w #$c, $10(a6)",
+          "002740  426e0012         clr.w $12(a6)",
+          "002744  60000054         bra.w $279a"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$29bc",
+      "soun_id": 53,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0029bc  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0029a4  322e0002         move.w $2(a6), d1",
+          "0029a8  246e0008         movea.l $8(a6), a2",
+          "0029ac  141a             move.b (a2)+, d2",
+          "0029ae  6c7c             bge.b $2a2c",
+          "0029b0  0c0200ff         cmpi.b #$ff, d2",
+          "0029b4  6654             bne.b $2a0a",
+          "0029b6  3f00             move.w d0, -(a7)",
+          "0029b8  303c0035         move.w #$35, d0",
+          "0029c0  301f             move.w (a7)+, d0",
+          "0029c2  48e7c080         movem.l d0-d1/a0, -(a7)",
+          "0029c6  06400017         addi.w #$17, d0",
+          "0029ca  06410015         addi.w #$15, d1"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$2b44",
+      "soun_id": 54,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002b44  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002b28  00010001         ori.b #$1, d1",
+          "002b2c  ffff             .byte 0xff, 0xff",
+          "002b2e  362e0006         move.w $6(a6), d3",
+          "002b32  546e0006         addq.w #$2, $6(a6)",
+          "002b36  343b305a         move.w $2b92(pc, d3.w), d2",
+          "002b3a  6c000030         bge.w $2b6c",
+          "002b3e  3f00             move.w d0, -(a7)",
+          "002b40  303c0036         move.w #$36, d0",
+          "002b48  301f             move.w (a7)+, d0",
+          "002b4a  3d7c00180004     move.w #$18, $4(a6)",
+          "002b50  426e0006         clr.w $6(a6)",
+          "002b54  303c0026         move.w #$26, d0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$2d04",
+      "soun_id": 51,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002d04  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002ce6  0644001e         addi.w #$1e, d4",
+          "002cea  31440016         move.w d4, $16(a0)",
+          "002cee  4268000c         clr.w $c(a0)",
+          "002cf2  42680018         clr.w $18(a0)",
+          "002cf6  20aefff8         move.l -$8(a6), (a0)",
+          "002cfa  2d48fff8         move.l a0, -$8(a6)",
+          "002cfe  3f00             move.w d0, -(a7)",
+          "002d00  303c0033         move.w #$33, d0",
+          "002d08  301f             move.w (a7)+, d0",
+          "002d0a  4e75             rts ",
+          "002d0c  206dffa8         movea.l -$58(a5), a0",
+          "002d10  226e0008         movea.l $8(a6), a1"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$2d88",
+      "soun_id": 51,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002d88  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002d6e  504e             addq.w #$8, a6",
+          "002d70  4240             clr.w d0",
+          "002d72  4eba236a         jsr $50de(pc)",
+          "002d76  303c0001         move.w #$1, d0",
+          "002d7a  4eba2362         jsr $50de(pc)",
+          "002d7e  4cdf4303         movem.l (a7)+, d0-d1/a0-a1/a6",
+          "002d82  3f00             move.w d0, -(a7)",
+          "002d84  303c0033         move.w #$33, d0",
+          "002d8c  301f             move.w (a7)+, d0",
+          "002d8e  60000012         bra.w $2da2",
+          "002d92  d06e0006         add.w $6(a6), d0",
+          "002d96  3c80             move.w d0, (a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$2e02",
+      "soun_id": 51,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002e02  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002de2  06400024         addi.w #$24, d0",
+          "002de6  37400014         move.w d0, $14(a3)",
+          "002dea  b06e000c         cmp.w $c(a6), d0",
+          "002dee  6d000048         blt.w $2e38",
+          "002df2  4ead01e2         jsr $1e2(a5)",
+          "002df6  3d7c00080004     move.w #$8, $4(a6)",
+          "002dfc  3f00             move.w d0, -(a7)",
+          "002dfe  303c0033         move.w #$33, d0",
+          "002e06  301f             move.w (a7)+, d0",
+          "002e08  6000002e         bra.w $2e38",
+          "002e0c  d06e0006         add.w $6(a6), d0",
+          "002e10  3c80             move.w d0, (a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$2ecc",
+      "soun_id": 51,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002ecc  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002eac  3d7c00300006     move.w #$30, $6(a6)",
+          "002eb2  3d7c00040004     move.w #$4, $4(a6)",
+          "002eb8  600003da         bra.w $3294",
+          "002ebc  342e0006         move.w $6(a6), d2",
+          "002ec0  0242000f         andi.w #$f, d2",
+          "002ec4  660c             bne.b $2ed2",
+          "002ec6  3f00             move.w d0, -(a7)",
+          "002ec8  303c0033         move.w #$33, d0",
+          "002ed0  301f             move.w (a7)+, d0",
+          "002ed2  536e0006         subq.w #$1, $6(a6)",
+          "002ed6  6e0003bc         bgt.w $3294",
+          "002eda  3d7c00080004     move.w #$8, $4(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$2ee6",
+      "soun_id": 51,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002ee6  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002ec8  303c0033         move.w #$33, d0",
+          "002ecc  4ead0052         jsr $52(a5)",
+          "002ed0  301f             move.w (a7)+, d0",
+          "002ed2  536e0006         subq.w #$1, $6(a6)",
+          "002ed6  6e0003bc         bgt.w $3294",
+          "002eda  3d7c00080004     move.w #$8, $4(a6)",
+          "002ee0  3f00             move.w d0, -(a7)",
+          "002ee2  303c0033         move.w #$33, d0",
+          "002eea  301f             move.w (a7)+, d0",
+          "002eec  266dff7a         movea.l -$86(a5), a3",
+          "002ef0  3a2b0016         move.w $16(a3), d5",
+          "002ef4  04450024         subi.w #$24, d5"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$2fbe",
+      "soun_id": 51,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002fbe  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002f9c  303c0063         move.w #$63, d0",
+          "002fa0  4ead005a         jsr $5a(a5)",
+          "002fa4  301f             move.w (a7)+, d0",
+          "002fa6  377c0032001a     move.w #$32, $1a(a3)",
+          "002fac  377c00100034     move.w #$10, $34(a3)",
+          "002fb2  3d7c000c0004     move.w #$c, $4(a6)",
+          "002fb8  3f00             move.w d0, -(a7)",
+          "002fba  303c0033         move.w #$33, d0",
+          "002fc2  301f             move.w (a7)+, d0",
+          "002fc4  6000009a         bra.w $3060",
+          "002fc8  0c6b000d001a     cmpi.w #$d, $1a(a3)",
+          "002fce  67000038         beq.w $3008"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$2ffe",
+      "soun_id": 51,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "002ffe  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "002fdc  303c0063         move.w #$63, d0",
+          "002fe0  4ead005a         jsr $5a(a5)",
+          "002fe4  301f             move.w (a7)+, d0",
+          "002fe6  377c0032001a     move.w #$32, $1a(a3)",
+          "002fec  377c00100034     move.w #$10, $34(a3)",
+          "002ff2  3d7c00140004     move.w #$14, $4(a6)",
+          "002ff8  3f00             move.w d0, -(a7)",
+          "002ffa  303c0033         move.w #$33, d0",
+          "003002  301f             move.w (a7)+, d0",
+          "003004  600000e4         bra.w $30ea",
+          "003008  3d7c00100004     move.w #$10, $4(a6)",
+          "00300e  6000016e         bra.w $317e"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$3056",
+      "soun_id": 30,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003056  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003038  6722             beq.b $305c",
+          "00303a  42a80008         clr.l $8(a0)",
+          "00303e  3d7c00180004     move.w #$18, $4(a6)",
+          "003044  426e0006         clr.w $6(a6)",
+          "003048  303c0024         move.w #$24, d0",
+          "00304c  4eba2bc6         jsr $5c14(pc)",
+          "003050  3f00             move.w d0, -(a7)",
+          "003052  303c001e         move.w #$1e, d0",
+          "00305a  301f             move.w (a7)+, d0",
+          "00305c  60000236         bra.w $3294",
+          "003060  206dffa8         movea.l -$58(a5), a0",
+          "003064  302e000c         move.w $c(a6), d0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$30e0",
+      "soun_id": 51,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0030e0  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0030c0  06400021         addi.w #$21, d0",
+          "0030c4  37400014         move.w d0, $14(a3)",
+          "0030c8  b06e0012         cmp.w $12(a6), d0",
+          "0030cc  6d0001c6         blt.w $3294",
+          "0030d0  4ead01e2         jsr $1e2(a5)",
+          "0030d4  3d7c00100004     move.w #$10, $4(a6)",
+          "0030da  3f00             move.w d0, -(a7)",
+          "0030dc  303c0033         move.w #$33, d0",
+          "0030e4  301f             move.w (a7)+, d0",
+          "0030e6  600001ac         bra.w $3294",
+          "0030ea  206dffa8         movea.l -$58(a5), a0",
+          "0030ee  302e000c         move.w $c(a6), d0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$3388",
+      "soun_id": 37,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003388  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003372  5940             subq.w #$4, d0",
+          "003374  5941             subq.w #$4, d1",
+          "003376  4ebacc88         jsr $0(pc)",
+          "00337a  4e75             rts ",
+          "00337c  536e0022         subq.w #$1, $22(a6)",
+          "003380  6f2a             ble.b $33ac",
+          "003382  3f00             move.w d0, -(a7)",
+          "003384  303c0025         move.w #$25, d0",
+          "00338c  301f             move.w (a7)+, d0",
+          "00338e  44ae0010         neg.l $10(a6)",
+          "003392  60b8             bra.b $334c",
+          "003394  536e0022         subq.w #$1, $22(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$33a0",
+      "soun_id": 37,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0033a0  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003388  4ead0052         jsr $52(a5)",
+          "00338c  301f             move.w (a7)+, d0",
+          "00338e  44ae0010         neg.l $10(a6)",
+          "003392  60b8             bra.b $334c",
+          "003394  536e0022         subq.w #$1, $22(a6)",
+          "003398  6f12             ble.b $33ac",
+          "00339a  3f00             move.w d0, -(a7)",
+          "00339c  303c0025         move.w #$25, d0",
+          "0033a4  301f             move.w (a7)+, d0",
+          "0033a6  44ae0014         neg.l $14(a6)",
+          "0033aa  60a0             bra.b $334c",
+          "0033ac  266e0004         movea.l $4(a6), a3"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$3600",
+      "soun_id": 33,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003600  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0035e2  60000104         bra.w $36e8",
+          "0035e6  3743000c         move.w d3, $c(a3)",
+          "0035ea  600000fc         bra.w $36e8",
+          "0035ee  49fa00d0         lea.l $36c0(pc), a4",
+          "0035f2  0c6b00040006     cmpi.w #$4, $6(a3)",
+          "0035f8  660c             bne.b $3606",
+          "0035fa  3f00             move.w d0, -(a7)",
+          "0035fc  303c0021         move.w #$21, d0",
+          "003604  301f             move.w (a7)+, d0",
+          "003606  60000056         bra.w $365e",
+          "00360a  49fa00c4         lea.l $36d0(pc), a4",
+          "00360e  0c6b00040006     cmpi.w #$4, $6(a3)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$361c",
+      "soun_id": 33,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00361c  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003600  4ead0052         jsr $52(a5)",
+          "003604  301f             move.w (a7)+, d0",
+          "003606  60000056         bra.w $365e",
+          "00360a  49fa00c4         lea.l $36d0(pc), a4",
+          "00360e  0c6b00040006     cmpi.w #$4, $6(a3)",
+          "003614  660c             bne.b $3622",
+          "003616  3f00             move.w d0, -(a7)",
+          "003618  303c0021         move.w #$21, d0",
+          "003620  301f             move.w (a7)+, d0",
+          "003622  0c6b00080006     cmpi.w #$8, $6(a3)",
+          "003628  66000034         bne.w $365e",
+          "00362c  382b000a         move.w $a(a3), d4"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$3658",
+      "soun_id": 86,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003658  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003636  047203e84000     subi.w #$3e8, (a2, d4.w)",
+          "00363c  047203e84002     subi.w #$3e8, $2(a2, d4.w)",
+          "003642  6000001a         bra.w $365e",
+          "003646  49fa005c         lea.l $36a4(pc), a4",
+          "00364a  0c6b00040006     cmpi.w #$4, $6(a3)",
+          "003650  660c             bne.b $365e",
+          "003652  3f00             move.w d0, -(a7)",
+          "003654  303c0056         move.w #$56, d0",
+          "00365c  301f             move.w (a7)+, d0",
+          "00365e  d8eb0006         adda.w $6(a3), a4",
+          "003662  586b0006         addq.w #$4, $6(a3)",
+          "003666  161c             move.b (a4)+, d3"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$3a6a",
+      "soun_id": 41,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003a6a  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003a54  0100             btst.l d0, d0",
+          "003a56  4a6e000c         tst.w $c(a6)",
+          "003a5a  6728             beq.b $3a84",
+          "003a5c  6d14             blt.b $3a72",
+          "003a5e  536e000c         subq.w #$1, $c(a6)",
+          "003a62  6e20             bgt.b $3a84",
+          "003a64  3f00             move.w d0, -(a7)",
+          "003a66  303c0029         move.w #$29, d0",
+          "003a6e  301f             move.w (a7)+, d0",
+          "003a70  6012             bra.b $3a84",
+          "003a72  526e000c         addq.w #$1, $c(a6)",
+          "003a76  6d0c             blt.b $3a84"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$3a7e",
+      "soun_id": 40,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003a7e  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003a66  303c0029         move.w #$29, d0",
+          "003a6a  4ead0052         jsr $52(a5)",
+          "003a6e  301f             move.w (a7)+, d0",
+          "003a70  6012             bra.b $3a84",
+          "003a72  526e000c         addq.w #$1, $c(a6)",
+          "003a76  6d0c             blt.b $3a84",
+          "003a78  3f00             move.w d0, -(a7)",
+          "003a7a  303c0028         move.w #$28, d0",
+          "003a82  301f             move.w (a7)+, d0",
+          "003a84  122dfc66         move.b -$39a(a5), d1",
+          "003a88  6762             beq.b $3aec",
+          "003a8a  422dfc66         clr.b -$39a(a5)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$3d14",
+      "soun_id": 35,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003d14  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003cfa  0c7200164004     cmpi.w #$16, $4(a2, d4.w)",
+          "003d00  673a             beq.b $3d3c",
+          "003d02  04850001fffe     subi.l #$1fffe, d5",
+          "003d08  6e04             bgt.b $3d0e",
+          "003d0a  7a00             moveq #$0, d5",
+          "003d0c  600e             bra.b $3d1c",
+          "003d0e  3f00             move.w d0, -(a7)",
+          "003d10  303c0023         move.w #$23, d0",
+          "003d18  301f             move.w (a7)+, d0",
+          "003d1a  5943             subq.w #$4, d3",
+          "003d1c  4485             neg.l d5",
+          "003d1e  2d450018         move.l d5, $18(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$3d54",
+      "soun_id": 86,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003d54  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003d3a  60e6             bra.b $3d22",
+          "003d3c  3d7c0001001c     move.w #$1, $1c(a6)",
+          "003d42  426e0012         clr.w $12(a6)",
+          "003d46  60da             bra.b $3d22",
+          "003d48  342e0012         move.w $12(a6), d2",
+          "003d4c  660c             bne.b $3d5a",
+          "003d4e  3f00             move.w d0, -(a7)",
+          "003d50  303c0056         move.w #$56, d0",
+          "003d58  301f             move.w (a7)+, d0",
+          "003d5a  206dffa8         movea.l -$58(a5), a0",
+          "003d5e  226dfd1c         movea.l -$2e4(a5), a1",
+          "003d62  06410014         addi.w #$14, d1"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$3eb4",
+      "soun_id": 52,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003eb4  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003e96  0c420029         cmpi.w #$29, d2",
+          "003e9a  6620             bne.b $3ebc",
+          "003e9c  286dff7a         movea.l -$86(a5), a4",
+          "003ea0  397c00040034     move.w #$4, $34(a4)",
+          "003ea6  426c0036         clr.w $36(a4)",
+          "003eaa  526e0002         addq.w #$1, $2(a6)",
+          "003eae  3f00             move.w d0, -(a7)",
+          "003eb0  303c0034         move.w #$34, d0",
+          "003eb8  301f             move.w (a7)+, d0",
+          "003eba  60bc             bra.b $3e78",
+          "003ebc  0c42002a         cmpi.w #$2a, d2",
+          "003ec0  663c             bne.b $3efe"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$3ef0",
+      "soun_id": 34,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003ef0  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003ed0  226dfc5e         movea.l -$3a2(a5), a1",
+          "003ed4  4ebac12a         jsr $0(pc)",
+          "003ed8  4c9f0003         movem.w (a7)+, d0-d1",
+          "003edc  286dff7a         movea.l -$86(a5), a4",
+          "003ee0  397c000c0034     move.w #$c, $34(a4)",
+          "003ee6  426c0036         clr.w $36(a4)",
+          "003eea  3f00             move.w d0, -(a7)",
+          "003eec  303c0022         move.w #$22, d0",
+          "003ef4  301f             move.w (a7)+, d0",
+          "003ef6  526e0002         addq.w #$1, $2(a6)",
+          "003efa  6000ff7c         bra.w $3e78",
+          "003efe  0c42002b         cmpi.w #$2b, d2"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$3f0a",
+      "soun_id": 49,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "003f0a  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "003ef0  4ead0052         jsr $52(a5)",
+          "003ef4  301f             move.w (a7)+, d0",
+          "003ef6  526e0002         addq.w #$1, $2(a6)",
+          "003efa  6000ff7c         bra.w $3e78",
+          "003efe  0c42002b         cmpi.w #$2b, d2",
+          "003f02  6614             bne.b $3f18",
+          "003f04  3f00             move.w d0, -(a7)",
+          "003f06  303c0031         move.w #$31, d0",
+          "003f0e  301f             move.w (a7)+, d0",
+          "003f10  526e0002         addq.w #$1, $2(a6)",
+          "003f14  6000ff62         bra.w $3e78",
+          "003f18  0c420006         cmpi.w #$6, d2"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$4386",
+      "soun_id": 9,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "004386  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "00436a  48e7c080         movem.l d0-d1/a0, -(a7)",
+          "00436e  7800             moveq #$0, d4",
+          "004370  43edfe64         lea.l -$19c(a5), a1",
+          "004374  206dfd50         movea.l -$2b0(a5), a0",
+          "004378  4ead01fa         jsr $1fa(a5)",
+          "00437c  4cdf0103         movem.l (a7)+, d0-d1/a0",
+          "004380  3f00             move.w d0, -(a7)",
+          "004382  303c0009         move.w #$9, d0",
+          "00438a  301f             move.w (a7)+, d0",
+          "00438c  343c0002         move.w #$2, d2",
+          "004390  4e71             nop ",
+          "004392  4cdf0800         movem.l (a7)+, a3"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$462c",
+      "soun_id": 43,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00462c  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "00460c  673c             beq.b $464a",
+          "00460e  42a80008         clr.l $8(a0)",
+          "004612  41ee001c         lea.l $1c(a6), a0",
+          "004616  2e3c04000000     move.l #$4000000, d7",
+          "00461c  4eba135e         jsr $597c(pc)",
+          "004620  3d7c00040020     move.w #$4, $20(a6)",
+          "004626  3f00             move.w d0, -(a7)",
+          "004628  303c002b         move.w #$2b, d0",
+          "004630  301f             move.w (a7)+, d0",
+          "004632  303c0012         move.w #$12, d0",
+          "004636  4eba15dc         jsr $5c14(pc)",
+          "00463a  41fafadc         lea.l $4118(pc), a0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$4926",
+      "soun_id": 46,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "004926  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "00490a  41d6             lea.l (a6), a0",
+          "00490c  4eba106e         jsr $597c(pc)",
+          "004910  0c6e00020022     cmpi.w #$2, $22(a6)",
+          "004916  6716             beq.b $492e",
+          "004918  41ee001c         lea.l $1c(a6), a0",
+          "00491c  4eba105e         jsr $597c(pc)",
+          "004920  3f00             move.w d0, -(a7)",
+          "004922  303c002e         move.w #$2e, d0",
+          "00492a  301f             move.w (a7)+, d0",
+          "00492c  600c             bra.b $493a",
+          "00492e  3f00             move.w d0, -(a7)",
+          "004930  303c002d         move.w #$2d, d0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$4934",
+      "soun_id": 45,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "004934  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "00491c  4eba105e         jsr $597c(pc)",
+          "004920  3f00             move.w d0, -(a7)",
+          "004922  303c002e         move.w #$2e, d0",
+          "004926  4ead0052         jsr $52(a5)",
+          "00492a  301f             move.w (a7)+, d0",
+          "00492c  600c             bra.b $493a",
+          "00492e  3f00             move.w d0, -(a7)",
+          "004930  303c002d         move.w #$2d, d0",
+          "004938  301f             move.w (a7)+, d0",
+          "00493a  7010             moveq #$10, d0",
+          "00493c  4eba12d6         jsr $5c14(pc)",
+          "004940  3d7c00020020     move.w #$2, $20(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$49fc",
+      "soun_id": 64,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0049fc  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "0049e2  4a6e0024         tst.w $24(a6)",
+          "0049e6  6706             beq.b $49ee",
+          "0049e8  41fa0256         lea.l $4c40(pc), a0",
+          "0049ec  6004             bra.b $49f2",
+          "0049ee  41fa0270         lea.l $4c60(pc), a0",
+          "0049f2  343c0001         move.w #$1, d2",
+          "0049f6  3f00             move.w d0, -(a7)",
+          "0049f8  303c0040         move.w #$40, d0",
+          "004a00  301f             move.w (a7)+, d0",
+          "004a02  302e0020         move.w $20(a6), d0",
+          "004a06  322e0022         move.w $22(a6), d1",
+          "004a0a  3d7c0002002e     move.w #$2, $2e(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$4a64",
+      "soun_id": 63,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "004a64  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "004a44  41fa033a         lea.l $4d80(pc), a0",
+          "004a48  343c0003         move.w #$3, d2",
+          "004a4c  600001f0         bra.w $4c3e",
+          "004a50  41fa022e         lea.l $4c80(pc), a0",
+          "004a54  343c0001         move.w #$1, d2",
+          "004a58  3d7c0006002e     move.w #$6, $2e(a6)",
+          "004a5e  3f00             move.w d0, -(a7)",
+          "004a60  303c003f         move.w #$3f, d0",
+          "004a68  301f             move.w (a7)+, d0",
+          "004a6a  600001d2         bra.w $4c3e",
+          "004a6e  41fa0218         lea.l $4c88(pc), a0",
+          "004a72  266dff7a         movea.l -$86(a5), a3"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$4c1c",
+      "soun_id": 61,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "004c1c  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "004bfe  0441001e         subi.w #$1e, d1",
+          "004c02  41fa01a0         lea.l $4da4(pc), a0",
+          "004c06  343c0001         move.w #$1, d2",
+          "004c0a  60000032         bra.w $4c3e",
+          "004c0e  41fa01a0         lea.l $4db0(pc), a0",
+          "004c12  343c0001         move.w #$1, d2",
+          "004c16  3f00             move.w d0, -(a7)",
+          "004c18  303c003d         move.w #$3d, d0",
+          "004c20  301f             move.w (a7)+, d0",
+          "004c22  426e002e         clr.w $2e(a6)",
+          "004c26  48e7e0e0         movem.l d0-d2/a0-a2, -(a7)",
+          "004c2a  4eba103c         jsr $5c68(pc)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$4e02",
+      "soun_id": 62,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "004e02  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "004de2  42a80008         clr.l $8(a0)",
+          "004de6  41ee001c         lea.l $1c(a6), a0",
+          "004dea  4eba0b90         jsr $597c(pc)",
+          "004dee  303c0014         move.w #$14, d0",
+          "004df2  4eba0e20         jsr $5c14(pc)",
+          "004df6  3d7c0003002e     move.w #$3, $2e(a6)",
+          "004dfc  3f00             move.w d0, -(a7)",
+          "004dfe  303c003e         move.w #$3e, d0",
+          "004e06  301f             move.w (a7)+, d0",
+          "004e08  41faf30e         lea.l $4118(pc), a0",
+          "004e0c  2d480004         move.l a0, $4(a6)",
+          "004e10  426e0008         clr.w $8(a6)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$54b4",
+      "soun_id": 34,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "0054b4  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "005498  4efa0138         jmp $55d2(pc)",
+          "00549c  4efa01e6         jmp $5684(pc)",
+          "0054a0  536e0006         subq.w #$1, $6(a6)",
+          "0054a4  6e14             bgt.b $54ba",
+          "0054a6  3cbc0001         move.w #$1, (a6)",
+          "0054aa  426e0006         clr.w $6(a6)",
+          "0054ae  3f00             move.w d0, -(a7)",
+          "0054b0  303c0022         move.w #$22, d0",
+          "0054b8  301f             move.w (a7)+, d0",
+          "0054ba  d06e0008         add.w $8(a6), d0",
+          "0054be  0c400032         cmpi.w #$32, d0",
+          "0054c2  6e06             bgt.b $54ca"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$5628",
+      "soun_id": 34,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "005628  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "005610  6e20             bgt.b $5632",
+          "005612  06470032         addi.w #$32, d7",
+          "005616  be40             cmp.w d0, d7",
+          "005618  6d18             blt.b $5632",
+          "00561a  3cbc0001         move.w #$1, (a6)",
+          "00561e  426e0006         clr.w $6(a6)",
+          "005622  3f00             move.w d0, -(a7)",
+          "005624  303c0022         move.w #$22, d0",
+          "00562c  301f             move.w (a7)+, d0",
+          "00562e  6000fece         bra.w $54fe",
+          "005632  3d7c00320006     move.w #$32, $6(a6)",
+          "005638  6000fe66         bra.w $54a0"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$565e",
+      "soun_id": 34,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "00565e  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "005646  6e32             bgt.b $567a",
+          "005648  06470032         addi.w #$32, d7",
+          "00564c  be40             cmp.w d0, d7",
+          "00564e  6d2a             blt.b $567a",
+          "005650  3cbc0003         move.w #$3, (a6)",
+          "005654  426e0006         clr.w $6(a6)",
+          "005658  3f00             move.w d0, -(a7)",
+          "00565a  303c0022         move.w #$22, d0",
+          "005662  301f             move.w (a7)+, d0",
+          "005664  226dff7a         movea.l -$86(a5), a1",
+          "005668  5049             addq.w #$8, a1",
+          "00566a  337c0010002c     move.w #$10, $2c(a1)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$5ac8",
+      "soun_id": 8,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "005ac8  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "005aae  2b680044fda4     move.l $44(a0), -$25c(a5)",
+          "005ab4  4e75             rts ",
+          "005ab6  4a6e0002         tst.w $2(a6)",
+          "005aba  6f12             ble.b $5ace",
+          "005abc  536e0002         subq.w #$1, $2(a6)",
+          "005ac0  660c             bne.b $5ace",
+          "005ac2  3f00             move.w d0, -(a7)",
+          "005ac4  303c0008         move.w #$8, d0",
+          "005acc  301f             move.w (a7)+, d0",
+          "005ace  61000008         bsr.w $5ad8",
+          "005ad2  610000a2         bsr.w $5b76",
+          "005ad6  4e75             rts "
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 4,
+      "offset": "$5b2e",
+      "soun_id": 8,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "005b2e  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "005b10  51c9fffc         dbra d1, $5b0e",
+          "005b14  b0adfda4         cmp.l -$25c(a5), d0",
+          "005b18  6cda             bge.b $5af4",
+          "005b1a  4ebaf570         jsr $508c(pc)",
+          "005b1e  202dfdba         move.l -$246(a5), d0",
+          "005b22  3d7c000d0002     move.w #$d, $2(a6)",
+          "005b28  3f00             move.w d0, -(a7)",
+          "005b2a  303c0008         move.w #$8, d0",
+          "005b32  301f             move.w (a7)+, d0",
+          "005b34  41edfdac         lea.l -$254(a5), a0",
+          "005b38  20fc0acacaca     move.l #$acacaca, (a0)+",
+          "005b3e  20fccacacaca     move.l #$cacacaca, (a0)+"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 5,
+      "offset": "$d86",
+      "soun_id": 95,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "000d86  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "000d6c  41fa2902         lea.l $3670(pc), a0",
+          "000d70  43fa2cca         lea.l $3a3c(pc), a1",
+          "000d74  93c8             suba.l a0, a1",
+          "000d76  3209             move.w a1, d1",
+          "000d78  303c0006         move.w #$6, d0",
+          "000d7c  4ead0372         jsr $372(a5)",
+          "000d80  3f00             move.w d0, -(a7)",
+          "000d82  303c005f         move.w #$5f, d0",
+          "000d8a  301f             move.w (a7)+, d0",
+          "000d8c  4ead033a         jsr $33a(a5)",
+          "000d90  4e75             rts ",
+          "000d92  01f900fc019c     bset.b d0, $fc019c.l"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 5,
+      "offset": "$1eac",
+      "soun_id": 29,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001eac  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001e96  6e08             bgt.b $1ea0",
+          "001e98  5342             subq.w #$1, d2",
+          "001e9a  4ead0212         jsr $212(a5)",
+          "001e9e  6044             bra.b $1ee4",
+          "001ea0  0c420014         cmpi.w #$14, d2",
+          "001ea4  660c             bne.b $1eb2",
+          "001ea6  3f00             move.w d0, -(a7)",
+          "001ea8  303c001d         move.w #$1d, d0",
+          "001eb0  301f             move.w (a7)+, d0",
+          "001eb2  6e14             bgt.b $1ec8",
+          "001eb4  343c0004         move.w #$4, d2",
+          "001eb8  4ead0212         jsr $212(a5)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 5,
+      "offset": "$1ef6",
+      "soun_id": 29,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001ef6  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001eda  426dfce4         clr.w -$31c(a5)",
+          "001ede  426dfcc6         clr.w -$33a(a5)",
+          "001ee2  60a6             bra.b $1e8a",
+          "001ee4  526dfce4         addq.w #$1, -$31c(a5)",
+          "001ee8  6014             bra.b $1efe",
+          "001eea  3b7c0001fce4     move.w #$1, -$31c(a5)",
+          "001ef0  3f00             move.w d0, -(a7)",
+          "001ef2  303c001d         move.w #$1d, d0",
+          "001efa  301f             move.w (a7)+, d0",
+          "001efc  608c             bra.b $1e8a",
+          "001efe  4e75             rts ",
+          "001f00  48e7c0c0         movem.l d0-d1/a0-a1, -(a7)"
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    },
+    {
+      "segment": 5,
+      "offset": "$1fc8",
+      "soun_id": 60,
+      "event": null,
+      "condition": null,
+      "confidence": "PROVEN",
+      "evidence": {
+        "call": "001fc8  4ead0052         jsr $52(a5)",
+        "surrounding_instructions": [
+          "001fac  226dfe5c         movea.l -$1a4(a5), a1",
+          "001fb0  206dffa8         movea.l -$58(a5), a0",
+          "001fb4  302e0004         move.w $4(a6), d0",
+          "001fb8  322e0006         move.w $6(a6), d1",
+          "001fbc  4ead0212         jsr $212(a5)",
+          "001fc0  6012             bra.b $1fd4",
+          "001fc2  3f00             move.w d0, -(a7)",
+          "001fc4  303c003c         move.w #$3c, d0",
+          "001fcc  301f             move.w (a7)+, d0",
+          "001fce  42aefffc         clr.l -$4(a6)",
+          "001fd2  4e71             nop ",
+          "001fd4  4e75             rts "
+        ]
+      },
+      "notes": "Immediate D0 assignment directly before call; any unspecified event and reachability are unresolved."
+    }
+  ]
+}

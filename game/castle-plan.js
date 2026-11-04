@@ -4,6 +4,7 @@
    tables are decoded from Dark Castle's CODE 5 into archive/dc/castle-data.js.
    The placements below are read from the same room routines (the numbers are the
    routine's own arguments), with `min` the lowest difficulty that spawns them.
+   Duncan's jumps and his walk, ladder and fall rates are the hero code's own.
    How each creature behaves is rebuilt for this edition from the disk's manual
    cards, because the 1986 game logic is not reused. */
 (() => {

@@ -1,0 +1,24 @@
+{
+  "method": "CODE 2 $722-$732 reads the span kind at record offset $4, masks to eight bits, subtracts one and jumps to $73a + 8 * (kind - 1). Offsets below are CODE segment-body offsets. State dispatch is at CODE 2 $2a80-$2b6a. Meanings left null are not established by the slot alone.",
+  "kinds": {
+    "1": {"a": null, "confidence": "PROVEN", "evidence": "CODE 2 $73a clears state; the meaning of record offset $6 is not established for kind 1", "notes": "Some records contain a y-like value; its use is unresolved."},
+    "7": {"meaning": null, "state": 10, "confidence": "PROVEN", "evidence": "CODE 2 $76a-$770; state dispatch $2ac2"},
+    "15": {"meaning": null, "state": 17, "confidence": "PROVEN", "evidence": "CODE 2 $7aa-$7b0; state dispatch $2ade; handler $1994-$19e8 adds record a to x and can advance by record c"},
+    "17": {"meaning": null, "state": 22, "confidence": "PROVEN", "evidence": "CODE 2 $7ba-$7c0; state dispatch $2af2"},
+    "18": {"meaning": null, "state": 23, "confidence": "PROVEN", "evidence": "CODE 2 $7c2-$7c8; state dispatch $2af6"},
+    "19": {"meaning": null, "state": 30, "confidence": "PROVEN", "evidence": "CODE 2 $7ca-$7d0; state dispatch $2b12"},
+    "20": {"meaning": null, "state": 31, "confidence": "PROVEN", "evidence": "CODE 2 $7d2-$7d8; state dispatch $2b16"},
+    "21": {"meaning": null, "state": 32, "confidence": "PROVEN", "evidence": "CODE 2 $7da-$7e0; state dispatch $2b1a"},
+    "22": {"meaning": null, "state": null, "confidence": "PROVEN", "evidence": "CODE 2 $7e2 branches to $874, which calls sound $56 and jumps to $360", "notes": "A state is not assigned in the dispatch slot."},
+    "23": {"meaning": null, "state": 34, "confidence": "PROVEN", "evidence": "CODE 2 $7ea branches to $890, which sets state $22; state handler $2612-$267e", "notes": "Shield pickup hypothesis is unconfirmed. Handler tests input and record a, sets a to 1, and draws an animation."},
+    "24": {"meaning": null, "state": 35, "confidence": "PROVEN", "evidence": "CODE 2 $7f2-$7f8; state dispatch $2b26 to $22a0", "notes": "Fireball pickup hypothesis is unconfirmed."},
+    "25": {"meaning": null, "state": 36, "confidence": "PROVEN", "evidence": "CODE 2 $7fa-$800; state dispatch $2b2a"},
+    "28": {"meaning": null, "state": 38, "confidence": "PROVEN", "evidence": "CODE 2 $812-$818; state dispatch $2b32"},
+    "30": {"meaning": null, "state": null, "confidence": "PROVEN", "evidence": "CODE 2 $822 begins with a nop; subsequent bytes are zero-filled and do not establish a usable handler", "notes": "The purpose and validity of this slot are unresolved."},
+    "36": {"meaning": null, "state": 49, "confidence": "PROVEN", "evidence": "CODE 2 $852-$858; state dispatch $2b5e"},
+    "37": {"meaning": null, "state": 52, "confidence": "PROVEN", "evidence": "CODE 2 $85a-$860; state dispatch $2b6a"},
+    "38": {"meaning": null, "state": null, "confidence": "PROVEN", "evidence": "CODE 2 $862 branches to $8b0, testing hero field $a and selecting subsequent behavior"},
+    "39": {"meaning": null, "state": null, "confidence": "PROVEN", "evidence": "CODE 2 $86a branches to $8cc, testing hero field $a and selecting subsequent behavior"},
+    "40": {"meaning": null, "state": null, "confidence": "PROVEN", "evidence": "CODE 2 $872 returns immediately"}
+  }
+}

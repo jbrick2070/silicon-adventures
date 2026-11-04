@@ -72,11 +72,12 @@ def main():
             '| ICON and ICN# art | 18 | Keycaps, save icons and the sad castle in the game, the castle mark on its title bar, the sad Macintosh on a load failure, the barred Macintosh XL in Oddities. |',
             f"| Rooms in CODE 5 | 14 | Floors, stairs, ladders, ropes, exits, entries and moving platforms decoded, not redrawn. |",
             f"| GPTH paths | {dc_types[('Data A', 'GPTH')]} | The Great Hall door runs. |",
+            '| Jump tables in CODE 2 | 3 | Duncan\'s running, standing and downward jumps, row for row. Walk, ladder and fall rates come from the same code. The update rate is not proven, so game speed is judged. |',
             f"| SFTR tables | {dc_types[('Data A', 'SFTR')] + dc_types[('Data B', 'SFTR')]} | Decoded into `archive/dc/castle-data.js`. |",
             f"| Stbl score tables | {dc_types[('Data A', 'Stbl')]} | Decoded. Points in play follow the scoring card, PICT 20005. |",
             '| HISC, KDEF, DCAS | 3 | Opening high scores, key setup and the demo version note. |',
             '| DEMO recording | 1 | Not replayed. The Demo button drives the rebuilt game instead. |',
-            '| CODE | 10 | Read for data only. No 1986 logic is executed. |',
+            '| CODE | 10 | Read for data only. No 1986 logic is executed. `archive/dc/rooms/` holds an independent partial trace, where unresolved facts stay null. |',
             '| System, Finder | - | Apple\'s files. Preserved in the Disk Cabinet, outside the game. |',
             '', '### Reels by role', '']
     grouped = {}

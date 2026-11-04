@@ -6,7 +6,12 @@
   const root = typeof window !== 'undefined' ? window : globalThis;
   const WALL = new Set([6, 27]), KILL = 29, LADDER_TOP = 2, LADDER_FOOT = 3, EXIT = 5, STAIR_TOP = 9, STAIR_FOOT = 10,
     MOVER = 14, STEP = 16, PULL = 35, WIDE_ROPE = 40;
-  const WALK = 3.1, RUN_JUMP = 3.7, CLIMB = 2.1, GRAVITY = .62, HIGH_JUMP = -8.6, LONG_JUMP = -6.7, HERO_W = 32, HERO_H = 40;
+  // The hero code moves 8 pixels a walking update, 10 on a ladder, and falls 10 then 8 more each
+  // update (CODE 2 $2bf6, $e1e, $149a, $14c2). Those numbers are the disk's. Its update rate is
+  // not proven, so UPDATE is a judged pace: 2.5 of our ticks, or 12 updates a second.
+  const UPDATE = 2.5, WALK = 8 / UPDATE, LADDER = 10 / UPDATE, FALL_START = 10 / UPDATE, FALL_STEP = 8 / UPDATE / UPDATE;
+  // Rope climbs and rope leaps have not been traced, so these remain this edition's.
+  const ROPE_CLIMB = 2.1, ROPE_LEAP = 3.7, ROPE_GRAVITY = .62, FALL_LIMIT = 18, HARD_LANDING = 90, HERO_W = 32, HERO_H = 40;
   const random = seed => () => {
     seed = seed + 0x6D2B79F5 | 0;
     let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
@@ -260,9 +265,10 @@
       if (input.up && this.tryUp(span)) return;
       if (input.down && !jump && this.tryDown(span)) return;
       if (jump) {
-        hero.state = 'air'; hero.floor = null; this.say('jump');
-        if (input.down) { hero.vy = 1; hero.vx = side * 1.2; hero.drop = 4; }
-        else { hero.vy = side ? LONG_JUMP : HIGH_JUMP; hero.vx = side * RUN_JUMP; }
+        // The disk picks one of three tables: moving, standing, or holding down.
+        const kind = side ? 'running' : input.down ? 'downward' : 'standing';
+        hero.state = 'air'; hero.floor = null; hero.vx = hero.vy = 0; hero.peak = hero.y;
+        hero.arc = {kind, rows: this.data.jumps[kind], t: 0}; this.say('jump');
         if (side) hero.face = side;
         return;
       }
@@ -285,7 +291,7 @@
     }
     leaveLedge(x) {
       const hero = this.hero;
-      hero.x = x; hero.state = 'air'; hero.floor = null; hero.vy = .5; hero.vx = hero.face * 1.4; hero.drop = 4;
+      hero.x = x; hero.state = 'air'; hero.floor = null; hero.vy = FALL_START; hero.vx = hero.face * 1.4; hero.drop = 4; hero.peak = hero.y;
     }
     takeExit(span, side) {
       // A span's far end leads out. The exit runs toward the nearer edge of the screen.
@@ -332,20 +338,20 @@
       hero.state = 'ladder'; hero.floor = null;
       hero.ladder = {top: top.y, bottom: foot.y, x: (foot.x0 + foot.x1) / 2, foot, topSpan: top};
       hero.x = hero.ladder.x; this.say('ladder');
-      hero.y += direction * CLIMB;
+      hero.y += direction * LADDER;
     }
     updateLadder(input) {
       const hero = this.hero, l = hero.ladder;
       const go = (input.down ? 1 : 0) - (input.up ? 1 : 0);
       if (!go) return;
-      hero.y += go * CLIMB;
+      hero.y += go * LADDER;
       if (this.tickCount % 9 === 0) this.say('ladder');
       if (hero.y <= l.top) this.landOn(l.topSpan.y, l.x);
       else if (hero.y >= l.bottom) this.landOn(l.bottom, l.x);
     }
     landOn(y, x) {
       const hero = this.hero;
-      hero.y = y; hero.x = x; hero.vx = hero.vy = 0; hero.ladder = hero.stairs = hero.rope = null;
+      hero.y = y; hero.x = x; hero.vx = hero.vy = 0; hero.ladder = hero.stairs = hero.rope = null; hero.arc = null; hero.light = false; hero.peak = null;
       hero.floor = this.floorAt(x, y) || this.floorAt(x, y, true);
       hero.state = hero.floor ? 'stand' : 'air';
     }
@@ -369,7 +375,7 @@
       if (hero.vy < -6) return false;
       for (const rope of this.room.ropes) {
         if (hero.x >= rope.x0 - 3 && hero.x <= rope.x1 + 3 && hero.y >= rope.top && hero.y <= rope.bottom) {
-          hero.state = 'rope'; hero.rope = rope; hero.x = (rope.x0 + rope.x1) / 2; hero.vx = hero.vy = 0; this.say('rope');
+          hero.state = 'rope'; hero.rope = rope; hero.x = (rope.x0 + rope.x1) / 2; hero.vx = hero.vy = 0; hero.arc = null; hero.light = false; this.say('rope');
           return true;
         }
       }
@@ -379,11 +385,11 @@
       const hero = this.hero, rope = hero.rope;
       const go = (input.down ? 1 : 0) - (input.up ? 1 : 0), side = (input.right ? 1 : 0) - (input.left ? 1 : 0);
       if (go) {
-        hero.y = Math.max(rope.top, Math.min(rope.bottom, hero.y + go * CLIMB));
+        hero.y = Math.max(rope.top, Math.min(rope.bottom, hero.y + go * ROPE_CLIMB));
         if (this.tickCount % 8 === 0) this.say('climb');
       }
       if (jump) {
-        hero.state = 'air'; hero.rope = null; hero.vy = side ? -4.6 : 0; hero.vx = side * RUN_JUMP; hero.drop = 10; hero.releaseAt = this.tickCount;
+        hero.state = 'air'; hero.rope = null; hero.vy = side ? -4.6 : 0; hero.vx = side * ROPE_LEAP; hero.drop = 10; hero.releaseAt = this.tickCount; hero.light = true; hero.peak = hero.y;
         if (side) hero.face = side;
         this.say('jump');
       }
@@ -393,7 +399,7 @@
       hero.x = tip.x - 24; hero.y = tip.y - 8;
       hero.face = Math.cos(rope.phase) > 0 ? 1 : -1;
       if (jump) {
-        hero.state = 'air'; hero.swing = null; rope.cool = 30; hero.vx = Math.cos(rope.phase) * 4.2; hero.vy = -3; this.say('jump');
+        hero.state = 'air'; hero.swing = null; rope.cool = 30; hero.vx = Math.cos(rope.phase) * 4.2; hero.vy = -3; hero.light = true; hero.peak = hero.y; this.say('jump');
         if (input.right) hero.vx = Math.abs(hero.vx) + 1; if (input.left) hero.vx = -Math.abs(hero.vx) - 1;
       }
     }
@@ -402,19 +408,31 @@
       return {x: e.x + Math.sin(angle) * 92, y: e.y + Math.cos(angle) * 92 + 10};
     }
     updateAir(input) {
-      const hero = this.hero;
-      const side = (input.right ? 1 : 0) - (input.left ? 1 : 0);
-      if (side) { hero.vx += side * .34; hero.vx = Math.max(-RUN_JUMP, Math.min(RUN_JUMP, hero.vx)); hero.face = side; }
-      const before = hero.y;
-      hero.vy = Math.min(9, hero.vy + GRAVITY);
-      hero.y += hero.vy; hero.x = Math.max(-4, Math.min(482, hero.x + hero.vx));
+      const hero = this.hero, before = hero.y;
+      if (hero.arc) {
+        // A jump is a fixed path on the disk: one table row per update, with no steering.
+        const arc = hero.arc, row = arc.rows[Math.floor(arc.t)];
+        hero.vy = row[1] / UPDATE;
+        hero.y += hero.vy; hero.x = Math.max(-4, Math.min(482, hero.x + hero.face * row[0] / UPDATE));
+        arc.t += 1 / UPDATE;
+        if (Math.floor(arc.t) >= arc.rows.length) { hero.arc = null; hero.vx = 0; hero.vy = FALL_START; }
+      } else if (hero.light) {
+        const side = (input.right ? 1 : 0) - (input.left ? 1 : 0);
+        if (side) { hero.vx = Math.max(-ROPE_LEAP, Math.min(ROPE_LEAP, hero.vx + side * .34)); hero.face = side; }
+        hero.vy = Math.min(9, hero.vy + ROPE_GRAVITY);
+        hero.y += hero.vy; hero.x = Math.max(-4, Math.min(482, hero.x + hero.vx));
+      } else {
+        hero.vy = Math.min(FALL_LIMIT, hero.vy + FALL_STEP);
+        hero.y += hero.vy; hero.x = Math.max(-4, Math.min(482, hero.x + hero.vx));
+      }
+      hero.peak = Math.min(hero.peak ?? hero.y, hero.y);
       if (hero.drop > 0) hero.drop--;
       if (!(hero.releaseAt && this.tickCount - hero.releaseAt < 10) && this.grabRope()) return;
       for (const e of this.entities) {
         if (e.type === 'swingRope' && !e.cool && !hero.swing) {
           const tip = this.swingTip(e);
           if (Math.abs(tip.x - (hero.x + 16)) < 22 && Math.abs(tip.y - hero.y) < 30) {
-            hero.state = 'swing'; hero.swing = e; this.say('swing'); return;
+            hero.state = 'swing'; hero.swing = e; hero.arc = null; hero.light = false; this.say('swing'); return;
           }
         }
       }
@@ -425,8 +443,8 @@
           if (seg) {
             const exit = seg.spans.find(s => s.kind === EXIT && hero.x >= s.x0 - 3 && hero.x <= s.x1 + 3 && s.x1 - s.x0 > 40);
             if (exit) { this.leaveRoom(exit.a, exit.b); return; }
-            const fell = hero.vy > 8.9;
-            hero.y = floor.y; hero.vy = hero.vx = 0; hero.floor = seg; hero.state = 'stand';
+            const fell = floor.y - (hero.peak ?? floor.y) >= HARD_LANDING;
+            hero.y = floor.y; hero.vy = hero.vx = 0; hero.floor = seg; hero.state = 'stand'; hero.arc = null; hero.light = false; hero.peak = null;
             hero.x = Math.max(seg.x0, Math.min(seg.x1, hero.x)); this.say('land');
             if (fell) { hero.safe = 8; hero.landed = this.tickCount; this.say('splat'); }
             return;

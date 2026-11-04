@@ -59,8 +59,8 @@ async () => {
     h.armUntil = core.tickCount + 20; await wait(100); h.flail = core.tickCount + 12; await wait(110); h.landed = core.tickCount; await wait(580);
     core.shots.push({x: 200, y: 299, vx: 0, vy: 0, w: 8, h: 8, fire: false, frame: 0, life: 12}, {x: 240, y: 200, vx: 0, vy: 0, w: 8, h: 8, fire: true, frame: 0, life: 12}); await wait(260);
     h.state = 'air'; h.floor = null; h.y = 40; h.vy = 8.9; h.vx = 1; await wait(120);
-    core.enter(3000, 0); core.entities = []; const k = core.hero; k.face = face; k.state = 'air'; k.floor = null; k.vx = 2; k.y = 100; k.vy = -8; await wait(40);
-    k.y = 60; k.vx = 0; k.vy = -8; await wait(40);
+    core.enter(3000, 0); core.entities = []; core.hero.x = 240; core.hero.face = face; keys.add(' '); await wait(70); keys.delete(' '); await wait(600);
+    core.hero.x = 240; const leap = face > 0 ? 'd' : 'a'; keys.add(leap); await wait(40); keys.add(' '); await wait(70); keys.delete(' '); await wait(600); keys.delete(leap);
     core.enter(1000, 0); core.entities = []; const r = core.hero, rope = core.room.ropes[0]; r.face = face;
     r.state = 'rope'; r.rope = rope; r.floor = null; r.y = (rope.top + rope.bottom) / 2; await wait(150); r.y = rope.top; await wait(110); r.y = rope.bottom; await wait(110);
     core.enter(1000, 0); core.entities = []; const s = core.hero; s.face = face; s.state = 'stairs'; s.floor = null;

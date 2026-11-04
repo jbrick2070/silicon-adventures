@@ -104,6 +104,17 @@ def path(data):
     return {'door': door, 'doorX': door_x, 'doorY': door_y, 'reels': reels, 'steps': steps}
 
 
+def jump_rows(code, at):
+    """One jump table: x step, y step, reel frame, y draw offset per update, ending at a negative x step."""
+    rows = []
+    while True:
+        row = list(struct.unpack_from('>4h', code, at))
+        if row[0] < 0:
+            return rows
+        rows.append(row)
+        at += 8
+
+
 def bcd(data):
     return [int(f'{value:04x}') for value in struct.unpack(f'>{len(data) // 2}H', data)]
 
@@ -140,6 +151,9 @@ def main():
         'rooms': rooms,
         'order': [room for room, _ in ROOMS],
         'paths': {rid: path(fork_a[('GPTH', rid)]) for rid in (10010, 10020, 10030, 10040)},
+        # Duncan's three jumps from the hero code, CODE 2. The manual card draws the same three arcs.
+        'jumps': {name: jump_rows(fork_a[('CODE', 2)][4:], at)
+                  for name, at in (('running', 0x13a4), ('standing', 0x13e4), ('downward', 0x1434))},
         'scores': [bcd(fork_a[('Stbl', i)]) for i in range(4)],
         'sharedSounds': {i: list(struct.unpack_from(f'>{signed(fork_a[("SFTR", i)], 0)}H', fork_a[('SFTR', i)], 2)) for i in (20, 21, 22)},
         'preferences': preferences(),

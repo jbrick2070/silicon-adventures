@@ -36,7 +36,7 @@ function explore(context, id, variant) {
   const seen = new Map(), reached = new Map(), queue = [], spots = [];
   const place = state => {
     const core = make(state.time), hero = core.hero;
-    Object.assign(hero, {x: state.x, y: state.y, vx: 0, vy: 0, state: 'stand', floor: null, rope: null, swing: null, ladder: null, stairs: null, safe: 0});
+    Object.assign(hero, {x: state.x, y: state.y, vx: 0, vy: 0, state: 'stand', floor: null, rope: null, swing: null, ladder: null, stairs: null, safe: 0, face: state.face || 1});
     if (state.rope) { hero.state = 'rope'; hero.rope = core.room.ropes[state.rope - 1]; }
     else if (state.swing !== undefined) {
       const e = core.entities[state.swing]; e.phase = state.phase; hero.state = 'swing'; hero.swing = e;
@@ -81,7 +81,8 @@ function explore(context, id, variant) {
       if (seg.moving) xs.add(hero.x);
       else {
         xs.add(seg.x0); xs.add(seg.x1);
-        for (let x = seg.x0; x <= seg.x1; x += 24) xs.add(x);
+        // A jump is a fixed path, so where it starts matters. The disk walks in 8 pixel steps.
+        for (let x = seg.x0; x <= seg.x1; x += 8) xs.add(x);
         for (const span of seg.spans) xs.add((span.x0 + span.x1) / 2);
       }
       for (const wait of movers ? WAITS : [0]) {
@@ -91,10 +92,12 @@ function explore(context, id, variant) {
             const walk = {left: side < 0, right: side > 0};
             run(here, () => walk, label + ' walk');
             for (const delay of [0, 2, 5]) run(here, t => ({...walk, jump: t === delay}), label + ' run-jump');
-            run(here, t => ({jump: t === 1, left: side < 0 && t > 2, right: side > 0 && t > 2}), label + ' jump-steer');
           }
-          run(here, t => ({jump: t === 1}), label + ' high-jump');
-          run(here, t => ({down: t === 1, jump: t === 1}), label + ' drop');
+          for (const face of [-1, 1]) {
+            const facing = {...here, face};
+            run(facing, t => ({jump: t === 1}), label + ' standing-jump');
+            run(facing, t => ({down: t === 1, jump: t === 1}), label + ' downward-jump');
+          }
           run(here, () => ({up: true}), label + ' up');
           run(here, () => ({down: true}), label + ' down');
         }

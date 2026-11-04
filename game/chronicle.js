@@ -111,7 +111,8 @@
     'The default keys are W S A D, Space, Q and E, recorded in the KDEF resource of Castle Preferences. Dark Castle shipped with WASD in 1986.',
     'Castle Preferences holds a recorded demo named Default, DEMO resource 8127.',
     'Sorry, Dark Castle cannot run because a Macintosh XL does not have the necessary hardware.',
-    'The string DEADFACEBEEFCAFE sits in the code at CODE 1. Its purpose is not proven.'
+    'The code compares the 16 bytes DEADFACEBEEFCAFE with memory at address $F80030, then acts on the result. Why it looks there is not proven.',
+    'The code builds file paths on a disk called Dark Castle 2. That looks like the name of a second floppy, not a hint of a sequel, though this is not proven.'
   ];
   const KIND_NAMES = {room: 'Rooms', edge: 'Edges of the world', speech: 'Spoken', event: 'Events', voice: 'Voices in battle',
     thing: 'Things', shell: 'The application', castle: 'Dark Castle application'};

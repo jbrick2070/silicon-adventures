@@ -78,20 +78,36 @@ test('standing, running and downward jumps follow the manual card', () => {
   core.hero.x = 200;
   core.tick({}); core.tick({jump: true});
   let top = core.hero.y;
-  for (let i = 0; i < 40; i++) { core.tick({}); top = Math.min(top, core.hero.y); }
-  assert.ok(264 - top > 50, 'standing jump height ' + (264 - top));
-  assert.equal(core.hero.x, 200);
+  for (let i = 0; i < 40 && core.hero.state === 'air'; i++) { core.tick({}); top = Math.min(top, core.hero.y); }
+  assert.ok(264 - top >= 40, 'standing jump height ' + (264 - top));
+  assert.ok(Math.abs(core.hero.x - 266) < 8, 'a standing jump leaps forward ' + core.hero.x);
   assert.equal(core.hero.y, 264);
-  const start = core.hero.x;
-  core.tick({right: true, jump: true});
-  for (let i = 0; i < 40 && core.hero.state === 'air'; i++) core.tick({right: true});
-  assert.ok(core.hero.x - start > 50, 'running jump distance ' + (core.hero.x - start));
-  core.enter(3000, 0); quiet(core);
   core.hero.x = 200;
-  core.landOn(202, 200);
+  core.tick({}); core.tick({right: true, jump: true});
+  top = core.hero.y;
+  for (let i = 0; i < 40 && core.hero.state === 'air'; i++) { core.tick({right: true}); top = Math.min(top, core.hero.y); }
+  assert.ok(Math.abs(core.hero.x - 310) < 10, 'running jump distance ' + (core.hero.x - 200));
+  assert.ok(264 - top <= 26, 'running jump stays low ' + (264 - top));
+  core.enter(3000, 0); quiet(core);
+  core.landOn(29, 216); core.hero.face = 1;
   core.tick({}); core.tick({down: true, jump: true});
-  for (let i = 0; i < 60 && core.hero.state !== 'stand'; i++) core.tick({});
-  assert.equal(core.hero.y, 264, 'downward jump drops one floor');
+  for (let i = 0; i < 80 && core.hero.state === 'air'; i++) core.tick({});
+  assert.equal(core.hero.y, 82, 'a downward jump off a ledge lands on the floor below');
+});
+
+test('the three jumps are the disk\u2019s tables', () => {
+  const {jumps} = make().data;
+  const across = rows => rows.reduce((sum, row) => sum + row[0], 0);
+  const lowest = rows => { let y = 0, top = 0; for (const row of rows) { y += row[1]; top = Math.min(top, y); } return top; };
+  assert.equal(across(jumps.running), 110);
+  assert.equal(lowest(jumps.running), -23);
+  assert.equal(across(jumps.standing), 66);
+  assert.equal(lowest(jumps.standing), -44);
+  assert.equal(across(jumps.downward), 65);
+  assert.equal(lowest(jumps.downward), -14);
+  assert.equal(jumps.running.length, 7);
+  assert.equal(jumps.standing.length, 9);
+  assert.equal(jumps.downward.length, 8);
 });
 
 test('a jump catches a rope, and climbing stops at the disk limits', () => {
