@@ -18,7 +18,10 @@ class PlateView {
     this.pose = {x:0,z:0,yaw:0,pitch:0};
     this.reset();
   }
-  reset() { Object.assign(this.pose,{x:0,z:0,yaw:0,pitch:0}); }
+  reset() {
+    this.unclippedPosition = null;
+    Object.assign(this.pose,{x:0,z:0,yaw:0,pitch:0});
+  }
   async decodeImage(url) {
     const img = new Image(); img.src = url; await img.decode();
     const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
@@ -89,7 +92,12 @@ class PlateView {
     this.rig = this.refreshed ? this.refreshRig : this.origRig;
     this.solids = this.refreshed ? this.refreshSolids : this.origSolids;
     this.rear = this.rig.rear ?? -1.75;
-    if (this.pose.z < this.rear + 0.14) this.pose.z = this.rear + 0.14;
+    // At a wall the other box can be smaller. Keep the requested position
+    // for the return toggle until the player actually walks or resets.
+    const {x, z} = this.unclippedPosition || this.pose;
+    this.pose.x = Math.max(this.rig.left + .14, Math.min(this.rig.right - .14, x));
+    this.pose.z = Math.max(this.rear + .14, Math.min(this.rig.back - .14, z));
+    this.unclippedPosition = this.pose.x === x && this.pose.z === z ? null : {x, z};
     this.env = this.rig.environment || (this.outsideByName ? 'open' : 'chamber');
     this.outside = this.env === 'open' || this.env === 'submerged';
     for (const s of this.sprites) {
@@ -118,7 +126,9 @@ class PlateView {
     const origRig = (meta.id === 7990 && window.AltarLayout) || window.RoomLayouts?.[meta.id] || fallbackRig;
     // Refreshed landmark rigs layer over the original rig and never replace separated originals.
     // Rooms without a rig of their own take the hand-checked environment table's box in refreshed mode.
-    const layout = window.RefreshRoomLayouts?.[meta.id] || (origRig === fallbackRig ? window.RefreshRigs?.[meta.id] : null);
+    const reviewed = origRig === fallbackRig && window.ReviewedRoomRigs?.[meta.id];
+    const layout = window.RefreshRoomLayouts?.[meta.id] || reviewed ||
+      (origRig === fallbackRig && window.RefreshRigs?.[meta.id]);
     const env = window.RefreshEnvironments?.[meta.id];
     const wide = env === 'open' || env === 'submerged';
     const envRig = env && origRig === fallbackRig
@@ -141,7 +151,7 @@ class PlateView {
     ]);
     if (serial !== this.serial) return;
     Object.assign(this, {
-      meta, source,
+      meta, source, axialPlateDepth: Boolean(reviewed),
       origRig, refreshRig,
       origClean, refreshClean,
       origSolids, refreshSolids: refreshSolids || origSolids,
@@ -189,6 +199,7 @@ class PlateView {
       if(!this.solidAt(ax,z,rad))x=ax;
       if(!this.solidAt(x,az,rad))z=az;
     }
+    if (x !== p.x || z !== p.z) this.unclippedPosition = null;
     p.x=x;p.z=z;
   }
   steps() {

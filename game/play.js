@@ -377,6 +377,7 @@
           if(typeof v.seen==='string'){visited=unpackSeen(v.seen);if(roomIndex.has(scene.id))visited[roomIndex.get(scene.id)]=1;rememberSeen();drawChart();}
           if(v.scene===scene.id && [v.x,v.z,v.yaw,v.pitch].every(Number.isFinite)) {
             Object.assign(view.pose,{x:v.x,z:v.z,yaw:v.yaw,pitch:v.pitch});
+            view.syncMode();
             wizardRead=!!v.read;shortcut=!!v.shortcut;
             if(v.auto)checkpoint={room:scene.name,hp:state.hp};
             controls();

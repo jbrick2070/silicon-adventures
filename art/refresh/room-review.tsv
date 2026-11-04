@@ -1,0 +1,150 @@
+id	name	environment	trace_rows	status	reason	contact_sheet
+1092	office	chamber	30	hand-authored	The desk hides part of the skirting at y=180. The exposed left wall base (4,214)-(44,180) projects to y=74 at the centre.	review/poses/1092.png
+22673	closet	chamber	14	hand-authored	The closet floor returns converge at (71,123). Fit the sloping rear seam at its centre crossing y=201 and the full-height corners at x=36 and x=215.	review/poses/22673.png
+9514	airlock	chamber	14	hand-authored	The upper and lower edges of the hatch bulkhead meet near y=137. The wall behind the ladder ends at y=227.	review/poses/9514.png
+3099	volcano top	open	9	left generic	The drawing looks down over the volcano lip. The far and near rims bound a hole at different depths and neither supplies a level horizon for the open box.	-
+14750	devil's sanctum	cave	9	hand-authored	The curved volcanic wall reaches y=153 between the pillars. Keep the 5 m cave depth at the middle of that seam.	review/poses/14750.png
+22733	web	cave	8	hand-authored	The nearly level middle course gives y=125 and the last floor tiles stop at y=166. The side feet at y=190 set the width before the right-hand opening.	review/poses/22733.png
+29467	lobby	chamber	8	hand-authored	The two wall bases converge at y=136. The far wall spans x=80..210 at y=190, behind the projecting stair wall.	review/poses/29467.png
+31514	queen	chamber	6	hand-authored	The curved floor begins at y=176 behind the throne and rises towards the centre. Use its central tangent at the 5 m chamber depth.	review/poses/31514.png
+23272	control	chamber	6	left generic	The console front and kneehole reach the frame edge. Its button deck and monitor give no floor contact from which to place the bulkhead.	-
+32726	sand room	chamber	5	hand-authored	The two tiled wall bases converge at y=119. The far row ends at y=195 below the narrow doorway.	review/poses/32726.png
+14057	Neptune's Throne	submerged	5	hand-authored	The distant sand meets the water at y=144..168 to either side of the throne. Place its feet near y=207 on the back plane.	review/poses/14057.png
+17872	court	open	5	hand-authored	The riveted face meets the courtyard paving at y=199. Retain level eye at y=140 and place this broad face 6.56 m out.	review/poses/17872.png
+17639	altar	cave	4	hand-authored	The rock banks on either side of the steps converge at y=117. Both banks reach the altar wall at y=184 behind the lowest tread.	review/poses/17639.png
+23147	chasm	open	4	left generic	The shelves at y=110 and y=230 lie on opposite sides of a chasm. A single ground plane through the far shelf would carry the near cliff face underfoot.	-
+29361	shell	cave	4	hand-authored	The two projecting rock feet point toward (155,123). Set the back at the low lip of the channel mouth around y=162.	review/poses/29361.png
+7747	grate	cave	4	hand-authored	The banks at either side of the grate meet the floor at y=153..155. Their outer feet converge near (149,126), placing the opening well beyond the zigzag on the floor.	review/poses/7747.png
+10472	helm room	chamber	4	hand-authored	The porthole corridor's two floor edges meet at y=137. The bases of the door jambs at x=142 and 213 set the far wall.	review/poses/10472.png
+5196	music room	chamber	3	left generic	Both wall bases meet at a single facing corner behind the drum. An axis-aligned far wall would split one of the two oblique walls.	-
+14688	salty bar	open	3	hand-authored	The tavern facade meets the ground near y=199 behind the porch. Keep the open walking depth and fit the rear contact there.	review/poses/14688.png
+10573	gambling	chamber	3	hand-authored	The visible wall and door end at y=173. The 123 px door opening is scaled to the renderer's 2.28 m passage height, clear of the table pedestal.	review/poses/10573.png
+22001	murals	cave	3	hand-authored	The outer mural-wall bases meet near (146,29). Their exposed feet set the width. The bend closes against the two dark panels at y=101..112.	review/poses/22001.png
+28593	sub deck	open	3	left generic	The hatch, deckhouse and conning tower fill the view from above. Their outlines lie on several decks and provide no exposed sea horizon.	-
+11672	mesa	open	3	left generic	The mesa summit breaks the sky at y=125 and slopes away to the right. The foreground and mesa overlap to the bottom without a visible foot or level desert horizon.	-
+4223	desert	open	3	hand-authored	The distant peaks meet the featureless sand at y=88. Set the foot of the mountain plane there at 24 m, above the foreground dune bands.	review/poses/4223.png
+23935	ram	open	3	hand-authored	The mountain range meets the flat desert near y=110. Place the range at 24 m and let the ground begin at its foot.	review/poses/23935.png
+9567	center	open	3	left generic	The canyon walls taper to an opening at the top of a sloping trail. The cactus and oblique lip supply no level cross-section through both walls.	-
+5896	sepulchre	chamber	3	left generic	At z=2.5 the narrower fit to the concealed floor folds the shrine's front around both side walls. The 5 m chamber box keeps the façade facing the viewer.	-
+5101	shrine	chamber	3	hand-authored	Exposed wall returns beside the upright shrine converge at y=140 and meet the far wall at y=237.	review/poses/5101.png
+2293	snake trail	open	3	left generic	The trail doubles back around the volcano above a drop. Its edges change level through the bend and give no common vanishing point on flat ground.	-
+9232	cell	chamber	2	left generic	The floor visible through the cell opening is behind the nearer wall. A box puts the jambs and the sloping inner floor on one plane.	-
+12795	well tunnel	cave	2	hand-authored	The path narrows into the rock turn at y=137. The solid angle between the nearest diverging wall feet sets the passage width. The unseen stretch beyond the bend stays deep.	review/poses/12795.png
+28995	lab	chamber	2	left generic	The bench legs end in front of the measured wall at y=179. At z=2.5 they splay across a fitted floor, while the chamber box keeps them upright.	-
+25308	art	chamber	2	left generic	The floor and ceiling wrap around a single oblique corner at x=149 behind the freestanding panels. No frontal back plane is visible.	-
+21083	great hall	chamber	2	left generic	The far arcade starts at x=217, to the right of the sightline. The steps and converging row of columns span several depths outside a centred box.	-
+28106	fountain	chamber	2	left generic	The arcade meets the floor at y=137, behind the raised fountain. The chamber box places its floor transition at the plinth and preserves the basin's height when approached.	-
+9691	jumping door	chamber	2	hand-authored	The same tiled shell as the sand room meets the floor at y=195. The flanking openings interrupt the side panels, leaving the tile baselines intact.	review/poses/9691.png
+7039	spikes	chamber	2	hand-authored	The outer floor tile seams converge at y=65 and reach the far wall at y=128. The dark square is an opening in the floor.	review/poses/7039.png
+20189	squasher	chamber	2	hand-authored	The tiled wall bases converge at y=108. They meet the back door row at y=159, above the foreground floor courses.	review/poses/20189.png
+24338	marsh	open	2	left generic	The far marsh abuts the canyon at y=180..182 near the centre, matching the open box junction at y=180. The boulders sit forward of that seam.	-
+5049	ledge	open	2	hand-authored	The open plain begins at y=114 to the left of the steep ledge. Carry that horizon round the turn, retaining the nearer cliff on the open walking box.	review/poses/5049.png
+1193	sea cliff	open	2	left generic	The right cliff feet descend from y=135 to y=240 while the beach slopes into a cleft at left. There is no level transect or visible sea horizon to replace the open box.	-
+13371	drinks	chamber	2	hand-authored	The chamber box keeps the bar front and stool legs vertical at z=2.5. Continue the exposed bar-room wall pattern (15) onto the unseen walls.	review/poses/13371.png
+15787	dock	open	2	hand-authored	The sea begins at a level y=84 behind the dock. Use that for eye level and a 24 m backdrop so the far water stays behind the pilings.	review/poses/15787.png
+27201	trench	submerged	2	left generic	The left shelf drops into a chasm at the centre. A single floor plane through either lip cuts the opposite bank, so keep the underwater box.	-
+23679	south sea	submerged	2	hand-authored	The open seabed horizon crosses y=152..164 beneath the shark. Set eye height there and carry the distant sand past the default 9.6 m.	review/poses/23679.png
+17595	wheel	submerged	2	left generic	The raised quarterdeck, wheel stand and main deck have separate elevations. Their sloping outlines yield incompatible depths. The long submerged hull box keeps the wheel ahead.	-
+20431	deck	submerged	2	hand-authored	The planking ends against the far rail at y=144. Keep the wreck's 9.6 m depth there and let the hatch stay within the deck.	review/poses/20431.png
+6364	hold	chamber	2	left generic	The view looks along exposed hull ribs and the central keel leaves the top of the drawing. None of the transverse beams is an upright far wall.	-
+26096	cannon	open	2	left generic	The cannonballs sit on the near shelf above the ravine. A second ledge crosses the opposite cliff and the drawing shows no continuous level floor between them.	-
+9841	hook	submerged	2	left generic	The rock path climbs around two overlapping faces. Its kelp and the zigzag in the sand mark neither a level horizon nor the end of the passage. Retain the deep underwater box.	-
+6048	crawl tunnel	cave	2	hand-authored	Successive rock-ring feet converge near (230,97). The last flat sill spans x=190..247 at y=134 and the nearest crown gives the low ceiling.	review/poses/6048.png
+290	sea room	submerged	2	left generic	The low sea arch opens onto a second slope. Its threshold is oblique and a through-tunnel has no visible back wall. Keep the underwater travel depth.	-
+25538	lair	cave	2	left generic	The hide covers the middle of the round lair. Neither visible wall shoulder continues behind it to a measurable flat end, so retain the cave depth.	-
+9709	computer	chamber	2	hand-authored	The computer feet stand at y=233 in front of the corridor wall at y=203. Keep the 5 m depth and seat the floor at the wall.	review/poses/9709.png
+11734	butte	open	2	left generic	The flat butte top at y=38 belongs to a summit. Its base disappears behind overlapping sand slopes, so the generic open depth avoids bringing the butte forward.	-
+23160	bunker	open	2	hand-authored	The stair foot interrupts the ground at y=170 while the outer cliff meets it near y=202. Place the rear entrance at the stair foot, retaining the open depth.	review/poses/23160.png
+28820	sphinx	open	2	hand-authored	The inside bases of the paws run from (74,198) and (269,199) towards the lower corners, converging at y=114. Fit the space between the paws at y=199.	review/poses/28820.png
+30856	phoenix	chamber	2	left generic	The mural wall ends at y=206, 11 px from the standard floor line. The short diagonal edges measure only the projecting jambs.	-
+27492	main road	open	2	hand-authored	The distant road cuts the sky at y=63 between the banks. Use the high visible horizon and put the far opening at landscape depth.	review/poses/27492.png
+21798	crossroads	open	2	left generic	The winding intersection rises to the top edge, with different bends on all three branches. No level skyline or straight paired road edges determine a new horizon.	-
+1186	cavern pool	cave	1	left generic	The lower arc is the rim of the pool. The rear rock ends much higher, while the bucket hangs free over the water. Keep the cave box across both levels.	-
+4874	landing	cave	1	hand-authored	Fit the 5 m cave depth to the rear rock at the stair landing (y=189), behind the projecting nosings. The lower tread at y=224 lies forward.	review/poses/4874.png
+23813	chasm view	open	1	left generic	The path ends high on the opposite ledge while the near trail crosses the bottom edge. Treating either as a common floor would bridge the depicted void.	-
+27293	corner	open	1	left generic	The doorway cuts into a bend in the cliff at y=203..214. Its floor and the cliff foot step across the image without parallel returns or an exposed horizon.	-
+19497	tree path	open	1	left generic	The road meets the forest at y=114 but the palm feet span y=140..274. The distant-road fit folded the trunks across the ground on approach. The open box keeps more trunk upright.	-
+18278	temple stairs	chamber	1	hand-authored	The lowest riser spans the plate and ends at y=190. Place that vertical face at chamber depth to keep the landing below the steps.	review/poses/18278.png
+25655	ball	chamber	1	hand-authored	Floor commands 4-7 repeat the squasher room's tiled shell at y=159. The ramps leading up to the suspended ball sit inside it.	review/poses/25655.png
+25936	slough	open	1	left generic	The watercourse and its low islands fill the slough. Every visible light-to-dark transition reaches a bank or a tree island, with no distant level waterline.	-
+3521	cliff road	open	1	hand-authored	The right-hand mountain range meets the distant plain on y=97. Fit its foot at 24 m to keep the plain beyond the foreground switchback.	review/poses/3521.png
+13946	dunes	open	1	hand-authored	The top of the uninterrupted sea band is level at y=118. Keep that eye line and put the far sea well beyond the grass and dune crests.	review/poses/13946.png
+23449	seaweed	submerged	1	left generic	The lumpy seabed rolls from y=139 to y=184 between two kelp beds. The broad underwater box keeps this saddle distant without imposing a straight rear wall through a plant.	-
+1776	meager room	chamber	1	hand-authored	The wall returns converge at y=130 and end at y=168 beside the small pedestal. The massive foreground posts hide the nearer corners.	review/poses/1776.png
+18468	submarine	open	1	left generic	The submarine's hull and tower cross an oblique patch of water. Their dark edges describe a floating vessel and provide no contact with the player's ground.	-
+9440	narrow pass	open	1	left generic	The pass wall recedes obliquely from the lower left edge and turns again at the far end. One visible wall and a sloping rim do not locate a level horizon.	-
+27689	trail	open	1	hand-authored	The far plain opens at y=134 beyond a dune. The track ends at y=153. Use the distant eye line and keep the end of the track near the 24 m ground junction.	review/poses/27689.png
+6591	ravine	open	1	hand-authored	The far desert first meets the sky at y=87 in the unobstructed upper part of the ravine. Keep that plain distant and let the ravine walls sit below it.	review/poses/6591.png
+29592	sphinx vista	open	1	left generic	The paws and dais project in front of a scalloped cliff base. The plinth edges belong to several heights and the white forecourt has no receding floor seam.	-
+12320	annex	chamber	1	hand-authored	The far rectangle ends at y=192. The right base and the continuation of the left base across the side passage converge at y=130.	review/poses/12320.png
+19939	cliff path	open	1	left generic	A near pillar covers the middle of the switchback. The path reappears across a rock face and hides both the far sky and a continuous ground contact.	-
+26748	camp	open	1	hand-authored	The road ends on the visible gate sill at y=114. Fit the rear ground contact to that sill at the open class depth.	review/poses/26748.png
+10919	post	open	1	left generic	The curved defensive wall changes height around the post, disappearing behind a projecting buttress. Its feet curve through the generic y=180 contact.	-
+29926	south road	open	1	hand-authored	The level foot of the distant volcano range is y=111. Put the range there at 24 m so the winding road and near cliff occupy the ground below.	review/poses/29926.png
+7083	aft	submerged	0	left generic	The roof and sunken stern overlap the distant sand. Their bases are at different elevations and the sand disappears under the hull. Keep the open wreck depth.	-
+964	alcove	cave	0	hand-authored	The alcove's flat inner rock foot spans x=165..209 at y=133. Centre the recess there and fit the side walls to the nearer buttress feet at (87,201) and (253,166).	review/poses/964.png
+24275	arena	open	0	left generic	The bases of the central arena bays run from y=174 to y=181 and splay away to either side. The open box ground contact at y=180 fits the middle bays.	-
+1725	back room	cave	0	left generic	The straw bed covers the far wall and part of the right corner. The doorway cuts through a nearer spur at left, so its feet and the bed legs cannot set one rear plane.	-
+15246	barracks	chamber	0	hand-authored	The wall is exposed on both sides of the bunk rack and ends at y=161. Retain chamber depth with the horizon fitted to that seam.	review/poses/15246.png
+12464	bow	submerged	0	hand-authored	The long edges of the raised bow converge near (182,104). The distant deck ends at y=135 below the bulwark cap, beyond the raised step at y=216.	review/poses/12464.png
+640	cabin	chamber	0	left generic	The keel and sloping hull panels have their apparent convergence above the picture. The cross-rib below the windows is not a standing-room wall base.	-
+21025	cage	cave	0	left generic	The dark rock corridor bends left out of sight. The wall polygons at the bend face across the route and give no closed rear seam. Retain the cave depth.	-
+327	castle road	open	0	hand-authored	The straight road sides converge near y=128 and meet the dark ridge at y=149. Those two rows give a distant road end of 18.43 m.	review/poses/327.png
+23064	catapult	open	0	hand-authored	The jagged ridge meets the open battlefield near y=88. Set the distant plane there at 24 m, behind the pile of shot.	review/poses/23064.png
+10525	cave painting	cave	0	left generic	The painted wall angles across the view and joins a second facet near x=240. The short level foot at the far right does not continue beneath the paintings. Keep the cave box.	-
+9497	cliff side	open	0	hand-authored	The mountain foot and distant plain meet at y=69 to the right of the cliff. Set that junction at 24 m, beyond the switchback.	review/poses/9497.png
+24601	coral reef	submerged	0	hand-authored	Between the two coral heads the sand skyline reaches y=128 at its crest and y=152 on the slope. Keep the reef distant with the eye between those rows.	review/poses/24601.png
+4658	dark woods	open	0	left generic	The shaded strip behind the trees is a clearing bounded by two irregular outlines. The drawing supplies no open sky or paired straight ground lines.	-
+17730	dead end	cave	0	hand-authored	The two inner wall feet converge at (176,159). The flat end spans x=125..217 at y=184. Set the width from the exposed rock edges.	review/poses/17730.png
+27740	desert vista	open	0	hand-authored	The viewer stands behind a parapet with its straight base at y=216. Keep the broad parapet upright there at the class eye level. The thin distant desert band above it cannot set walking depth.	review/poses/27740.png
+20641	drift	open	0	hand-authored	The distant light sand of the drift meets the sky at y=148 on the left. Put its horizon there and take the two sloping near dunes as ground relief.	review/poses/20641.png
+30680	fast water	open	0	hand-authored	The straight far edge of the stream is y=99 in the gap between the banks. Align the water horizon there and keep the head of the stream distant.	review/poses/30680.png
+22874	ferns	open	0	left generic	The strip of ferns lies between a sloping canyon wall and a black drop. Neither of its edges gives the level of a traversable plain or an exposed skyline.	-
+12242	fire room	cave	0	hand-authored	The far bank of rock is exposed at y=179..184 on both sides of the fire. Keep the 5 m cave depth there behind the crossed logs.	review/poses/12242.png
+999	flats	open	0	hand-authored	The featureless flats begin at a horizontal y=100 beneath the sun. Carry that horizon round the player and keep the painted distance 24 m out.	review/poses/999.png
+25054	gate	cave	0	left generic	The gate posts end at y=241 and the passage remains visible through them. The posts give their own depth but conceal the rear side walls, so keep the cave box.	-
+14435	grave	open	0	hand-authored	The path grows narrow where the distant ridge meets it at y=152. Fit a distant junction there, behind the near grave and two tree trunks.	review/poses/14435.png
+4980	gulley	open	0	left generic	Two near shelves overhang a lower gully. Their tops and the rear cliff foot land at different elevations, so no one floor plane follows all three.	-
+30474	hut	open	0	left generic	The far forest line is y=169 but the hut posts stand well in front. Projecting to that line folded the hut walls onto the ground at z=2.5. The open box keeps the nearer facade upright longer.	-
+25584	idols	open	0	left generic	The y=152 tree line runs behind the tall idols. Fitting it sent the bases of the idols and palms across the floor while walking. The class depth is the better compromise.	-
+9387	jungle clearing	open	0	hand-authored	The visible far tree line lies near y=148, and the path sweeps sideways away from it. Fit the remote ground junction there, leaving space behind the foreground palms.	review/poses/9387.png
+28370	jungle path	open	0	left generic	The distant tree line is at y=140 behind much nearer palms lining the path. The distant fit bent both rows of trunks at that seam on walking, so keep the nearer open box.	-
+26180	keeper	cave	0	hand-authored	The wall bases beside the cage converge near (192,120). The foot of the barred wall between x=136 and x=246 is visible at y=148.	review/poses/26180.png
+16121	lonely hall	cave	0	left generic	The left rock spur overlaps the curving floor while the right wall recedes round the bend. No common back plane closes the two sides. Retain the cave box.	-
+20168	magic hut	chamber	0	hand-authored	The chamber box keeps the two rounded urns upright. Extend the curved hut's woven walls with pattern 18 and the dark floor with pattern 7.	review/poses/20168.png
+17568	map room	chamber	0	left generic	The map, compass points and surround occupy a continuous frontal wall. No floor, ceiling or doorway supplies a scale or a horizon.	-
+5878	mellow pond	open	0	hand-authored	The far bank touches the centre of the water near y=100 beneath the opposite cliff. Keep the open walking depth and place the water-bank contact there.	review/poses/5878.png
+32624	mountain spring	open	0	left generic	The falls drop through two ledges before reaching the foreground pool. The small background mountain foot lies near the existing y=140 eye line and cannot locate a single ground plane.	-
+24035	nest	open	0	left generic	The nest fills the centre of the cliff ledge, concealing its footing. The rim belongs to the nest and the broken hills behind it have no level contact.	-
+25219	oasis	open	0	left generic	The pool rim, palm bases and irregular skyline mark distinct depths on rolling sand. None gives a level cross-plate horizon or a known far contact.	-
+31593	osiris	chamber	0	hand-authored	The wall bases beside the statue converge at y=151 and reach the far wall at y=200. The figure's plinth is a separate, nearer contact.	review/poses/31593.png
+14895	outcrop	open	0	left generic	The isolated outcrop sits against two terraced cliffs. Their edges cross the frame at several heights with no opposing lines to separate eyeline from ledge elevation.	-
+14237	past battle	open	0	left generic	The viewpoint looks down through a gap at scattered bodies, stones and weapons. The upper rectangle depicts more ground, leaving eye level unresolved.	-
+4787	peak	open	0	hand-authored	The plain begins on y=151 and the visible central and right feet of the peak end at y=220..227. Set the rock face at 5.09 m with its base at y=227.	review/poses/4787.png
+6029	pen	open	0	hand-authored	The lower side rails converge near y=157 and the front cage posts end at y=216. Place the front face 6.56 m away to keep its vertical bars off the ground.	review/poses/6029.png
+17455	pikes	open	0	left generic	The defence spikes lean across a stepped trench and their feet have different elevations. A single floor seam through their tips or bases would skew the ground.	-
+3617	piranhas	open	0	left generic	The stream curves behind a wooded bank. Its apparent far edge is the underside of an overhang. The prow and near rocks give no exposed level horizon.	-
+21831	pool table	chamber	0	hand-authored	The chamber box places the floor near the two feet of the pool table, preserving its apron. Extend the striped wall with pattern 15.	review/poses/21831.png
+9603	port	open	0	left generic	Both banks run diagonally below a towering near redwood. The stripe follows the channel across the view and gives no sea horizon.	-
+10456	quiet water	open	0	left generic	The stream bends behind a tree-lined bank. Its oblique shoreline, the rocks and the prow all sit at different distances without a level far opening.	-
+5112	rapids	open	0	hand-authored	The open-water notch between the rock walls is horizontal at y=100. Carry that horizon past the side banks and keep the far water at landscape depth.	review/poses/5112.png
+12217	riverside	open	0	left generic	The river crosses the drawing diagonally behind a foreground palm. The two water edges are opposite shorelines and neither is an unbroken horizon.	-
+26193	rocky water	open	0	left generic	The rocks and the prow frame a bend in the stream. Its far edge is cut off by the jutting bank, so the open width and depth are an appropriate approximation.	-
+25730	sandstone	chamber	0	hand-authored	The offset floor returns converge near y=111. The far floor meets the wall at y=157 and its right edge follows the visible sandstone jamb at x=199.	review/poses/25730.png
+14979	shallows	open	0	left generic	The tall cliff overlaps the outer bank at the bend. Every visible water edge abuts nearby land, and the stream disappears around the corner.	-
+4957	slip	open	0	left generic	The oval marsh ground rises behind three palm trunks. Their feet sit at different rows and the curved jungle silhouette supplies no unique level distant contact.	-
+2464	spiral stairs	open	0	left generic	The near spiral and tower hide the left ground while the far battlement meets the right paving at y=257. A single flat seam would attach the steps to the far wall.	-
+4315	stagnant pool	open	0	left generic	The stream occupies the foreground with one sloping far bank. Isolated reeds and a prow give no second perspective edge or unobstructed distant water.	-
+31748	strategy	chamber	0	left generic	The tabletop spans rows 179–218 in front of the actual wall. The class floor transition at y=217 keeps its top and apron visible when approached.	-
+29622	Treasury	cave	0	measured	The continuous floor polygon reaches both feet of the end wall at y=174. Its two long sides converge at y=81, fixing the depth at 4.14 m.	review/poses/29622.png
+27610	troll's lair	cave	0	left generic	The tunnel entrance is cut high on a diagonal bank behind the bone. The opening and foreground stones yield unrelated depths, so retain the cave box.	-
+29561	turn	chamber	0	left generic	The visible return starts beyond the centre at x=190. Its lone diagonal and cropped top do not fix the scale of the hall around the bend.	-
+4896	twisty trail	open	0	left generic	The plain visible beyond the right cliff starts around y=147, close to the existing eye line of y=140. The switchback climbs the rock face and cannot set level depth.	-
+11124	upward path	open	0	left generic	The trail rises to the top edge and disappears around a rock wall. Its steep vanishing direction belongs to a climbing path without a visible level horizon.	-
+19597	valley vista	open	0	left generic	A ribbon of trail disappears into a low valley above multiple overlapping slopes. The ridge skyline varies across the frame and the nearest treeline marks a different depth.	-
+15901	view	chamber	0	left generic	The curved bottom of the viewing gallery runs from y=193 to about 217. The class floor line meets its sides, and window mullions do not give a depth.	-
+20177	vines	open	0	left generic	The track vanishes between palm trunks that cross the treeline at y=157. A fit to that line folded the trunks visibly at z=2.5. The nearer open box keeps more of them upright.	-
+859	water hole	open	0	left generic	The dune rises across the back of the water hole at y=77..101. A distant fit below the crest stretched the palm and reeds across the water. The open box junction is near the palm foot at y=175.	-
+4940	weapons storage	open	0	hand-authored	The rear fence meets the ground near y=215 while the rack posts stand closer. Keep the open walking depth and fit the fence base between the posts.	review/poses/4940.png
+7132	well	open	0	left generic	The visible dark treeline meets the ground at y=176..183 beside the well. That agrees with the open box junction near y=180 and leaves the well in front.	-
+12955	whirlpool	submerged	0	left generic	The eddy is viewed from above and the bank curves around it. Its outline is in the water plane and cannot set eye height. Retain the deep submerged box.	-

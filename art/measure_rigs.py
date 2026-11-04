@@ -1,22 +1,19 @@
-"""Measure first-person rigs for rooms still on the generic box.
+"""Measure refreshed room boxes from the ASCN draw commands.
 
-For each ASCN plate the script finds the floor: the largest filled shape that
-reaches the bottom band and spans the centre column. Its top row at the centre
-is the wall junction J. The vanishing point of its slanted side edges gives the
-horizon cy; without slanted edges the horizon is set so the junction lands at
-the class's default depth. Then back = 215 * 1.8 / (J - cy), the floor's side
-edges at the junction give left/right, the top band gives wallTop, and the
-pattern-index plates under art/refresh/plates/ give the unseen tones.
+Paint order identifies the floor in the bottom band. The wall junction J and
+vanishing point cy give back = 215 * 1.8 / (J - cy). The floor edges give
+the width, and the tone plate supplies patterns for the unseen surfaces.
 
-  python art/measure_rigs.py --calibrate     compare with the hand-measured RefreshRoomLayouts
-  python art/measure_rigs.py --write         write art/refresh/rigs.js for campaign rooms off the box
-  python art/measure_rigs.py --sheet DIR     contact sheets of flagged rooms for a human nudge
+  python art/measure_rigs.py --calibrate       compare against 12 landmark rigs
+  python art/measure_rigs.py --write           regenerate accepted measurements
+  python art/measure_rigs.py --all --sheet DIR inspect candidates including off-route rooms
 
-Rigs are used only while the refreshed layers are on; rooms with their own
-rig (High Altar, quarters, sanctum, courtyard, the 18 foreground rooms and
-the 12 landmark rooms) are left alone."""
+Hand-authored rigs live in a separate file. The room review records which
+candidates survived a visual check of the moving and turned views.
+"""
 from pathlib import Path
 import argparse
+import csv
 import json
 import re
 import sys
@@ -56,7 +53,6 @@ def foreground_rooms():
 
 def visits():
     counts = Counter()
-    names = {}
     for line in (ROOT / "archive/es/campaign-trace.tsv").read_text(encoding="utf-8").splitlines()[1:]:
         parts = line.split("\t")
         if len(parts) >= 3:
@@ -118,7 +114,35 @@ def floor_candidate(cmds, w=338, h=314):
         ys = [y for y in range(h) if vp[x, y] in members]
         if ys:
             tops.append(ys[0])
-    return (area, i, cmd, min(tops) if tops else h, m)
+    junction = min(tops) if tops else h
+    if cmd[0] in (16, 20):
+        junction = runner_junction(cmd[4], junction, vp, i, w, h)
+    return (area, i, cmd, junction, m)
+
+
+def runner_junction(points, junction, pixels, index, w, h):
+    """Recover a platform-occluded runner end from matching exposed wall feet."""
+    corners = list(dict.fromkeys(points))
+    if len(corners) != 4:
+        return junction
+    a, b, c, d = sorted(corners, key=lambda p: (p[1], p[0]))
+    left, right = sorted((a, b))
+    y = b[1]
+    if not (abs(a[1] - y) <= 2 and 3 <= y < junction - 12 and y + 3 < h
+            and min(c[1], d[1]) >= h - 24
+            and min(c[0], d[0]) < left[0] < CX < right[0] < max(c[0], d[0])):
+        return junction
+
+    # Both shoulders must expose the same underlying ground fill where the
+    # wall ends. The foreground platform alone cannot supply this evidence.
+    def shoulder(x0, x1):
+        foot = Counter(pixels[x, y + 3] for x in range(max(0, x0), min(w, x1))
+                      if 0 < pixels[x, y + 3] < pixels[x, y - 3] < index)
+        return {k for k, n in foot.items() if n >= 8}
+
+    if shoulder(left[0] - 36, left[0]) & shoulder(right[0], right[0] + 36):
+        return y
+    return junction
 
 
 def slanted_edges(cmd):
@@ -296,21 +320,22 @@ def main():
             print(f"{ident:>5} {rooms[ident]['name']:<16} hand cy={hcy:>3} back={hback:<5} auto cy={r['rig']['cy']:>6} back={r['rig']['back']:<5} J={r['J']:<3} {'OK ' if ok else 'off'} {r['flags']}")
         return
     counts = visits()
+    with (ART / "refresh/room-review.tsv").open(encoding="utf-8") as source:
+        reviewed = {int(row["id"]): row["status"] for row in csv.DictReader(source, delimiter="\t")}
+    approved = {i for i, status in reviewed.items() if status == "measured"}
     skip = OWN_RIG | foreground_rooms() | set(HAND)
     chosen = {}
-    dropped = []
     for ident, r in results.items():
         name = rooms[ident]["name"]
         if ident in skip:
             continue
-        if not args.all and counts.get(name, 0) == 0:
+        if ident not in approved and not args.all and counts.get(name, 0) == 0:
             continue
         wide = r["rig"]["environment"] in ("open", "submerged")
         fallback_J = 140 + FOCAL * EYE / (9.6 if wide else 5.0)
         if abs(r["J"] - fallback_J) <= 25:
             continue
         if ident in REJECTED or not confident(r):
-            dropped.append(ident)
             continue
         chosen[ident] = r
     if args.sheet:
@@ -335,11 +360,15 @@ def main():
             sheet.save(out / f"rigs-{part // 24}.png")
         print(f"{len(items)} rooms on {(len(items) + 23) // 24} sheets")
     if args.write:
-        lines = ["/* Generated by art/measure_rigs.py. Refreshed-mode rigs for campaign rooms whose drawn",
+        chosen = {i: r for i, r in chosen.items() if i not in reviewed or i in approved}
+        missing = approved - chosen.keys()
+        if missing:
+            raise ValueError(f"Reviewed measurements no longer pass the gate: {sorted(missing)}")
+        lines = ["/* Generated by art/measure_rigs.py. Refreshed-mode rigs for reviewed rooms whose drawn",
                  " * floor junction sits more than 25 rows from the generic box. Horizons come from the",
                  " * floor's vanishing point (or the class depth when the floor has no slanted edges),",
                  " * depths from the junction, widths from the floor's side edges, tones from the plate.",
-                 " * Rooms with a rig of their own are not listed. Flags mark low-confidence rooms. */",
+                 " * See room-review.tsv for decisions on the 149 previously generic rooms. */",
                  "window.RefreshRigs = {"]
         for ident in sorted(chosen, key=lambda i: rooms[i]["name"].lower()):
             r = chosen[ident]
@@ -347,7 +376,7 @@ def main():
             lines.append(f"  {ident}: {json.dumps(r['rig'], separators=(',', ':'))}, // {rooms[ident]['name']} · J={r['J']}{flag}")
         lines.append("};")
         (ART / "refresh/rigs.js").write_text("\n".join(lines) + "\n", encoding="utf-8")
-        print(f"Wrote {len(chosen)} rigs to art/refresh/rigs.js; {len(dropped)} low-confidence rooms keep the generic box")
+        print(f"Wrote {len(chosen)} rigs to art/refresh/rigs.js")
 
 
 if __name__ == "__main__":

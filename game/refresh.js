@@ -447,7 +447,9 @@
   // without slicing circular rings through flat QuickDraw polygons.
   function shadePlateTone(view, solid, face, x, y, z, t, tex, pIdx, fx, fy, sx, sy) {
     const r = view.rig;
-    const t0 = Math.hypot(x, y - r.eye, z);
+    // The new single-plate surveys use camera-space depth on both sides of
+    // the ratio. At the drawing's eye z/t is one, even in the far corners.
+    const t0 = view.axialPlateDepth ? z : Math.hypot(x, y - r.eye, z);
     const mag = Math.abs(face) === 3
       ? Math.max(t0 / Math.max(0.15, t), (z / Math.max(0.25, t)) * 1.15)
       : t0 / Math.max(0.15, t);
@@ -583,6 +585,33 @@
     const r = view.rig;
     const pen = Math.max(0.004, t / r.focal);
     const cave = view.env === 'cave';
+    if (view.outside && dx === undefined) {
+      dx = x - view.pose.x; dz = z - view.pose.z; dy = y - r.eye;
+    }
+
+    // For surveyed landscapes the box limits walking, but does not bound the
+    // water, sky or ground. Use the same horizon across wall, floor and cap.
+    if (view.outside && r.unseen?.ridge) {
+      const u = r.unseen;
+      const elevation = dy / Math.max(1e-6, Math.hypot(dx, dz));
+      const angle = Math.atan2(dx, dz);
+      const crest = r.flatHorizon ? 0 : .019 * Math.sin(7 * angle) + .012 * Math.cos(11 * angle);
+      const foot = r.flatHorizon ? crest : Math.min(-.035, crest - .022);
+      let pat = elevation >= crest ? u.sky : elevation >= foot ? u.ridge : u.floor;
+      // The wreck's planking ends at the feet of its low bulwarks. Over
+      // their top edges the same distant seabed continues around the ship.
+      if (u.deck && face === 3) pat = u.deck;
+      if (u.deck && Math.abs(face) !== 3 && y < r.gunwaleHeight) {
+        return y >= r.gunwaleHeight - pen || samplePattern(u.gunwale, sx, sy) ? 1 : 2;
+      }
+      if (elevation < foot && dy < 0 && (!u.deck || face === 3) && view.shadowSpots.length) {
+        const ground = -r.eye / dy;
+        if (spriteShadow(view, view.pose.x + dx * ground, view.pose.z + dz * ground)) {
+          pat = shiftPattern(pat, 1);
+        }
+      }
+      return samplePattern(pat, sx, sy) ? 1 : 2;
+    }
 
     if (r.environment === 'submerged') {
       const angle = Math.atan2(x, z), ridge = 1.65 + 0.13 * Math.sin(angle * 8) + 0.06 * Math.cos(angle * 15);
@@ -600,7 +629,6 @@
       }
       // One horizon at infinity: the ridge depends only on the ray's bearing and elevation,
       // so it holds still while walking and never seams between the wall and ceiling faces.
-      if (dx === undefined) { dx = x - view.pose.x; dz = z - view.pose.z; dy = y - r.eye; }
       const a = Math.atan2(dx, dz), ridge = 1.6 + 0.23 * Math.sin(a * 13) + 0.30 * Math.cos(a * 4);
       const elev = dy / Math.max(1e-6, Math.hypot(dx, dz)), ridgeElev = (ridge - r.eye) / 12;
       if (Math.abs(elev - ridgeElev) < 1.35 * pen / 12) return 1;
