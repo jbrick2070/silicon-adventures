@@ -68,6 +68,51 @@ def smoke(driver, url):
     check_page()
 
 
+def diagnose(driver):
+    """Isolate cover rendering, browser storage and engine startup after a failure."""
+    driver.set_script_timeout(45)
+    print("Startup status:", driver.execute_script("""
+        return {
+            status: document.querySelector('#browserStatus')?.textContent,
+            dialog: document.querySelector('#dialogBody')?.innerText,
+            runtime: typeof window.cheerpjInit,
+            runtimeRequests: performance.getEntriesByType('resource')
+                .filter(r => /leaningtech|Scepters.rsrc|adventure.jar/.test(r.name)).slice(-8)
+                .map(r => [r.name, r.responseStatus, Math.round(r.duration)])
+        };
+    """), flush=True)
+    checks = {
+        "cover": """
+            const view = new PlateView(document.createElement('canvas'));
+            const room = ES_DESIGNS.find(r => r.type === 'ASCN' && r.id === 7990);
+            await view.load(room);
+            const lid = ES_DESIGNS.find(r => r.type === 'AOBJ' && r.id === 14168);
+            await view.add(lid, 'AOBJ/14168', {x:0,z:4.18,y:1.8,w:0.3,h:0.3});
+            view.render(0);
+            return 'rendered';
+        """,
+        "quota": "return await navigator.storage.estimate();",
+        "storage": """
+            sessionStorage.setItem('smoke', '1'); sessionStorage.removeItem('smoke');
+            return await new Promise((resolve, reject) => {
+                const req = indexedDB.open('smoke');
+                req.onsuccess = () => { req.result.close(); resolve('available'); };
+                req.onerror = () => reject(req.error);
+            });
+        """,
+        "engine": "const snapshot = await BrowserEngine.action('state'); return snapshot.name;",
+    }
+    for label, js in checks.items():
+        try:
+            out = driver.execute_async_script(
+                "const done = arguments[0]; (async () => {" + js +
+                "})().then(done, e => done([e.name, e.message, String(e.stack)]));"
+            )
+            print(label, out, flush=True)
+        except Exception as error:
+            print(label, str(error), flush=True)
+
+
 if __name__ == "__main__":
     with webdriver.Safari() as safari:
         print("Safari", safari.capabilities.get("browserVersion"), flush=True)
@@ -75,6 +120,6 @@ if __name__ == "__main__":
             smoke(safari, sys.argv[1])
         except Exception:
             print("Current page:", safari.current_url)
-            print(safari.find_element(By.TAG_NAME, "body").text[-5000:])
+            diagnose(safari)
             raise
         print("New journey, travel, picture modes, save and restore passed.")
