@@ -10,7 +10,10 @@ window.ScepterHints = (() => {
   const SWORD = 1420, LANTERN = 17298, KEYRING = 19657, FLUTE = 6496, WAND = 17963, EARTH = 608,
     AIR = 23213, SUIT = 14702, OIL = 23374, CHIP = 13010, PEARL = 19491, TRIDENT = 25961,
     IRONKEY = 4091, WATER = 19566, ROPE = 24183, FIRE = 4500;
-  const HIGH_ALTAR = 7990, FINALE = 18366, SUB_DECK = 28593, OFFICE = 1092;
+  const HIGH_ALTAR = 7990, FINALE = 18366, OFFICE = 1092,
+    COMPUTER = 9709, CONTROL_ROOM = 23272,
+    INSTALLED_CHIP = 2718, LEFT_CONTROL = 4876, CENTRE_CONTROL = 13165, RIGHT_CONTROL = 20759,
+    VIEW_1 = 16192, VIEW_2 = 11543, VIEW_3 = 3992, VIEW_4 = 4051;
   const milestones = [
     { title: 'Permission to leave',
       done: (has) => has(SWORD),
@@ -83,7 +86,10 @@ window.ScepterHints = (() => {
         'Back out through the airlock in diving gear. Murals, bend east, hook south, grate west: open with the iron key; crawl tunnel west; lair: throw trident. Return through the airlock to the court and the queen, then south: get water scepter.',
         ['open', 'west', 'throw trident', 'wait', 'south', 'get water scepter']] },
     { title: 'The submarine',
-      done: (has, seen) => has(ROPE) || has(FIRE) || seen(OFFICE) || seen(SUB_DECK),
+      // Boarding the sub deck is only the beginning of the voyage.  The old
+      // seen(SUB_DECK) shortcut skipped the controls puzzle and pointed Saber
+      // at the Hurk office before the boat had even left its bay.
+      done: (has, seen) => has(ROPE) || has(FIRE) || seen(OFFICE),
       tiers: ['The computer south of the Queen’s chamber is missing a part, and the submarine beyond needs a pilot.',
         'Meager room south, computer west: insert chip. Submarine west, sub deck: open, down. Helm room: close. Control: click the panel switches until the boat moves. Then east, open, up, and north to the beach.',
         ['south', 'west', 'insert chip', 'west', 'open', 'down', 'close', 'west', 'east', 'open', 'up', 'north']] },
@@ -106,15 +112,90 @@ window.ScepterHints = (() => {
       done: () => false,
       tiers: ['Wait, and listen.', 'Wait.', ['wait']] }
   ];
+  const local = (key, title, tiers) => ({ key, milestone: { title, tiers } });
+  const computerHint = objects => {
+    if (objects.has(INSTALLED_CHIP)) return local('local/9709/installed', 'Computer room · machine running', [
+      'The computer is already running. The submarine waits to the west.',
+      'Leave the installed silicon chip where it is; the machine has done its part.',
+      'Go west to the submarine. Its hatch and helm are the next things to inspect.'
+    ]);
+    if (objects.has(CHIP)) return local('local/9709/floor-chip', 'Computer room · loose chip', [
+      'A loose silicon chip lies in the computer room.',
+      'Take it first. It is the part the computer is waiting for.',
+      'Carry the chip to the computer, install it, then go west to the submarine.'
+    ]);
+    return null;
+  };
+  const controlHint = objects => {
+    const views = new Set([...objects].filter(id => [VIEW_1, VIEW_2, VIEW_3, VIEW_4].includes(id)));
+    const exact = (...ids) => views.size === ids.length && ids.every(id => views.has(id));
+    const unclear = () => local('local/23272/unclear', 'Control room · viewplate', [
+      'The viewplate shows an unfamiliar state. Read it and the last disk response before steering.',
+      'The controls are deliberate turns: do not guess at a switch when the view is unclear.',
+      'Inspect the viewplate and the three labelled controls; only the changing picture tells you which bearing is safe.'
+    ]);
+    if (!views.size) return local('local/23272/blank', 'Control room · viewplate', [
+      'The viewplate is blank. The computer and the closed hatch are departure prerequisites.',
+      'Check the computer room and the hatch at the helm before trying to sail. Do not open the hatch while you are underway.',
+      'When the viewplate changes, read it before touching another control.'
+    ]);
+    if (exact(VIEW_1)) return objects.has(CENTRE_CONTROL) ? local('local/23272/centre', 'Control room · first bearing', [
+      'One viewplate picture is showing. The boat can advance once from here.',
+      'The centre control advances the boat. Read the new view before choosing again.',
+      'Press the centre control once, then stop and study the next picture.'
+    ]) : unclear();
+    if (exact(VIEW_1, VIEW_2)) return objects.has(LEFT_CONTROL) ? local('local/23272/cliff', 'Control room · cliff ahead', [
+      'A cliff fills the right side of the viewplate.',
+      'Steer toward the open water with the left control.',
+      'Press the left control once, then read the next view before making another choice.'
+    ]) : unclear();
+    if (exact(VIEW_1, VIEW_2, VIEW_3)) return objects.has(RIGHT_CONTROL) ? local('local/23272/reef', 'Control room · reef ahead', [
+      'A reef fills the left side of the viewplate.',
+      'Steer toward the open water with the right control.',
+      'Press the right control once, then read the next view before making another choice.'
+    ]) : unclear();
+    if (exact(VIEW_1, VIEW_4)) return local('local/23272/grounded', 'Control room · grounded', [
+      'The viewplate shows the submarine grounded.',
+      'There is no more steering to do. Return east to the helm, open the hatch, and climb up.',
+      'From the hatch, go up and then north onto the beach.'
+    ]);
+    return unclear();
+  };
+  function localHint(state, has, seen) {
+    // Reaching the office, taking its rope, or carrying Fire proves a later
+    // campaign state.  A revisit to either room should then keep the player on
+    // the ordinary chapter ladder instead of pulling them back into the voyage.
+    if (has(ROPE) || has(FIRE) || seen(OFFICE)) return null;
+    const objects = new Set((state.objects || []).map(o => o.id));
+    if (state.scene === COMPUTER) {
+      const fromRoom = computerHint(objects);
+      if (fromRoom) return fromRoom;
+      if (has(CHIP)) return local('local/9709/pack-chip', 'Computer room · chip in pack', [
+        'The computer is missing its silicon chip, and you are carrying one.',
+        'The chip belongs in the computer. Fit it before going west to the submarine.',
+        'Use the loose chip with the computer; once it runs, go west to the submarine.'
+      ]);
+      return local('local/9709/missing-chip', 'Computer room · missing chip', [
+        'The computer needs its small silicon chip.',
+        'Search the machine, check your pack, and consult earlier field notes. The silicon beach was its original discovery site.',
+        'Recover the chip before relying on the submarine; this room cannot confirm where an absent chip went.'
+      ]);
+    }
+    if (state.scene === CONTROL_ROOM) return controlHint(objects);
+    return null;
+  }
   // The first milestone not yet met, where anything met later counts as met earlier (dropped items stay met).
   function current(state, visited) {
-    const has = id => state.inventory.some(o => o.id === id);
-    const named = name => state.inventory.some(o => o.name.toLowerCase() === name);
+    const inventory = state.inventory || [];
+    const has = id => inventory.some(o => o.id === id);
+    const named = name => inventory.some(o => o.name.toLowerCase() === name);
     const seen = id => !!visited(id);
     const met = milestones.map(m => m.done(has, seen, state.scene, named));
     for (let i = met.length - 1; i >= 0; i--) if (met[i]) for (let k = 0; k < i; k++) met[k] = true;
     const index = met.findIndex(v => !v);
-    return { index, milestone: milestones[index], count: milestones.length };
+    const nearby = localHint(state, has, seen);
+    if (nearby) return { index, milestone: nearby.milestone, count: milestones.length, key: nearby.key };
+    return { index, milestone: milestones[index], count: milestones.length, key: 'chapter/'+index };
   }
   return { milestones, current };
 })();

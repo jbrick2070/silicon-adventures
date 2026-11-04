@@ -16,7 +16,9 @@
   const history=[];let histAt=0;
   // Click targets: the disk's names are terse (dung.1, stor.2); only stems the room text itself names get a word.
   const STEMS={high:'altar',stor:'chest',can:'cannon',sub:'control',dung:'door',squash:'door',jd:'door',lobb:'door',clos:'closet',airl:'airlock',comp:'computer',hatch:'hatch',shrine:'shrine',spikes:'spikes',web:'web',grate:'grate',floor:'floor',river:'river',nest:'nest',ram:'ram',bar:'bars',sand:'sand',slip:'slip',ball:'ball',queen:'queen',cat:'catapult',view:'view',sep:'sepulchre',osir:'osiris',phoenix:'phoenix',sphinx:'sphinx',top:'top',drink:'drink',lair:'lair',pot:'pot',rob:'robot'};
+  const TARGET_NAMES={'AOBJ/4876':'left control','AOBJ/13165':'centre control','AOBJ/20759':'right control'};
   function labelFor(key){
+    if(TARGET_NAMES[key])return TARGET_NAMES[key];
     const m=designs.get(key);if(!m)return 'the drawing here';
     if(!/\.[a-z0-9]+$/i.test(m.name))return m.name;
     return STEMS[m.name.replace(/\.[a-z0-9]+$/i,'').toLowerCase()]||'the drawing here';
@@ -41,20 +43,40 @@
     const k=Math.max(1,Math.min(2,Math.floor(($('routePanel').clientWidth||400)/worldMap.w)));
     $('map').style.width=(worldMap.w*k)+'px';$('map').style.height=(worldMap.h*k)+'px';
     const n=visited.reduce((a,b)=>a+b,0);$('mapNote').textContent=n+(n===1?' room charted':' rooms charted')+' · ink edges are walls on the map, gaps are openings';
+    setMapRoom(scene,true);
   }
-  $('map').onpointermove=e=>{const r=$('map').getBoundingClientRect();const room=worldMap.roomAt((e.clientX-r.left)*worldMap.w/r.width,(e.clientY-r.top)*worldMap.h/r.height);$('map').title=room&&visited[roomIndex.get(room.id)]?title(room.name):'';};
+  function setMapRoom(room,current=false){
+    const label=$('mapRoom');if(!label)return;
+    const known=room&&(room.id===scene?.id||visited[roomIndex.get(room.id)]);
+    label.textContent=!room?'Move across the chart to read a room.':!known?'Uncharted room.':title(room.name)+(current||room.id===scene?.id?' · current position':' · charted room');
+  }
+  function roomAtMapEvent(e){
+    const r=$('map').getBoundingClientRect();
+    return worldMap.roomAt((e.clientX-r.left)*worldMap.w/r.width,(e.clientY-r.top)*worldMap.h/r.height);
+  }
+  $('map').onpointermove=e=>{const room=roomAtMapEvent(e);$('map').title=room&&visited[roomIndex.get(room.id)]?title(room.name):'';setMapRoom(room);};
+  $('map').onpointerdown=e=>{setMapRoom(roomAtMapEvent(e));$('map').focus({preventScroll:true});};
+  $('map').onkeydown=e=>{
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();setMapRoom(scene,true);}
+  };
   // Where next? One more tier of the current milestone per press; the tier resets when the goal changes.
-  let hintGoal=-1,hintTier=0,hintsUsed=0;
+  // A campaign chapter keeps its reveal level as Saber travels. Local, observed
+  // puzzle guidance starts over when its particular room/state changes.
+  let hintGoal='',hintTier=0,hintsUsed=0;
   function whereNext(){
     if(!playing||!state||state.ended||!window.ScepterHints)return;
-    const {index,milestone,count}=ScepterHints.current(state,id=>visited[roomIndex.get(id)]);
+    const {index,milestone,count,key}=ScepterHints.current(state,id=>visited[roomIndex.get(id)]);
     if(index<0||!milestone)return;
-    if(index!==hintGoal){hintGoal=index;hintTier=0;}
-    if(hintTier>=3){line('No more clues for this step: '+milestone.tiers[2].join(' · ')+'.','aside hint');tabs('journal');return;}
-    const tier=milestone.tiers[hintTier];hintsUsed++;
+    const goal=key||'chapter/'+index;
+    if(goal!==hintGoal){hintGoal=goal;hintTier=0;}
+    const tierIndex=Math.min(hintTier,Math.max(0,milestone.tiers.length-1));
+    const tier=milestone.tiers[tierIndex],exhausted=hintTier>=milestone.tiers.length;
     const text=Array.isArray(tier)?'Exactly: '+tier.join(' · ')+'.':tier;
-    tabs('journal');line('Step '+(index+1)+' of '+count+' · '+milestone.title+(hintTier?' · clue '+(hintTier+1):'')+'. '+text,'aside hint');
-    hintTier++;controls();
+    const local=goal.startsWith('local/');
+    const heading=local?milestone.title:'Step '+(index+1)+' of '+count+' · '+milestone.title;
+    tabs('journal');line(heading+(tierIndex?' · clue '+(tierIndex+1):'')+'. '+text,'aside hint');
+    if(!exhausted){hintsUsed++;hintTier++;}
+    controls();
   }
   $('hint').onclick=whereNext;
   function rememberSeen(){try{sessionStorage.setItem('scepters-seen',JSON.stringify({session:state?.session,seen:packSeen()}));}catch{}}
@@ -135,6 +157,15 @@
     journal.push(...entries.slice(-600));log.setAttribute('aria-live','polite');rememberJournal();
   }
   function message(s){ $('cue').textContent=s;captionUntil=elapsed+3.3; }
+  // Browser-engine turns can take a moment. The state guard was already here;
+  // make it visible without changing the disk turn cadence or button meaning.
+  function setBusy(value,label='WORKING…'){
+    busy=value;
+    const status=$('working'),panel=$('playing');
+    if(status){status.textContent=value?label:'';status.hidden=!value;}
+    if(value){const hover=$('hoverCue');if(hover){hover.hidden=true;hover.textContent='';}}
+    if(panel){panel.setAttribute('aria-busy',String(value));panel.classList.toggle('is-busy',value);}
+  }
   function openDialog(name,...content){
     keys.clear();sound.pause(true);$('dialogName').textContent=name;
     $('dialogBody').replaceChildren(...content);if(!$('dialog').open)$('dialog').showModal();
@@ -196,13 +227,24 @@
     }
     await crossover();dirty=true;
   }
-  function tabs(which){
+  function tabs(which,focus=false){
     for(const id of ['journal','pack','route']){
-      $(id+'Panel').hidden=id!==which;$(id+'Tab').setAttribute('aria-pressed',String(id===which));
+      const selected=id===which,tab=$(id+'Tab');
+      $(id+'Panel').hidden=!selected;
+      tab.setAttribute('aria-selected',String(selected));
+      tab.tabIndex=selected?0:-1;
+      if(selected&&focus)tab.focus({preventScroll:true});
     }
     if(which==='route')drawChart();
   }
   for(const name of ['journal','pack','route'])$(name+'Tab').onclick=()=>tabs(name);
+  document.querySelector('.tabs').addEventListener('keydown',e=>{
+    if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+    e.preventDefault();
+    const names=['journal','pack','route'],current=names.findIndex(id=>$(id+'Tab').getAttribute('aria-selected')==='true');
+    const next=e.key==='Home'?0:e.key==='End'?names.length-1:(current+(e.key==='ArrowRight'?1:-1)+names.length)%names.length;
+    tabs(names[next],true);
+  });
   function canKnock(){
     return playing&&scene?.id===armory&&!state.ended&&!state.characters.length&&!pending;
   }
@@ -243,6 +285,37 @@
     });
   }
   const towerSighting='From the watchtower I saw an aircraft bank over the river and turn east.';
+  const travelDirections=['west','north','east','up','south','down'];
+  function renderTravel(){
+    const waiting=pending?.kind==='yesno';
+    const visible=['north','east','south','west'].filter(d=>view.exits?.[d]);
+    const buttons=travelDirections.map(direction=>{
+      const doorway=visible.includes(direction);
+      const b=button(direction,()=>command(direction),'travel-key');
+      b.classList.toggle('is-visible',doorway);
+      b.disabled=waiting;
+      b.title=waiting?'Answer the question in the Journal first.':(doorway?'A doorway is visible to the '+direction+'.':scene.messages?.[direction]||'Try this direction in the original adventure.');
+      b.setAttribute('aria-label','Go '+direction+(doorway?' — visible doorway':'')+(waiting?' — waiting for an answer':''));
+      return b;
+    });
+    $('travel').replaceChildren(...buttons);
+    const note=$('routeNote'),status=$('routeStatus'),legend=$('routeLegend');
+    if(waiting){
+      note.textContent='A question is waiting. Choose Yes or No in the Journal, or type the reply you mean.';
+      if(status){status.textContent='Travel paused while an answer is due.';status.hidden=false;}
+      if(legend)legend.hidden=true;
+      return;
+    }
+    note.textContent=visible.length?'Visible passages · '+visible.join(' / ')+'. Other bearings may be scripted.':'No doorway is in view. Other bearings may be scripted.';
+    if(status)status.hidden=true;
+    if(legend)legend.hidden=false;
+  }
+  function saveDescription(){
+    if(!state?.saved)return 'No saved adventure.';
+    if(!checkpoint)return 'Saved adventure available.';
+    const kind=checkpoint.kind==='checkpoint'?'Doorway checkpoint':'Manual save';
+    return kind+' · '+title(checkpoint.room)+' · HP '+checkpoint.hp;
+  }
   function controls(){
     $('roomTitle').textContent=state.ended?'Journey’s end':scene.name;
     const held=[608,23213,19566,4500].map(id=>state.inventory.some(o=>o.id===id)?'●':'○').join('');
@@ -253,6 +326,8 @@
     $('health').classList.toggle('danger',!state.ended&&share<.40);
     $('itemCount').textContent=state.inventory.length;
     $('save').disabled=state.ended;$('load').disabled=!state.saved;
+    $('saveState').textContent=saveDescription();
+    $('load').title=state.saved?'Resume the saved adventure. This may be a manual save or doorway checkpoint.':'No saved adventure yet.';
     $('hint').disabled=state.ended;$('hint').textContent=hintsUsed?'Where next? · '+hintsUsed:'Where next?';
     // Who stands against Saber, in the engine's own condition words, from each inhabitant's first-seen HP.
     let foe=$('foe');
@@ -281,12 +356,12 @@
     if(!state.inventory.length)$('pack').append(para('Your pack is empty.','subtext'));
     $('arms').replaceChildren(...state.weapons.map(s=>button(s,()=>command(s))));
     if(state.characters.length&&!state.ended)for(const [i,part] of ['head','chest','side'].entries()){
-      $('arms').append(button('Aim '+part,async()=>{if(busy)return;busy=true;try{await api('aim',String(i+1));message('Aiming at '+part);}finally{busy=false;}}));
+      $('arms').append(button('Aim '+part,async()=>{if(busy)return;setBusy(true,'AIMING…');try{await api('aim',String(i+1));message('Aiming at '+part);}finally{setBusy(false);}}));
     }
     $('actions').replaceChildren();
     if(state.ended){
       sound.music.setRoom(null);
-      if(state.saved)$('actions').append(button(checkpoint?'Return to '+checkpoint.room+' · HP '+checkpoint.hp:'Return to your last save',()=>begin('restore'),'mini primary-mini'));
+      if(state.saved)$('actions').append(button(checkpoint?'Return to '+checkpoint.room+' · HP '+checkpoint.hp:'Return to saved adventure',()=>begin('restore'),'mini primary-mini'));
       $('actions').append(button('Begin again',()=>begin('new')),button('Adventures…',adventures));
       return;
     }
@@ -294,7 +369,7 @@
     if(pending?.kind==='yesno'){
       // Look, Search, a click or a step all read as refusals here; only the answer is safe.
       $('actions').append(button('Yes',()=>command('yes')),button('No',()=>command('no')));
-      $('travel').replaceChildren(...['west','north','east','up','south','down'].map(d=>button(d,()=>command(d),'travel-key')));
+      renderTravel();
       return;
     }
     // The disk's own Commands menu (MENU 2004), in its original order, minus the six directions.
@@ -319,10 +394,8 @@
     if(scene.id===29408)verbs.push('Read book','Swing sword');
     if(scene.name==='bridge room')verbs.push('Turn crank');
     $('actions').append(...[...new Set(verbs)].map(v=>button(v,()=>v==='Rest until healed'?restUntilHealed():command(v))));
-    $('travel').replaceChildren(...['west','north','east','up','south','down'].map(d=>{const b=button(d,()=>command(d),'travel-key');b.title=scene.messages?.[d]||'';return b;}));
     // Doorways the renderer draws: the map's open bearings or an exit the room text names.
-    const open=['north','east','south','west'].filter(d=>view.exits?.[d]);
-    $('routeNote').textContent=open.length?'Doorways · '+open.join(' / '):'Listen for clues in the room description.';
+    renderTravel();
   }
   async function apply(next,opts={}) {
     const changed=next.scene!==state?.scene||opts.fresh;
@@ -340,14 +413,15 @@
       sourceEvents(next,opts.point);line(next.output);
       if(/saved Callion/i.test(next.output))callionSaved=true;
       else if(diedIn)line('Saber fell in '+diedIn+'.','aside');
-      line(state.saved?'Restore returns to '+(checkpoint?checkpoint.room+' with HP '+checkpoint.hp:'your last save')+'.':'This adventure has ended. Begin again or choose a new entry.','aside');
+      line(state.saved?'Restore returns to '+(checkpoint?checkpoint.room+' with HP '+checkpoint.hp:'the saved adventure')+'.':'This adventure has ended. Begin again or choose a new entry.','aside');
       controls();return;
     }
     if(changed){
       scene=designs.get('ASCN/'+next.scene);
       if(!scene)throw new Error('Missing room plate '+next.scene);
       sound.scene(scene);await view.load(scene);
-      if(opts.fresh) {if(!opts.keepJournal){$('log').replaceChildren();journal.length=0;rememberJournal();}wizardRead=false;prayed=false;callionSaved=false;enemyBase.clear();checkpointNoted=false;hintGoal=-1;hintTier=0;hintsUsed=0;if(!opts.keepSeen)visited=new Uint8Array(roomList.length);}
+      if(opts.fresh) {if(!opts.keepJournal){$('log').replaceChildren();journal.length=0;rememberJournal();}wizardRead=false;prayed=false;callionSaved=false;enemyBase.clear();checkpointNoted=false;hintGoal='';hintTier=0;hintsUsed=0;if(!opts.keepSeen)visited=new Uint8Array(roomList.length);}
+      else if(hintGoal.startsWith('local/')){hintGoal='';hintTier=0;}
       if(roomIndex.has(scene.id)){visited[roomIndex.get(scene.id)]=1;rememberSeen();drawChart();}
       if(!opts.fresh && playing)line('— '+title(scene.name)+' —','entry');
       if(scene.id!==7990&&shortcut){shortcut=false;line('The High Altar excursion ends here, in the hidden valley. The full adventure continues from this point.','aside');}
@@ -379,7 +453,7 @@
     if(owner&&checkpointsOn&&opts.echo&&changed&&scene.id!==7990&&!state.characters.length){
       try{
         const result=await api('save',savedView(true));
-        state.saved=result.saved;checkpoint={room:scene.name,hp:state.hp};
+        state.saved=result.saved;checkpoint={room:scene.name,hp:state.hp,kind:'checkpoint'};
         if(!checkpointNoted){checkpointNoted=true;line('Checkpoint at the doorway. Restore returns here; turn this off in the field guide to keep a hand-placed save.','aside');}
         controls();
       }catch{}
@@ -398,17 +472,17 @@
       lastCommand=t;if(history[history.length-1]!==t)history.push(t);if(history.length>50)history.shift();histAt=history.length;
       if(state.weapons.some(w=>w.toLowerCase()===t.toLowerCase()))lastAttack=t;
     }
-    busy=true;keys.clear();tabs('journal');
+    setBusy(true);keys.clear();tabs('journal');
     try {
       const next=await api(action,sent);
       await apply(next,{echo:echo||(action==='turn'?text:verbFor(text)),point});
     } catch(e){line(e.message,'aside');}
-    finally {busy=false;dirty=true;}
+    finally {setBusy(false);dirty=true;}
   }
   // Rest turn after turn while no one is near, until the engine's regen stalls (it floors to 0 within 8 HP of max).
   async function restUntilHealed(){
     if(!playing||busy||state.ended||state.characters.length)return;
-    busy=true;keys.clear();tabs('journal');
+    setBusy(true,'RESTING · PRESS A KEY OR TAP TO STOP');keys.clear();tabs('journal');
     const startHp=state.hp;let turns=0,stalled=0,last=null,stop=false;
     const halt=()=>{stop=true;};
     document.addEventListener('keydown',halt);document.addEventListener('pointerdown',halt);
@@ -424,10 +498,10 @@
       }
       if(last){await apply(last,{echo:'rest'});if(!last.ended&&!last.characters.length&&last.hp>=startHp)line('Rested '+turns+(turns===1?' turn':' turns')+' · HP '+startHp+' → '+last.hp,'aside');}
     }catch(e){line(e.message,'aside');}
-    finally{document.removeEventListener('keydown',halt);document.removeEventListener('pointerdown',halt);busy=false;dirty=true;}
+    finally{document.removeEventListener('keydown',halt);document.removeEventListener('pointerdown',halt);setBusy(false);dirty=true;}
   }
   async function begin(entry){
-    if(busy)return;busy=true;
+    if(busy)return;setBusy(true,'LOADING…');
     let enterKnock=false;
     if($('dialog').open)$('dialog').close();
     try {
@@ -463,29 +537,29 @@
             Object.assign(view.pose,{x:v.x,z:v.z,yaw:v.yaw,pitch:v.pitch});
             view.syncMode();
             wizardRead=!!v.read;shortcut=!!v.shortcut;
-            if(v.auto)checkpoint={room:scene.name,hp:state.hp};
+            checkpoint={room:scene.name,hp:state.hp,kind:v.auto?'checkpoint':'manual'};
             controls();
           }
         }catch{}
       }
       $('world').focus({preventScroll:true});
     } catch(e){openDialog('Launch the adventure',para(e.message));}
-    finally{busy=false;dirty=true;}
+    finally{setBusy(false);dirty=true;}
     if(enterKnock)openKnock();
   }
   $('enter').onclick=()=>begin('altar');$('journey').onclick=()=>begin('new');$('resume').onclick=()=>begin('restore');
   $('knockEntry').onclick=()=>begin('knock');
   async function saveHere(){
     if(busy||!playing||state.ended)throw new Error('Wait for this turn to finish.');
-    busy=true;
+    setBusy(true,'SAVING…');
     try{
       const result=await api('save',savedView());
-      state.saved=result.saved;owner=true;checkpoint={room:scene.name,hp:state.hp};controls();line('Adventure saved.','aside');
+      state.saved=result.saved;owner=true;checkpoint={room:scene.name,hp:state.hp,kind:'manual'};controls();line('Adventure saved.','aside');
       try{localStorage.setItem('scepters-saved-journal',JSON.stringify(journal));}catch{}
-    }finally{busy=false;}
+    }finally{setBusy(false);}
   }
   $('save').onclick=()=>saveHere().catch(e=>line(e.message,'aside'));
-  $('load').onclick=()=>openDialog('Restore adventure',para('Resume your last manual save?'),button('Restore saved adventure',()=>begin('restore')),button('Keep playing',()=>$('dialog').close()));
+  $('load').onclick=()=>openDialog('Restore adventure',para('Resume the saved adventure? It may be your manual save or a doorway checkpoint.'),button('Restore saved adventure',()=>begin('restore')),button('Keep playing',()=>$('dialog').close()));
   function adventures(){
     const text=para('Begin in Saber’s quarters, visit the High Altar, or open one of the nine saved adventures found on the disk. Save your current progress first if you want to return.');
     const buttons=[button('Saber’s quarters',()=>begin('new')),button('High Altar excursion',()=>begin('altar')),button('The Answering Knock',()=>begin('knock'))];
@@ -654,16 +728,32 @@
     const rect=$('world').getBoundingClientRect(),scale=Math.min(rect.width/view.w,rect.height/view.h);
     return [(e.clientX-rect.left-(rect.width-view.w*scale)/2)/scale,(e.clientY-rect.top-(rect.height-view.h*scale)/2)/scale];
   }
+  function hoverText(key){
+    if(pending?.kind==='yesno')return 'Answer the question in the Journal first';
+    if(key==='wizard')return 'Click to speak to the wizard · takes a turn';
+    if(key==='knight')return 'Click to answer the knock';
+    if(key==='bat')return 'Click to listen';
+    if(key==='AOBJ/14168')return 'Click to read the murals · takes a turn';
+    const action=verbFor(key);
+    if(/^click\s/i.test(action))return action+' · takes a turn';
+    return 'Click to '+action.charAt(0).toLowerCase()+action.slice(1)+' · takes a turn';
+  }
+  function setHoverPreview(target){
+    const cue=$('hoverCue');if(!cue)return;
+    if(!target?.key){cue.hidden=true;cue.textContent='';return;}
+    cue.textContent=hoverText(target.key);cue.hidden=false;
+  }
   $('world').onpointerdown=e=>{
     if(!playing){begin('altar');return;}
-    drag={x:e.clientX,y:e.clientY,total:0};$('world').setPointerCapture(e.pointerId);
+    setHoverPreview(null);drag={x:e.clientX,y:e.clientY,total:0};$('world').setPointerCapture(e.pointerId);
   };
   // Clickable Macintosh objects announce themselves: pointer over a drawn sprite, grab elsewhere.
   function hoverCursor(e){
     const world=$('world');
-    if(!playing){world.style.cursor='';return;}
-    if(drag){world.style.cursor=drag.total>3?'grabbing':'pointer';return;}
-    world.style.cursor=view.hit(...canvasPoint(e))?'pointer':'grab';
+    if(!playing){world.style.cursor='';setHoverPreview(null);return;}
+    if(drag){world.style.cursor=drag.total>3?'grabbing':'pointer';setHoverPreview(null);return;}
+    const target=view.hit(...canvasPoint(e));
+    world.style.cursor=target?'pointer':'grab';setHoverPreview(target);
   }
   $('world').onpointermove=e=>{
     if(!drag){hoverCursor(e);return;}
@@ -678,8 +768,8 @@
     if(drag.total<=4){const t=view.hit(...canvasPoint(e));if(t)use(t.key,true);}
     drag=null;hoverCursor(e);
   };
-  $('world').onpointercancel=()=>{drag=null;$('world').style.cursor=playing?'grab':'';};
-  $('world').onpointerleave=()=>{if(!drag)$('world').style.cursor='';};
+  $('world').onpointercancel=()=>{drag=null;$('world').style.cursor=playing?'grab':'';setHoverPreview(null);};
+  $('world').onpointerleave=()=>{if(!drag)$('world').style.cursor='';setHoverPreview(null);};
   document.addEventListener('keydown',e=>{
     if(knockOpen||$('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
     if(e.target.tagName==='SELECT')return;
@@ -798,7 +888,7 @@
       // Keep the Windows launcher's local server alive while the player is reading.
       setInterval(()=>api('state').catch(()=>{}),45000);
     }
-    busy=true;
+    setBusy(true,'LOADING…');
     $('enter').disabled=$('journey').disabled=$('knockEntry').disabled=true;
     try{
       await view.load(scene);
@@ -827,7 +917,7 @@
         openDialog('Browser edition',para(e.message),button('Reload the game',()=>location.reload()));
       }else openDialog('Local engine',para(e.message));
     }finally{
-      busy=false;
+      setBusy(false);
       $('enter').disabled=$('journey').disabled=$('knockEntry').disabled=Boolean(browserEngine&&!state);
     }
     fitViewport();
