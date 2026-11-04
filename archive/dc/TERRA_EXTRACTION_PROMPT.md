@@ -37,7 +37,7 @@ These span kinds are settled:
 | 519, 520, 543, 545, 546 | Rope zones with their own top and bottom limits and neighbour ropes. |
 | 525 | Swinging rope catch zone. |
 
-Known routine names, by jump-table slot in `CODE 4`: `$26a` guard and whip man, `$272` door that releases guards, `$282` bat, `$28a` and `$292` rats, `$29a` rock henchman with the weight, `$2a2` dragon, `$2aa` shield chamber, `$2b2` mutant, `$2d2` levers, `$2da` Black Knight, `$2ea` gargoyle, `$2f2` moving platforms, `$2fa` drips, `$302` bridge, `$30a` gate, `$312` boulder, `$31a` wizard, `$32a` fountain and vulture, `$332` burning eye, `$342` swinging ropes, `$34a` item, `$38a` storm.
+Routine names, by jump-table slot in `CODE 4`, inferred from the sprites each routine uses, so confirm them: `$26a` guard and whip man, `$272` door that releases guards, `$282` bat, `$28a` and `$292` rats, `$29a` rock henchman with the weight, `$2a2` dragon, `$2aa` shield chamber, `$2b2` mutant, `$2d2` levers, `$2da` Black Knight, `$2ea` gargoyle, `$2f2` moving platforms, `$2fa` drips, `$302` bridge, `$30a` gate, `$312` boulder, `$31a` wizard, `$32a` fountain and vulture, `$332` burning eye, `$342` swinging ropes, `$34a` item, `$38a` storm.
 
 ## Inputs
 
@@ -50,7 +50,7 @@ Known routine names, by jump-table slot in `CODE 4`: `$26a` guard and whip man, 
 
 ## Deliverables, all in `archive/dc/rooms/`
 
-1. `span-kinds.json`: the kinds not settled above: 7, 15, 17, 18, 21 to 26, 28, 30, 36 to 40, and the `a` field on kind 1. Kinds 23 and 24 appear to be the Shield and Fireball pickup spots. Prove or refute that.
+1. `span-kinds.json`: the kinds not settled above: 7, 15, 17, 18, 19 to 25, 28, 30, 36 to 40, and the `a` field on kind 1. Kinds 23 and 24 appear to be the Shield and Fireball pickup spots. Prove or refute that.
 2. `spawns.json`: for each room, the ordered object calls with resolved meaning:
    - `{routine, segment, offset, meaning, condition, args, ppct:[...], soun:[...], evidence, confidence}`.
    - `condition` is the exact difficulty or entry test guarding the call. Keep every branch.
@@ -59,7 +59,7 @@ Known routine names, by jump-table slot in `CODE 4`: `$26a` guard and whip man, 
 4. `hero-states.json`: what each of the 53 hero states does and which `PPCT` reel it shows.
 5. `events.json`: which `SOUN` id plays on which event, from `jsr $52(a5)` call sites.
 6. `demo.md`: the format of the `DEMO` resource named `Default` in Castle Preferences, and whether the recorded input can be replayed. The disk image is `sources/dark-castle/DarkCastle_1_2.dsk`. Read the file with `machfs`.
-7. `NOTES.md`: method, open questions, and anything surprising or hidden. List any cheat keys, date checks, hidden rooms, debug strings or developer jokes, with the segment and offset. `DEADFACEBEEFCAFE` appears in `CODE 1` at `$66c`. Explain what it is, if the code shows it.
+7. `NOTES.md`: method, open questions, and anything surprising or hidden. List any cheat keys, date checks, hidden rooms, debug strings or developer jokes, with the segment and offset. `DEADFACEBEEFCAFE` appears in `CODE 1` at `$670`, counted after the segment header. Explain what it is, if the code shows it.
 
 ## Done means
 
