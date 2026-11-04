@@ -91,6 +91,40 @@ def diagnose(driver):
             view.render(0);
             return 'rendered';
         """,
+        "canvas readback": """
+            const image = new Image();
+            image.src = 'archive/es/plates/ASCN-7990.png';
+            await image.decode();
+            const report = {imageSize: [image.width, image.height, image.naturalWidth, image.naturalHeight]};
+            for (const [name, options, flags] of [
+                ['default', {}, ''], ['readOften', {willReadFrequently:true}, ''],
+                ['srgb', {colorSpace:'srgb', alpha:false, willReadFrequently:true}, ''],
+                ['offscreen', {willReadFrequently:true}, 'offscreen'],
+                ['attached', {willReadFrequently:true}, 'attached'],
+                ['bitmap', {willReadFrequently:true}, 'bitmap']
+            ]) {
+                const out = report[name] = {};
+                let c;
+                try {
+                    c = flags === 'offscreen' ? new OffscreenCanvas(338,314) : document.createElement('canvas');
+                    c.width = 338; c.height = 314;
+                    if (flags === 'attached') document.body.append(c);
+                    const ctx = c.getContext('2d', options);
+                    ctx.fillStyle = '#13579b'; ctx.fillRect(0,0,4,4);
+                    try { out.fill = [...ctx.getImageData(0,0,1,1).data]; }
+                    catch (e) { out.fill = [e.name, e.message]; }
+                    const source = flags === 'bitmap' ? await createImageBitmap(image) : image;
+                    ctx.drawImage(source,0,0);
+                    // The original contains opaque black at (0,0) and white at (4,107).
+                    const rgba = ctx.getImageData(0,0,338,314).data;
+                    const i = (107 * 338 + 4)*4;
+                    out.plate = [[...rgba.slice(0,4)], [...rgba.slice(i,i+4)]];
+                    if (flags === 'bitmap') source.close();
+                } catch (e) { out.error = [e.name, e.message]; }
+                finally { if (c) { c.width = c.height = 1; c.remove?.(); } }
+            }
+            return report;
+        """,
         "quota": "return await navigator.storage.estimate();",
         "storage": """
             sessionStorage.setItem('smoke', '1'); sessionStorage.removeItem('smoke');
