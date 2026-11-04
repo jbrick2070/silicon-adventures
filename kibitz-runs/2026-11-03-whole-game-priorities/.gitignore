@@ -1,0 +1,3 @@
+# Provider logs and duplicate per-lane input files stay on this machine.
+r*/lanes/
+r*/*-dispatch.log

@@ -1,0 +1,6 @@
+VERDICT: yes-with-fixes. CONFIRMED the comparator is now tied to the local objects moved by the disk.
+MUST-FIX [2, CONFIRMED]. State how return visits, no-inventory bookmarks and the office boundary interact with existing milestone backfill. Decide where per-room override precedes or yields to broader progress. Preserve original data, semantics and disabled/busy behaviour on a hint exhausted after state changes.
+MUST-FIX [2, CONFIRMED]. Separate per-stage safe input from control discovery. The current E target is nearby and chosen from visible targets. Do not assume highlighting sends a click or automatically changes simulation. Prove bindings with one deliberate input and no engine traffic for hints.
+SHOULD-FIX [3, CONFIRMED]. The hint slice and save/dialogue changes have separate releases. Do not expand the first release to persist journal state, redesign controls or replay the whole campaign on every change.
+OPTIONAL [UNVERIFIABLE]. Human comprehension. Trials should have a concrete pass/stop observation, including one off-route/no-history case.
+CUT [2, MISREAD]. Cursor auth is an operational limit, not a blocker to design review. There is no need for Java state export or permanent voyage tracking.
