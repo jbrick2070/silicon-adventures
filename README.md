@@ -6,6 +6,8 @@ Double-click **Play Enchanted Scepters.exe** on 64-bit Windows. The launcher ope
 
 **Enter the High Altar** starts a short excursion at two granite columns. Headphones help. **Begin the full adventure** starts Saber in the quarters with the King’s summons. Both entries use the same 200-room game and allow you to continue exploring. In **Adventures…** you can also open the nine saved games that came with the archived image.
 
+**Music** in the top bar turns on the optional regional score. *Violet Stone* follows the castle halls and drops in level at the High Altar. *Soundings* follows the sea floor and the wreck. The loop continues across neighbouring rooms in the same region. **Sound** mutes the score and the original effects together. Music starts off on a new browser launch address. [Soundtrack sketches and downloads](audio/soundtrack-studies/README.md)
+
 | Control | Action |
 | --- | --- |
 | W A S D | Walk forward, strafe and back up |

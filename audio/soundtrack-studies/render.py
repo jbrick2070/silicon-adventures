@@ -1,6 +1,7 @@
 """Rebuild the soundtrack references with Python, NumPy, SciPy and FFmpeg/libmp3lame.
 
-Run from any directory. Outputs go beside this script or to the supplied directory.
+Run from any directory. MP3s go beside this script or to the supplied directory.
+Use --game-loops for just the two playable WAV loops in audio/music (or the given directory).
 The compositions use recorded cue excerpts and harmonics measured from those cues.
 """
 
@@ -276,17 +277,42 @@ def encode(directory, basename, title, pcm):
         print(target.name, round(len(pcm) / SR, 2), "seconds", flush=True)
 
 
+def write_game_loop(path, master, bpm):
+    """Fold the natural release past the 48th beat under the opening downbeat."""
+    length = round(48 * 60 / bpm * SR)
+    body = master[:length].copy()
+    release = master[length:]
+    fade = np.cos(np.linspace(0, np.pi / 2, len(release))) ** 2
+    body[: len(release)] += release * fade[:, None]
+    # The antialiasing filter sees the real samples on the far side of the join.
+    loop = signal.resample_poly(body, 1, 2, axis=0, padtype="wrap")
+    gain = min(0.11 / rms(loop), 0.75 / np.max(np.abs(loop)))
+    wavfile.write(path, SR // 2, np.rint(loop * gain * 32767).astype(np.int16))
+    print(path.name, round(len(loop) / (SR // 2), 3), "seconds", flush=True)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("out", nargs="?", type=Path, default=HERE)
-    parser.add_argument(
+    parser.add_argument("out", nargs="?", type=Path)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
         "--synth-only",
         action="store_true",
         help="Render Suno seeds without opening any disk recording",
     )
+    mode.add_argument(
+        "--game-loops",
+        action="store_true",
+        help="Render only the in-game disk score as loopable PCM WAVs",
+    )
     args = parser.parse_args()
-    out = args.out
+    out = args.out or (ROOT / "audio/music" if args.game_loops else HERE)
     out.mkdir(exist_ok=True, parents=True)
+    if args.game_loops:
+        sounds = load_samples()
+        write_game_loop(out / "violet-stone.wav", violet_stone(sounds), 60)
+        write_game_loop(out / "soundings.wav", soundings(sounds), 56)
+        raise SystemExit(0)
     score = [
         ("01-violet-stone", "Violet Stone", violet_stone),
         ("02-soundings", "Soundings", soundings),

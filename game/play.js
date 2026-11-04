@@ -137,7 +137,7 @@
     $('dialogBody').replaceChildren(...content);if(!$('dialog').open)$('dialog').showModal();
   }
   $('closeDialog').onclick=()=>$('dialog').close();
-  $('dialog').addEventListener('close',()=>{sound.pause(!playing);if(playing)$('world').focus({preventScroll:true});});
+  $('dialog').addEventListener('close',()=>{sound.pause(!playing||document.hidden||$('dialog').open);if(playing)$('world').focus({preventScroll:true});});
   $('dialog').addEventListener('click',e=>{if(e.target===$('dialog'))$('dialog').close();});
   async function api(action,arg=''){
     const r=await fetch('/api/'+action,{method:'POST',headers:{'X-Scepters':'1'},body:arg});
@@ -241,6 +241,7 @@
     }
     $('actions').replaceChildren();
     if(state.ended){
+      sound.music.setRoom(null);
       if(state.saved)$('actions').append(button(checkpoint?'Return to '+checkpoint.room+' · HP '+checkpoint.hp:'Return to your last save',()=>begin('restore'),'mini primary-mini'));
       $('actions').append(button('Begin again',()=>begin('new')),button('Adventures…',adventures));
       return;
@@ -295,7 +296,7 @@
     if(changed){
       scene=designs.get('ASCN/'+next.scene);
       if(!scene)throw new Error('Missing room plate '+next.scene);
-      await view.load(scene);sound.scene(scene);
+      sound.scene(scene);await view.load(scene);
       if(opts.fresh) {if(!opts.keepJournal){$('log').replaceChildren();journal.length=0;rememberJournal();}wizardRead=false;prayed=false;callionSaved=false;enemyBase.clear();checkpointNoted=false;hintGoal=-1;hintTier=0;hintsUsed=0;if(!opts.keepSeen)visited=new Uint8Array(roomList.length);}
       if(roomIndex.has(scene.id)){visited[roomIndex.get(scene.id)]=1;rememberSeen();drawChart();}
       if(!opts.fresh && playing)line('— '+title(scene.name)+' —','entry');
@@ -379,9 +380,11 @@
     if($('dialog').open)$('dialog').close();
     try {
       if(location.protocol==='file:')throw new Error('Double-click Play Enchanted Scepters.exe in the game folder. It starts the local adventure engine and opens your browser.');
-      await sound.start();sound.mute(muted);sound.pause(false);
+      sound.music.setRoom(null);
+      await sound.start();sound.mute(muted);
       const next=await api('start',entry);
       playing=true;shortcut=entry==='altar';owner=entry==='new'||entry==='restore';checkpoint=null;lastCommand=lastAttack='';
+      sound.pause(document.hidden||$('dialog').open);
       $('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;fitViewport();
       let kept=null;
       if(entry==='restore'){try{kept=JSON.parse(localStorage.getItem('scepters-saved-journal')||'null');}catch{}}
@@ -424,6 +427,7 @@
   function fieldGuide(){
     const h=document.createElement('h2');h.textContent='Field guide';
     openDialog('Field guide',h,
+      para('Music in the top bar turns on the optional score. Violet Stone follows the castle halls and plays softly at the High Altar. Soundings follows the underwater bubbles. Sound off mutes both music and effects.'),
       para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around. On a phone or tablet, hold the Walk, Back and turn buttons under the picture.'),
       para('Click a drawn object or approach it and press E. A click is a turn in the original game: it may take, answer a question or spring a trap, so E offers the edition’s honest prompt (Take, Click, Face, Go). Press / to type. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
       para('The disk’s vocabulary: the Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, ACCEPT, WEAR, and each weapon’s own verb. There is no EXAMINE, USE or TALK; this edition sends EXAMINE as Look and USE as the item’s verb. Status and Rest are turns of their own, so use them away from a fight.'),
@@ -446,6 +450,17 @@
   $('soundBtn').onclick=async()=>{
     muted=!muted;sound.mute(muted);$('soundLabel').textContent=muted?'off':'on';$('soundBtn').setAttribute('aria-pressed',String(!muted));
     if(playing&&!muted)await sound.start();
+  };
+  function syncMusicButton(){
+    const on=sound.music.enabled;
+    $('musicLabel').textContent=on?'on':'off';
+    $('musicBtn').setAttribute('aria-pressed',String(on));
+  }
+  $('musicBtn').onclick=async()=>{
+    sound.music.setEnabled(!sound.music.enabled);
+    syncMusicButton();
+    try{localStorage.setItem('scepters-music',sound.music.enabled?'on':'off');}catch{}
+    if(playing&&!state?.ended&&!muted&&sound.music.enabled&&!sound.started)await sound.start();
   };
   $('homeView').onclick=()=>{view.reset();dirty=true;if(playing){message('Doorway viewpoint');$('world').focus({preventScroll:true});}else if(view.source)view.render(elapsed);};
   $('commandForm').onsubmit=e=>{e.preventDefault();const t=$('cmd').value.trim();if(!t)return;$('cmd').value='';$('cmd').blur();$('world').focus();command(t);};
@@ -633,6 +648,8 @@
     requestAnimationFrame(animate);
   }
   async function init(){
+    try{sound.music.setEnabled(localStorage.getItem('scepters-music')==='on');}catch{}
+    syncMusicButton();
     let pictureMode='colour';
     try{pictureMode=localStorage.getItem('scepters-picture-mode')||pictureMode;}catch{}
     view.setColour(pictureMode!=='ink'&&pictureMode!=='original-ink');
@@ -652,7 +669,7 @@
       const snapshot=await api('state');
       const resumable=sessionStorage.getItem('scepters-session')===snapshot.session;
       if(resumable){
-        playing=true;$('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;
+        playing=true;sound.pause(document.hidden||$('dialog').open);$('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;
         try{const kept=JSON.parse(sessionStorage.getItem('scepters-seen')||'null');if(kept&&kept.session===snapshot.session)visited=unpackSeen(kept.seen);}catch{}
         let keptJournal=false;
         try{const j=JSON.parse(sessionStorage.getItem('scepters-journal')||'null');if(j&&j.session===snapshot.session&&Array.isArray(j.journal)&&j.journal.length){replayJournal(j.journal);keptJournal=true;}}catch{}

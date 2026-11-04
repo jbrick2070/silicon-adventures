@@ -3,6 +3,7 @@
 class SceneSound {
   constructor() {
     this.vault = new VaultAudio();
+    this.music = new RegionMusic(this.vault, resource => this.buffer(resource));
     this.vault.onCue = (id, point) => {
       const text = SceneSound.caption(id);
       if (this.onCaption && text) this.onCaption(text, point);
@@ -46,19 +47,24 @@ class SceneSound {
       this.started = ready;
       if (!ready) return false;
       if (this.paused) await this.vault.ctx.suspend();
+      this.music.sync();
       for (const [names,point] of this.pending.splice(0)) this.events(names,point);
       return true;
     }).finally(() => { this.starting = null; });
     return this.starting;
   }
 
-  mute(value) { this.vault.mute(value); }
+  mute(value) {
+    this.vault.mute(value);
+    this.music.sync();
+  }
 
   pause(value) {
     const paused = Boolean(value);
     if (this.paused === paused) return;
     this.paused = paused;
     this.vault.pause(paused);
+    this.music.sync();
     if (this.started) {
       const ctx = this.vault.ctx;
       if (paused) ctx.suspend().catch(() => {});
@@ -67,6 +73,7 @@ class SceneSound {
   }
 
   scene(meta) {
+    this.music.setRoom(meta);
     if (this.room && this.room.id === meta?.id) return;
     this.generation++;
     for (const source of this.ambientSources) source.stop();

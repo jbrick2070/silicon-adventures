@@ -30,6 +30,12 @@
 }
 #pictureMode,#layerBtn,#homeView{flex:none}
 #layerBtn{white-space:nowrap}
+@media(max-width:610px){
+  .mast-in{flex-wrap:wrap;row-gap:0}
+  .mast nav{margin-left:auto}
+  .mast nav>*{white-space:nowrap}
+}
+@media(max-width:610px) and (pointer:coarse){.mast nav>*{min-height:44px;align-content:center}}
 @media(pointer:coarse){.image-leaf{container:picture / inline-size}}
 @container picture (max-width:420px){
   .image-leaf .bar{display:grid;grid-template-columns:minmax(0,1fr) auto 44px;height:auto;padding:5px 8px}

@@ -44,8 +44,12 @@ A slower six-beat sway for the sea floor. A metal strike sounds much lower than 
 
 The arranged disk mixes repitch and filter these cues. Sustained notes use partials measured from the flute, horn, drip and ping. The synth seeds instead use their own generated tones, noise and resonators. All files are stereo MP3 at 44.1 kHz and 192 kb/s. [Disk provenance](../../sources/README.md) · [Dark Castle sound assignments](../../archive/dc/README.md)
 
-## Placing the finished music
+## Playing the sketches in the game
 
-Keep one bed running across adjoining rooms in the same region. Try the music 15–20 dB below a foreground cue as a starting balance. Fade it down for the High Altar voice and the submarine signals. Leave the Finale’s directional sequence clear. The studies have endings for Suno. A game loop needs an edited return point and a listening pass against the live effects. The bundled server already serves WAV for in-game playback.
+Choose **Music on** in the top bar. The two in-game loops use the arrangements with actual disk samples. Each closes on a 48-beat boundary, with its tail folded into the opening. The WAVs are 22,050 Hz, 16-bit stereo. [Violet Stone game loop · 48 seconds](../music/violet-stone.wav) · [Soundings game loop · 51.43 seconds](../music/soundings.wav)
+
+Violet Stone follows the quarters, marble and banquet halls, throne room, courtyard, Wizard’s Sanctum, map room, bridge room and temple stairs. At the High Altar its gain drops from 10% to 3.5% so the wizard is easier to hear. Soundings follows the 28 rooms whose original ambient cue is bubbles, including the wreck interiors. Music fades out on leaving a scored region. The submarine helm, controls, armory and Finale have their own game cues.
+
+The Music preference is saved for the browser’s launch address. It takes no adventure turn. Sound off mutes the whole mix, and opening a dialog or hiding the tab pauses the audio context. Resume within the same region continues the loop. Generate just the game WAVs with `python audio/soundtrack-studies/render.py --game-loops`; the downloadable MP3 arrangements keep their original endings.
 
 Rebuild with `python audio/soundtrack-studies/render.py` from the repository root with NumPy, SciPy, and FFmpeg with libmp3lame on PATH. Supply an output directory to keep a separate render, or add `--synth-only` for just the two seeds.
