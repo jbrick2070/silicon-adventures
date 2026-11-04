@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Enchanted Scepters · Silicon Adventures</title><link rel="icon" href="game/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="game/style.css">
+<title>Enchanted Scepters · Silicon Adventures</title><link rel="icon" href="game/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="game/style.css"><link rel="stylesheet" href="game/knock-quest.css">
 </head><body>
 <header class="mast"><div class="mast-in"><a class="brand" href="./" aria-label="Silicon Adventures home"><img src="game/mark.svg" alt="">Silicon Adventures</a>
 <nav><button id="guideBtn">Field guide</button><a href="game/catalog.html" target="_blank" rel="opener">Disk cabinet <span>↗</span></a><button id="musicBtn" aria-pressed="true" title="Toggle the regional soundtrack">Music <b id="musicLabel">on</b></button><button id="soundBtn" aria-pressed="true" title="Mute or unmute all audio">Sound <b id="soundLabel">on</b></button></nav></div>
@@ -29,7 +29,7 @@
         <p class="lead">Two granite columns. A silent altar. From somewhere behind the stone, a voice.</p>
         <p class="subtext">Step inside the original drawing. Follow the sound to meet a visitor from Dark Castle.</p>
         <p id="browserStatus" class="subtext" role="status" hidden></p>
-        <div class="start-actions"><button class="primary" id="enter">Enter the High Altar <b>→</b></button><button class="secondary" id="journey">Begin the full adventure <b>↗</b></button><button class="text-btn" id="resume" hidden>Continue saved adventure →</button></div>
+        <div class="start-actions"><button class="primary" id="enter">Enter the High Altar <b>→</b></button><button class="secondary" id="journey">Begin the full adventure <b>↗</b></button><button class="secondary" id="knockEntry">Play The Answering Knock <b>↗</b></button><button class="text-btn" id="resume" hidden>Continue saved adventure →</button></div>
         <div class="source-note"><b>From the disks</b><span>Enchanted Scepters · Dark Castle v1.2</span></div>
       </section>
       <section id="playing" hidden>
@@ -47,6 +47,7 @@
 </main>
 <dialog id="dialog"><div class="bar"><span id="dialogName">Field guide</span><span class="barlines"></span><button id="closeDialog" aria-label="Close">×</button></div><div id="dialogBody"></div></dialog>
 <script src="archive/es/designs.js"></script><script src="archive/es/sounds.js"></script><script src="art/castle-index.js"></script>
+<script src="game/knock-art.js"></script><script src="game/knock-quest.js"></script>
 <script src="audio/dark-castle-bank.js"></script><script src="audio/vault-audio.js"></script><script src="audio/region-music.js"></script><script src="game/spatial.js"></script>
 <script src="game/altar.js"></script><script src="art/foreground-index.js"></script><script src="art/refresh/refresh-index.js"></script><script src="art/refresh/environments.js"></script><script src="art/refresh/banana-index.js"></script><script src="art/refresh/rigs.js"></script><script src="art/refresh/hand-rigs.js"></script><script src="game/rooms.js"></script><script src="game/refresh.js"></script><script src="game/map.js"></script><script src="game/hints.js"></script><script src="art/colour/index.js"></script><script src="game/colour.js"></script><script src="game/view.js"></script><script src="game/play.js"></script>
 </body></html>

@@ -1,0 +1,22 @@
+#knockQuest{width:min(790px,94vw);max-width:94vw}
+#knockQuest .knock-body{display:grid;grid-template-columns:minmax(0,338px) minmax(0,1fr);gap:22px;padding:18px;align-items:start}
+#knockCanvas{display:block;width:100%;height:auto;image-rendering:pixelated;cursor:pointer}
+#knockQuest .eyebrow{margin:3px 0 5px}
+#knockTitle{font:600 30px/1.05 var(--serif);margin:0 0 12px}
+#knockQuest .knock-story,#knockQuest .knock-feedback{font:16px/1.35 var(--serif);margin:8px 0}
+#knockQuest .knock-feedback:not(:empty){border-left:2px solid var(--line);padding-left:10px}
+#knockQuest .knock-feedback.knock-pulse{border-left-color:var(--ink)}
+.knock-actions,.knock-choices,.knock-tools{display:flex;gap:6px;flex-wrap:wrap}
+.knock-actions,.knock-choices{margin-top:12px}
+#knockQuest button:not(.bar button){border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:6px 9px;font:12px var(--mono)}
+#knockQuest .knock-choices button[aria-pressed=true],#knockQuest [data-climb]{background:var(--ink);color:var(--paper)}
+#knockQuest button:disabled{opacity:.5}
+.knock-tools{padding:10px 18px;border-top:1px solid var(--line)}
+#knockQuest .audio-mix{padding:4px 18px;justify-content:flex-start}
+.knock-tools [data-action=exit]{margin-left:auto}
+@media(max-width:630px){
+  #knockQuest .knock-body{grid-template-columns:1fr;gap:12px;padding:12px}
+  #knockCanvas{width:auto;max-width:100%;max-height:36vh;margin:auto}
+  #knockTitle{font-size:25px}
+  .knock-tools{padding:8px 12px}
+}

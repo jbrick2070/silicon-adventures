@@ -90,6 +90,34 @@ def smoke(driver, url):
     wait.until(lambda _: "Restored" in element("log").text)
     check_page()
 
+    # Reach the optional passage by the original room exits. Exercise both the
+    # wrong answer and the visual-only solution, including an in-passage save.
+    for direction, name in [("east", "banquet hall"), ("south", "armory")]:
+        element("cmd").send_keys(direction, Keys.ENTER)
+        room(name)
+
+    def click_button(text):
+        button = wait.until(lambda _: driver.find_element(By.XPATH, f"//button[normalize-space(.)='{text}']"))
+        button.click()
+
+    click_button("Answer the knock")
+    click_button("Knock back")
+    click_button("Wing")
+    click_button("Strike the selected shield")
+    assert "stays fast" in driver.find_element(By.CSS_SELECTOR, ".knock-feedback").text
+    click_button("Save here")
+    wait.until(lambda _: "Saved here" in driver.find_element(By.CSS_SELECTOR, ".knock-feedback").text)
+    open_muted()
+    element("resume").click()
+    click_button("Crescent")
+    click_button("Strike the selected shield")
+    click_button("Climb to the watchtower")
+    assert element("knockTitle").text == "The watchtower"
+    assert [element("knockCanvas").get_property(k) for k in ("width", "height")] == [338, 314]
+    click_button("Return to the armory")
+    room("armory")
+    check_page()
+
 
 def diagnose(driver):
     """Report whether cover rendering or engine startup failed."""

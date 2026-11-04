@@ -8,6 +8,8 @@
   const starts=['art','computer','dogleg','Finale','lava tunnel','main road','mirror room','office',"Queen's Chamber"];
   let state,scene,playing=false,busy=false,muted=false,captions=true,drag=null;
   let shortcut=false,wizardRead=false,prayed=false,npc=null,combatant=null,knightReel=908;
+  let knockProgress=null,knockOpen=false;
+  const armory=20357;
   // A scripted question waiting for its answer, slot ownership for doorway checkpoints, and combat recall.
   let callionSaved=false;
   let pending=null,owner=false,checkpoint=null,checkpointsOn=true,checkpointNoted=false,lastCommand='',lastAttack='',parserHelp=0;
@@ -201,6 +203,38 @@
     if(which==='route')drawChart();
   }
   for(const name of ['journal','pack','route'])$(name+'Tab').onclick=()=>tabs(name);
+  function canKnock(){
+    return playing&&scene?.id===armory&&!state.ended&&!state.characters.length&&!pending;
+  }
+  function readKnock(saved){
+    if(!saved||!['door','guardroom','tower'].includes(saved.stage))return null;
+    return {stage:saved.stage,solved:saved.solved===true||saved.stage==='tower'};
+  }
+  function rememberKnock(){
+    try{sessionStorage.setItem('scepters-knock',JSON.stringify({session:state.session,...knockProgress,open:knockOpen}));}catch{}
+  }
+  function savedView(auto=false){
+    return JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut,hp:state.hp,seen:packSeen(),
+      auto:auto||undefined,knock:knockProgress?{...knockProgress,open:knockOpen}:undefined});
+  }
+  function openKnock(){
+    if(busy||knockOpen||!canKnock())return;
+    keys.clear();drag=null;knockOpen=true;
+    knockProgress||={stage:'door',solved:false};rememberKnock();
+    KnockQuest.open({
+      progress:knockProgress,colour:view.refreshed&&view.colour,muted,mixer:document.querySelector('.audio-mix'),
+      onProgress(next){
+        if(next.stage==='tower'&&knockProgress.stage!=='tower'&&!journal.some(e=>e.cls==='aside'&&e.text===towerSighting))
+          line(towerSighting,'aside');
+        knockProgress=next;rememberKnock();
+      },
+      onCue(id){if(!muted&&!document.hidden)sound.effect(id,{x:view.pose.x,z:view.pose.z});},
+      onToggleSound(){toggleSound();return muted;},
+      onSave:saveHere,
+      onExit(){knockOpen=false;rememberKnock();keys.clear();dirty=true;controls();$('world').focus({preventScroll:true});}
+    });
+  }
+  const towerSighting='From the watchtower I saw an aircraft bank over the river and turn east.';
   function controls(){
     $('roomTitle').textContent=state.ended?'Journey’s end':scene.name;
     const held=[608,23213,19566,4500].map(id=>state.inventory.some(o=>o.id===id)?'●':'○').join('');
@@ -259,6 +293,7 @@
     const menu=state.menu.split(';').filter(a=>a&&!a.startsWith('(')).map(a=>a.split('/')[0].split('<')[0]);
     const directions=['north','south','east','west','up','down'];
     const fighting=state.characters.length>0;
+    if(canKnock())$('actions').append(button(knockProgress?.solved?'Revisit the watchtower':'Answer the knock',openKnock,'mini primary-mini'));
     let verbs=menu.filter(a=>!directions.includes(a.toLowerCase())&&!(fighting&&a.toLowerCase()==='rest'));
     if(!fighting&&state.maxHp&&state.maxHp-state.hp>=8)verbs.splice(verbs.findIndex(v=>v.toLowerCase()==='rest')+1,0,'Rest until healed');
     if(fighting)verbs.push(...state.weapons);
@@ -330,7 +365,7 @@
     // Doorway checkpoint: only a run that owns the save slot, only on a real turn, never mid-fight or at the altar.
     if(owner&&checkpointsOn&&opts.echo&&changed&&scene.id!==7990&&!state.characters.length){
       try{
-        const result=await api('save',JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut,auto:true,hp:state.hp,seen:packSeen()}));
+        const result=await api('save',savedView(true));
         state.saved=result.saved;checkpoint={room:scene.name,hp:state.hp};
         if(!checkpointNoted){checkpointNoted=true;line('Checkpoint at the doorway. Restore returns here; turn this off in the field guide to keep a hand-placed save.','aside');}
         controls();
@@ -338,10 +373,11 @@
     }
   }
   async function command(text,action='turn',point=null,echo=null) {
-    if(!playing||busy||state.ended)return;
+    if(!playing||busy||knockOpen||state.ended)return;
     let sent=text;
     if(action==='turn'){
       const t=text.trim();
+      if(canKnock()&&/^(knock|knock back|answer the knock)$/i.test(t)){openKnock();return;}
       if(/^(help|hint|\?|commands)$/i.test(t)){fieldGuide();return;}
       if(/^(examine|x|inspect|check)\b/i.test(t))sent='look';
       const useOf=t.match(/^use\s+(.+)$/i);
@@ -379,6 +415,7 @@
   }
   async function begin(entry){
     if(busy)return;busy=true;
+    let enterKnock=false;
     if($('dialog').open)$('dialog').close();
     try {
       if(location.protocol==='file:')throw new Error('Double-click Play Enchanted Scepters.exe in the game folder. It starts the local adventure engine and opens your browser.');
@@ -386,7 +423,17 @@
       sound.mute(muted);
       // Request audio within the entry click. A blocked or suspended context mustn't delay play.
       sound.start().catch(()=>{});
-      const next=await api('start',entry);
+      let next=await api('start',entry==='knock'?'new':entry);
+      // This excursion follows the disk's three ordinary exits. A shortcut visit
+      // only takes ownership of the existing save slot if the player chooses Save.
+      if(entry==='knock'){
+        for(const [verb,id] of [['south',22844],['east',8807],['south',armory]]){
+          next=await api('turn',verb);
+          if(next.scene!==id||next.ended||next.characters.length)break;
+        }
+        enterKnock=next.scene===armory;
+      }
+      knockProgress=null;
       playing=true;shortcut=entry==='altar';owner=entry==='new'||entry==='restore';checkpoint=null;lastCommand=lastAttack='';
       sound.pause(document.hidden||$('dialog').open);
       $('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;fitViewport();
@@ -397,6 +444,7 @@
       if(entry==='altar')line('A voice carries from the far side of the stone.','aside');
       if(entry==='restore'&&state.viewData){
         try{const v=JSON.parse(state.viewData);
+          knockProgress=readKnock(v.knock);enterKnock=!!(knockProgress&&v.knock.open&&scene.id===armory);
           if(typeof v.seen==='string'){visited=unpackSeen(v.seen);if(roomIndex.has(scene.id))visited[roomIndex.get(scene.id)]=1;rememberSeen();drawChart();}
           if(v.scene===scene.id && [v.x,v.z,v.yaw,v.pitch].every(Number.isFinite)) {
             Object.assign(view.pose,{x:v.x,z:v.z,yaw:v.yaw,pitch:v.pitch});
@@ -410,20 +458,24 @@
       $('world').focus({preventScroll:true});
     } catch(e){openDialog('Launch the adventure',para(e.message));}
     finally{busy=false;dirty=true;}
+    if(enterKnock)openKnock();
   }
   $('enter').onclick=()=>begin('altar');$('journey').onclick=()=>begin('new');$('resume').onclick=()=>begin('restore');
-  $('save').onclick=async()=>{
-    if(busy||!playing)return;busy=true;
+  $('knockEntry').onclick=()=>begin('knock');
+  async function saveHere(){
+    if(busy||!playing||state.ended)throw new Error('Wait for this turn to finish.');
+    busy=true;
     try{
-      const result=await api('save',JSON.stringify({...view.pose,scene:scene.id,read:wizardRead,shortcut,hp:state.hp,seen:packSeen()}));
+      const result=await api('save',savedView());
       state.saved=result.saved;owner=true;checkpoint={room:scene.name,hp:state.hp};controls();line('Adventure saved.','aside');
       try{localStorage.setItem('scepters-saved-journal',JSON.stringify(journal));}catch{}
-    }catch(e){line(e.message,'aside');}finally{busy=false;}
-  };
+    }finally{busy=false;}
+  }
+  $('save').onclick=()=>saveHere().catch(e=>line(e.message,'aside'));
   $('load').onclick=()=>openDialog('Restore adventure',para('Resume your last manual save?'),button('Restore saved adventure',()=>begin('restore')),button('Keep playing',()=>$('dialog').close()));
   function adventures(){
     const text=para('Begin in Saber’s quarters, visit the High Altar, or open one of the nine saved adventures found on the disk. Save your current progress first if you want to return.');
-    const buttons=[button('Saber’s quarters',()=>begin('new')),button('High Altar excursion',()=>begin('altar'))];
+    const buttons=[button('Saber’s quarters',()=>begin('new')),button('High Altar excursion',()=>begin('altar')),button('The Answering Knock',()=>begin('knock'))];
     if(state?.saved)buttons.push(button('Your saved adventure',()=>begin('restore')));
     openDialog('Adventures',text,...buttons,para('Original disk bookmarks','eyebrow'),...starts.map(n=>button(title(n),()=>begin('bookmark/'+n))));
   }
@@ -452,6 +504,7 @@
       para('Sound and Music start on. Use the Effects slider for footsteps, voices and room sounds, and Music for the score. Sound off mutes both at once. Each control remembers your setting.'),
       para('Two tracks alternate in the castle halls and temple, and another pair in underwater rooms with bubbles. The title appears below the picture.'),
       soundtrackCredits(),
+      para('The Answering Knock is an optional Dark Castle excursion. From the quarters, go south, east, then south. In the armory choose Answer the knock. The shields show their rhythms even with Sound off.'),
       para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around. On a phone or tablet, hold the Walk, Back and turn buttons under the picture.'),
       para('Click a drawn object or approach it and press E. A click is a turn in the original game: it may take, answer a question or spring a trap, so E offers the edition’s honest prompt (Take, Click, Face, Go). Press / to type. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
       para('The disk’s vocabulary: the Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, ACCEPT, WEAR, and each weapon’s own verb. There is no EXAMINE, USE or TALK; this edition sends EXAMINE as Look and USE as the item’s verb. Status and Rest are turns of their own, so use them away from a fight.'),
@@ -486,11 +539,12 @@
     if(playing&&!muted&&!state?.ended&&!document.hidden&&!$('dialog').open&&
         (!sound.started||sound.vault.ctx?.state!=='running'))sound.start().catch(()=>{});
   }
-  $('soundBtn').onclick=()=>{
+  function toggleSound(){
     setMasterMute(!muted);
     saveAudioSetting('sound',muted?'off':'on');
     activateAudio();
-  };
+  }
+  $('soundBtn').onclick=toggleSound;
   function syncMusicButton(){
     const on=sound.music.enabled,track=sound.music.nowPlaying;
     $('musicLabel').textContent=on?'on':'off';
@@ -545,7 +599,7 @@
       command(prayed?'move altar':'read','turn',p);return;
     }
     if(key==='bat'){sound.effect('dc:70',p);message('The bat wheels away');return;}
-    if(key==='knight'){sound.effect('dc:0',p);line('The Black Knight strikes his shield. A second blow answers from the doorway.','aside');sound.effect('dc:69',{x:view.rig.right,z:1});return;}
+    if(key==='knight'){line('The Black Knight strikes his shield. A knock answers from the doorway.','aside');openKnock();return;}
     if(key==='altar-pray'){command('pray','turn',{x:.2,z:4.42});return;}
     if(key==='altar-down'){command('down');return;}
     if(key.startsWith('go/')){command(key.slice(3));return;}
@@ -569,7 +623,7 @@
     if(near) {
       const k=near.t.key;
       if(k==='wizard')return [k,prayed&&!state.objects.some(o=>o.id===14168)?'Listen to the stone':'Speak to the wizard'];
-      if(k==='knight')return [k,'Listen to the knight'];
+      if(k==='knight')return [k,'Answer the knock'];
       if(k==='bat')return [k,'Listen'];
       if(k==='AOBJ/14168')return [k,wizardRead?(prayed?'Move the altar':'Kneel at the altar'):'Read the murals'];
       return [k,verbFor(k)];
@@ -614,7 +668,7 @@
   $('world').onpointercancel=()=>{drag=null;$('world').style.cursor=playing?'grab':'';};
   $('world').onpointerleave=()=>{if(!drag)$('world').style.cursor='';};
   document.addEventListener('keydown',e=>{
-    if($('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(knockOpen||$('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
     if(e.target.tagName==='SELECT')return;
     if(e.target.tagName==='INPUT'){
       if(e.key==='Escape')$('world').focus();
@@ -661,7 +715,7 @@
   sound.geometry=()=>({rig:view.rig,exits:view.exits,sideDoorZ:view.sideDoorZ,rear:view.rear});
   function animate(ms){
     const dt=Math.min(.05,Math.max(0,(ms-oldTime)/1000));oldTime=ms;elapsed+=dt;
-    if(playing && !busy && !$('dialog').open && !state?.ended) {
+    if(playing && !busy && !knockOpen && !$('dialog').open && !state?.ended) {
       let forward=+(keys.has('w')||keys.has('arrowup'))-+(keys.has('s')||keys.has('arrowdown'));
       let side=+keys.has('d')-+keys.has('a');
       const turn=+keys.has('arrowright')-+keys.has('arrowleft'),p=view.pose;
@@ -710,6 +764,7 @@
   }
   async function init(){
     initAudio();
+    let enterKnock=false;
     let pictureMode='colour';
     try{pictureMode=localStorage.getItem('scepters-picture-mode')||pictureMode;}catch{}
     view.setColour(pictureMode!=='ink'&&pictureMode!=='original-ink');
@@ -731,7 +786,7 @@
       setInterval(()=>api('state').catch(()=>{}),45000);
     }
     busy=true;
-    $('enter').disabled=$('journey').disabled=true;
+    $('enter').disabled=$('journey').disabled=$('knockEntry').disabled=true;
     try{
       await view.load(scene);
       const lid=designs.get('AOBJ/14168');
@@ -741,6 +796,10 @@
       const resumable=sessionStorage.getItem('scepters-session')===snapshot.session;
       if(resumable){
         playing=true;sound.pause(document.hidden||$('dialog').open);$('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;
+        try{
+          const saved=JSON.parse(sessionStorage.getItem('scepters-knock'));
+          if(saved?.session===snapshot.session){knockProgress=readKnock(saved);enterKnock=!!(knockProgress&&saved.open);}
+        }catch{}
         try{const kept=JSON.parse(sessionStorage.getItem('scepters-seen')||'null');if(kept&&kept.session===snapshot.session)visited=unpackSeen(kept.seen);}catch{}
         let keptJournal=false;
         try{const j=JSON.parse(sessionStorage.getItem('scepters-journal')||'null');if(j&&j.session===snapshot.session&&Array.isArray(j.journal)&&j.journal.length){replayJournal(j.journal);keptJournal=true;}}catch{}
@@ -756,10 +815,11 @@
       }else openDialog('Local engine',para(e.message));
     }finally{
       busy=false;
-      $('enter').disabled=$('journey').disabled=Boolean(browserEngine&&!state);
+      $('enter').disabled=$('journey').disabled=$('knockEntry').disabled=Boolean(browserEngine&&!state);
     }
     fitViewport();
     requestAnimationFrame(animate);
+    if(enterKnock)openKnock();
   }
   init();
 })();
