@@ -1,4 +1,4 @@
-"""Smoke-test the hosted browser edition in an isolated macOS Safari automation session."""
+"""Smoke-test the hosted browser edition in a fresh Mac browser automation session."""
 
 import sys
 
@@ -114,12 +114,19 @@ def diagnose(driver):
 
 
 if __name__ == "__main__":
-    with webdriver.Safari() as safari:
-        print("Safari", safari.capabilities.get("browserVersion"), flush=True)
+    if sys.argv[2:] == ["chrome"]:
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless=new")
+        options.add_argument("--mute-audio")
+        browser = webdriver.Chrome(options=options)
+    else:
+        browser = webdriver.Safari()
+    with browser as driver:
+        print(driver.capabilities["browserName"], driver.capabilities["browserVersion"], flush=True)
         try:
-            smoke(safari, sys.argv[1])
+            smoke(driver, sys.argv[1])
         except Exception:
-            print("Current page:", safari.current_url)
-            diagnose(safari)
+            print("Current page:", driver.current_url)
+            diagnose(driver)
             raise
         print("New journey, travel, picture modes, save and restore passed.")
