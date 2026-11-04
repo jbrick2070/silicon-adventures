@@ -170,6 +170,68 @@ def smoke(page, base, home):
     assert not api("state")["ended"], "Accepting the restored King's question killed the player"
     expect(page.locator("#log")).to_contain_text("Perhaps this sword will aid you")
 
+    # A new journey must not overwrite an existing save at its first doorway.
+    # Pressing Save is the explicit choice that replaces it and turns checkpoints on.
+    page.locator("#save").click()
+    idle()
+    kept = save.read_bytes()
+    begin()
+    expect(page.locator("#log")).to_contain_text("Your saved adventure is safe")
+    command("south")
+    room("marble hall")
+    assert save.read_bytes() == kept, "A new journey overwrote the existing save"
+    page.locator("#save").click()
+    idle()
+    assert save.read_bytes() != kept, "Save did not replace the kept adventure"
+    command("north")
+    expect(page.locator("#saveState")).to_contain_text("Doorway checkpoint · Quarters")
+
+    # Keys stay with the game after a tab, the chart, or a volume slider takes focus.
+    def walks():
+        before_pose = page.evaluate("JSON.stringify(acceptanceView.pose)")
+        page.keyboard.down("w")
+        page.wait_for_timeout(250)
+        page.keyboard.up("w")
+        assert page.evaluate("JSON.stringify(acceptanceView.pose)") != before_pose, "W did not walk"
+        page.evaluate("acceptanceView.reset()")
+
+    page.locator("#packTab").click()
+    walks()
+    page.locator("#routeTab").click()
+    page.locator("#map").click(position={"x": 5, "y": 5})
+    walks()
+    page.locator("#journalTab").click()
+    walks()
+    page.locator("#effectsVolume").focus()
+    walks()
+    level = page.locator("#effectsVolume").input_value()
+    page.keyboard.press("ArrowLeft")
+    assert page.locator("#effectsVolume").input_value() != level, "Slider lost its arrow keys"
+    page.keyboard.press("ArrowRight")
+    page.locator("#journalTab").focus()
+    page.keyboard.press("ArrowRight")
+    assert page.locator("#packTab").get_attribute("aria-selected") == "true", "Tab arrows stopped working"
+    page.locator("#journalTab").click()
+
+    # Excursion progress survives Restore followed by a same-launch reload.
+    page.locator("#bookmarks").click()
+    page.get_by_role("button", name="The Answering Knock", exact=True).click()
+    expect(page.locator("#knockQuest")).to_be_visible()
+    page.get_by_role("button", name="Knock back", exact=True).click()
+    page.locator(".knock-choices button", has_text="Crescent").click()
+    page.get_by_role("button", name="Strike the selected shield").click()
+    page.get_by_role("button", name="Climb to the watchtower").click()
+    page.locator('#knockQuest [data-action="save"]').click()
+    expect(page.locator("#knockQuest .knock-feedback")).to_contain_text("Saved here")
+    page.locator('#knockQuest [aria-label="Close excursion"]').click()
+    page.locator("#save").click()
+    idle()
+    restore()
+    expect(page.locator("#actions")).to_contain_text("Revisit the watchtower")
+    page.reload()
+    idle()
+    expect(page.locator("#actions")).to_contain_text("Revisit the watchtower")
+
     # Reload after an intentional refusal keeps the death room rather than the
     # initial High Altar cover source.
     begin()

@@ -716,7 +716,10 @@
         enterKnock=next.scene===armory;
       }
       knockProgress=null;
-      playing=true;shortcut=entry==='altar';owner=entry==='new'||entry==='restore';checkpoint=next.saved?loadSavedMeta():null;lastCommand=lastAttack='';
+      // There is one save slot. A new journey never claims one that already holds
+      // an adventure; pressing Save is what chooses to replace it.
+      const keptSave=entry==='new'&&next.saved;
+      playing=true;shortcut=entry==='altar';owner=entry==='restore'||(entry==='new'&&!next.saved);checkpoint=next.saved?loadSavedMeta():null;lastCommand=lastAttack='';
       sound.pause(document.hidden||$('dialog').open);
       $('cover').hidden=true;$('playing').hidden=false;$('compass').hidden=false;fitViewport();
       let kept=null;
@@ -730,9 +733,12 @@
       if(Array.isArray(kept)&&kept.length){replayJournal(kept);line('— Restored —','entry');}
       await apply(next,{fresh:true,keepJournal:Array.isArray(kept)&&kept.length>0});sessionStorage.setItem('scepters-session',state.session);
       if(entry==='altar')line('A voice carries from the far side of the stone.','aside');
+      if(keptSave)line('Your saved adventure is safe. Doorway checkpoints begin when you press Save, which replaces it.','aside');
       if(entry==='restore'&&state.viewData){
         try{const v=JSON.parse(state.viewData);
           knockProgress=readKnock(v.knock);enterKnock=!!(knockProgress&&v.knock.open&&scene.id===armory);
+          // Restore starts a new session, so re-key the progress or a reload forgets it.
+          if(knockProgress)rememberKnock();
           if(typeof v.seen==='string'){visited=unpackSeen(v.seen);if(roomIndex.has(scene.id))visited[roomIndex.get(scene.id)]=1;rememberSeen();drawChart();}
           if(v.scene===scene.id && [v.x,v.z,v.yaw,v.pitch].every(Number.isFinite)) {
             Object.assign(view.pose,{x:v.x,z:v.z,yaw:v.yaw,pitch:v.pitch});
@@ -836,7 +842,7 @@
       para('The disk’s vocabulary: the Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, ACCEPT, WEAR, and each weapon’s own verb. There is no EXAMINE, USE or TALK; this edition sends EXAMINE as Look and USE as the item’s verb. Status and Rest are turns of their own, so use them away from a fight.'),
       para('Lit colour uses the disk’s weapon shapes. Refreshed 1-bit draws the weapons as bananas. Their attacks work the same in every picture mode. Blows are heard where they land, and a struck inhabitant flinches. When someone stands against you, your weapons join the action row. Press R to repeat the last attack and the up arrow in the command line to recall the last command.'),
       para('Choose Lit colour, Refreshed 1-bit or Original in the picture bar. Press L or click Classic B/W to see the disk plate. Press L again or use the same button to return to your chosen style. The ⌖ button returns you to the illustrator’s viewpoint.'),
-      para((browserEngine?'Save keeps your place in this browser on this device. ':'Save keeps your place between launches. ')+'Doorway checkpoints use the same slot as a manual save. Turn them off to keep a hand-placed save.'),
+      para((browserEngine?'Save keeps your place in this browser on this device. ':'Save keeps your place between launches. ')+'Doorway checkpoints use the same slot as a manual save. Turn them off to keep a hand-placed save. A new journey leaves an existing save alone until you press Save.'),
       button(checkpointsOn?'Turn doorway checkpoints off':'Turn doorway checkpoints on',()=>{checkpointsOn=!checkpointsOn;try{localStorage.setItem('scepters-checkpoints',checkpointsOn?'on':'off');}catch{}fieldGuide();}),
       para('The full journey begins in Saber’s quarters. All 200 Macintosh scene scripts run locally. The High Altar excursion starts you inside a later puzzle. The Dark Castle visitors, their placement, and the Where next? clues are new to this edition: each press gives one more clue toward the next scepter, from a nudge to the exact words of a winning run.'),
       button(view.refreshed?'Show Original':'Return to '+enhancedName(),()=>{toggleLayers();fieldGuide();}),
@@ -1032,12 +1038,12 @@
   document.addEventListener('keydown',e=>{
     if(e.defaultPrevented||knockOpen||$('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
     if(e.target.tagName==='SELECT')return;
-    if(e.target.id==='map'){
-      if(e.key==='Escape')$('world').focus();
-      return;
-    }
-    if(e.target.closest?.('.tabs,.folio-tabs'))return;
-    if(e.target.tagName==='INPUT'){
+    // The chart and the tabs handle their own keys and prevent the default, so
+    // everything else stays with the game. A slider keeps only the keys that move it.
+    if(e.target.id==='map'&&e.key==='Escape'){$('world').focus();return;}
+    const textEntry=e.target.tagName==='INPUT'&&e.target.type!=='range';
+    const sliderKey=e.target.type==='range'&&['Escape','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(e.key);
+    if(textEntry||sliderKey){
       if(e.key==='Escape')$('world').focus();
       else if((e.key==='ArrowUp'||e.key==='ArrowDown')&&e.target.id==='cmd'&&history.length){
         e.preventDefault();
