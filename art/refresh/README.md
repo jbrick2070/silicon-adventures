@@ -20,3 +20,7 @@ The image layers are derived from the Macintosh resource fork and decoded Dark C
 | [Room review](review/README.md) | Native-size contact sheets, per-room checks, calibration results and outstanding limitations. |
 | `environments.js` | Hand-checked environment (`chamber`, `cave`, `open`, `submerged`) for all 200 rooms, seeded by `art/classify_environments.py`. Rooms without a rig of their own take its box in refreshed mode; caves drop courses and cornices and open rooms share one fixed horizon. |
 | `refresh-index.js` | Lookup tables mapping layer luminance values back to one-based `ScepterPatterns` indices (`1–29`) and border flags, plus sprite rim paths and the lifted-form index. |
+
+## Colour study
+
+The High Altar study uses the disk ink as a mask over a fixed doorway view. The lamp lights the existing stone faces. Blended aubergine follows the height of the walls, carrying violet through the horizontal joint into the upper slate. The selector also contains the earlier solid aubergine and slate finishes. Open the standalone HTML in a WebGL 2 browser to move the lamp. [Interactive colour study](studies/high-altar-colour-lab.html) · [Solid and blended finishes at native size](studies/high-altar-blended-aubergine.png)
