@@ -1,0 +1,674 @@
+{
+  "resource": {
+    "fork": "Data A.rsrc",
+    "type": "FONT",
+    "id": 29452
+  },
+  "family": "DC Dialog Font",
+  "size": 12,
+  "ascent": 13,
+  "descent": 3,
+  "leading": 0,
+  "glyphs": {
+    "9": {
+      "x": 0,
+      "width": 0,
+      "offset": 7,
+      "advance": 7
+    },
+    "13": {
+      "x": 0,
+      "width": 0,
+      "offset": 0,
+      "advance": 0
+    },
+    "32": {
+      "x": 0,
+      "width": 0,
+      "offset": 4,
+      "advance": 4
+    },
+    "33": {
+      "x": 0,
+      "width": 2,
+      "offset": 1,
+      "advance": 4
+    },
+    "34": {
+      "x": 2,
+      "width": 3,
+      "offset": 1,
+      "advance": 5
+    },
+    "35": {
+      "x": 5,
+      "width": 7,
+      "offset": 0,
+      "advance": 7
+    },
+    "36": {
+      "x": 12,
+      "width": 8,
+      "offset": 0,
+      "advance": 8
+    },
+    "37": {
+      "x": 20,
+      "width": 10,
+      "offset": 1,
+      "advance": 11
+    },
+    "38": {
+      "x": 30,
+      "width": 10,
+      "offset": 1,
+      "advance": 11
+    },
+    "39": {
+      "x": 40,
+      "width": 2,
+      "offset": 1,
+      "advance": 4
+    },
+    "40": {
+      "x": 42,
+      "width": 4,
+      "offset": 1,
+      "advance": 5
+    },
+    "41": {
+      "x": 46,
+      "width": 4,
+      "offset": 1,
+      "advance": 5
+    },
+    "42": {
+      "x": 50,
+      "width": 5,
+      "offset": 1,
+      "advance": 6
+    },
+    "43": {
+      "x": 55,
+      "width": 8,
+      "offset": 1,
+      "advance": 9
+    },
+    "44": {
+      "x": 63,
+      "width": 2,
+      "offset": 2,
+      "advance": 7
+    },
+    "45": {
+      "x": 65,
+      "width": 7,
+      "offset": 1,
+      "advance": 8
+    },
+    "46": {
+      "x": 72,
+      "width": 2,
+      "offset": 1,
+      "advance": 4
+    },
+    "47": {
+      "x": 74,
+      "width": 5,
+      "offset": 1,
+      "advance": 6
+    },
+    "48": {
+      "x": 79,
+      "width": 7,
+      "offset": 1,
+      "advance": 8
+    },
+    "49": {
+      "x": 86,
+      "width": 4,
+      "offset": 2,
+      "advance": 7
+    },
+    "50": {
+      "x": 90,
+      "width": 6,
+      "offset": 1,
+      "advance": 7
+    },
+    "51": {
+      "x": 96,
+      "width": 5,
+      "offset": 1,
+      "advance": 7
+    },
+    "52": {
+      "x": 101,
+      "width": 6,
+      "offset": 1,
+      "advance": 7
+    },
+    "53": {
+      "x": 107,
+      "width": 5,
+      "offset": 2,
+      "advance": 7
+    },
+    "54": {
+      "x": 112,
+      "width": 6,
+      "offset": 1,
+      "advance": 7
+    },
+    "55": {
+      "x": 118,
+      "width": 6,
+      "offset": 1,
+      "advance": 7
+    },
+    "56": {
+      "x": 124,
+      "width": 6,
+      "offset": 1,
+      "advance": 7
+    },
+    "57": {
+      "x": 130,
+      "width": 6,
+      "offset": 1,
+      "advance": 7
+    },
+    "58": {
+      "x": 136,
+      "width": 2,
+      "offset": 1,
+      "advance": 4
+    },
+    "59": {
+      "x": 138,
+      "width": 2,
+      "offset": 1,
+      "advance": 4
+    },
+    "60": {
+      "x": 140,
+      "width": 5,
+      "offset": 1,
+      "advance": 6
+    },
+    "61": {
+      "x": 145,
+      "width": 5,
+      "offset": 1,
+      "advance": 6
+    },
+    "62": {
+      "x": 150,
+      "width": 5,
+      "offset": 1,
+      "advance": 6
+    },
+    "63": {
+      "x": 155,
+      "width": 6,
+      "offset": 1,
+      "advance": 7
+    },
+    "64": {
+      "x": 161,
+      "width": 7,
+      "offset": 1,
+      "advance": 9
+    },
+    "65": {
+      "x": 168,
+      "width": 14,
+      "offset": 0,
+      "advance": 14
+    },
+    "66": {
+      "x": 182,
+      "width": 10,
+      "offset": 0,
+      "advance": 11
+    },
+    "67": {
+      "x": 192,
+      "width": 7,
+      "offset": 1,
+      "advance": 9
+    },
+    "68": {
+      "x": 199,
+      "width": 12,
+      "offset": 0,
+      "advance": 12
+    },
+    "69": {
+      "x": 211,
+      "width": 8,
+      "offset": 1,
+      "advance": 9
+    },
+    "70": {
+      "x": 219,
+      "width": 11,
+      "offset": 0,
+      "advance": 11
+    },
+    "71": {
+      "x": 230,
+      "width": 10,
+      "offset": 0,
+      "advance": 10
+    },
+    "72": {
+      "x": 240,
+      "width": 15,
+      "offset": 0,
+      "advance": 15
+    },
+    "73": {
+      "x": 255,
+      "width": 8,
+      "offset": 1,
+      "advance": 9
+    },
+    "74": {
+      "x": 263,
+      "width": 9,
+      "offset": 0,
+      "advance": 10
+    },
+    "75": {
+      "x": 272,
+      "width": 15,
+      "offset": 0,
+      "advance": 15
+    },
+    "76": {
+      "x": 287,
+      "width": 11,
+      "offset": 1,
+      "advance": 12
+    },
+    "77": {
+      "x": 298,
+      "width": 16,
+      "offset": 0,
+      "advance": 16
+    },
+    "78": {
+      "x": 314,
+      "width": 13,
+      "offset": 0,
+      "advance": 13
+    },
+    "79": {
+      "x": 327,
+      "width": 8,
+      "offset": 1,
+      "advance": 9
+    },
+    "80": {
+      "x": 335,
+      "width": 12,
+      "offset": 1,
+      "advance": 13
+    },
+    "81": {
+      "x": 347,
+      "width": 8,
+      "offset": 1,
+      "advance": 9
+    },
+    "82": {
+      "x": 355,
+      "width": 13,
+      "offset": 1,
+      "advance": 14
+    },
+    "83": {
+      "x": 368,
+      "width": 8,
+      "offset": 0,
+      "advance": 8
+    },
+    "84": {
+      "x": 376,
+      "width": 8,
+      "offset": 1,
+      "advance": 9
+    },
+    "85": {
+      "x": 384,
+      "width": 12,
+      "offset": 1,
+      "advance": 13
+    },
+    "86": {
+      "x": 396,
+      "width": 12,
+      "offset": 1,
+      "advance": 13
+    },
+    "87": {
+      "x": 408,
+      "width": 17,
+      "offset": 0,
+      "advance": 17
+    },
+    "88": {
+      "x": 425,
+      "width": 12,
+      "offset": 0,
+      "advance": 12
+    },
+    "89": {
+      "x": 437,
+      "width": 10,
+      "offset": 0,
+      "advance": 10
+    },
+    "90": {
+      "x": 447,
+      "width": 9,
+      "offset": 0,
+      "advance": 9
+    },
+    "91": {
+      "x": 456,
+      "width": 3,
+      "offset": 1,
+      "advance": 4
+    },
+    "95": {
+      "x": 459,
+      "width": 7,
+      "offset": 0,
+      "advance": 7
+    },
+    "97": {
+      "x": 466,
+      "width": 8,
+      "offset": 0,
+      "advance": 8
+    },
+    "98": {
+      "x": 474,
+      "width": 8,
+      "offset": 0,
+      "advance": 8
+    },
+    "99": {
+      "x": 482,
+      "width": 6,
+      "offset": 0,
+      "advance": 6
+    },
+    "100": {
+      "x": 488,
+      "width": 8,
+      "offset": 0,
+      "advance": 8
+    },
+    "101": {
+      "x": 496,
+      "width": 7,
+      "offset": 0,
+      "advance": 7
+    },
+    "102": {
+      "x": 503,
+      "width": 4,
+      "offset": 0,
+      "advance": 4
+    },
+    "103": {
+      "x": 507,
+      "width": 7,
+      "offset": 0,
+      "advance": 7
+    },
+    "104": {
+      "x": 514,
+      "width": 8,
+      "offset": 0,
+      "advance": 8
+    },
+    "105": {
+      "x": 522,
+      "width": 4,
+      "offset": 0,
+      "advance": 4
+    },
+    "106": {
+      "x": 526,
+      "width": 3,
+      "offset": 0,
+      "advance": 4
+    },
+    "107": {
+      "x": 529,
+      "width": 8,
+      "offset": 0,
+      "advance": 8
+    },
+    "108": {
+      "x": 537,
+      "width": 4,
+      "offset": 0,
+      "advance": 4
+    },
+    "109": {
+      "x": 541,
+      "width": 12,
+      "offset": 0,
+      "advance": 12
+    },
+    "110": {
+      "x": 553,
+      "width": 8,
+      "offset": 0,
+      "advance": 8
+    },
+    "111": {
+      "x": 561,
+      "width": 6,
+      "offset": 0,
+      "advance": 7
+    },
+    "112": {
+      "x": 567,
+      "width": 7,
+      "offset": 0,
+      "advance": 8
+    },
+    "113": {
+      "x": 574,
+      "width": 7,
+      "offset": 0,
+      "advance": 7
+    },
+    "114": {
+      "x": 581,
+      "width": 6,
+      "offset": 0,
+      "advance": 6
+    },
+    "115": {
+      "x": 587,
+      "width": 5,
+      "offset": 1,
+      "advance": 7
+    },
+    "116": {
+      "x": 592,
+      "width": 5,
+      "offset": 0,
+      "advance": 5
+    },
+    "117": {
+      "x": 597,
+      "width": 8,
+      "offset": 0,
+      "advance": 8
+    },
+    "118": {
+      "x": 605,
+      "width": 7,
+      "offset": 0,
+      "advance": 8
+    },
+    "119": {
+      "x": 612,
+      "width": 11,
+      "offset": 0,
+      "advance": 11
+    },
+    "120": {
+      "x": 623,
+      "width": 10,
+      "offset": 1,
+      "advance": 11
+    },
+    "121": {
+      "x": 633,
+      "width": 7,
+      "offset": 0,
+      "advance": 8
+    },
+    "122": {
+      "x": 640,
+      "width": 7,
+      "offset": 0,
+      "advance": 7
+    },
+    "176": {
+      "x": 647,
+      "width": 18,
+      "offset": 0,
+      "advance": 18
+    },
+    "202": {
+      "x": 665,
+      "width": 0,
+      "offset": 7,
+      "advance": 7
+    },
+    "230": {
+      "x": 665,
+      "width": 25,
+      "offset": 1,
+      "advance": 27
+    }
+  },
+  "confidence": {
+    "resource_and_metrics": "PROVEN",
+    "family": "PROVEN",
+    "size": "PROVEN"
+  },
+  "evidence": {
+    "header": "FONT resource offsets $00-$19, big-endian FontRec",
+    "bitmaps": "FONT resource $1a-$599",
+    "locations": "FONT resource $59a",
+    "offset_width_table": "FONT resource $784",
+    "family_and_size": "Data A FOND 230 association entry at resource offset $34 identifies FONT 29452, size 12"
+  },
+  "notes": "PROVEN: glyph keys are Mac Roman character codes whose offset/width entry is not $ffff. Offset includes the FontRec global kern, matching paper.py Strike.draw. A zero-width glyph can still have an advance. ",
+  "character_codes": [
+    9,
+    13,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    95,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    176,
+    202,
+    230
+  ],
+  "characters_mac_roman": "\t\r !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[_abcdefghijklmnopqrstuvwxyz\u221e\u00a0\u00ca"
+}

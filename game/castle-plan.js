@@ -4,7 +4,8 @@
    tables are decoded from Dark Castle's CODE 5 into archive/dc/castle-data.js.
    The placements below are read from the same room routines (the numbers are the
    routine's own arguments), with `min` the lowest difficulty that spawns them.
-   Duncan's jumps and his walk, ladder and fall rates are the hero code's own.
+   Duncan's jumps, his walk, ladder and fall rates, and most of his reels are the
+   hero code's own, traced in archive/dc/rooms/assets/hero-reels.json.
    How each creature behaves is rebuilt for this edition from the disk's manual
    cards, because the 1986 game logic is not reused. */
 (() => {
@@ -12,8 +13,8 @@
   const root = typeof window !== 'undefined' ? window : globalThis;
   const WINGS = {
     trouble: {title: 16201, first: 1000, name: 'Trouble', scepter: {id: 'earth', name: 'Earth Scepter', plate: 'archive/es/plates/AOBJ-608.png', room: 1020, x: 452, y: 259}},
-    fireball: {title: 16202, first: 2000, name: 'Fireball', scepter: {id: 'fire', name: 'Fire Scepter', plate: 'archive/es/plates/AOBJ-4500.png', room: 2030, x: 342, y: 66}},
-    shield: {title: 16204, first: 3000, name: 'Shield', scepter: {id: 'air', name: 'Air Scepter', plate: 'archive/es/plates/AOBJ-23213.png', room: 3010, x: 448, y: 74}},
+    fireball: {title: 16202, first: 2000, name: 'Fireball', scepter: {id: 'fire', name: 'Fire Scepter', plate: 'archive/es/plates/AOBJ-4500.png', room: 2030, x: 334, y: 72}},
+    shield: {title: 16204, first: 3000, name: 'Shield', scepter: {id: 'air', name: 'Air Scepter', plate: 'archive/es/plates/AOBJ-23213.png', room: 3030, x: 366, y: 56}},
     knight: {title: 16203, first: 4000, name: 'Black Knight', scepter: {id: 'water', name: 'Water Scepter', plate: 'archive/es/plates/AOBJ-19566.png', room: 4020, x: 246, y: 240}}
   };
   const WING_OF = id => id < 2000 ? 'trouble' : id < 3000 ? 'fireball' : id < 4000 ? 'shield' : 'knight';
@@ -62,7 +63,7 @@
       g(486, 222, 425, 478, -2, 1, 1), g(486, 163, 425, 478, -2, 1, 1)],
     4010: [{type: 'gargoyle', x: 30, y: 60, right: 265}, {type: 'platforms'}, {type: 'henchman', x: 18, y: 39}, {type: 'weight', x: 240, min: 1},
       rat(399, 40, 274, 473, 1), rat(494, 80, 399, 494, 1)],
-    4020: [{type: 'gargoyle', x: 105, y: 60, right: 395, min: 1}, {type: 'knight', x: 232, y: 90}, {type: 'lever', x: 46, y: 8, chain: 0}, {type: 'lever', x: 453, y: 8, chain: 1},
+    4020: [{type: 'gargoyle', x: 105, y: 60, right: 395, min: 1}, {type: 'knight', x: 232, y: 90}, {type: 'lever', x: 0, y: 256, chain: 0}, {type: 'lever', x: 480, y: 256, chain: 1},
       rat(192, 245, 95, 195, 1), rat(303, 245, 298, 401, 1), climber(97, 40, 161, 1), climber(397, 40, 161, 1)]
   };
 
@@ -73,9 +74,11 @@
 
   // Every reel on the disk and the moment it appears in play. A test requires all 172.
   const REELS = {
-    hero: ['A100', 'A101', 'A102', 'A103', 'A104', 'A105', 'A106', 'A107', 'A108', 'A109', 'A110', 'A114', 'A115', 'A116', 'A117', 'A118', 'A119', 'A120', 'A123', 'A125', 'A126', 'A128', 'A129', 'A149', 'B121', 'B122', 'B132', 'B133', 'B134', 'B147', 'B150', 'B151', 'B154', 'B156', 'B157', 'B142'],
+    hero: ['A100', 'A101', 'A102', 'A103', 'A104', 'A105', 'A106', 'A107', 'A108', 'A109', 'A110', 'A114', 'A115', 'A116', 'A117', 'A118', 'A119', 'A120', 'A123', 'A125', 'A126', 'A128', 'A129', 'A130', 'A131', 'A149', 'B121', 'B122', 'B132', 'B133', 'B134'],
+    pull: ['B146', 'B147', 'B155'],
+    power: ['B142', 'B143', 'B150', 'B151', 'B154', 'B157', 'B158'],
     arm: ['A111', 'A112', 'A113', 'A127', 'A138', 'A520'],
-    harm: ['A124', 'A130', 'A131', 'A135', 'A136', 'A137', 'B139', 'B140', 'B141', 'B143', 'B146', 'B148', 'B152', 'B153', 'B155', 'B158'],
+    harm: ['A124', 'A135', 'A136', 'A137', 'B139', 'B140', 'B141', 'B148', 'B152', 'B153', 'B156'],
     shield: ['A144', 'A145', 'B709'],
     hallRun: ['A10008', 'A10010', 'A10011', 'A10012', 'A10013', 'A10020', 'A10021', 'A10022', 'A10023', 'A10024', 'A10030', 'A10031', 'A10032', 'A10033', 'A10034', 'A10040', 'A10041', 'A10042', 'A10043'],
     hallDoor: ['A10050', 'A10051', 'A10052'],
@@ -106,5 +109,7 @@
     gate: [40, 41], broom: [60], vulture: [32], hatch: [41], weight: [8], swing: [2], hallRun: [84], title: [90, 91, 95], hall: [92, 93, 94],
     ending: [0, 89], ambience: [1]
   };
-  root.CastlePlan = {WINGS, WING_OF, DOORS, ROOMS, POINTS, RULES, REELS, SCREENS, SOUNDS};
+  // The rock henchman's throw is 19 updates long. The boulder leaves on the 15th (CODE 4 $176a-$17bc).
+  const HENCHMAN = {steps: 19, release: 14};
+  root.CastlePlan = {WINGS, WING_OF, DOORS, ROOMS, POINTS, RULES, REELS, SCREENS, SOUNDS, HENCHMAN};
 })();

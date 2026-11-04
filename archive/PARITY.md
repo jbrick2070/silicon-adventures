@@ -44,7 +44,8 @@ One line needs a pirated copy: "The pirate laughs: Har, Har, Har!" sits behind t
 | SFTR tables | 17 | Decoded into `archive/dc/castle-data.js`. |
 | Stbl score tables | 4 | Decoded. Points in play follow the scoring card, PICT 20005. |
 | HISC, KDEF, DCAS | 3 | Opening high scores, key setup and the demo version note. |
-| DEMO recording | 1 | Not replayed. The Demo button drives the rebuilt game instead. |
+| DEMO recording | 1 | The Demo button replays its 1,053 bytes of recorded input in the rebuilt game. Creatures differ, so the run plays out differently. |
+| FONT strikes | 3 | Score Font on the status bar, DC Dialog Font on the Scores of Merit and door labels, the Scepters font for the adventure's own lines. |
 | CODE | 10 | Read for data only. No 1986 logic is executed. `archive/dc/rooms/` holds an independent partial trace, where unresolved facts stay null. |
 | System, Finder | - | Apple's files. Preserved in the Disk Cabinet, outside the game. |
 
@@ -65,16 +66,18 @@ One line needs a pirated copy: "The pirate laughs: Har, Har, Har!" sits behind t
 | guard | B350 B351 B352 B353 B354 B355 B356 B357 |
 | hallDoor | A10050 A10051 A10052 |
 | hallRun | A10008 A10010 A10011 A10012 A10013 A10020 A10021 A10022 A10023 A10024 A10030 A10031 A10032 A10033 A10034 A10040 A10041 A10042 A10043 |
-| harm | A124 A130 A131 A135 A136 A137 B139 B140 B141 B143 B146 B148 B152 B153 B155 B158 |
+| harm | A124 A135 A136 A137 B139 B140 B141 B148 B152 B153 B156 |
 | hatch | B715 B716 B717 |
 | henchman | B703 B704 |
-| hero | A100 A101 A102 A103 A104 A105 A106 A107 A108 A109 A110 A114 A115 A116 A117 A118 A119 A120 A123 A125 A126 A128 A129 A149 B121 B122 B132 B133 B134 B142 B147 B150 B151 B154 B156 B157 |
+| hero | A100 A101 A102 A103 A104 A105 A106 A107 A108 A109 A110 A114 A115 A116 A117 A118 A119 A120 A123 A125 A126 A128 A129 A130 A131 A149 B121 B122 B132 B133 B134 |
 | icons | A5000 A5010 |
 | knight | B902 B904 B905 B908 B910 B911 B912 B913 B914 B915 B916 B917 B920 B921 |
 | ledges | B410 B411 B412 B413 B700 B900 B901 B903 |
 | lever | B712 B918 B919 |
 | mutant | B434 B435 B436 |
+| power | B142 B143 B150 B151 B154 B157 B158 |
 | prisoners | B522 |
+| pull | B146 B147 B155 |
 | rat | B310 B311 |
 | rope | B510 B511 |
 | shield | A144 A145 B709 |
@@ -151,7 +154,9 @@ A-PICT-10000 A-PICT-10004 A-PICT-12100 A-PICT-12200 A-PICT-15100 A-PICT-15101 A-
 | Typed verbs | The command line, plus a Try button for keyboard-free play. Riddle and password answers are held back. |
 | Save, Revert | Save, Restore, doorway checkpoints. |
 | About box | VERS credits in the Archive. |
-| Dark Castle keys | W S A D, Space, Q, E, Tab, mouse aim and click, plus arrows, F and touch buttons. |
+| Dark Castle keys | W S A D, Space, Q, E, Tab, mouse aim and click, plus arrows, F, gamepad and touch buttons. Each input keeps one job, and the title and pause screens show one controls card. Modern controls are the default. Classic 1986 controls in Options restore fixed jumps, the one-axis mouse arm, throwing only when standing, and Q to pick things up. |
+| Duncan's arm | The mouse sets the arm, and the rock's speed, drop and bounds follow CODE 2. Holding the button repeats on the disk's six updates. Modern aim points the same arm at the pointer. |
+| Joining ladders | Span kinds 38 and 39, which carry Duncan between rooms with no key held. They decide how the Shield room is entered. |
 | Difficulty levels | Beginner, Intermediate, Advanced, with the disk's bonus and extra-man values. |
 | Scores of Merit | Opens with the disk's shipped scores. |
 | December 25 tree | In the Archive and in play. |

@@ -41,13 +41,13 @@ async () => {
   for (const v of [{type: 'rat', speed: 2, ...base}, {type: 'rat', speed: -2, ...base}, {type: 'ropeRat', speed: 1, top: 0, bottom: 300}, {type: 'bat', state: 'perch', timer: 99},
     {type: 'mutant', speed: 2, ...base}, {type: 'mutant', speed: 2, ...base, hurt: 8}, {type: 'mutant', speed: 2, ...base, dying: 18}, {type: 'vulture', homeY: 200, timer: 0}, {type: 'feather', vy: .1},
     {type: 'eye', phase: 1}, {type: 'eye', phase: 1, dying: 18}, {type: 'broom', speed: 1, ...base}, {type: 'broom', speed: 1, ...base, hurt: 8}, {type: 'broom', speed: 1, ...base, dying: 18},
-    {type: 'fountain', timer: 0}, {type: 'torch'}, {type: 'faces', timer: 99}, {type: 'item', item: 'bag'}, {type: 'henchman', timer: 99}, {type: 'henchman', timer: 6}, {type: 'henchman', dying: 18},
+    {type: 'fountain', timer: 0}, {type: 'torch'}, {type: 'faces', timer: 99}, {type: 'item', item: 'bag'}, {type: 'henchman', timer: 99}, {type: 'henchman', timer: 99, step: 2}, {type: 'henchman', timer: 99, step: 6}, {type: 'henchman', timer: 99, step: 9}, {type: 'henchman', timer: 99, step: 12}, {type: 'henchman', timer: 99, step: 14}, {type: 'henchman', timer: 99, step: 16},
     {type: 'rock', vx: 0, vy: 0}, {type: 'shards', broken: 9, vx: 0, vy: 0}, {type: 'weight', falling: true, timer: 99, x: 300}, {type: 'dragon', timer: 99, breath: 0, hp: 9},
-    {type: 'dragon', timer: 99, breath: 30, hp: 9, x: 300}, {type: 'dragon', timer: 99, breath: 0, hp: 9, dying: 18}, {type: 'wizard', timer: 99}, {type: 'wizard', timer: 44}, {type: 'wizard', timer: 8},
+    {type: 'dragon', timer: 99, breath: 30, hp: 9, x: 300}, {type: 'dragon', timer: 99, breath: 0, hp: 9, dying: 18}, {type: 'wizard', timer: 99}, {type: 'wizard', timer: 44}, {type: 'wizard', timer: 8}, {type: 'wizard', timer: 3},
     {type: 'wizard', timer: 99, hurt: 8}, {type: 'wizard', timer: 99, dying: 18}, {type: 'bolt', vx: 0, vy: 0, life: 40}, {type: 'gargoyle', homeY: 200, speed: 1, right: 400},
     {type: 'gargoyle', homeY: 200, speed: -1, right: 400}, {type: 'gargoyle', homeY: 200, speed: 1, right: 400, dying: 18}, {type: 'drip', state: 'wait', timer: 40, startY: 10, floor: 300},
     {type: 'drip', state: 'fall', y: 40, startY: 10, floor: 300}, {type: 'drip', state: 'splash', timer: 12, y: 200, startY: 10, floor: 300}, {type: 'storm', every: 900, timer: 900, live: 16, bolt: 'B705'},
-    {type: 'storm', every: 900, timer: 900, live: 7, bolt: 'B706'}, {type: 'clouds'}, {type: 'bridge'}, {type: 'hatch', open: false}, {type: 'hatch', open: true}, {type: 'gate', open: false}, {type: 'gate', open: true},
+    {type: 'storm', every: 900, timer: 900, live: 7, bolt: 'B706'}, {type: 'clouds'}, {type: 'bridge'}, {type: 'hatch', open: false, t: 0}, {type: 'hatch', open: true, t: 8}, {type: 'gate', open: false}, {type: 'gate', open: true},
     {type: 'portcullis'}, {type: 'mug', vx: 0, vy: 0, life: 60}, {type: 'mug', vx: 0, vy: 0, life: 90, frame: 22}, {type: 'scepter', scepter: CastlePlan.WINGS.shield.scepter}]) await show(v);
   for (const e of [{type: 'guard', ...base, speed: 2, hurt: 7}, {type: 'bat', state: 'perch', timer: 99, dying: 18}]) await show(e, 180);
   for (const face of [1, -1]) {
@@ -56,9 +56,11 @@ async () => {
     const stride = face > 0 ? 'd' : 'a'; keys.add(stride); await wait(240); keys.delete(stride); h.x = 300; await wait(40);
     keys.add('e'); await wait(110); keys.delete('e'); core.powers.add('air'); keys.add('e'); await wait(110); keys.delete('e');
     keys.add('q'); await wait(180); keys.delete('q'); core.powers.delete('air'); await wait(40);
-    h.armUntil = core.tickCount + 20; await wait(100); h.flail = core.tickCount + 12; await wait(110); h.landed = core.tickCount; await wait(580);
+    h.armUntil = core.tickCount + 20; await wait(100); h.flail = core.tickCount + 12; await wait(110); h.landed = core.tickCount; await wait(1000);
+    h.settled = core.tickCount; await wait(450); h.pullAt = core.tickCount; await wait(1400); h.x = 100; h.leverAt = core.tickCount; await wait(450); h.x = 300; h.leverAt = core.tickCount; await wait(450);
     core.shots.push({x: 200, y: 299, vx: 0, vy: 0, w: 8, h: 8, fire: false, frame: 0, life: 12}, {x: 240, y: 200, vx: 0, vy: 0, w: 8, h: 8, fire: true, frame: 0, life: 12}); await wait(260);
     h.state = 'air'; h.floor = null; h.y = 40; h.vy = 8.9; h.vx = 1; await wait(120);
+    h.state = 'air'; h.floor = null; h.y = 40; h.vy = 0; h.light = true; await wait(120); h.light = false;
     core.enter(3000, 0); core.entities = []; core.hero.x = 240; core.hero.face = face; keys.add(' '); await wait(70); keys.delete(' '); await wait(600);
     core.hero.x = 240; const leap = face > 0 ? 'd' : 'a'; keys.add(leap); await wait(40); keys.add(' '); await wait(70); keys.delete(' '); await wait(600); keys.delete(leap);
     core.enter(1000, 0); core.entities = []; const r = core.hero, rope = core.room.ropes[0]; r.face = face;
@@ -69,6 +71,11 @@ async () => {
     core.enter(1010, 0); const q = core.hero, rig = core.entities.find(e => e.type === 'swingRope'); q.state = 'swing'; q.swing = rig; q.floor = null; q.safe = 999; await wait(2100);
   }
   for (const id of [2010, 4010]) { core.enter(id, 0); core.hero.safe = 9999; await wait(140); }
+  for (const id of ['earth', 'fire', 'air', 'water']) {
+    core.powers.clear(); core.enter(3000, 0); core.entities = []; core.hero.face = id === 'air' ? -1 : 1;
+    core.claim({id, name: id + ' scepter'}); await wait(2300);
+  }
+  core.powers.clear(); core.enter(3000, 0); core.entities = []; core.hero.face = 1; core.claim({id: 'air', name: 'air scepter'}); await wait(2300);
   core.ward = false; core.elixir = 0;
   for (const cause of ['fall', 'bite', 'bat', 'guard', 'whip', 'mutant', 'fire', 'lightning', 'crush', 'weight', 'acid', 'throw', 'mug']) {
     core.enter(3000, 0); core.entities = []; core.hero.safe = 0; core.harm(cause);
@@ -77,7 +84,8 @@ async () => {
   core.ward = true;
   core.enter(4020, 0); core.hero.safe = 9999; core.entities = core.entities.filter(e => ['throne', 'knight', 'lever'].includes(e.type));
   const knight = core.entities.find(e => e.type === 'knight'); knight.timer = 2; await wait(650); knight.timer = 80; await wait(120);
-  for (const pull of core.room.pulls) { core.pull(pull); await wait(220); }
+  for (const lever of core.entities.filter(e => e.type === 'lever')) lever.pulled = true;
+  for (const pull of core.room.pulls) { core.pull(pull); await wait(500); }
   await wait(2500);
   for (let i = 0; i < 4; i++) {
     core.powers.clear(); core.powers.add('earth'); core.powers.add('fire'); core.powers.add('air'); core.powers.delete({0: 'earth', 1: 'fire', 3: 'air'}[i]);
@@ -183,6 +191,17 @@ def smoke(page, base):
     page.keyboard.press("f")
     time.sleep(.1)
     assert page.evaluate("EnchantedCastle.session.core().rocks") == 59
+
+    # Escape pauses and shows the controls card, and repeated presses never close the window.
+    page.keyboard.press("Escape")
+    time.sleep(.1)
+    assert page.locator("[data-panel=pause]").is_visible()
+    assert page.locator("[data-panel=pause] tr").count() == 8
+    for _ in range(3):
+        page.keyboard.press("Escape")
+        time.sleep(.05)
+    assert page.evaluate("document.getElementById('castleGame').open")
+    assert not page.locator("[data-panel=pause]").is_visible()
 
     # The 1-bit modes stay strictly two-colour, status text included.
     page.evaluate("document.getElementById('castleCanvas')")

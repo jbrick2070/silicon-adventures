@@ -115,6 +115,46 @@ def jump_rows(code, at):
         at += 8
 
 
+FONTS = {'score': ('score-font', 'Data-A-FONT-25737-strip.png'), 'dialog': ('dialog-font', 'Data-A-FONT-29452-strip.png'),
+         'scepters': ('scepters-font', 'Scepters-FONT-394-strip.png')}
+
+
+def fonts():
+    """Copy each font strip beside the disk's other pictures and keep its metrics for the game."""
+    out = {}
+    source = ROOT / 'archive/dc/rooms/assets'
+    for key, (name, strip) in FONTS.items():
+        meta = json.loads((source / f'{name}.json').read_text(encoding='utf8'))
+        (ROOT / 'archive/dc/paper' / strip).write_bytes((source / f'{name}.png').read_bytes())
+        out[key] = {'path': 'archive/dc/paper/' + strip, 'ascent': meta['ascent'], 'descent': meta['descent'],
+                    'glyphs': {code: [g['x'], g['width'], g['offset'], g['advance']] for code, g in meta['glyphs'].items()}}
+    return out
+
+
+def demo():
+    """The recorded demo as [updates to wait, control, value]. Controls: 0 x, 1 y, 2 jump, 3 throw, 4 action, 5 duck.
+
+    CODE 2 $2bcc-$2d50 sets the fields and bits from the keys: W S on $a, A D on $8, Space bit 0,
+    the mouse button bit 1, Q bit 2 and E bit 3.
+    """
+    rows = json.loads((ROOT / 'archive/dc/rooms/assets/demo.json').read_text(encoding='utf8'))
+    bits = {0: 2, 1: 3, 2: 4, 3: 5}
+    out, wait = [], 0
+    for row in rows:
+        wait += row['delay'] or 0
+        command = row['command']
+        if not command:
+            continue
+        if command.startswith('set input field'):
+            control, value = (0 if command.endswith('$8') else 1), (row['value'] > 0) - (row['value'] < 0)
+        else:
+            control = bits[int(command[-1])]
+            value = 0 if command.startswith('clear') else row['value'] if control == 3 else 1
+        out.append([wait, control, value])
+        wait = 0
+    return out
+
+
 def bcd(data):
     return [int(f'{value:04x}') for value in struct.unpack(f'>{len(data) // 2}H', data)]
 
@@ -155,6 +195,8 @@ def main():
         'jumps': {name: jump_rows(fork_a[('CODE', 2)][4:], at)
                   for name, at in (('running', 0x13a4), ('standing', 0x13e4), ('downward', 0x1434))},
         'scores': [bcd(fork_a[('Stbl', i)]) for i in range(4)],
+        'fonts': fonts(),
+        'demo': demo(),
         'sharedSounds': {i: list(struct.unpack_from(f'>{signed(fork_a[("SFTR", i)], 0)}H', fork_a[('SFTR', i)], 2)) for i in (20, 21, 22)},
         'preferences': preferences(),
         'demoVersion': fork_a[('DCAS', 0)][1:].decode('mac_roman').replace('\r', ' ')

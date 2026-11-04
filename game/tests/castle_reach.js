@@ -4,7 +4,9 @@
    ladders, ropes, swinging ropes and moving platforms. It reports which exits and
    which scepter it reached.
 
-     node game/tests/castle_reach.js [room ...]
+     node game/tests/castle_reach.js [room ...] [--modern]
+
+   Classic controls by default, so a pass proves the rooms on the disk's physics alone.
 */
 const { readFileSync } = require('node:fs');
 const path = require('node:path');
@@ -21,13 +23,15 @@ function boot() {
 }
 
 let built = null;
+const MODERN = process.argv.includes('--modern');
 const WAITS = [0, 25, 50, 75, 100, 125, 150, 175];
 function explore(context, id, variant) {
   const make = ticks => {
-    const core = new context.CastleCore({data: context.CASTLE_DATA, plan: context.CastlePlan, ward: true, rooms: built});
+    const core = new context.CastleCore({data: context.CASTLE_DATA, plan: context.CastlePlan, ward: true, rooms: built, modern: MODERN});
     built = core.rooms;
     core.say = () => {}; core.tell = () => {}; core.enter(id, variant);
     core.entities = core.entities.filter(e => e.type === 'swingRope' || e.type === 'platform');
+    for (let t = 0; t < 200 && core.hero.ladder?.auto; t++) core.tick({}); // A joining ladder carries Duncan in.
     for (let t = 0; t < (ticks || 0); t++) for (const e of core.entities) if (e.type === 'platform') core.run_platform(e);
     return core;
   };
@@ -137,7 +141,7 @@ function arrivals(context) {
 }
 
 function main() {
-  const context = boot(), ids = process.argv.slice(2).map(Number), plan = context.CastlePlan;
+  const context = boot(), ids = process.argv.slice(2).filter(arg => arg !== '--modern').map(Number), plan = context.CastlePlan;
   const list = ids.length ? ids : context.CASTLE_DATA.order, used = arrivals(context);
   const scepters = Object.fromEntries(Object.values(plan.WINGS).map(w => [w.scepter.room, w.scepter]));
   let missing = 0;

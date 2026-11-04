@@ -20,6 +20,12 @@
       img.onload = () => resolve(img); img.onerror = () => reject(new Error('Could not load ' + src)); img.src = src;
     });
   }
+  function tinted(img, colour) {
+    const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0); ctx.globalCompositeOperation = 'source-in'; ctx.fillStyle = colour; ctx.fillRect(0, 0, c.width, c.height);
+    return c;
+  }
   const assets = {reels: new Map(), info: new Map(), screens: new Map(), paper: new Map(), plates: new Map(), loaded: null};
   function loadAssets() {
     if (assets.loaded) return assets.loaded;
@@ -33,6 +39,10 @@
       'A-PICT-16200', 'B-PICT-16201', 'B-PICT-16202', 'B-PICT-16203', 'B-PICT-16204'];
     for (const name of paper) jobs.push(loadImage('archive/dc/paper/Data-' + name + '.png').then(img => assets.paper.set(name, img)));
     for (const wing of Object.values(window.CastlePlan.WINGS)) jobs.push(loadImage(wing.scepter.plate).then(img => assets.plates.set(wing.scepter.id, img)));
+    assets.fonts = {};
+    for (const [name, meta] of Object.entries(window.CASTLE_DATA.fonts)) {
+      jobs.push(loadImage(meta.path).then(img => { assets.fonts[name] = {meta, black: tinted(img, '#000'), white: tinted(img, '#fff')}; }));
+    }
     assets.loaded = Promise.all(jobs).then(prepareForegrounds);
     return assets.loaded;
   }
@@ -59,7 +69,7 @@
     constructor(canvas) {
       this.canvas = canvas; this.ctx = canvas.getContext('2d');
       this.buffer = document.createElement('canvas'); this.buffer.width = W; this.buffer.height = H;
-      this.b = this.buffer.getContext('2d', {willReadFrequently: true}); this.b.imageSmoothingEnabled = false; this.ctx.imageSmoothingEnabled = false;
+      this.b = this.buffer.getContext('2d'); this.b.imageSmoothingEnabled = false; this.ctx.imageSmoothingEnabled = false;
       this.used = new Set();
     }
     reel(key, frame, x, y, flip) {
@@ -73,11 +83,26 @@
         this.b.drawImage(img, fx, fy, info.width, info.height, 0, 0, info.width, info.height); this.b.restore();
       } else this.b.drawImage(img, fx, fy, info.width, info.height, Math.round(x), Math.round(y), info.width, info.height);
     }
-    // Canvas text is antialiased. Snapping it keeps the 1-bit modes strictly two-colour.
-    snap(x, y, w, h) {
-      const im = this.b.getImageData(x, y, w, h), d = im.data;
-      for (let i = 0; i < d.length; i += 4) { const v = d[i] < 128 ? 0 : 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; }
-      this.b.putImageData(im, x, y);
+    // Text comes from the disks' own bitmap fonts, so every mode stays strictly two-colour.
+    measure(name, text) {
+      const {glyphs} = assets.fonts[name].meta;
+      return [...text].reduce((sum, ch) => sum + (glyphs[ch.charCodeAt(0)]?.[3] ?? 6), 0);
+    }
+    text(name, text, x, y, colour = 'black', align = 'left') {
+      const font = assets.fonts[name], {glyphs, ascent, descent} = font.meta, strip = font[colour];
+      let pen = Math.round(align === 'left' ? x : x - this.measure(name, text) / (align === 'center' ? 2 : 1));
+      for (const ch of text) {
+        const g = glyphs[ch.charCodeAt(0)];
+        if (g) this.b.drawImage(strip, g[0], 0, g[1], ascent + descent, pen + g[2], y - ascent, g[1], ascent + descent);
+        pen += g ? g[3] : 6;
+      }
+    }
+    // A line of the adventure's own voice, in the Enchanted Scepters font.
+    plaque(text, y) {
+      const width = Math.min(W - 16, this.measure('scepters', text) + 16), left = Math.round((W - width) / 2);
+      this.b.fillStyle = '#000'; this.b.fillRect(left - 1, y - 1, width + 2, 22);
+      this.b.fillStyle = '#fff'; this.b.fillRect(left, y, width, 20);
+      this.text('scepters', text, left + 8, y + 14, 'black');
     }
     show(colour, tone) {
       const c = this.ctx;
@@ -90,39 +115,41 @@
     }
   }
 
+  // Reel choices follow the hero code: the first of each pair faces left (hero-reels.json).
+  const LONG_FALL = [0, 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6];
+  const SETTLE = [2, 2, 2, 2, 3, 3, 3, 2, 2, 2], LEVER_PULL = [0, 0, 1, 2, 3, 4, 4, 3, 3, 0];
+  const UPDATE = 2.5;
+  function upright(p, key, frame, h) {
+    const info = assets.info.get(key);
+    p.reel(key, frame, h.x + (32 - info.width) / 2, h.y + 40 - info.height);
+  }
   function drawHero(p, core, reduced) {
     const h = core.hero, tick = core.tickCount, left = h.face < 0, step = Math.floor(tick / 3);
-    const x = h.x, y = h.y;
+    const x = h.x, y = h.y, age = at => at === undefined ? 1e9 : (tick - at) / UPDATE;
     if (h.safe > 0 && !reduced && tick % 4 < 2) return;
-    if (h.flail > tick) {
-      p.reel(left ? 'B133' : 'B134', 12 - (h.flail - tick), x - 8, y - 12);
-      return;
-    }
-    if (h.landed && tick - h.landed < 16) { p.reel(left ? 'A131' : 'A130', Math.floor((tick - h.landed) / 2.3), x - 8, y - 2); return; }
+    if (h.flail > tick) { p.reel(left ? 'B133' : 'B134', 12 - (h.flail - tick), x - 8, y - 12); return; }
+    if (age(h.landed) < LONG_FALL.length) { upright(p, left ? 'A130' : 'A131', LONG_FALL[Math.floor(age(h.landed))], h); return; }
+    if (age(h.pullAt) < 15) { upright(p, 'B147', age(h.pullAt) < 4 ? 0 : 1, h); return; }
+    if (age(h.leverAt) < LEVER_PULL.length) { upright(p, x <= 200 ? 'B146' : 'B155', LEVER_PULL[Math.floor(age(h.leverAt))], h); return; }
     switch (h.state) {
-      case 'walk': p.reel(left ? 'A101' : 'A100', step, x, y); break;
+      case 'walk': p.reel(left ? 'A100' : 'A101', step, x, y); break;
       case 'air': {
         if (h.arc) {
           // Reel frame and draw offset come from the same disk table as the jump's path.
           const row = h.arc.rows[Math.min(h.arc.rows.length - 1, Math.floor(h.arc.t))];
-          const reel = h.arc.kind === 'running' ? (left ? 'A105' : 'A104') : (left ? 'A118' : 'A117');
+          const reel = h.arc.kind === 'running' ? (left ? 'A104' : 'A105') : (left ? 'A117' : 'A118');
           p.reel(reel, row[2], x, y + row[3]);
-        } else if (h.vy > 10) p.reel('B132', 0, x, y - 11);
-        else p.reel(left ? 'A105' : 'A104', 4, x, y - 5);
+        } else if (h.light) p.reel('B132', 0, x, y - 11);
+        else p.reel('A123', Math.floor(tick / 4), x, y - 8);
         break;
       }
-      case 'duck': p.reel(core.powers.has('air') ? 'A149' : left ? 'A120' : 'A119', 0, x, y + (core.powers.has('air') ? 14 : 8)); break;
+      case 'duck': p.reel(core.powers.has('air') ? 'A149' : left ? 'A119' : 'A120', core.powers.has('air') && left ? 1 : 0, x, y + (core.powers.has('air') ? 14 : 8)); break;
       case 'ladder': p.reel(h.y < h.ladder.top + 10 || h.y > h.ladder.bottom - 10 ? 'A103' : 'A102', Math.floor(y / 7), x, y - 8); break;
-      case 'stairs': {
-        const up = h.stairs.up;
-        p.reel(up ? (left ? 'A108' : 'A107') : (left ? 'A110' : 'A109'), step, x, y - 8);
-        break;
-      }
+      case 'stairs': p.reel(h.stairs.up ? (left ? 'A109' : 'A107') : (left ? 'A110' : 'A108'), step, x, y - 8); break;
       case 'rope': {
         const r = h.rope;
-        if (y <= r.top + 2) p.reel('A123', Math.floor(tick / 12), x, y - 8);
-        else if (y >= r.bottom - 2) p.reel('A116', Math.floor(tick / 12), x, y - 16);
-        else p.reel(left ? 'A115' : 'A114', Math.floor(y / 8), x, y - 8);
+        if (y <= r.top + 2 || y >= r.bottom - 2) p.reel('A116', left ? 0 : 1, x, y - 16);
+        else p.reel(left ? 'A114' : 'A115', Math.floor(y / 8), x, y - 8);
         break;
       }
       case 'swing': {
@@ -132,21 +159,51 @@
       }
       default: {
         const still = tick - (h.walked || 0);
-        if (still > 200) p.reel(left ? 'A129' : 'A128', Math.floor(tick / 8), x, y);
-        else if (still > 90) p.reel('A106', Math.floor(tick / 14), x, y);
-        else if (still < 6) p.reel('A125', Math.floor(still / 2), x, y);
-        else p.reel('A126', Math.floor(tick / 18), x, y);
+        if (age(h.settled) < SETTLE.length) p.reel('A125', SETTLE[Math.floor(age(h.settled))], x, y);
+        else if (still > 200) p.reel(left ? 'A128' : 'A129', Math.floor(tick / 8), x, y);
+        else p.reel('A106', left ? 0 : 3, x, y);
       }
     }
     if (h.state !== 'stand') h.walked = tick;
-    if (h.armUntil > tick) p.reel(left ? 'A112' : 'A111', h.aim, x, y + 2);
-    if (h.shield > 0) p.reel(left ? 'A145' : 'A144', Math.floor(tick / 3), x - 8, y - 3);
+    // The arm, from CODE 2 $3434-$3498. Frame 8 winds up, 9 or 10 throws, and the others hold the
+    // aim. Standing with nothing to do, Duncan's arm rests on frame 7.
+    const since = tick - (h.throwAt ?? -99), update = 2.5, throwing = since < update * 2;
+    if (throwing || h.state === 'stand') {
+      const frame = since < update ? 8 : throwing ? (h.arm > 192 ? 9 : 10) : h.armUntil > tick ? h.arm >> 6 : 7;
+      p.reel(left ? 'A111' : 'A112', frame, x + (left ? (throwing ? 2 : -14) : (throwing ? -12 : 4)), y - 6);
+    }
+    if (h.shield > 0) p.reel(left ? 'A144' : 'A145', Math.floor(tick / 3), x - 8, y - 3);
+  }
+  // Gaining a power, in the hero code's own order: states 35, 36 and 50.
+  const SHIMMER = [0, 1, 2, 3, 4, 5, 6, 5, 6, 5, 4, 3, 2, 1, 0, 0], FLEX = [0, 1, 2, 1];
+  function drawReward(p, core) {
+    const h = core.hero, u = (core.tickCount - core.reward.at) / UPDATE, f = Math.floor(u), left = h.face < 0;
+    switch (core.reward.id) {
+      case 'fire':
+        if (f < 4) upright(p, 'A106', 2, h);
+        else if (f < 4 + SHIMMER.length) upright(p, 'B158', SHIMMER[f - 4], h);
+        else upright(p, 'A126', FLEX[f % 4], h);
+        break;
+      case 'air':
+        if (f < 6) upright(p, 'B142', Math.min(2, Math.floor(f / 2)), h);
+        else if (f < 14) upright(p, 'B143', f & 1, h);
+        else upright(p, left ? 'A144' : 'A145', f & 1, h);
+        break;
+      case 'water':
+        if (f < 4) upright(p, 'A106', 2, h);
+        else if (f < 12) upright(p, 'B151', f & 1, h);
+        else if (f < 20) upright(p, 'B150', f & 1, h);
+        else if (f < 24) upright(p, 'B154', 0, h);
+        else upright(p, 'B157', f & 1, h);
+        break;
+      default: upright(p, 'A126', FLEX[Math.floor(f / 2) % 4], h);
+    }
   }
   const DEATHS = {
-    fall: [['A135', 26, 2], ['A137', 40, 8]], bite: [['B151', 18, 5], ['A124', 40, 7]], bat: [['B150', 18, 5], ['A124', 40, 7]],
-    guard: [['B152', 22, 4], ['B148', 40, 9]], whip: [['B146', 22, 4], ['B155', 40, 8]], mutant: [['B147', 18, 5], ['B153', 40, 7]],
-    fire: [['B140', 30, 6], ['B141', 40, 8]], lightning: [['B140', 40, 7]], crush: [['B139', 40, 7]], weight: [['B143', 30, 6], ['B139', 40, 7]],
-    acid: [['B158', 44, 5]], throw: [['A136', 40, 5]], mug: [['B142', 16, 5], ['B156', 26, 6], ['B157', 36, 6], ['B154', 44, 9]]
+    fall: [['A135', 26, 2], ['A137', 40, 8]], bite: [['A124', 40, 7]], bat: [['A124', 40, 7]],
+    guard: [['B153', 22, 4], ['B148', 40, 9]], whip: [['B148', 20, 5], ['A137', 40, 8]], mutant: [['B152', 22, 4], ['A137', 40, 8]],
+    fire: [['B140', 30, 6], ['B141', 40, 8]], lightning: [['B140', 40, 7]], crush: [['B139', 40, 7]], weight: [['A136', 22, 4], ['A137', 40, 8]],
+    acid: [['B139', 40, 7]], throw: [['A136', 40, 5]], mug: [['B156', 26, 6], ['A124', 40, 7]]
   };
   function drawDeath(p, core) {
     const {cause, t} = core.dying, list = DEATHS[cause] || DEATHS.guard, h = core.hero;
@@ -164,6 +221,11 @@
     const [reel] = list[list.length - 1], info = assets.info.get(reel);
     p.reel(reel, info.frames - 1, h.x + (32 - info.width) / 2, h.y + 40 - info.height);
   }
+  // Frame orders read from the creature routines (creature-reels.json).
+  const HENCHMAN_THROW = [['B704', 0], ['B704', 1], ['B704', 1], ['B704', 1], ['B703', 0], ['B703', 0], ['B703', 0], ['B703', 0], ['B703', 1], ['B703', 1], ['B703', 1],
+    ['B703', 2], ['B703', 2], ['B703', 2], ['B703', 3], ['B704', 2], ['B704', 2], ['B704', 2], ['B704', 0]];
+  const WIZARD_IDLE = [5, 5, 5, 6, 6, 6, 5, 5, 5, 7, 7, 7, 7], THRONE_ROCK = [0, 1, 1, 0, 2, 2, 0, 1, 1, 0, 2, 2], THRONE_FALL = [0, 1, 1, 1];
+  const HATCH_SWING = [0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 1, 1];
   function drawEntity(p, e, core, reduced) {
     const tick = core.tickCount, slow = Math.floor(e.frame / 4);
     switch (e.type) {
@@ -174,12 +236,13 @@
         else p.reel(e.hurt ? 'B350' : e.turned ? 'B351' : e.speed > 0 ? 'B352' : 'B353', slow, e.x, e.y);
         break;
       case 'arrow': p.reel(e.vx > 0 ? 'B357' : 'B356', 0, e.x, e.y); break;
-      case 'rat': p.reel(e.speed > 0 ? 'B310' : 'B311', Math.floor(e.frame / 2), e.x, e.y + 24); break;
+      case 'rat': p.reel(e.speed > 0 ? 'B311' : 'B310', e.dying ? 2 : 1 - (Math.floor(e.frame / 2) & 1), e.x, e.y + 24); break;
       case 'ropeRat': p.reel('B310', Math.floor(e.frame / 2), e.x, e.y, e.speed < 0); break;
-      case 'bat': p.reel('B300', e.state === 'perch' ? 0 : Math.floor(e.frame / 2), e.x, e.y); break;
+      case 'bat': p.reel('B300', e.dying ? 5 : e.state === 'perch' ? 0 : 1 + (Math.floor(e.frame / 2) & 1), e.x, e.y); break;
       case 'mutant':
         if (e.dying) p.reel('B436', Math.floor((18 - e.dying) / 3), e.x, e.y);
-        else p.reel(e.hurt ? 'B435' : 'B434', slow, e.x, e.y + 8, e.speed < 0);
+        else if (e.hurt) p.reel('B434', slow, e.x, e.y + 8);
+        else p.reel('B435', (slow & 3) + (e.speed > 0 ? 4 : 0), e.x, e.y + 8);
         break;
       case 'vulture': p.reel('B701', Math.floor(e.frame / 3), e.x, e.y); break;
       case 'feather': p.reel('B702', Math.floor(e.frame / 3), e.x, e.y); break;
@@ -189,7 +252,11 @@
       case 'torch': p.reel('A5000', slow, e.x, e.y); break;
       case 'faces': p.reel('B522', e.pose || 0, e.x, e.y); break;
       case 'item': p.reel('A5010', e.item === 'bag' ? 4 : 6, e.x, e.y); break;
-      case 'henchman': p.reel(e.dying ? 'B704' : 'B703', e.dying ? Math.floor((18 - e.dying) / 6) : e.timer < 14 ? 3 - Math.floor(e.timer / 5) : 0, e.x, e.y); break;
+      case 'henchman': {
+        const [reel, frame] = HENCHMAN_THROW[Math.min(HENCHMAN_THROW.length - 1, Math.floor(e.step || 0))];
+        p.reel(reel, frame, e.x, e.y);
+        break;
+      }
       case 'rock': p.reel('B428', Math.floor(e.frame / 2), e.x, e.y); break;
       case 'shards': p.reel('B429', 10 - e.broken, e.x, e.y); break;
       case 'weight': if (e.falling) p.reel('B521', 0, e.x, e.y); break;
@@ -200,13 +267,16 @@
         break;
       case 'wizard':
         if (e.dying) p.reel('B433', Math.floor(e.frame / 3), e.x, e.y + 26);
-        else p.reel(e.timer < 14 ? 'B432' : e.hurt ? 'B431' : 'B430', slow, e.x, e.y);
+        else if (e.hurt) p.reel('B431', slow, e.x, e.y);
+        else if (e.timer < 4) p.reel('B432', slow, e.x, e.y);
+        else if (e.timer < 14) p.reel('B430', 4 - Math.floor(e.timer / 3), e.x, e.y);
+        else p.reel('B430', WIZARD_IDLE[Math.floor(e.frame / UPDATE) % WIZARD_IDLE.length], e.x, e.y);
         if (e.timer > 40 && e.timer < 46) p.reel('B437', 0, e.x - 20, e.y + 4);
         break;
       case 'bolt': p.reel('B424', Math.floor(e.frame / 2), e.x, e.y); break;
       case 'gargoyle':
         if (e.dying) p.reel('B922', Math.floor((18 - e.dying) / 2.7), e.x, e.y);
-        else p.reel(e.speed > 0 ? 'B907' : 'B906', slow, e.x, e.y, e.speed < 0);
+        else p.reel(e.speed < 0 ? 'B907' : 'B906', 1 + (Math.floor(e.frame / 3) & 1), e.x, e.y);
         break;
       case 'boulder': p.reel('B428', Math.floor(e.frame / 2), e.x, e.y); break;
       case 'drip':
@@ -232,7 +302,7 @@
         p.reel('B412', 0, e.x, e.y + 56); p.reel('B700', 0, e.x + 8, e.y - 6);
         break;
       case 'hatch':
-        p.reel('B715', e.open ? 3 : 0, e.x, e.y);
+        p.reel('B715', e.open ? HATCH_SWING[Math.floor(e.t)] : 0, e.x, e.y);
         if (e.open) p.reel('B717', Math.floor(tick / 10), e.x - 8, e.y + 28);
         else p.reel('B716', Math.floor(tick / 12), e.x + 8, e.y + 30);
         break;
@@ -240,8 +310,12 @@
       case 'platform': p.reel(core.room.id >= 4000 ? 'B901' : 'B410', e.mover.frame, e.x, e.y); break;
       case 'portcullis': p.reel('B200', Math.min(2, Math.floor(e.frame / 9)), -24, core.hero.y - 43 > 0 ? e.fixedY ??= core.hero.y - 43 : 0); break;
       case 'throne':
-        if (core.throne) p.reel('B902', core.throne.down ? 2 : core.throne.shaken % 2, e.x, e.y);
-        p.reel('B903', core.throne?.down ? 2 : Math.min(1, core.throne?.shaken || 0), e.x - 48, e.y + 76);
+        {
+          // Both reels rock together (CODE 4 $2708-$2778), and the last topples them.
+          const t = core.throne, u = t?.rocked === undefined ? 99 : Math.floor((tick - t.rocked) / UPDATE);
+          const frame = t?.down ? THRONE_FALL[Math.min(THRONE_FALL.length - 1, u)] : u < THRONE_ROCK.length ? THRONE_ROCK[u] : 0;
+          p.reel('B902', frame, e.x, e.y); p.reel('B903', frame, e.x - 48, e.y + 76);
+        }
         p.reel('B900', 0, e.x - 8, e.y + 73);
         if (core.throne?.shaken) p.reel('B905', Math.floor(tick / 6), e.x + 8, e.y + 62);
         break;
@@ -254,12 +328,16 @@
         p.reel(e.frame % 40 < 20 ? 'B904' : 'B917', Math.floor(e.frame / 3), e.x, e.y);
         break;
       case 'lever':
-        p.reel(e.chain ? 'B918' : 'B712', core.pullsDone.size ? Math.min(4, core.pullsDone.size) : 0, e.x, e.y);
+        p.reel(e.chain ? 'B918' : 'B712', e.pulled ? 4 : 0, e.x, e.y);
         if (core.pullsDone.size) { p.reel('B919', Math.floor(tick / 4), e.x + 8, e.y + 28); p.reel('B920', 0, e.x + 8, e.y + 34); p.reel('B921', Math.floor(tick / 6), e.x + 8, e.y + 22); }
         break;
       case 'scepter': {
         const img = assets.plates.get(e.scepter.id);
-        if (img) p.b.drawImage(img, e.x, e.y + Math.sin(tick * .1) * (reduced ? 0 : 2));
+        if (img) {
+          // The drawings are room-sized, so the castle shows them at half scale, centred on the spot.
+          const w = img.naturalWidth >> 1, h = img.naturalHeight >> 1;
+          p.b.drawImage(img, Math.round(e.x + 12 - w / 2), Math.round(e.y + 15 - h / 2 + Math.sin(tick * .1) * (reduced ? 0 : 2)), w, h);
+        }
         if (e.scepter.id === 'air') p.reel('B709', 0, e.x + 8, e.y - 26);
         break;
       }
@@ -277,21 +355,21 @@
       const numeral = assets.paper.get('A-PICT-' + (16100 + inWing));
       if (numeral) b.drawImage(numeral, 164, STATUS_Y + 7);
     }
-    b.fillStyle = '#fff'; b.font = '11px Consolas, "Lucida Console", monospace'; b.textAlign = 'center';
-    const row = STATUS_Y + 27;
-    b.fillText(String(core.score), 214, row); b.fillText(String(core.bonus), 270, row);
-    b.fillText(String(core.rocks), 318, row); b.fillText(String(Math.max(0, core.lives)), 365, row); b.fillText(String(core.elixir), 412, row);
-    b.textAlign = 'left';
+    const row = STATUS_Y + 29, number = n => n.toLocaleString('en-US');
+    p.text('score', number(core.score), 214, row, 'white', 'center'); p.text('score', number(core.bonus), 270, row, 'white', 'center');
+    p.text('score', number(core.rocks), 318, row, 'white', 'center'); p.text('score', number(Math.max(0, core.lives)), 365, row, 'white', 'center');
+    p.text('score', number(core.elixir), 412, row, 'white', 'center');
     const slots = [['earth', 1], ['fire', 2], ['air', 3]];
     slots.forEach(([power, frame], i) => { if (core.powers.has(power)) p.reel('A5010', frame, 443 + i * 23, STATUS_Y + 12); });
-    p.snap(0, STATUS_Y, W, H - STATUS_Y);
   }
   function drawRoom(p, core, reduced) {
     const b = p.b, room = core.room, art = assets.screens.get('B' + room.id);
     b.fillStyle = '#000'; b.fillRect(0, 0, W, H);
     if (art) b.drawImage(art, 0, 0);
     for (const e of core.entities) if (!['knight', 'lever'].includes(e.type)) drawEntity(p, e, core, reduced);
-    if (core.mode === 'dying') drawDeath(p, core); else drawHero(p, core, reduced);
+    if (core.mode === 'dying') drawDeath(p, core);
+    else if (core.mode === 'leaving') drawReward(p, core);
+    else drawHero(p, core, reduced);
     for (const e of core.entities) if (['knight', 'lever'].includes(e.type)) drawEntity(p, e, core, reduced);
     for (const shot of core.shots) {
       if (shot.fire) p.reel('B424', shot.frame, shot.x - 8, shot.y - 8);
@@ -301,6 +379,7 @@
     }
     const front = assets.fronts?.get(room.id);
     if (front) b.drawImage(front, 0, 0);
+    if (core.mode === 'leaving') p.plaque('You have the ' + core.reward.name + '.', 30);
     if (core.flash && !reduced) { b.fillStyle = 'rgba(255,255,255,.65)'; b.fillRect(0, 0, W, STATUS_Y); }
     drawStatus(p, core);
   }
@@ -316,6 +395,9 @@
     } else {
       p.reel('A10008', Math.floor(core.tickCount / 12), 220, 208);
       p.reel('A520', 0, door.x - 16, 200);
+      const width = p.measure('dialog', door.label) + 12, left = Math.max(4, Math.min(W - width - 4, door.x - width / 2));
+      b.fillStyle = '#000'; b.fillRect(left, 222, width, 20);
+      p.text('dialog', door.label, left + 6, 237, 'white');
     }
     drawStatus(p, core);
   }
@@ -339,19 +421,18 @@
     try { localStorage.setItem('castle-scores', JSON.stringify(list)); } catch { /* Storage may be blocked. */ }
     return at === 0 ? 'Congratulations, you made the top score with ^0 points.' : 'Congratulations, you made a high score with ^0 points.';
   }
+  let banner = '';
   function drawScores(p, tick, reduced) {
     const b = p.b, art = assets.screens.get('A15000');
     b.fillStyle = '#000'; b.fillRect(0, 0, W, H);
     if (art) b.drawImage(art, 0, 0);
     const door = assets.paper.get(tick % 240 < 120 || reduced ? 'A-PICT-15100' : 'A-PICT-15101');
     if (door) b.drawImage(door, 0, 0, 64, 126, 150, 126, 64, 126);
-    b.fillStyle = '#000'; b.font = 'bold 13px Georgia, serif';
     scores().slice(0, 8).forEach((row, i) => {
-      b.textAlign = 'left'; b.fillText(row.name, 342, 74 + i * 22);
-      b.textAlign = 'right'; b.fillText(row.points.toLocaleString('en-US'), 486, 74 + i * 22);
+      p.text('dialog', row.name, 342, 74 + i * 22, 'black');
+      p.text('dialog', row.points.toLocaleString('en-US'), 486, 74 + i * 22, 'black', 'right');
     });
-    b.textAlign = 'left';
-    p.snap(330, 56, 170, 190);
+    if (banner) p.plaque(banner, 274);
   }
   function drawTitle(p, tick, reduced) {
     const b = p.b, flash = !reduced && tick % 200 > 190;
@@ -363,6 +444,21 @@
     }
   }
 
+  // One table for every place the controls are shown, so the title, the pause card and the
+  // gamepad never disagree. Each name is the name on the touch buttons too.
+  const controlRows = classic => [
+    ['Move', 'Left and Right, or A and D', 'Stick or pad'],
+    ['Climb', 'Up and Down, or W and S', 'Stick or pad'],
+    ['Jump', 'Space. Hold Down too for a low jump', 'A'],
+    classic ? ['Throw', 'Move the mouse to set the arm, then click. Stand still to throw', 'X']
+      : ['Throw', 'Click to throw at the pointer, or F for the nearest foe. Hold to keep throwing', 'X'],
+    ['Act', classic ? 'Q pulls, presses, picks up and raises the shield' : 'Q pulls, presses and raises the shield', 'B'],
+    ['Duck', classic ? 'E' : 'Down on open floor, or E', 'Y'],
+    ['Pause', 'Esc, P or Tab', 'Start'],
+  ];
+  const controlsTable = classic => '<tr><th>To</th><th>Keyboard and mouse</th><th>Gamepad</th></tr>'
+    + controlRows(classic).map(([name, keys, pad]) => `<tr><th>${name}</th><td>${keys}</td><td>${pad}</td></tr>`).join('');
+
   let session = null;
   function open(host) {
     if (session) return;
@@ -371,7 +467,7 @@
     dialog.id = 'castleGame'; dialog.setAttribute('aria-labelledby', 'castleTitle');
     dialog.innerHTML = `
       <div class="bar"><img class="castle-mark" src="archive/dc/paper/Dark-Castle-ICNN-128.png" alt=""><span id="castleTitle">THE ENCHANTED CASTLE</span><span class="barlines"></span><button type="button" data-do="close" aria-label="Close the castle">×</button></div>
-      <div class="castle-stage"><canvas id="castleCanvas" width="${W}" height="${H}" tabindex="0" role="img" aria-label="The Enchanted Castle. A D move, W S climb, Space jump, F or click throw, Q action or shield, E duck, Tab pause."></canvas></div>
+      <div class="castle-stage"><canvas id="castleCanvas" width="${W}" height="${H}" tabindex="0" role="img" aria-label="The Enchanted Castle. The controls are listed below the game."></canvas></div>
       <p class="castle-line" id="castleLine" role="status"></p>
       <div class="castle-menu" data-panel="menu">
         <p class="eyebrow">A NEW GAME FROM THE TWO DISKS</p>
@@ -385,13 +481,19 @@
           <button type="button" data-do="info">Info</button>
           <button type="button" data-do="options">Options</button>
         </div>
+        <table class="castle-controls" data-controls></table>
+        <p class="castle-touch-note">The buttons under the game move, climb, jump, throw, act and duck.</p>
+      </div>
+      <div class="castle-menu" data-panel="pause" hidden>
+        <p class="eyebrow">PAUSED</p>
+        <table class="castle-controls" data-controls></table>
       </div>
       <div class="castle-menu" data-panel="options" hidden>
+        <label><input type="checkbox" data-opt="classic"> Classic 1986 controls: fixed jumps, throw only when standing, Q picks things up</label>
         <label><input type="checkbox" data-opt="ward"> Elron’s ward: blows cost bonus instead of a life</label>
-        <label><input type="checkbox" data-opt="vertical"> Mouse Tracking: Vertical (arm follows up and down)</label>
+        <label><input type="checkbox" data-opt="vertical"> Classic mouse moves the arm up and down, not left and right</label>
         <label><input type="checkbox" data-opt="captions" checked> Sound captions</label>
         <p class="castle-volume"><img src="archive/dc/paper/Data-A-PICT-32000.png" alt="">Sound Volume follows the Effects slider above the game.</p>
-        <p class="castle-keys">A D move · W S climb · Space jump · S with Space jumps down · F or click throws · Q acts, or holds the shield · E ducks · Tab pauses</p>
         <button type="button" data-do="menu">Back</button>
       </div>
       <div class="castle-touch" hidden>
@@ -403,14 +505,15 @@
     const $ = q => dialog.querySelector(q), canvas = $('canvas'), line = $('#castleLine');
     // A key tapped between two ticks still counts for one tick.
     const painter = new Painter(canvas), keys = new Set(), tapped = new Set(), input = {};
-    let core = null, view = 'loading', frame = 0, last = 0, spare = 0, paused = false, tick = 0, demoUntil = 0;
-    let aimAt = null, usedMouse = false, lineUntil = 0;
-    const options = {ward: false, vertical: false, captions: true};
+    let core = null, view = 'loading', frame = 0, last = 0, spare = 0, paused = false, tick = 0;
+    let pointer = null, usedMouse = false, lineUntil = 0;
+    const options = {classic: false, ward: false, vertical: false, captions: true};
     try { Object.assign(options, JSON.parse(localStorage.getItem('castle-options') || '{}')); } catch { /* Storage may be blocked. */ }
     for (const box of dialog.querySelectorAll('[data-opt]')) {
       box.checked = !!options[box.dataset.opt];
       box.addEventListener('change', () => {
         options[box.dataset.opt] = box.checked;
+        showControls();
         try { localStorage.setItem('castle-options', JSON.stringify(options)); } catch { /* Storage may be blocked. */ }
       });
     }
@@ -419,11 +522,14 @@
       window.SiliconChronicle?.note(text, 0, '');
     };
     const panel = name => { for (const p of dialog.querySelectorAll('[data-panel]')) p.hidden = p.dataset.panel !== name; };
+    function showControls() { for (const table of dialog.querySelectorAll('[data-controls]')) table.innerHTML = controlsTable(options.classic); }
+    showControls();
     function begin(level, demo = false) {
-      core = new window.CastleCore({data: window.CASTLE_DATA, plan: window.CastlePlan, difficulty: level, ward: options.ward, demo, seed: Math.floor(performance.now()) || 1});
-      view = 'game'; paused = false; panel(''); demoUntil = demo ? performance.now() + 26000 : 0;
+      core = new window.CastleCore({data: window.CASTLE_DATA, plan: window.CastlePlan, difficulty: level, ward: options.ward, demo, modern: !options.classic && !demo, seed: Math.floor(performance.now()) || 1});
+      view = 'game'; paused = false; panel(''); banner = '';
+      if (demo) core.startDemo();
       $('.castle-touch').hidden = false;
-      say(demo ? window.CASTLE_DATA.demoVersion : 'Choose a door with A and D. Press Space to go through it.');
+      say(demo ? 'The input recorded on the disk, played in this edition. Press any key to stop.' : 'Choose a door with A and D. Press Space to go through it.');
       canvas.focus({preventScroll: true});
     }
     function toTitle() {
@@ -447,7 +553,8 @@
         } else if (event.type === 'won') {
           const text = recordScore(event.score);
           host.onFinish?.({won: true, score: event.score});
-          showScores('Elron: Bravo! You have saved Callion! ' + (text ? text.replace('^0', event.score.toLocaleString('en-US')) : ''));
+          banner = 'Elron: Bravo! You have saved Callion!';
+          showScores(text ? text.replace('^0', event.score.toLocaleString('en-US')) : banner);
         }
       }
     }
@@ -461,20 +568,41 @@
       input.action = on('q', 'action');
       input.duck = on('e', 'duck');
       input.fire = on('f', 'fire', 'mouse');
-      input.aimAt = usedMouse ? aimAt : null;
+      // Modern aim goes straight at the pointer. The classic mouse is one axis, as on the disk.
+      input.aimAt = usedMouse && !options.classic ? pointer : null;
+      input.arm = usedMouse && options.classic && pointer ? Math.round(Math.max(0, Math.min(511, options.vertical ? pointer.y * 512 / H : pointer.x))) : null;
       tapped.clear();
+      readGamepad();
     }
-    // A small driver for the Demo: it walks, jumps and throws, and every room still plays by the rules.
-    function demoInput() {
-      const t = core.tickCount;
-      return {left: t % 420 > 300, right: t % 420 <= 300, up: t % 90 < 30, down: t % 170 < 12, jump: t % 53 === 0, fire: t % 37 === 0, action: t % 211 === 0};
+    // The standard pad layout: stick or d-pad, A jump, B act, X throw, Y duck, Start pause.
+    let startHeld = false;
+    function readGamepad() {
+      const pad = [...(navigator.getGamepads?.() || [])].find(Boolean);
+      if (!pad) return;
+      const button = i => !!pad.buttons[i]?.pressed, x = pad.axes[0] || 0, y = pad.axes[1] || 0;
+      input.left ||= x < -.4 || button(14); input.right ||= x > .4 || button(15);
+      input.up ||= y < -.5 || button(12); input.down ||= y > .5 || button(13);
+      input.jump ||= button(0); input.action ||= button(1); input.fire ||= button(2) || button(7); input.duck ||= button(3);
+      usedMouse = usedMouse && !button(2);
+      if (button(9) && !startHeld) togglePause();
+      startHeld = button(9);
+    }
+    function togglePause() {
+      paused = !paused; keys.clear(); panel(paused ? 'pause' : '');
+      $('.knock-tools [data-do=pause]').textContent = paused ? 'Resume' : 'Pause';
+    }
+    const KEY_WORDS = {action: 'Q · ', up: 'Up · ', down: 'Down · ', jump: 'Space · ', climb: 'Up or Down · ', hall: ''};
+    function showPrompt() {
+      if (view !== 'game' || !core || core.demo || lineUntil) return;
+      const prompt = core.prompt(), text = prompt ? KEY_WORDS[prompt[0]] + prompt[1] : '';
+      if (line.textContent !== text) line.textContent = text;
     }
     function step() {
       tick++;
       if (view !== 'game' || paused || !core) return;
       if (core.demo) {
-        onEvents(core.tick(demoInput()));
-        if (performance.now() > demoUntil || core.mode === 'over') toTitle();
+        onEvents(core.tick(core.demoInput()));
+        if (core.script.done || core.mode === 'over') toTitle();
         return;
       }
       readInput();
@@ -491,8 +619,8 @@
         drawHall(painter, core, now.getMonth() === 11 && now.getDate() === 25);
       } else if (core.room) drawRoom(painter, core, reduced.matches);
       if (paused) {
-        b.fillStyle = '#000'; b.fillRect(196, 150, 120, 30); b.fillStyle = '#fff'; b.font = '13px Consolas, monospace'; b.textAlign = 'center';
-        b.fillText('Paused', 256, 170); b.textAlign = 'left'; painter.snap(196, 150, 120, 30);
+        b.fillStyle = '#000'; b.fillRect(196, 150, 120, 30);
+        painter.text('dialog', 'Paused', 256, 171, 'white', 'center');
       }
       painter.show(!!host.colour?.(), core.wing || 'hall');
     }
@@ -505,6 +633,7 @@
         paint();
       } else last = ms;
       if (lineUntil && performance.now() > lineUntil) { line.textContent = ''; lineUntil = 0; }
+      showPrompt();
     }
     function close() {
       cancelAnimationFrame(frame); dialog.close(); dialog.remove(); session = null;
@@ -521,16 +650,28 @@
       else if (act === 'info') host.openInfo?.();
       else if (act === 'options') panel('options');
       else if (act === 'menu') toTitle();
-      else if (act === 'pause') { paused = !paused; button.textContent = paused ? 'Resume' : 'Pause'; }
+      else if (act === 'pause') togglePause();
     });
-    dialog.addEventListener('cancel', e => { e.preventDefault(); close(); });
+    // Escape pauses a game in progress, as it does in any modern game. Elsewhere it leaves.
+    dialog.addEventListener('cancel', e => {
+      e.preventDefault();
+      if (view === 'game' && core && !core.demo) togglePause(); else close();
+    });
     dialog.addEventListener('keydown', e => {
       if (e.target.matches?.('input')) return;
       const k = e.key.toLowerCase();
-      if (k === 'tab') { e.preventDefault(); if (!e.repeat) paused = !paused; return; }
+      if (k === 'tab' || k === 'p') { e.preventDefault(); if (!e.repeat) togglePause(); return; }
+      // Handled here so a second press can never close the window, which a browser may do to a dialog.
+      if (k === 'escape') {
+        e.preventDefault();
+        if (e.repeat) return;
+        if (view === 'game' && core && !core.demo) togglePause(); else close();
+        return;
+      }
       if (['a', 'd', 'w', 's', 'q', 'e', 'f', ' ', 'arrowleft', 'arrowright', 'arrowup', 'arrowdown'].includes(k)) {
         if (e.target.tagName === 'BUTTON' && k === ' ') return;
-        e.preventDefault(); keys.add(k); tapped.add(k); if (paused) paused = false;
+        e.preventDefault(); keys.add(k); tapped.add(k); if (paused) togglePause();
+        if (core?.demo) toTitle(); // Any key ends the Demo, as it does on a title screen.
       }
     });
     dialog.addEventListener('keyup', e => keys.delete(e.key.toLowerCase()));
@@ -541,13 +682,9 @@
       const r = canvas.getBoundingClientRect();
       return {x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height};
     };
-    canvas.addEventListener('pointermove', e => {
-      if (!options.vertical && core) { const p = point(e); aimAt = {x: p.x, y: core.hero.y + 12}; }
-      else aimAt = point(e);
-      usedMouse = e.pointerType === 'mouse';
-    });
+    canvas.addEventListener('pointermove', e => { pointer = point(e); usedMouse = e.pointerType === 'mouse'; });
     canvas.addEventListener('pointerdown', e => {
-      canvas.focus({preventScroll: true}); aimAt = point(e); usedMouse = e.pointerType === 'mouse';
+      canvas.focus({preventScroll: true}); pointer = point(e); usedMouse = e.pointerType === 'mouse';
       if (core?.mode === 'hall') {
         const p = point(e), doors = core.plan.DOORS;
         let best = 0; doors.forEach((d, i) => { if (Math.abs(d.x - p.x) < Math.abs(doors[best].x - p.x)) best = i; });

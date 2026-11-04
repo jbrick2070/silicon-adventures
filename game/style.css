@@ -130,7 +130,12 @@ dialog:has(.folio){max-width:min(660px,95vw);width:660px}
 .castle-buttons{display:flex;flex-wrap:wrap;gap:6px}
 .castle-buttons button,.castle-menu>button{padding:5px 10px;border:1px solid var(--ink);background:none;font:bold 12px var(--mono)}
 .castle-buttons .primary-mini{background:var(--ink);color:var(--paper)}
-.castle-keys{font:12px var(--mono)}
+.castle-controls{width:100%;margin-top:10px;border-collapse:collapse;font:12px/1.35 var(--mono)}
+.castle-controls th,.castle-controls td{padding:2px 8px 2px 0;text-align:left;vertical-align:top;border-top:1px solid var(--line,#8886)}
+.castle-controls td:last-child,.castle-controls tr:first-child th:last-child{white-space:nowrap}
+#castleCanvas{cursor:crosshair}
+.castle-touch-note{display:none;font:12px var(--mono)}
+@media(hover:none) and (pointer:coarse){.castle-controls{display:none}.castle-touch-note{display:block}}
 .castle-touch{display:flex;justify-content:space-between;gap:10px;padding:6px 10px;touch-action:none;user-select:none}
 .castle-touch[hidden]{display:none}
 .castle-pad{display:flex;align-items:center;gap:6px;flex-wrap:wrap}

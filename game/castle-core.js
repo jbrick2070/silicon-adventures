@@ -5,12 +5,20 @@
   'use strict';
   const root = typeof window !== 'undefined' ? window : globalThis;
   const WALL = new Set([6, 27]), KILL = 29, LADDER_TOP = 2, LADDER_FOOT = 3, EXIT = 5, STAIR_TOP = 9, STAIR_FOOT = 10,
-    MOVER = 14, STEP = 16, PULL = 35, WIDE_ROPE = 40;
+    MOVER = 14, STEP = 16, SWITCH = 23, PULL = 35, LEVER = 36, WIDE_ROPE = 40;
   // The hero code moves 8 pixels a walking update, 10 on a ladder, and falls 10 then 8 more each
   // update (CODE 2 $2bf6, $e1e, $149a, $14c2). Those numbers are the disk's. Its update rate is
   // not proven, so UPDATE is a judged pace: 2.5 of our ticks, or 12 updates a second.
   const UPDATE = 2.5, WALK = 8 / UPDATE, LADDER = 10 / UPDATE, FALL_START = 10 / UPDATE, FALL_STEP = 8 / UPDATE / UPDATE;
   // Rope climbs and rope leaps have not been traced, so these remain this edition's.
+  // Modern control help, in ticks and pixels. None of it applies with classic controls.
+  const JUMP_BUFFER = 6, LEDGE_GRACE = 5, REACH = 14, LANDING_HELP = 8, AIR_NUDGE = 28;
+  // Kinds 38 and 39 are the ends of a ladder that joins two rooms (CODE 2 $8b0-$8e6).
+  const LADDER_IN_TOP = 38, LADDER_IN_FOOT = 39;
+  // The arm runs from 0 straight up through 300 level to 511 steeply down. The mouse sets it and
+  // it divides the rock's speed (CODE 2 $2d5a, $3528). Holding the button throws every six
+  // updates, and the arm stays up for 25 (CODE 2 $3434-$3466).
+  const ARM_LEVEL = 300, ARM_HOLD = 25 * UPDATE, HELD_THROW = 6 * UPDATE, ROCK_GRAVITY = 0xd555 / 65536 / UPDATE / UPDATE;
   const ROPE_CLIMB = 2.1, ROPE_LEAP = 3.7, ROPE_GRAVITY = .62, FALL_LIMIT = 18, HARD_LANDING = 90, HERO_W = 32, HERO_H = 40;
   const random = seed => () => {
     seed = seed + 0x6D2B79F5 | 0;
@@ -18,6 +26,7 @@
     t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
   };
+  const DEMO_CONTROLS = ['x', 'y', 'jump', 'fire', 'action', 'duck'];
   const overlap = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
 
   // Turns one room's decoded tables into walkable segments, links and ropes.
@@ -66,8 +75,9 @@
   }
 
   class CastleCore {
-    constructor({data, plan, difficulty = 0, ward = false, seed = 1986, demo = false, rooms = null}) {
-      Object.assign(this, {data, plan, difficulty, ward, demo});
+    // `modern` keeps the disk's physics and adds today's control help. False is the 1986 feel.
+    constructor({data, plan, difficulty = 0, ward = false, seed = 1986, demo = false, rooms = null, modern = true}) {
+      Object.assign(this, {data, plan, difficulty, ward, demo, modern});
       this.random = random(seed);
       this.rooms = rooms || new Map(data.order.map(id => [id, buildRoom(id, data.rooms[id])]));
       this.events = [];
@@ -76,12 +86,12 @@
       this.seen = new Set(); // Reels and sounds met in play, for the coverage record
       this.mode = 'hall'; this.tickCount = 0; this.door = 0; this.bonus = 0; this.room = null; this.entities = []; this.shots = [];
       this.hero = this.freshHero(); this.flash = 0; this.pullsDone = new Set();
-      this.cooldown = 0; this.lastJump = false; this.lastAction = false; this.lastThrow = false; this.lastSide = 0;
+      this.cooldown = 0; this.lastJump = false; this.lastAction = false; this.lastUp = false; this.lastSide = 0;
       this.say('hall');
     }
     freshHero() {
       return {x: 240, y: 0, vx: 0, vy: 0, face: 1, state: 'stand', frame: 0, floor: null, ladder: null, stairs: null, rope: null,
-        swing: null, shield: 0, safe: 0, drop: 0, aim: 4, armUntil: 0, hurt: null};
+        swing: null, shield: 0, safe: 0, drop: 0, arm: ARM_LEVEL, armUntil: 0, hurt: null};
     }
     say(role) {
       const list = this.plan.SOUNDS[role];
@@ -132,16 +142,22 @@
       const room = this.rooms.get(id), hero = this.freshHero(), start = room.entries[variant] || room.entries[0];
       this.room = room; this.mode = 'room'; this.entry = {id, variant};
       this.visited.add(id);
-      hero.x = (start.x0 + start.x1) / 2; hero.y = start.y; hero.shield = this.hero.shield; hero.aim = this.hero.aim;
+      hero.x = (start.x0 + start.x1) / 2; hero.y = start.y; hero.shield = this.hero.shield; hero.arm = this.hero.arm;
       this.hero = hero;
-      if (start.y < -30) { const seg = this.topFloor(room); hero.x = Math.max(seg.x0, Math.min(seg.x1, hero.x)); hero.y = seg.y; }
       const here = this.floorAt(hero.x, hero.y, true);
-      if (here) { hero.floor = here; hero.y = here.y; hero.state = 'stand'; hero.x = Math.max(here.x0, Math.min(here.x1, hero.x)); }
+      const door = here?.spans.find(s => (s.kind === LADDER_IN_TOP || s.kind === LADDER_IN_FOOT) && hero.x >= s.x0 && hero.x <= s.x1);
+      if (door) this.arriveByLadder(door);
+      else if (here) { hero.floor = here; hero.y = here.y; hero.state = 'stand'; hero.x = Math.max(here.x0, Math.min(here.x1, hero.x)); }
       else hero.state = 'air';
       this.bonus = this.plan.RULES.bonus[this.difficulty];
       this.spawn(room); this.shots = [];
     }
-    topFloor(room) { return room.floors.find(f => f.y >= 0 && f.segments.some(s => !s.moving)).segments.filter(s => !s.moving).at(-1); }
+    // A ladder that joins two rooms carries Duncan on to the floor with no key held.
+    arriveByLadder(door) {
+      const up = door.kind === LADDER_IN_FOOT, other = this.room.byAt.get(up ? door.a : door.b);
+      this.onLadder(up ? door : other, up ? other : door, up ? -1 : 1);
+      this.hero.ladder.auto = up ? -1 : 1;
+    }
     floorAt(x, y, near = false) {
       for (const floor of this.room.floors) {
         if (near ? Math.abs(floor.y - y) > 6 : floor.y !== y) continue;
@@ -213,12 +229,12 @@
         const side = (input.right ? 1 : 0) - (input.left ? 1 : 0);
         if (side && side !== this.lastSide) this.chooseDoor(side);
         this.lastSide = side;
-        if ((input.jump && !this.lastJump) || (input.action && !this.lastAction)) this.runDoor();
+        if ((input.jump && !this.lastJump) || (input.action && !this.lastAction) || (input.up && !this.lastUp)) this.runDoor();
       } else if (this.mode === 'run') this.tickRun();
       else if (this.mode === 'room') this.tickRoom(input);
       else if (this.mode === 'dying') this.tickDying();
       else if (this.mode === 'leaving' && --this.leaving <= 0) this.enterHall();
-      this.lastJump = !!input.jump; this.lastAction = !!input.action; this.lastThrow = !!input.fire;
+      this.lastJump = !!input.jump; this.lastAction = !!input.action; this.lastUp = !!input.up;
       return this.events.splice(0);
     }
     tickRoom(input) {
@@ -243,14 +259,16 @@
       hero.frame++;
       if (hero.safe > 0) hero.safe--;
       if (hero.shield > 0) { hero.shield--; if (!input.action) hero.shield = 0; }
-      if (input.aim !== undefined) hero.aim = Math.max(0, Math.min(10, input.aim));
-      if (input.fire && !this.lastThrow) this.throwRock(input.aimAt);
+      if (hero.stun > 0) { hero.stun--; return; }
+      this.aimArm(input);
+      if (input.fire && this.tickCount >= (hero.nextThrow || 0) && this.throwRock(input)) hero.nextThrow = this.tickCount + HELD_THROW;
       if (input.action && !this.lastAction && this.tryAction()) { /* handled */ }
       else if (input.action && !this.lastAction && this.powers.has('air')) { hero.shield = this.plan.RULES.shieldTicks; this.say('heroHit'); }
       const jump = input.jump && !this.lastJump;
+      if (jump) hero.jumpAsked = this.tickCount;
       switch (hero.state) {
         case 'stand': case 'walk': case 'duck': this.updateGround(input, jump); break;
-        case 'air': this.updateAir(input); break;
+        case 'air': this.updateAir(input, jump); break;
         case 'ladder': this.updateLadder(input); break;
         case 'stairs': this.updateStairs(input); break;
         case 'rope': this.updateRope(input, jump); break;
@@ -260,18 +278,18 @@
     updateGround(input, jump) {
       const hero = this.hero, seg = hero.floor;
       const side = (input.right ? 1 : 0) - (input.left ? 1 : 0);
-      if (input.duck) { if (hero.state !== 'duck') this.say('duck'); hero.state = 'duck'; return; }
+      const duck = () => { if (hero.state !== 'duck') this.say('duck'); hero.state = 'duck'; };
+      if (input.duck && !this.modern) { duck(); return; }
       const span = seg.spans.find(s => hero.x >= s.x0 - 1 && hero.x <= s.x1 + 1) || seg.spans[0];
-      if (input.up && this.tryUp(span)) return;
-      if (input.down && !jump && this.tryDown(span)) return;
-      if (jump) {
-        // The disk picks one of three tables: moving, standing, or holding down.
-        const kind = side ? 'running' : input.down ? 'downward' : 'standing';
-        hero.state = 'air'; hero.floor = null; hero.vx = hero.vy = 0; hero.peak = hero.y;
-        hero.arc = {kind, rows: this.data.jumps[kind], t: 0}; this.say('jump');
-        if (side) hero.face = side;
-        return;
-      }
+      const wantJump = jump || (this.modern && this.tickCount - (hero.jumpAsked ?? -99) <= JUMP_BUFFER);
+      // Modern controls find a ladder or stair that is nearly under Duncan's feet.
+      const reach = this.modern ? REACH : 1;
+      const near = kinds => seg.spans.find(s => kinds.includes(s.kind) && hero.x >= s.x0 - reach && hero.x <= s.x1 + reach);
+      if (input.up) { const at = near([LADDER_FOOT, STAIR_FOOT, STEP]); if (at && this.tryUp(at)) return; }
+      if (input.down && !wantJump) { const at = near([LADDER_TOP, STAIR_TOP, STEP]); if (at && this.tryDown(at)) return; }
+      if (wantJump) { this.startJump(input, side); return; }
+      // Down with nothing to climb is a duck, so Down never does nothing.
+      if (input.duck || (this.modern && input.down)) { duck(); return; }
       if (!side) { hero.state = 'stand'; return; }
       hero.face = side; hero.state = 'walk';
       if (this.tickCount % 7 === 0) this.say('step');
@@ -289,8 +307,16 @@
         this.leaveLedge(next);
       } else hero.x = next;
     }
+    startJump(input, side) {
+      // The disk picks one of three tables: moving, standing, or holding down.
+      const hero = this.hero, kind = side ? 'running' : input.down ? 'downward' : 'standing';
+      hero.state = 'air'; hero.floor = null; hero.vx = hero.vy = 0; hero.peak = hero.y; hero.jumpAsked = undefined; hero.ledgeAt = undefined;
+      hero.arc = {kind, rows: this.data.jumps[kind], t: 0, x: hero.x, y: hero.y, nudge: 0}; this.say('jump');
+      if (side) hero.face = side;
+    }
     leaveLedge(x) {
       const hero = this.hero;
+      hero.ledgeAt = this.tickCount;
       hero.x = x; hero.state = 'air'; hero.floor = null; hero.vy = FALL_START; hero.vx = hero.face * 1.4; hero.drop = 4; hero.peak = hero.y;
     }
     takeExit(span, side) {
@@ -342,12 +368,19 @@
     }
     updateLadder(input) {
       const hero = this.hero, l = hero.ladder;
-      const go = (input.down ? 1 : 0) - (input.up ? 1 : 0);
+      const go = l.auto || (input.down ? 1 : 0) - (input.up ? 1 : 0);
       if (!go) return;
       hero.y += go * LADDER;
       if (this.tickCount % 9 === 0) this.say('ladder');
-      if (hero.y <= l.top) this.landOn(l.topSpan.y, l.x);
-      else if (hero.y >= l.bottom) this.landOn(l.bottom, l.x);
+      if (hero.y <= l.top) this.ladderEnd(l.topSpan, l.x);
+      else if (hero.y >= l.bottom) this.ladderEnd(l.foot, l.x);
+    }
+    // Reaching the far end of a joining ladder leaves by the exit record that follows it.
+    ladderEnd(span, x) {
+      if (span.kind === LADDER_IN_TOP || span.kind === LADDER_IN_FOOT) {
+        const exit = this.room.byAt.get(span.at + 18);
+        this.leaveRoom(exit.a, exit.b);
+      } else this.landOn(span.y, x);
     }
     landOn(y, x) {
       const hero = this.hero;
@@ -407,17 +440,24 @@
       const angle = Math.sin(e.phase) * .78;
       return {x: e.x + Math.sin(angle) * 92, y: e.y + Math.cos(angle) * 92 + 10};
     }
-    updateAir(input) {
-      const hero = this.hero, before = hero.y;
+    updateAir(input, jump) {
+      const hero = this.hero, before = hero.y, startX = hero.x;
+      const side = (input.right ? 1 : 0) - (input.left ? 1 : 0);
+      if (this.modern && jump && !hero.arc && this.tickCount - (hero.ledgeAt ?? -99) <= LEDGE_GRACE) { this.startJump(input, side); return; }
       if (hero.arc) {
-        // A jump is a fixed path on the disk: one table row per update, with no steering.
-        const arc = hero.arc, row = arc.rows[Math.floor(arc.t)];
-        hero.vy = row[1] / UPDATE;
-        hero.y += hero.vy; hero.x = Math.max(-4, Math.min(482, hero.x + hero.face * row[0] / UPDATE));
-        arc.t += 1 / UPDATE;
-        if (Math.floor(arc.t) >= arc.rows.length) { hero.arc = null; hero.vx = 0; hero.vy = FALL_START; }
+        // A jump is a fixed path on the disk. Positions come from the table itself, so rows
+        // are never stretched by rounding to our ticks.
+        const arc = hero.arc;
+        arc.t = Math.min(arc.rows.length, arc.t + 1 / UPDATE);
+        const whole = Math.floor(arc.t), part = arc.t - whole;
+        let along = 0, rise = 0;
+        arc.rows.forEach((row, i) => { const share = i < whole ? 1 : i === whole ? part : 0; along += row[0] * share; rise += row[1] * share; });
+        // Modern controls let Duncan lean a jump left or right. The disk's arc stays the base path.
+        if (this.modern && side) arc.nudge = Math.max(-AIR_NUDGE, Math.min(AIR_NUDGE, arc.nudge + side * 1.2));
+        hero.vy = arc.y + rise - hero.y;
+        hero.y = arc.y + rise; hero.x = Math.max(-4, Math.min(482, arc.x + hero.face * along + arc.nudge));
+        if (arc.t >= arc.rows.length) { hero.arc = null; hero.vx = 0; hero.vy = FALL_START; }
       } else if (hero.light) {
-        const side = (input.right ? 1 : 0) - (input.left ? 1 : 0);
         if (side) { hero.vx = Math.max(-ROPE_LEAP, Math.min(ROPE_LEAP, hero.vx + side * .34)); hero.face = side; }
         hero.vy = Math.min(9, hero.vy + ROPE_GRAVITY);
         hero.y += hero.vy; hero.x = Math.max(-4, Math.min(482, hero.x + hero.vx));
@@ -439,14 +479,19 @@
       if (hero.vy >= 0 && !hero.drop) {
         for (const floor of this.room.floors) {
           if (floor.y < before - .5 || floor.y > hero.y) continue;
-          const seg = floor.segments.find(s => hero.x >= s.x0 - 3 && hero.x <= s.x1 + 3);
+          // Sweep the whole step, as the disk does. Wall ledges are single points set exactly
+          // where the standing jump comes down (CODE 2 $12a0-$1392).
+          const margin = this.modern ? LANDING_HELP : 3, low = Math.min(startX, hero.x) - margin, high = Math.max(startX, hero.x) + margin;
+          const seg = floor.segments.find(s => s.x1 >= low && s.x0 <= high);
           if (seg) {
-            const exit = seg.spans.find(s => s.kind === EXIT && hero.x >= s.x0 - 3 && hero.x <= s.x1 + 3 && s.x1 - s.x0 > 40);
+            const exit = seg.spans.find(s => s.kind === EXIT && s.x1 >= low && s.x0 <= high && s.x1 - s.x0 > 40);
             if (exit) { this.leaveRoom(exit.a, exit.b); return; }
             const fell = floor.y - (hero.peak ?? floor.y) >= HARD_LANDING;
             hero.y = floor.y; hero.vy = hero.vx = 0; hero.floor = seg; hero.state = 'stand'; hero.arc = null; hero.light = false; hero.peak = null;
             hero.x = Math.max(seg.x0, Math.min(seg.x1, hero.x)); this.say('land');
-            if (fell) { hero.safe = 8; hero.landed = this.tickCount; this.say('splat'); }
+            hero.settled = this.tickCount;
+            // The long fall: flat on the floor for 24 updates (CODE 2 table $172e).
+            if (fell) { hero.safe = 8; hero.landed = this.tickCount; hero.stun = 24 * UPDATE; this.say('splat'); }
             return;
           }
         }
@@ -456,16 +501,30 @@
     }
     tryAction() {
       const hero = this.hero;
+      // The prompt and the key agree on how close is close enough.
+      const reach = this.modern ? REACH : 2, within = s => hero.x >= s.x0 - reach && hero.x <= s.x1 + reach;
       for (const pull of this.room.pulls) {
-        if (hero.floor && hero.floor.y === pull.y && hero.x >= pull.x0 - 2 && hero.x <= pull.x1 + 2) { this.pull(pull); return true; }
+        if (hero.floor && hero.floor.y === pull.y && within(pull)) {
+          hero.pullAt = this.tickCount; hero.stun = 15 * UPDATE; this.pull(pull); return true;
+        }
+      }
+      const here = hero.floor?.spans.find(s => within(s) && (s.kind === SWITCH || s.kind === LEVER)) || hero.floor?.spans.find(s => hero.x >= s.x0 - 2 && hero.x <= s.x1 + 2);
+      if (here?.kind === SWITCH) {
+        const hatch = this.entities.find(e => e.type === 'hatch');
+        hero.pullAt = this.tickCount; hero.stun = 15 * UPDATE;
+        if (hatch && !hatch.open) { hatch.open = true; hatch.t = 0; this.say('hatch'); }
+        return true;
+      }
+      if (here?.kind === LEVER) {
+        const lever = this.entities.find(e => e.type === 'lever' && (e.x < 240) === (hero.x < 240));
+        hero.leverAt = this.tickCount; hero.stun = 10 * UPDATE; this.say('lever');
+        if (lever) lever.pulled = !lever.pulled;
+        return true;
       }
       const box = this.heroBox();
       for (const e of this.entities) {
         if (e.type === 'item' && overlap(box, {x: e.x - 8, y: e.y - 8, w: e.w + 16, h: e.h + 16})) {
           this.take(e); return true;
-        }
-        if (e.type === 'hatch' && !e.open && Math.abs(hero.x - e.x) < 44 && Math.abs(hero.y - e.y) < 44) {
-          e.open = true; this.say('hatch'); return true;
         }
       }
       const foe = this.entities.find(e => e.foes && !e.dying && Math.abs(e.x - hero.x) < 34 && Math.abs(e.y - hero.y) < 34);
@@ -488,7 +547,7 @@
         if (this.pullsDone.size === this.room.pulls.length) { gate.open = true; this.say('gate'); this.tell('The gate rises.'); }
       }
       if (this.throne && !this.throne.down) {
-        this.throne.shaken++; this.say('throne');
+        this.throne.shaken++; this.throne.rocked = this.tickCount; this.say('throne');
         this.tell('The throne rocks on its footing.');
         if (this.throne.shaken >= this.room.pulls.length) this.toppleThrone();
       }
@@ -498,25 +557,37 @@
       for (const e of this.entities) if (e.type === 'knight') { e.falling = 60; }
       this.tell('The Black Knight falls.');
     }
-    throwRock(aimAt) {
+    aimArm(input) {
+      const hero = this.hero, arm = input.arm ?? (input.aimAt ? this.armToward(input.aimAt) : null);
+      if (arm === null || arm === hero.arm) return;
+      hero.arm = arm; hero.armUntil = this.tickCount + ARM_HOLD;
+    }
+    // The arm position that sends a rock at a point. Gravity's small drop is left out.
+    armToward(point) {
+      const dx = Math.abs(point.x - this.hero.x - 16), dy = point.y - this.hero.y - 12;
+      return Math.round(Math.min(511, ARM_LEVEL + ARM_LEVEL * dy / ((dx + Math.abs(dy)) || 1)));
+    }
+    throwRock(input) {
       const hero = this.hero;
-      if (!['stand', 'walk', 'air', 'duck'].includes(hero.state)) return;
-      if (this.rocks <= 0) { this.tell('You are out of rocks.'); return; }
+      // The disk draws the arm only for Duncan standing still (CODE 2 $d28, $d6c). Modern controls
+      // let him throw from any footing, at the pointer or at the nearest foe.
+      if (!(this.modern ? ['stand', 'walk', 'air', 'duck'] : ['stand']).includes(hero.state)) return false;
+      if (this.rocks <= 0) { this.tell('You are out of rocks.'); return true; }
       this.rocks--;
-      const fire = this.powers.has('fire');
-      let angle;
-      if (aimAt) {
-        angle = Math.atan2(aimAt.y - (hero.y + 12), aimAt.x - (hero.x + 16));
-        hero.face = Math.cos(angle) >= 0 ? 1 : -1;
-        hero.aim = Math.max(0, Math.min(10, Math.round((Math.abs(Math.atan2(Math.sin(angle), Math.abs(Math.cos(angle)))) + (Math.sin(angle) > 0 ? 0 : 0)) / (Math.PI / 2) * 5 + (Math.sin(angle) > 0 ? 5 : -5) * 0 + 5 * (Math.sin(angle) > 0 ? 1 : 0))));
-      } else {
-        const target = this.nearestFoe();
-        angle = target ? Math.atan2(target.y + target.h / 2 - (hero.y + 12), target.x + target.w / 2 - (hero.x + 16)) : (hero.face > 0 ? 0 : Math.PI);
-        if (target) hero.face = Math.cos(angle) >= 0 ? 1 : -1;
+      if (this.modern) {
+        const foe = input.aimAt ? null : this.nearestFoe();
+        const point = input.aimAt || (foe && {x: foe.x + foe.w / 2, y: foe.y + foe.h / 2});
+        hero.arm = point ? this.armToward(point) : ARM_LEVEL;
+        if (point) hero.face = point.x >= hero.x + 16 ? 1 : -1;
       }
-      const speed = fire ? 7 : 6;
-      this.shots.push({x: hero.x + 16, y: hero.y + 10, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, w: 8, h: 8, fire, frame: 0, life: 60});
-      hero.armUntil = this.tickCount + 9; this.say(fire ? 'fireball' : 'throwRock');
+      // The hand's place and the rock's speed, from CODE 2 $35a2 and $3512-$354c. Rocks and
+      // fireballs fly the same path.
+      const fire = this.powers.has('fire'), arm = hero.arm, low = arm >= 256, left = hero.face < 0;
+      const across = (arm < ARM_LEVEL ? arm : 2 * ARM_LEVEL - arm) / 8 / UPDATE;
+      this.shots.push({x: hero.x + (left ? (low ? 14 : 13) : (low ? 7 : 4)), y: hero.y + (low ? 13 : -3),
+        vx: hero.face * across, vy: (arm - ARM_LEVEL) / 8 / UPDATE, w: 8, h: 8, fire, frame: 0, life: 60});
+      hero.throwAt = this.tickCount; hero.armUntil = this.tickCount + ARM_HOLD; this.say(fire ? 'fireball' : 'throwRock');
+      return true;
     }
     nearestFoe() {
       const hero = this.hero;
@@ -530,7 +601,7 @@
     }
     updateShots() {
       for (const shot of this.shots) {
-        shot.x += shot.vx; shot.y += shot.vy; shot.vy += shot.fire ? 0 : .12; shot.frame++; shot.life--;
+        shot.vy += ROCK_GRAVITY; shot.x += shot.vx; shot.y += shot.vy; shot.frame++; shot.life--;
         for (const e of this.entities) {
           if (!e.foes || e.dying || !overlap({x: shot.x, y: shot.y, w: 8, h: 8}, e)) continue;
           shot.life = 0; this.say('rockHit');
@@ -538,7 +609,8 @@
           this.strike(e, shot.fire ? 2 : 1);
           break;
         }
-        if (shot.y > 306 || shot.x < -8 || shot.x > 520) shot.life = 0;
+        // The disk's bounds for a rock (CODE 2 $337e-$339c).
+        if (shot.x <= 4 || shot.x >= 504 || shot.y <= 4 || shot.y >= 334) shot.life = 0;
       }
       this.shots = this.shots.filter(s => s.life > 0);
     }
@@ -549,7 +621,6 @@
       const points = this.plan.POINTS[e.whip ? 'whip' : e.type];
       if (points) this.award(points);
       this.say({guard: 'guardDie', rat: 'rat', ropeRat: 'rat', bat: 'bat', mutant: 'mutant', eye: 'eye', broom: 'broom', henchman: 'henchman', dragon: 'dragon', gargoyle: 'gargoyle', wizard: 'wizard'}[e.type] || 'guardDie');
-      if (e.type === 'dragon') { const hatch = this.entities.find(h => h.type === 'hatch'); if (hatch) hatch.open = true; }
       if (e.type === 'wizard') this.tell('The wizard is gone in a burst of flame.');
     }
     updateEntity(e) {
@@ -639,10 +710,15 @@
     run_fountain(e) { if (this.tickCount % 80 === 0 && Math.abs(this.hero.x - e.x) < 200) this.say('fountain'); }
     run_faces(e) { if (--e.timer <= 0) { e.timer = 40 + Math.floor(this.random() * 70); e.pose = Math.floor(this.random() * 3); } }
     run_henchman(e) {
+      const {steps, release} = this.plan.HENCHMAN;
       if (--e.timer > 0) return;
-      e.timer = 80 + Math.floor(this.random() * 60); this.say('henchman');
-      const toward = this.hero.x > e.x ? 1 : -1;
-      this.entities.push({type: 'rock', x: e.x + 8, y: e.y + 8, vx: toward * 2.4, vy: -1.4, w: 16, h: 16, frame: 0});
+      e.step = (e.step || 0) + 1 / UPDATE;
+      if (e.step >= release && !e.thrown) {
+        e.thrown = true; this.say('henchman');
+        const toward = this.hero.x > e.x ? 1 : -1;
+        this.entities.push({type: 'rock', x: e.x + 8, y: e.y + 8, vx: toward * 2.4, vy: -1.4, w: 16, h: 16, frame: 0});
+      }
+      if (e.step >= steps) { e.step = 0; e.thrown = false; e.timer = 50 + Math.floor(this.random() * 60); }
     }
     run_rock(e) {
       e.vy += .22; e.x += e.vx; e.y += e.vy;
@@ -729,18 +805,67 @@
       if ((m.dx > 0 && seg.x1 >= m.right + (m.x1 - m.x0)) || (m.dx < 0 && seg.x0 <= m.left)) m.dx = -m.dx;
       e.x = seg.x0;
     }
+    run_item(e) {
+      // Modern controls collect by walking over. Classic play uses the action key.
+      if (this.modern && !(e.item === 'bag' && this.rocks >= this.plan.RULES.rockCap) && overlap(this.heroBox(), e)) this.take(e);
+    }
+    // What the action or climb keys would do here, for the on-screen prompt.
+    prompt() {
+      const hero = this.hero;
+      if (this.mode === 'hall') return ['hall', 'Left or Right picks a door. Space goes in.'];
+      if (this.mode !== 'room') return null;
+      if (hero.state === 'rope') return ['climb', 'Climb. Jump with a direction to leap.'];
+      if (hero.state === 'swing') return ['jump', 'Jump to let go'];
+      if (!hero.floor) return null;
+      const near = kind => hero.floor.spans.find(s => s.kind === kind && hero.x >= s.x0 - (this.modern ? REACH : 1) && hero.x <= s.x1 + (this.modern ? REACH : 1));
+      if (near(PULL) && !this.pullsDone.has(near(PULL).at)) return ['action', 'Pull the chain'];
+      if (near(SWITCH)) return ['action', 'Press the switch'];
+      if (near(LEVER)) return ['action', 'Work the lever'];
+      if (near(LADDER_FOOT) || near(STAIR_FOOT)) return ['up', 'Climb up'];
+      if (near(LADDER_TOP) || near(STAIR_TOP)) return ['down', 'Climb down'];
+      const box = this.heroBox(), item = this.entities.find(e => e.type === 'item' && overlap(box, {x: e.x - 8, y: e.y - 8, w: e.w + 16, h: e.h + 16}));
+      return item && !this.modern ? ['action', 'Pick it up'] : null;
+    }
     run_gate(e) {
       if (!e.open && this.hero.y < e.y + e.h - 12 && this.hero.y > e.y - 30 && this.hero.x > e.x - 24 && this.hero.x < e.x + 2) this.hero.x = e.x - 24;
     }
-    run_hatch(e) { if (e.open && !e.opened) { e.opened = true; this.say('hatch'); } }
+    run_hatch(e) { if (e.open && (e.t += 1 / UPDATE) >= 24) { e.open = false; e.t = 0; } }
     run_scepter(e) {
       if (!overlap(this.heroBox(), {x: e.x - 6, y: e.y - 6, w: e.w + 12, h: e.h + 12})) return;
-      if (e.scepter.id === 'air') { const hatch = this.entities.find(h => h.type === 'hatch'); if (hatch && !hatch.open) return; }
-      e.gone = true; this.powers.add(e.scepter.id); this.award(this.plan.RULES.power); this.say('pickup');
-      this.tell('You have the ' + e.scepter.name + '.');
-      this.events.push({type: 'scepter', id: e.scepter.id, name: e.scepter.name});
-      this.mode = 'leaving'; this.leaving = 45;
+      e.gone = true; this.claim(e.scepter);
     }
+    claim(scepter) {
+      this.powers.add(scepter.id); this.award(this.plan.RULES.power); this.say('pickup');
+      this.tell('You have the ' + scepter.name + '.');
+      this.events.push({type: 'scepter', id: scepter.id, name: scepter.name});
+      this.mode = 'leaving'; this.leaving = 75; this.reward = {id: scepter.id, name: scepter.name, at: this.tickCount};
+    }
+
+    /* The Demo button replays the input recorded on the disk, one 1986 update at a time. */
+    startDemo() {
+      this.script = {at: 0, wait: null, clock: 0, done: false, held: {}};
+      this.enter(this.plan.WINGS.trouble.first, 0);
+    }
+    demoInput() {
+      const s = this.script, list = this.data.demo;
+      s.clock += 1 / UPDATE;
+      while (s.clock >= 1) {
+        s.clock -= 1;
+        if (s.wait === null && s.at < list.length) s.wait = list[s.at][0];
+        if (s.wait > 0) { s.wait--; continue; }
+        while (s.at < list.length && (s.wait === null || s.wait === 0)) {
+          const [wait, control, value] = list[s.at];
+          if (s.wait === null && wait > 0) { s.wait = wait; break; }
+          this.applyDemo(s.held, DEMO_CONTROLS[control], value);
+          s.at++; s.wait = null;
+        }
+        if (s.at >= list.length) s.done = true;
+      }
+      const h = s.held;
+      return {left: h.x < 0, right: h.x > 0, up: h.y < 0, down: h.y > 0, jump: h.jump, action: h.action, duck: h.duck, fire: !!h.fire,
+        arm: h.fire ? Math.min(511, h.fire) : null};
+    }
+    applyDemo(held, control, value) { held[control] = value; }
 
     /* Harm */
     harm(cause) {
