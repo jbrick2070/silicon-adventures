@@ -2,6 +2,8 @@
 
 Double-click **Play Enchanted Scepters.exe** on 64-bit Windows. The launcher opens the game in your desktop browser. If you are using the ZIP, extract the whole folder first. The game, Macintosh disks, sound banks, and interpreter are included and work offline.
 
+**Lit colour** paints all 200 rooms, their inhabitants and the objects in your pack. At the High Altar, the ochre pillars cast shadows onto the paving and the aubergine at the foot of the walls blends into the upper slate. The jungle, wreck, desert and palace have their own materials. Click **Classic B/W** or press **L** at any point to see the original Macintosh picture. Press it again to return. [Colour plates and comparison](art/colour/README.md)
+
 **Enter the High Altar** starts a short excursion at two granite columns. Headphones help. **Begin the full adventure** starts Saber in the quarters with the King’s summons. Both entries use the same 200-room game and allow you to continue exploring. In **Adventures…** you can also open the nine saved games that came with the archived image.
 
 | Control | Action |
@@ -13,7 +15,8 @@ Double-click **Play Enchanted Scepters.exe** on 64-bit Windows. The launcher ope
 | Click a drawn object | Send the original Macintosh click to the game |
 | / and Enter | Type and submit an original adventure command |
 | I or M | Open your pack or the travel controls |
-| L or Refreshed in the title bar | Switch live between the refreshed 1-bit layers and untouched disk plates (the refreshed layer also bends every weapon into a banana; they fight exactly as before) |
+| Classic B/W or L | Compare the original disk view with your chosen enhanced style at the current position |
+| Picture style in the title bar | Choose Lit colour, Refreshed 1-bit or Original. Lit colour uses the disk weapon silhouettes. Refreshed 1-bit includes the banana weapon art. |
 | R | Repeat the last attack while someone stands against you |
 | Where next? | One more clue toward the next scepter, from a nudge to the exact inputs of a winning run (an addition of this edition) |
 | Up arrow in the command line | Recall the last command |

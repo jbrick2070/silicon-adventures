@@ -34,7 +34,8 @@ CAPTURE = """async id => {
     document.dispatchEvent(new KeyboardEvent('keydown', {key:'l', bubbles:true}));
     document.dispatchEvent(new KeyboardEvent('keyup', {key:'l', bubbles:true}));
     check(v.refreshed === enabled && v.rig === (enabled ? v.refreshRig : v.origRig), 'L routing');
-    check(document.getElementById('layerBtn').getAttribute('aria-pressed') === String(enabled), 'L button');
+    check(document.getElementById('pictureMode').value === (enabled ? 'ink' : 'original'), 'L selected mode');
+    check(document.getElementById('layerBtn').textContent === (enabled ? 'Classic B/W' : 'Back to 1-bit'), 'L button');
   }
   const shade = R.shadeUnseenWorld;
   R.shadeUnseenWorld = function(view, face, ...rest) {
@@ -162,6 +163,7 @@ def main():
         page.goto(args.server)
         page.locator("#soundBtn").click()
         assert page.locator("#soundLabel").inner_text() == "off"
+        page.locator("#pictureMode").select_option("ink")
         # The cover renderer has no sound or simulation. Capture its instance
         # on the next frame without exporting a test hook in the game.
         page.evaluate("""() => {

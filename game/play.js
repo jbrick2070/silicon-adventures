@@ -34,7 +34,7 @@
   function unpackSeen(text){const v=new Uint8Array(roomList.length);try{const s=atob(text);for(let i=0;i<s.length;i++){const b=s.charCodeAt(i);for(let k=0;k<8&&i*8+k<v.length;k++)if(b&(1<<k))v[i*8+k]=1;}}catch{}return v;}
   function drawChart(){
     if(!scene||$('routePanel').hidden)return;
-    worldMap.draw(visited,scene.id);
+    worldMap.draw(visited,scene.id,view.refreshed&&view.colour);
     const k=Math.max(1,Math.min(2,Math.floor(($('routePanel').clientWidth||400)/worldMap.w)));
     $('map').style.width=(worldMap.w*k)+'px';$('map').style.height=(worldMap.h*k)+'px';
     const n=visited.reduce((a,b)=>a+b,0);$('mapNote').textContent=n+(n===1?' room charted':' rooms charted')+' · ink edges are walls on the map, gaps are openings';
@@ -72,10 +72,13 @@
   }
   let elapsed=0,oldTime=0,stepDistance=0,dirty=true,lastPaint=-1,captionUntil=0,viewScale=1;
   const actorPlace={x:-.94,z:5.14};
+  const enhancedName=()=>view.colour?'Lit colour':'Refreshed 1-bit';
   function syncLayerUi(){
-    const on=view.refreshed;
-    if($('layerBtn')){$('layerBtn').textContent=on?'Refreshed':'Original';$('layerBtn').setAttribute('aria-pressed',String(on));}
-    if($('plateMode'))$('plateMode').textContent=(on?'REFRESHED LAYER':'ORIGINAL PLATE')+(viewScale>=1?' · '+viewScale+'×':' · 1-BIT');
+    $('pictureMode').value=view.refreshed?(view.colour?'colour':'ink'):'original';
+    $('layerBtn').textContent=view.refreshed?'Classic B/W':view.colour?'Back to colour':'Back to 1-bit';
+    $('layerBtn').title=(view.refreshed?'Show the original black-and-white disk drawing':'Return to '+enhancedName())+' (L)';
+    $('plateMode').textContent=(view.refreshed?enhancedName().toUpperCase():'ORIGINAL · 1-BIT')+
+      (viewScale>=1?' · '+viewScale+'×':'');
   }
   function fitViewport(){
     const scr=$('screen'),world=$('world');if(!scr||!world)return;
@@ -95,10 +98,14 @@
     syncLayerUi();
   }
   function toggleLayers(force){
-    view.setRefreshed(typeof force==='boolean'?force:!view.refreshed);
-    syncLayerUi();dirty=true;
+    if($('layerBtn').disabled)return;
+    const on=typeof force==='boolean'?force:!view.refreshed;
+    if(on!==view.refreshed)view.setRefreshed(on);
+    const style=view.colour?'colour':'ink';
+    try{localStorage.setItem('scepters-picture-mode',(on?'':'original-')+style);}catch{}
+    syncLayerUi();drawChart();dirty=true;
     if(playing&&state&&scene)controls();
-    if(playing){message(view.refreshed?'Refreshed layers':'Original plate');$('world').focus({preventScroll:true});}
+    if(playing){message(on?enhancedName():'Original plate');$('world').focus({preventScroll:true});}
     else if(view.source)view.render(elapsed);
   }
   window.addEventListener('resize',fitViewport);
@@ -216,7 +223,16 @@
     for(const it of state.inventory) {
       const m=designs.get(keyFor(it,'AOBJ'));
       const b=button(it.name,()=>{tabs('journal');$('cmd').value=(it.verb?it.verb+' ':'drop ')+it.name;$('cmd').focus();},'');
-      if(m){const img=new Image();img.src=(view.refreshed&&window.RefreshBananas?.[m.path])||m.path;img.alt='';b.prepend(img);}$('pack').append(b);
+      if(m){
+        const img=new Image();
+        img.alt='';
+        if(view.refreshed&&view.colour){
+          img.src=m.path;img.className='colour-icon';
+          view.colourIcon(m).then(url=>{if(img.isConnected)img.src=url;}).catch(()=>{});
+        }else img.src=(view.refreshed&&window.RefreshBananas?.[m.path])||m.path;
+        b.prepend(img);
+      }
+      $('pack').append(b);
     }
     if(!state.inventory.length)$('pack').append(para('Your pack is empty.','subtext'));
     $('arms').replaceChildren(...state.weapons.map(s=>button(s,()=>command(s))));
@@ -411,16 +427,22 @@
       para('Walk with W A S D or the up and down arrows. Turn with left and right. Drag the drawing to look up, down, and around. On a phone or tablet, hold the Walk, Back and turn buttons under the picture.'),
       para('Click a drawn object or approach it and press E. A click is a turn in the original game: it may take, answer a question or spring a trap, so E offers the edition’s honest prompt (Take, Click, Face, Go). Press / to type. People ask questions; answer YES or NO, or type the word they ask for. Anything else counts as a refusal.'),
       para('The disk’s vocabulary: the Commands menu (Look, Rest, Status, Inventory, Search, Open, Close), the six directions, GET and DROP, READ, UNLOCK, PUSH, CLIMB, THROW, DRINK, OFFER, ACCEPT, WEAR, and each weapon’s own verb. There is no EXAMINE, USE or TALK; this edition sends EXAMINE as Look and USE as the item’s verb. Status and Rest are turns of their own, so use them away from a fight.'),
-      para('In the refreshed layer every weapon is drawn as a banana; it swings, throws and fires exactly as the disk intends. Blows are heard where they land, and a struck inhabitant flinches. When someone stands against you, your weapons join the action row. Press R to repeat the last attack and the up arrow in the command line to recall the last command.'),
-      para('The ⌖ button returns you to the illustrator’s viewpoint. Press L or click Refreshed in the window bar to compare the separate refresh layers against the untouched disk plates. Save keeps your place between launches. The game keeps one save: with doorway checkpoints on, each new room you enter on your own journey saves there, so turn them off to keep a hand-placed save.'),
+      para('Lit colour uses the disk’s weapon shapes. Refreshed 1-bit draws the weapons as bananas. Their attacks work the same in every picture mode. Blows are heard where they land, and a struck inhabitant flinches. When someone stands against you, your weapons join the action row. Press R to repeat the last attack and the up arrow in the command line to recall the last command.'),
+      para('Choose Lit colour, Refreshed 1-bit or Original in the picture bar. Press L or click Classic B/W to see the disk plate. Press L again or use the same button to return to your chosen style. The ⌖ button returns you to the illustrator’s viewpoint.'),
+      para('Save keeps your place between launches. Doorway checkpoints use the same slot as a manual save. Turn them off to keep a hand-placed save.'),
       button(checkpointsOn?'Turn doorway checkpoints off':'Turn doorway checkpoints on',()=>{checkpointsOn=!checkpointsOn;try{localStorage.setItem('scepters-checkpoints',checkpointsOn?'on':'off');}catch{}fieldGuide();}),
       para('The full journey begins in Saber’s quarters. All 200 Macintosh scene scripts run locally. The High Altar excursion starts you inside a later puzzle. The Dark Castle visitors, their placement, and the Where next? clues are new to this edition: each press gives one more clue toward the next scepter, from a nudge to the exact words of a winning run.'),
-      button(view.refreshed?'Show original plates':'Show refreshed layers',()=>{toggleLayers();fieldGuide();}),
+      button(view.refreshed?'Show Original':'Return to '+enhancedName(),()=>{toggleLayers();fieldGuide();}),
       button(captions?'Hide sound captions':'Show sound captions',()=>{captions=!captions;localStorage.setItem('scepters-captions',captions?'on':'off');fieldGuide();}),
       button('Disk bookmarks',adventures));
   }
   $('guideBtn').onclick=fieldGuide;
-  if($('layerBtn'))$('layerBtn').onclick=()=>toggleLayers();
+  $('layerBtn').onclick=()=>toggleLayers();
+  $('pictureMode').onchange=e=>{
+    const mode=e.target.value;
+    if(mode!=='original')view.setColour(mode==='colour');
+    toggleLayers(mode!=='original');
+  };
   $('soundBtn').onclick=async()=>{
     muted=!muted;sound.mute(muted);$('soundLabel').textContent=muted?'off':'on';$('soundBtn').setAttribute('aria-pressed',String(!muted));
     if(playing&&!muted)await sound.start();
@@ -517,6 +539,7 @@
   $('world').onpointerleave=()=>{if(!drag)$('world').style.cursor='';};
   document.addEventListener('keydown',e=>{
     if($('dialog').open||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.target.tagName==='SELECT')return;
     if(e.target.tagName==='INPUT'){
       if(e.key==='Escape')$('world').focus();
       else if((e.key==='ArrowUp'||e.key==='ArrowDown')&&e.target.id==='cmd'&&history.length){
@@ -610,10 +633,16 @@
     requestAnimationFrame(animate);
   }
   async function init(){
+    let pictureMode='colour';
+    try{pictureMode=localStorage.getItem('scepters-picture-mode')||pictureMode;}catch{}
+    view.setColour(pictureMode!=='ink'&&pictureMode!=='original-ink');
+    view.setRefreshed(pictureMode!=='original-ink'&&pictureMode!=='original-colour');
     try{captions=localStorage.getItem('scepters-captions')!=='off';checkpointsOn=localStorage.getItem('scepters-checkpoints')!=='off';}catch{}
     fitViewport();
     scene=designs.get('ASCN/7990');
     if(location.protocol==='file:'){
+      view.setRefreshed(false);syncLayerUi();
+      $('pictureMode').disabled=true;$('layerBtn').disabled=true;
       const img=new Image();img.onload=()=>view.ctx.drawImage(img,0,0);img.src=scene.path;
       $('enter').textContent='Launch instructions →';return;
     }

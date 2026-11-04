@@ -8,9 +8,14 @@
   <section class="heading"><div><p class="eyebrow"><i></i> THE MACINTOSH ADVENTURE LIBRARY</p><h1>Enchanted Scepters</h1></div><div class="edition"><b>VOLUME <em>I</em></b><span>FIRST-PERSON EDITION</span></div></section>
   <div class="book">
     <section class="image-leaf">
-      <div class="bar"><span class="lamp"></span><span id="windowName">High Altar</span><span class="barlines"></span><button id="layerBtn" class="bar-pill" aria-pressed="true" title="Switch between refreshed and original layers (L)">Refreshed</button><button id="homeView" title="Return to the original doorway viewpoint" aria-label="Return to doorway viewpoint">⌖</button></div>
+      <div class="bar">
+        <span class="lamp"></span><span id="windowName">High Altar</span><span class="barlines"></span>
+        <select id="pictureMode" aria-label="Picture mode"><option value="colour">Lit colour</option><option value="ink">Refreshed 1-bit</option><option value="original">Original</option></select>
+        <button id="layerBtn" class="bar-pill" aria-keyshortcuts="L" title="Show the original black-and-white disk drawing (L)">Classic B/W</button>
+        <button id="homeView" title="Return to the original doorway viewpoint" aria-label="Return to doorway viewpoint">⌖</button>
+      </div>
       <div id="screen" class="screen"><canvas id="world" tabindex="0" aria-label="First-person view. Walk with W A S D, turn with left and right arrows, press E to interact, press L to compare layers."></canvas><div id="compass" hidden>N</div><div id="cue" aria-live="polite"></div><button id="interact" hidden></button></div>
-      <div class="plate-foot"><span id="plateCode">ASCN · 7990</span><span><span class="reg">✛</span> <span id="plateMode">REFRESHED LAYER · 1-BIT</span></span></div>
+      <div class="plate-foot"><span id="plateCode">ASCN · 7990</span><span><span class="reg">✛</span> <span id="plateMode">LIT COLOUR</span></span></div>
     </section>
     <aside class="journal">
       <section id="cover">
@@ -32,11 +37,11 @@
       </section>
     </aside>
   </div>
-  <div class="controls"><span class="control-title">CONTROLS</span><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Walk</span><span><kbd>←</kbd><kbd>→</kbd> Turn</span><span><kbd>E</kbd> Interact</span><span><kbd>L</kbd> Layers</span><span><kbd>/</kbd> Type</span><span class="drag">Click an object · Drag to look</span><span class="touch-walk" aria-label="Walk controls"><button type="button" data-key="arrowleft" aria-label="Turn left">◀</button><button type="button" data-key="w">Walk</button><button type="button" data-key="s">Back</button><button type="button" data-key="arrowright" aria-label="Turn right">▶</button></span></div>
+  <div class="controls"><span class="control-title">CONTROLS</span><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Walk</span><span><kbd>←</kbd><kbd>→</kbd> Turn</span><span><kbd>E</kbd> Interact</span><span><kbd>L</kbd> Compare B/W</span><span><kbd>/</kbd> Type</span><span class="drag">Click an object · Drag to look</span><span class="touch-walk" aria-label="Walk controls"><button type="button" data-key="arrowleft" aria-label="Turn left">◀</button><button type="button" data-key="w">Walk</button><button type="button" data-key="s">Back</button><button type="button" data-key="arrowright" aria-label="Turn right">▶</button></span></div>
   <footer><span>FIELD SERIES <b>01</b></span><span class="rule"></span><span>LOCAL DISK EDITION</span></footer>
 </main>
 <dialog id="dialog"><div class="bar"><span id="dialogName">Field guide</span><span class="barlines"></span><button id="closeDialog" aria-label="Close">×</button></div><div id="dialogBody"></div></dialog>
 <script src="archive/es/designs.js"></script><script src="archive/es/sounds.js"></script><script src="art/castle-index.js"></script>
 <script src="audio/dark-castle-bank.js"></script><script src="audio/vault-audio.js"></script><script src="game/spatial.js"></script>
-<script src="game/altar.js"></script><script src="art/foreground-index.js"></script><script src="art/refresh/refresh-index.js"></script><script src="art/refresh/environments.js"></script><script src="art/refresh/banana-index.js"></script><script src="art/refresh/rigs.js"></script><script src="art/refresh/hand-rigs.js"></script><script src="game/rooms.js"></script><script src="game/refresh.js"></script><script src="game/map.js"></script><script src="game/hints.js"></script><script src="game/view.js"></script><script src="game/play.js"></script>
+<script src="game/altar.js"></script><script src="art/foreground-index.js"></script><script src="art/refresh/refresh-index.js"></script><script src="art/refresh/environments.js"></script><script src="art/refresh/banana-index.js"></script><script src="art/refresh/rigs.js"></script><script src="art/refresh/hand-rigs.js"></script><script src="game/rooms.js"></script><script src="game/refresh.js"></script><script src="game/map.js"></script><script src="game/hints.js"></script><script src="art/colour/index.js"></script><script src="game/colour.js"></script><script src="game/view.js"></script><script src="game/play.js"></script>
 </body></html>

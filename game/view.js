@@ -15,6 +15,7 @@ class PlateView {
     this.ink = 0xff161816;
     this.paper = 0xffe8eee9;
     this.refreshed = true;
+    this.colour = false;
     this.pose = {x:0,z:0,yaw:0,pitch:0};
     this.reset();
   }
@@ -66,7 +67,9 @@ class PlateView {
         swapBits = new Uint8Array(n);
         for (let i = 0; i < n; i++) swapBits[i] = swapData.rgba[i*4+3] < 128 ? 0 : swapData.rgba[i*4] < 128 ? 1 : 2;
       }
-      return {w:base.w, h:base.h, bits, tones, borders, fields, rimBits, swapBits};
+      const materials = window.RoomColour ? await RoomColour.materialMap(url,base.w,base.h) : null;
+      const dominant = window.ColourIndex?.dominant[url] || 0;
+      return {w:base.w, h:base.h, bits, tones, borders, fields, rimBits, swapBits, materials, dominant};
     })());
     return this.cache.get(url);
   }
@@ -119,6 +122,21 @@ class PlateView {
     this.refreshed = Boolean(enabled);
     this.syncMode();
   }
+  setColour(enabled) { this.colour = Boolean(enabled && window.RoomColour && window.ColourIndex); }
+  async colourIcon(meta) {
+    const room=this.colourRoom, tex=await this.texture(meta.path);
+    if(!room)return meta.path;
+    tex.icons ||= new Map();
+    if(tex.icons.has(room.themeName))return tex.icons.get(room.themeName);
+    const c=document.createElement('canvas');c.width=tex.w;c.height=tex.h;
+    const ctx=c.getContext('2d'), im=ctx.createImageData(c.width,c.height), pixels=new Uint32Array(im.data.buffer);
+    const material=room.spriteMaterial(meta.type,tex);
+    for(let i=0;i<pixels.length;i++)if(tex.bits[i])pixels[i]=room.spritePixel(tex.bits[i],tex.materials?.[i],material,3);
+    ctx.putImageData(im,0,0);
+    const url=c.toDataURL();
+    tex.icons.set(room.themeName,url);
+    return url;
+  }
   async load(meta) {
     const serial = this.serial = (this.serial || 0) + 1;
     const outside = /forest|swamp|marsh|mountain|desert|valley|canyon|road|clearing|grove|trail|garden|bank|shore|courtyard|lake|river|sea\b|meadow|prairie/i.test(meta.name+' '+meta.text?.slice(0,90));
@@ -152,6 +170,7 @@ class PlateView {
     if (serial !== this.serial) return;
     Object.assign(this, {
       meta, source, axialPlateDepth: Boolean(reviewed),
+      colourRoom: window.RoomColour ? new RoomColour.Room(meta,refreshRig,refreshSolids || origSolids) : null,
       origRig, refreshRig,
       origClean, refreshClean,
       origSolids, refreshSolids: refreshSolids || origSolids,
@@ -232,6 +251,8 @@ class PlateView {
     if(!this.source) return;
     const {w,h,rig:r,pose:p}=this, f=r.focal, cx=r.cx, cy=r.cy;
     const R = this.refreshed ? window.RefreshEngine : null;
+    const C = this.refreshed && this.colour ? this.colourRoom : null;
+    const diskEye = C && p.x===0 && p.z===0 && p.yaw===0 && p.pitch===0;
     const clean = this.refreshed ? this.refreshClean : this.origClean;
     const eye=r.eye+this.steps(), horizon=cy+p.pitch;
     const panX=Math.round(p.yaw*f), panY=Math.round(-p.pitch);
@@ -243,6 +264,7 @@ class PlateView {
     for(let i=0;i<w;i++) {
       const sx = i + panX;
       const u=(i+.5-cx)/f,dx=sn+cs*u,dz=cs-sn*u;
+      const inverseRayLength=C ? 1/Math.hypot(dx,dz) : 0;
       const tx=((dx>0?r.right:r.left)-p.x)/(dx||1e-10),tz=((dz>0?r.back:this.rear)-p.z)/(dz||1e-10);
       const wall=Math.min(tx,tz),side=tx<tz;
       boxHits.length=0;
@@ -314,7 +336,7 @@ class PlateView {
                   const tile=window.ScepterPatterns[hit.box.reversePattern];
                   bit=(tile[ty2&7]&(128>>(tx2&7)))?1:2;
                 }
-              } else if(bit && R && tex.tones){
+              } else if(bit && R && tex.tones && !diskEye){
                 bit=R.shadePlateTone(this,hit.box,faceHere,hx,hy,hz,n,tex,pIdx,fx,fy,sx,sy);
               }
             }
@@ -324,7 +346,11 @@ class PlateView {
         depth[idx]=t;
         const x=p.x+dx*t, y=eye+dy*t,z=p.z+dz*t;
         const fx=cx+f*x/z, fy=cy-f*(y-r.eye)/z, px=Math.floor(fx), py=Math.floor(fy);
-        if(!R && z>.02 && px>=0&&px<w&&py>=0&&py<h && Math.abs(p.x)+Math.abs(p.z)<.00001) {
+        let unseenMaterial=0;
+        if(diskEye){
+          // At registration the final ink comes directly from the drawing.
+          pix[idx]=source.bits[idx]===1?ink:paper;
+        } else if(!R && z>.02 && px>=0&&px<w&&py>=0&&py<h && Math.abs(p.x)+Math.abs(p.z)<.00001) {
           // Original mode: at the drawing's exact eye point use the raw disk plate.
           pix[idx]=source.bits[py*w+px]===1?ink:paper;
         } else if(layerBit){
@@ -338,7 +364,9 @@ class PlateView {
             : clean.bits[pIdx];
           pix[idx]=cBit===1?ink:paper;
         } else if(R){
-          pix[idx]=R.shadeUnseenWorld(this,face,x,y,z,t,sx,sy,dx,dy,dz)===1?ink:paper;
+          const sample=R.shadeUnseenWorld(this,face,x,y,z,t,sx,sy,dx,dy,dz,C?.surround);
+          pix[idx]=(sample&3)===1?ink:paper;
+          unseenMaterial=sample>>>2;
         } else {
           // Original mode fallback hatch for unseen surfaces.
           const bayer=((i&1)*2+(j&1)+((i>>1 ^ j>>1)&1))%5;
@@ -367,6 +395,17 @@ class PlateView {
           }
           pix[idx]=black?ink:paper;
         }
+        if(C){
+          let tex=null,uv=0;
+          if(diskEye){tex=source;uv=idx;}
+          else if(z>.02 && visible && px>=0 && py>=0 && px<w && py<h && (!solid || layerBit)){
+            tex=solid ? solid.layer : clean;uv=py*w+px;
+          }
+          // Spikes has a 313-row plate in the 314-row viewport.
+          let tag=tex && uv>=tex.bits.length ? 64 : tex?.materials?.[uv] || 0;
+          if(!(tag&31))tag|=unseenMaterial || solid?.layer?.dominant || C.fallback(face,y);
+          pix[idx]=C.pixel(pix[idx]===ink,tag,face,solid && hitUsed?.plane,solid,x,y,z,dy*inverseRayLength,tex?.tones?.[uv]||0);
+        }
       }
     }
     this.targets=[];
@@ -374,7 +413,9 @@ class PlateView {
     for(const {s,t} of actors) {
       if(t<=.08 || s.hidden)continue;
       const tex=s.texture,fw=s.fw||Math.floor(tex.w/s.cols),fh=s.fh||tex.h;
-      const bits=(this.refreshed&&tex.swapBits)||tex.bits;
+      const swapped=this.refreshed && !C && tex.swapBits;
+      const bits=swapped||tex.bits;
+      const material=C && C.spriteMaterial(s.key,tex);
       // A struck inhabitant flinches: a two-pixel shudder for a few frames.
       const flinch=s.flinchUntil&&time<s.flinchUntil?((Math.floor(time*30)&1)?2:-2):0;
       const lateral=(s.x-p.x)*cs-(s.z-p.z)*sn, middle=cx+lateral*f/t;
@@ -382,7 +423,7 @@ class PlateView {
       let left=middle-sw/2;
       if(left>=w||left+sw<=0||top>=h||top+sh<=0)continue;
       const offsetX=(s.frame%Math.max(1,s.cols))*fw,offsetY=s.row*fh;
-      const rim=this.refreshed&&!tex.swapBits?tex.rimBits:null;
+      const rim=this.refreshed&&!swapped?tex.rimBits:null;
       left+=flinch;
       let plotted=0;
       for(let j=Math.max(0,Math.ceil(top-.5));j<Math.min(h,top+sh-.5);j++){
@@ -393,7 +434,10 @@ class PlateView {
           const sx=Math.min(fw-1,Math.floor((i+.5-left)*fw/sw));
           const tIdx=sy*tex.w+offsetX+(s.flip?fw-1-sx:sx);
           const bit=bits[tIdx] || (rim ? rim[tIdx] : 0);
-          if(bit){pix[idx]=bit===1?ink:paper;plotted++;}
+          if(bit){
+            pix[idx]=C ? (bits[tIdx]?C.spritePixel(bit,tex.materials?.[tIdx],material,3):paper) : bit===1?ink:paper;
+            plotted++;
+          }
         }
       }
       if(plotted>1)this.targets.push({key:s.key,s,left,top,sw,sh,t});
@@ -405,7 +449,7 @@ class PlateView {
       const {left,top,sw,sh,s,t}=a;
       if(px<left||px>=left+sw||py<top||py>=top+sh)continue;
       const fw=s.fw||s.texture.w,fh=s.fh||s.texture.h, ix=Math.floor((px-left)*fw/sw);
-      const bit=((this.refreshed&&s.texture.swapBits)||s.texture.bits)[(s.row*fh+Math.floor((py-top)*fh/sh))*s.texture.w+(s.frame%s.cols)*fw+(s.flip?fw-1-ix:ix)];
+      const bit=((this.refreshed&&!this.colour&&s.texture.swapBits)||s.texture.bits)[(s.row*fh+Math.floor((py-top)*fh/sh))*s.texture.w+(s.frame%s.cols)*fw+(s.flip?fw-1-ix:ix)];
       if(bit && t<=this.depth[Math.floor(py)*this.w+Math.floor(px)]+.025)return a;
     }
     return null;

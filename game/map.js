@@ -1,9 +1,9 @@
 /* Saber's chart: a fog-of-war map of the 10 × 20 room grid recorded in the
-   scene designs (worldX, worldY; y grows south). Drawn in strict 1-bit with
+   scene designs (worldX, worldY; y grows south). Both monochrome modes use
    the disk's own CODE 1 tiles: visited rooms take Pattern 3, the current room
    Pattern 8 with a paper dot, and each visited cell shows an ink edge where
    its map bearing is blocked and a gap where it opens. Nothing is drawn for
-   rooms not yet seen. */
+   rooms not yet seen. Lit colour tints only the paper in previously visited cells. */
 class WorldMap {
   constructor(canvas, rooms, cell = 10) {
     this.canvas = canvas;
@@ -25,7 +25,7 @@ class WorldMap {
     const i = this.byCell.get(cx + ',' + cy);
     return i === undefined ? null : this.rooms[i];
   }
-  draw(visited, currentId) {
+  draw(visited, currentId, colour = false) {
     const { w, h, cell, pixels, ink, paper } = this;
     const tiles = window.ScepterPatterns;
     const bit = (pat, x, y) => !!(tiles[pat][y & 7] & (128 >> (x & 7)));
@@ -36,8 +36,9 @@ class WorldMap {
       if (!visited[i] && r.id !== currentId) return;
       const x0 = (r.worldX - 1) * cell + 1, y0 = (r.worldY - 1) * cell + 1, n = cell - 1;
       const current = r.id === currentId;
+      const roomPaper = colour && !current ? (window.RoomColour?.chartPaper(r.id) ?? paper) : paper;
       for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
-        pixels[(y0 + y) * w + x0 + x] = bit(current ? 8 : 3, x0 + x, y0 + y) ? ink : paper;
+        pixels[(y0 + y) * w + x0 + x] = bit(current ? 8 : 3, x0 + x, y0 + y) ? ink : roomPaper;
       }
       if (current) {
         const mx = x0 + (n >> 1) - 1, my = y0 + (n >> 1) - 1;

@@ -56,7 +56,7 @@ def build_luma_tables():
 PAT_TO_EVEN, LUMA_TO_META = build_luma_tables()
 
 
-def read_ascn_resources():
+def read_design_resources(resource_type):
     fork = (ROOT / "archive/es/Scepters.rsrc").read_bytes()
     data_start, index = struct.unpack_from(">II", fork)
     types = index + struct.unpack_from(">H", fork, index + 24)[0]
@@ -64,7 +64,7 @@ def read_ascn_resources():
     streams = {}
     for i in range(count):
         kind, n, offset = struct.unpack_from(">4sHH", fork, types + 2 + 8 * i)
-        if kind == b"ASCN":
+        if kind == resource_type:
             for j in range(n + 1):
                 ref = types + offset + 12 * j
                 ident = struct.unpack_from(">h", fork, ref)[0]
@@ -72,6 +72,10 @@ def read_ascn_resources():
                 length = struct.unpack_from(">I", fork, start)[0]
                 streams[ident] = fork[start + 4 : start + 4 + length]
     return streams
+
+
+def read_ascn_resources():
+    return read_design_resources(b"ASCN")
 
 
 def parse_commands(res):
@@ -443,6 +447,23 @@ def load_designs():
     return json.loads(js[js.index("[") : js.rindex("]") + 1])
 
 
+BESPOKE = [
+    (7990, "altar-clean", {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,21,22,24}, True),
+    (7990, "altar-dais", {16,23}, False),
+    (7990, "altar-column-left", {19,20}, False),
+    (7990, "altar-column-right", {17,18}, False),
+    (7990, "altar-plinth", {25,26,27}, False),
+    (21149, "quarters-clean", {1,2,3,4,5,10,11}, True),
+    (21149, "quarters-bed", {6,7,8,9,12}, False),
+    (29408, "sanctum-clean", {1,2,3,4,5,16,18,19,20,21,22,23,24,25,26,31}, True),
+    (29408, "sanctum-table", {6,7,8,9,10,17}, False),
+    (29408, "sanctum-book", {11,12,13,14,15}, False),
+    (29408, "sanctum-arch", {27,28,29,30}, False),
+    (10021, "court-clean", {1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,29,30,31,32,33,34,35}, True),
+    (10021, "court-basin", {13,26,27,28}, False),
+]
+
+
 def main():
     (OUT / "plates").mkdir(parents=True, exist_ok=True)
     (OUT / "foreground").mkdir(parents=True, exist_ok=True)
@@ -462,23 +483,8 @@ def main():
         plate_bytes += dest.stat().st_size
 
     # 2. Separated architectural rooms (High Altar, Quarters, Sanctum, Courtyard)
-    bespoke = [
-        (7990, "altar-clean", {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,21,22,24}, True),
-        (7990, "altar-dais", {16,23}, False),
-        (7990, "altar-column-left", {19,20}, False),
-        (7990, "altar-column-right", {17,18}, False),
-        (7990, "altar-plinth", {25,26,27}, False),
-        (21149, "quarters-clean", {1,2,3,4,5,10,11}, True),
-        (21149, "quarters-bed", {6,7,8,9,12}, False),
-        (29408, "sanctum-clean", {1,2,3,4,5,16,18,19,20,21,22,23,24,25,26,31}, True),
-        (29408, "sanctum-table", {6,7,8,9,10,17}, False),
-        (29408, "sanctum-book", {11,12,13,14,15}, False),
-        (29408, "sanctum-arch", {27,28,29,30}, False),
-        (10021, "court-clean", {1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,29,30,31,32,33,34,35}, True),
-        (10021, "court-basin", {13,26,27,28}, False),
-    ]
     fg_bytes = 0
-    for ident, name, sel, opq in bespoke:
+    for ident, name, sel, opq in BESPOKE:
         src = ART / f"{name}.png"
         dest = OUT / f"{name}.png"
         im = build_tone_layer(src, parsed[ident], sel, opq)

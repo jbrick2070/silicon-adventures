@@ -581,7 +581,12 @@
   }
 
   // Shade unseen world surfaces (side wall extensions, rear doorway wall, ceilings, horizons) with CODE 1 patterns.
-  function shadeUnseenWorld(view, face, x, y, z, t, sx, sy, dx, dy, dz) {
+  // With a colour surround, carry the material in the upper bits of the
+  // result. Both presentations then use the very same ridge and gunwale.
+  function panoramaBit(pat, sx, sy, surround, band) {
+    return (samplePattern(pat, sx, sy) ? 1 : 2) | (surround ? surround[band] << 2 : 0);
+  }
+  function shadeUnseenWorld(view, face, x, y, z, t, sx, sy, dx, dy, dz, surround) {
     const r = view.rig;
     const pen = Math.max(0.004, t / r.focal);
     const cave = view.env === 'cave';
@@ -597,12 +602,13 @@
       const angle = Math.atan2(dx, dz);
       const crest = r.flatHorizon ? 0 : .019 * Math.sin(7 * angle) + .012 * Math.cos(11 * angle);
       const foot = r.flatHorizon ? crest : Math.min(-.035, crest - .022);
-      let pat = elevation >= crest ? u.sky : elevation >= foot ? u.ridge : u.floor;
+      let band = elevation >= crest ? 0 : elevation >= foot ? 1 : 2;
+      let pat = band === 0 ? u.sky : band === 1 ? u.ridge : u.floor;
       // The wreck's planking ends at the feet of its low bulwarks. Over
       // their top edges the same distant seabed continues around the ship.
-      if (u.deck && face === 3) pat = u.deck;
+      if (u.deck && face === 3) { pat = u.deck; band = 3; }
       if (u.deck && Math.abs(face) !== 3 && y < r.gunwaleHeight) {
-        return y >= r.gunwaleHeight - pen || samplePattern(u.gunwale, sx, sy) ? 1 : 2;
+        return y >= r.gunwaleHeight - pen ? 1 : panoramaBit(u.gunwale, sx, sy, surround, 3);
       }
       if (elevation < foot && dy < 0 && (!u.deck || face === 3) && view.shadowSpots.length) {
         const ground = -r.eye / dy;
@@ -610,7 +616,7 @@
           pat = shiftPattern(pat, 1);
         }
       }
-      return samplePattern(pat, sx, sy) ? 1 : 2;
+      return panoramaBit(pat, sx, sy, surround, band);
     }
 
     if (r.environment === 'submerged') {
@@ -618,22 +624,23 @@
       if (face !== 3 && Math.abs(y - ridge) < 1.3 * pen) return 1;
       let pat = face === 3 ? 4 : y < ridge ? 5 : 7;
       if (t > 6.6) pat = shiftPattern(pat, 1);
-      return samplePattern(pat, sx, sy) ? 1 : 2;
+      return panoramaBit(pat, sx, sy, surround, face === 3 ? 2 : y < ridge ? 1 : 0);
     }
 
     if (view.outside) {
       if (face === 3) {
         let pat = t < 3.4 ? 13 : t < 7.2 ? 5 : 4;
         if (hasContactShadow(view.solids, null, x, y, z) || spriteShadow(view, x, z)) pat = shiftPattern(pat, 1);
-        return samplePattern(pat, sx, sy) ? 1 : 2;
+        return panoramaBit(pat, sx, sy, surround, 2);
       }
       // One horizon at infinity: the ridge depends only on the ray's bearing and elevation,
       // so it holds still while walking and never seams between the wall and ceiling faces.
       const a = Math.atan2(dx, dz), ridge = 1.6 + 0.23 * Math.sin(a * 13) + 0.30 * Math.cos(a * 4);
       const elev = dy / Math.max(1e-6, Math.hypot(dx, dz)), ridgeElev = (ridge - r.eye) / 12;
       if (Math.abs(elev - ridgeElev) < 1.35 * pen / 12) return 1;
-      const pat = elev < ridgeElev ? (elev < ridgeElev - 0.08 ? 5 : 6) : (r.unseen?.sky || 3);
-      return samplePattern(pat, sx, sy) ? 1 : 2;
+      const band = elev < ridgeElev ? (elev < ridgeElev - 0.08 ? 2 : 1) : 0;
+      const pat = band === 2 ? 5 : band === 1 ? 6 : (r.unseen?.sky || 3);
+      return panoramaBit(pat, sx, sy, surround, band);
     }
 
     // Indoor stone chamber, or a cave: rock without courses, cornice or baseboard

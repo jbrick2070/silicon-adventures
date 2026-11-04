@@ -1,0 +1,114 @@
+id	theme	materials	surround
+7083	wreck	water=0-1,10-11 earth=2-3 wood=4-9	water,earth,earth
+12464	wreck	water=0-1,10-11 wood=2-8,12 ice=9	water,earth,earth
+20431	wreck	water=0-1,15-16 wood=2-13 metal=17-18 shadow=14	water,earth,earth
+15266	wreck	water=0-1,19-20 foliage=22 earth=9,16 stone=21 wood=2-3,5-8 metal=11-14 cloth=4,10,15 ice=17-18	water,earth,earth
+17595	wreck	water=0-1,19-22 wood=2-16 gold=17 flesh=18	water,earth,earth
+30379	wreck	water=3,11,22-24 earth=0-1 wood=2,4-7,12-17 metal=8-10,18-21	water,earth,earth
+24601	sea	water=0-1,6-7 earth=2,8 flesh=4-5 accent=3,9	water,accent,earth
+23449	sea	water=0-1,11-12 foliage=7,10 earth=2,9 stone=3-6,8	water,foliage,earth
+26847	sea	water=0-1,8-9 foliage=7 earth=2,6 stone=3 flesh=4-5	water,earth,earth
+15776	coast	water=0-1,6-7 foliage=5 earth=2-3 stone=4	water,earth,earth
+7820	sea	water=0-1,6-8 earth=2-3 stone=9 metal=4-5	water,earth,earth
+8642	sea	water=0-1,9-10 foliage=4 earth=2,7 stone=3,8 gold=5 ice=6	water,earth,earth
+31555	sea	water=0-1,8-9 foliage=3,7 earth=2,6 stone=4-5	water,foliage,earth
+2352	sea	water=0,10-12 foliage=6 earth=1,8 stone=2-5,9 accent=7	water,stone,earth
+12955	jungle	water=0-1,10 foliage=4-6,12-13 earth=7 stone=8-9 wood=2-3,11,14-15	sky,foliage,water
+23679	sea	water=0-1,4-7 earth=2-3 ice=8	water,accent,earth
+27201	sea	water=0-1,11-12 foliage=13 earth=3 stone=2,4-9 shadow=10	water,stone,earth
+9841	sea	water=0,8-10 foliage=7 earth=1,6 stone=2-5	water,stone,earth
+290	sea	water=0,9-10 earth=1 stone=3-8 shadow=2	water,stone,earth
+14057	sea	water=0-1,11,16-18 foliage=8,10,14 earth=2-3,13 metal=12 ice=4-7,9,15	water,foliage,earth
+28593	coast	sky=0 water=1 metal=2-7	sky,water,water
+18468	coast	sky=0 water=4,8 stone=9 metal=2-3,5-7,10-12 shadow=1	stone,stone,water
+24275	castle	sky=0,18 earth=2 wall=1,3-13 wood=19 gold=14-17	sky,wall,earth
+14279	jungle	sky=0 foliage=1-4,7-8 earth=5 wood=6	sky,foliage,earth
+2577	jungle	sky=0-1 water=6 foliage=4,7-8,12 earth=5 stone=2-3,10 wood=9,11	sky,foliage,water
+23160	desert	sky=0 earth=7 stone=1-2,4-6,8-9 metal=3 shadow=10	sky,stone,earth
+11734	desert	sky=0 earth=7-8 stone=1-5 gold=6	sky,stone,earth
+26550	desert	sky=0 foliage=16 earth=1,3 stone=2,4-15	sky,stone,earth
+26748	ruins	sky=0 foliage=21 earth=1,12,17 stone=5,9-11,13,15-16 wall=2,7-8,14 wood=3-4,6 cloth=18-20	sky,wall,earth
+26096	ruins	sky=0 earth=1,8 stone=2-7,9-17 metal=18-23	sky,wall,earth
+327	desert	sky=0,6-7 earth=3,5 stone=2 wood=4,8-11 gold=1	sky,stone,earth
+23064	desert	sky=0 earth=1 stone=2-9	sky,stone,earth
+10850	highland	sky=0-1 foliage=8 earth=2,7 stone=3-4,6 wood=9 shadow=5	sky,foliage,earth
+9567	desert	sky=0 foliage=10 earth=1 stone=3-9,11-12 shadow=2	sky,stone,earth
+23147	highland	earth=0,8,10,14 stone=1-2,4-7,11-13 ivory=9 shadow=3	sky,stone,earth
+23813	highland	earth=0,10,20 stone=1-3,5-9,11-19,21 shadow=4	sky,stone,earth
+19939	volcanic	sky=0 earth=1,7 stone=2,4-6,8-9 shadow=3	sky,stone,earth
+3521	highland	sky=0,8 earth=2,7 stone=1,3-6,9-16	sky,stone,earth
+9497	highland	sky=0 earth=4,7 stone=1-3,5-6,8-9	sky,stone,earth
+27293	jungle	sky=0-1 foliage=5 earth=7-8 stone=2-4 shadow=6	sky,foliage,earth
+17872	ruins	sky=0 floor=1 metal=2-8,10 shadow=9	metal,metal,floor
+10021	castle	sky=0,22,24 water=28 stone=4-5,7-9,11-15,26-27 floor=1-3,29-30,32,34 wood=18-21,23,35 gold=10,25 shadow=6,16-17,31,33	sky,wall,floor
+21798	desert	earth=0-3 stone=4-12	sky,stone,earth
+4658	jungle	foliage=0,2-4,6-7 earth=1 wood=8-9 shadow=5	foliage,foliage,earth
+4223	desert	sky=0 earth=2-3 stone=1	sky,stone,earth
+27740	desert	sky=0,12 water=1 earth=2 stone=4-11 floor=3	sky,stone,floor
+15787	coast	sky=0 water=1-2 foliage=10 earth=9 wood=3-8	sky,water,water
+20641	desert	sky=0 earth=1-3 gold=4	sky,stone,earth
+13946	coast	sky=0 water=1 foliage=5-6 earth=2-4	sky,water,earth
+30680	jungle	sky=0-1 water=3,5 foliage=2,12 stone=7-10 wood=4,6,11	sky,foliage,water
+22874	jungle	foliage=8,11-12 earth=0-2 stone=3-7,9-10	sky,stone,earth
+999	desert	sky=0 earth=1,3 gold=2	sky,earth,earth
+20359	jungle	foliage=4,6-8 earth=0-3,5,9,12 wood=10 shadow=11	sky,foliage,earth
+14435	highland	sky=0 foliage=1-3,9,12 earth=4,11 stone=5-8 wood=10	sky,foliage,earth
+4980	highland	sky=1 earth=0,3,8,14 stone=2,4-7,9-13,15-17	sky,stone,earth
+30474	jungle	sky=0,14 foliage=1-2,4,11,13,15 earth=3,8 wood=5-6,9,12 gold=10 shadow=7	sky,foliage,earth
+25584	jungle	sky=0,9 foliage=1,3,5-6,14-15,18 earth=2,11 stone=12,16 wood=4,7-8 gold=10 shadow=13,17	sky,foliage,earth
+9387	jungle	sky=0,13 foliage=2-5,8-9,12 earth=1,10 wood=6-7,11	sky,foliage,earth
+28370	jungle	sky=0,4 foliage=3,7-9 earth=1-2 wood=5-6	sky,foliage,earth
+14969	highland	sky=0 earth=1 stone=4-10 shadow=2-3	sky,foliage,earth
+5049	highland	sky=0,11 earth=1,8 stone=2-7,9-10	sky,stone,earth
+27492	desert	sky=0,5-6 earth=1 stone=2-4,8-14 gold=7	sky,stone,earth
+24338	jungle	water=8 foliage=5,9-10 earth=0,4 stone=1-3,6-7,11	sky,foliage,water
+5878	jungle	sky=0 water=2,6 foliage=1 earth=5,7,12 stone=3-4,11 wood=8-10,13-15	sky,foliage,water
+11672	desert	sky=0,8 earth=1,3,6 stone=2,4-5 gold=7	sky,stone,earth
+32624	highland	sky=0-1 water=4,9-11 foliage=15-17 stone=3,5-8,12,18 wood=2,13-14,19	sky,foliage,earth
+12523	desert	sky=0 foliage=5 earth=1,3-4 gold=2	sky,earth,earth
+9440	highland	sky=0-1 earth=2 stone=3-6	sky,stone,earth
+24035	highland	sky=0,6,10 earth=1 stone=2-5,14 wood=7,11 gold=9 flesh=8 shadow=12-13	sky,stone,earth
+25219	desert	sky=0 water=5-6 foliage=4,7,10-11 earth=1-2 wood=3,9 gold=8	sky,foliage,earth
+14895	desert	sky=0 earth=1-5 stone=6-14	sky,stone,earth
+32256	sea	water=0,3,26-28 foliage=4,17,24 earth=1-2 stone=9-16,18-19 gold=22 ivory=5-8,20-21,23,25	water,foliage,earth
+14237	ruins	earth=0-1 stone=3-9 metal=10-12 flesh=2,13	sky,stone,earth
+4787	desert	sky=0,4 earth=1,8 stone=2,5-7 gold=3	sky,stone,earth
+6029	desert	sky=0,29 earth=3 stone=1 metal=2,4-28,31-36 gold=30	sky,stone,earth
+17455	ruins	sky=0 earth=1-2 stone=5-6,13-16 wood=3-4,7-12	sky,wall,earth
+3617	jungle	water=3,12 foliage=2,4-5 earth=0-1,6 stone=9 wood=7-8,10-11	sky,foliage,water
+9603	jungle	water=5 earth=2-4 stone=0-1,7,11-13 wood=6,8-10	sky,foliage,earth
+10919	ruins	sky=0 earth=5-6 stone=7-9 wall=1-4,10	sky,wall,earth
+17473	jungle	sky=0 foliage=4,6,8 earth=3 stone=1-2 wood=5,7,9 metal=10-11 shadow=12	sky,foliage,earth
+10456	jungle	water=2,8 foliage=1,13 earth=0,3-6 stone=7,12 wood=9-11	sky,foliage,water
+23935	desert	sky=0 earth=1 stone=2	sky,stone,earth
+12197	castle	sky=0 earth=5,22 wall=3-4,6-11,13-16,18-19 wood=1-2 metal=12,17,20-21	sky,wall,earth
+5112	jungle	sky=0-1 water=2,11 earth=3-4,9-10 stone=7-8 wood=5-6	sky,water,water
+6591	desert	sky=0 earth=1-2 stone=4-7 gold=3	sky,stone,earth
+12217	jungle	sky=0,9 water=5 foliage=3,7-8,10 earth=1-2,4 wood=6	sky,foliage,earth
+26193	jungle	sky=0 water=5,9-10,22 foliage=1,12,17,19 earth=2-4,6,13 stone=7-8,11 wood=14-16,18,20-21	sky,foliage,water
+14688	village	sky=0 foliage=15 earth=1 wood=2-3,6-14,16-20 metal=4-5	sky,water,earth
+1193	coast	sky=0 foliage=8-9 earth=1,7 stone=3-6,10-11 shadow=2	sky,water,earth
+6785	coast	sky=0,4-5 water=1 foliage=7-8 earth=2,6 gold=3	sky,water,earth
+14979	jungle	water=2 foliage=1 earth=0,3-4 stone=5,8 wood=6-7,9-10	sky,foliage,water
+20301	coast	sky=0,4-5 water=1 foliage=6 earth=2-3	sky,water,earth
+4957	jungle	sky=0,3 water=5 foliage=1,7,10-11 earth=4 wood=2,6,8-9	sky,foliage,earth
+25936	jungle	water=1 foliage=13-16,18 earth=0,11 stone=2-10,12,17	sky,foliage,water
+2293	volcanic	sky=0 earth=4,7 stone=1-3,5-6	sky,stone,earth
+29926	volcanic	sky=0,4-5 earth=1,3,8 stone=2,6-7,9,12 gold=11 fire=10	sky,stone,earth
+28820	desert	earth=0-1 stone=2-6	stone,stone,earth
+29592	desert	earth=0 stone=1-12,14,17,20-39 gold=15,19 accent=16,18 shadow=13	sky,stone,earth
+2464	castle	sky=0 stone=4,13-21 floor=1 wall=2-3,5-12	sky,wall,floor
+4315	jungle	water=1,5 foliage=2,6-7,10-11 earth=0,3-4 wood=8-9,12-13	sky,foliage,water
+25694	jungle	sky=0 water=2-4,11 foliage=7-10,12-16,19-24 earth=17 stone=1,5-6 wood=18	sky,foliage,water
+16874	temple	sky=0,14-15 foliage=2-3,16-17 earth=1 stone=4-6,9-12 wood=8,13 shadow=7	sky,foliage,earth
+27689	desert	sky=0,4 earth=1-2,5 gold=3	sky,stone,earth
+19497	jungle	sky=0 foliage=1,4,6,9-12 earth=2,7 wood=3,5,8	sky,foliage,earth
+4896	highland	sky=0 foliage=17-18 earth=1,13 stone=2-12,14-16	sky,stone,earth
+11124	highland	sky=0 earth=2,10 stone=1,3-9,11	sky,stone,earth
+19597	highland	sky=0-1 water=17 foliage=6-7,10-11,14 earth=4-5,13 stone=3 wood=8-9,12,15-16 gold=2	sky,stone,earth
+20177	jungle	foliage=0-1,4,6-7,9-10,12-13 earth=2-3 wood=5,8,11	sky,foliage,earth
+3099	volcanic	sky=0 earth=6 stone=1-2,4-5 wood=7-8 shadow=3	sky,stone,earth
+63	volcanic	sky=0,2 earth=1 stone=4-15 fire=3	sky,stone,earth
+859	desert	sky=0 water=3-4 foliage=5-8,14 earth=1-2 stone=10-12 wood=9 gold=13	sky,foliage,earth
+4940	desert	sky=0-1,20 earth=10 stone=11-12,14-16 wood=2-9,13,17-19	sky,stone,earth
+7132	highland	sky=0,2 foliage=3-4,13 earth=1 stone=6-7,14-17 wood=5,9-12,18-20 shadow=8	sky,foliage,earth
