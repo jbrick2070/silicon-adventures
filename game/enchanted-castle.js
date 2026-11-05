@@ -72,10 +72,14 @@
     }
     assets.hd.normals = new Map();
     for (const key of HD_NORMALS) jobs.push(loadImage(`art/castle-3d/normals/B-PSCR-${key.slice(1)}.png`).then(img => assets.hd.normals.set(key, img)).catch(() => {}));
+    assets.hd.skies = new Map();
+    for (const key of HD_SKIES) jobs.push(loadImage(`art/castle-3d/sky/B-PSCR-${key.slice(1)}.png`).then(img => assets.hd.skies.set(key, img)).catch(() => {}));
     assets.hdLoaded = Promise.all(jobs).then(prepareHDForegrounds);
     return assets.hdLoaded;
   }
   // Relights a painted room from its surface map. Without WebGL the room simply stays as painted.
+  // Outdoor rooms carry a sky layer whose alpha marks what may drift. Its 4% margin hides the edges of the drift.
+  const HD_SKIES = ['B2000', 'B3010', 'B3030'];
   class RoomLight {
     constructor() {
       this.canvas = document.createElement('canvas'); this.canvas.width = W * 2; this.canvas.height = H * 2;
@@ -84,36 +88,41 @@
       const shader = (type, code) => { const o = gl.createShader(type); gl.shaderSource(o, code); gl.compileShader(o); return o; };
       const program = gl.createProgram();
       gl.attachShader(program, shader(gl.VERTEX_SHADER, 'attribute vec2 p; varying vec2 v; void main() { v = vec2(p.x + 1., 1. - p.y) / 2.; gl_Position = vec4(p, 0., 1.); }'));
-      gl.attachShader(program, shader(gl.FRAGMENT_SHADER, `precision mediump float; varying vec2 v; uniform sampler2D art, normals; uniform vec2 torch; uniform float glow;
+      gl.attachShader(program, shader(gl.FRAGMENT_SHADER, `precision mediump float; varying vec2 v; uniform sampler2D art, normals, sky; uniform vec2 torch, drift; uniform float glow, outdoors;
         void main() {
           vec3 base = texture2D(art, v).rgb, raw = texture2D(normals, v).rgb * 2. - 1., n = normalize(raw + vec3(0., 0., .001));
           float solid = smoothstep(.2, .6, length(raw)); // Sky has no surface, so it stays as painted.
           vec3 to = vec3((torch.x - v.x) * 3., (v.y - torch.y) * 2.004, .35);
           float away = length(to), fall = 1. / (1. + away * away * 2.56), lit = max(dot(n, to / away), 0.);
-          gl_FragColor = vec4(base * (mix(vec3(1.), vec3(.6, .62, .68), solid) + solid * 2.1 * glow * lit * fall * vec3(1., .78, .5)), 1.);
+          vec3 room = base * (mix(vec3(1.), vec3(.6, .62, .68), solid) + solid * 2.1 * glow * lit * fall * vec3(1., .78, .5));
+          float open = outdoors * texture2D(sky, v).a;
+          gl_FragColor = vec4(mix(room, texture2D(sky, .5 + (v - .5) * .96 + drift).rgb, open), 1.);
         }`));
       gl.linkProgram(program); gl.useProgram(program);
       this.ok = gl.getProgramParameter(program, gl.LINK_STATUS);
       gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
       const at = gl.getAttribLocation(program, 'p'); gl.enableVertexAttribArray(at); gl.vertexAttribPointer(at, 2, gl.FLOAT, false, 0, 0);
-      gl.uniform1i(gl.getUniformLocation(program, 'art'), 0); gl.uniform1i(gl.getUniformLocation(program, 'normals'), 1);
+      gl.uniform1i(gl.getUniformLocation(program, 'art'), 0); gl.uniform1i(gl.getUniformLocation(program, 'normals'), 1); gl.uniform1i(gl.getUniformLocation(program, 'sky'), 2);
       this.torch = gl.getUniformLocation(program, 'torch'); this.glow = gl.getUniformLocation(program, 'glow');
+      this.drift = gl.getUniformLocation(program, 'drift'); this.outdoors = gl.getUniformLocation(program, 'outdoors');
       this.textures = new Map(); this.key = null;
     }
     texture(image) {
       const gl = this.gl; let t = this.textures.get(image);
       if (t) return t;
       t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
       for (const [name, value] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, name, value);
       this.textures.set(image, t); return t;
     }
-    draw(art, normals, x, y, glow) {
+    draw(art, normals, sky, x, y, glow, drift) {
       const gl = this.gl;
       gl.viewport(0, 0, this.canvas.width, this.canvas.height);
       gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.texture(art));
       gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, this.texture(normals));
+      if (sky) { gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, this.texture(sky)); }
+      gl.uniform1f(this.outdoors, sky ? 1 : 0); gl.uniform2f(this.drift, drift, 0);
       gl.uniform2f(this.torch, x / W, y / H); gl.uniform1f(this.glow, glow);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       return this.canvas;
@@ -191,6 +200,22 @@
       for (const c of [this.buffer, this.canvas]) { c.width = W * scale; c.height = H * scale; }
       this.b.setTransform(scale, 0, 0, scale, 0, 0);
       this.b.imageSmoothingEnabled = false; this.ctx.imageSmoothingEnabled = false;
+      this.stage = null;
+    }
+    // Lit rooms gather everything standing in them on a stage, so the torch can fall on it as one.
+    openStage() {
+      if (!this.stage) {
+        const c = document.createElement('canvas'); c.width = W * this.scale; c.height = H * this.scale;
+        this.stage = c.getContext('2d'); this.stage.setTransform(this.scale, 0, 0, this.scale, 0, 0); this.stage.imageSmoothingEnabled = false;
+      }
+      this.main = this.b; this.b = this.stage; this.b.clearRect(0, 0, W, H);
+    }
+    closeStage(x, y) {
+      const s = this.b, g = s.createRadialGradient(x, y, 0, x, y, 340);
+      g.addColorStop(0, 'rgba(255, 190, 110, .1)'); g.addColorStop(.14, 'rgba(255, 190, 110, .05)'); g.addColorStop(.26, 'rgba(12, 15, 24, 0)');
+      g.addColorStop(.6, 'rgba(12, 15, 24, .26)'); g.addColorStop(1, 'rgba(12, 15, 24, .38)');
+      s.globalCompositeOperation = 'source-atop'; s.fillStyle = g; s.fillRect(0, 0, W, H); s.globalCompositeOperation = 'source-over';
+      this.b = this.main; this.b.drawImage(s.canvas, 0, 0, W, H);
     }
     reel(key, frame, x, y, flip) {
       const img = assets.reels.get(key), info = assets.info.get(key);
@@ -514,12 +539,16 @@
     const b = p.b, room = core.room, hdArt = p.scale > 1 ? assets.hd?.screens.get('B' + room.id) : null, art = hdArt || assets.screens.get('B' + room.id);
     b.fillStyle = '#000'; b.fillRect(0, 0, W, H);
     const normals = hdArt ? assets.hd.normals?.get('B' + room.id) : null;
+    let lit = false;
     if (normals) {
       assets.roomLight ||= new RoomLight();
       const light = assets.roomLight, h = core.hero, flicker = reduced ? 1 : .94 + .06 * Math.sin(core.tickCount * .37) * Math.sin(core.tickCount * .13);
-      if (light.ok) b.drawImage(light.draw(hdArt, normals, h.x + 16, h.y + 16, flicker), 0, 0, W, H); else b.drawImage(art, 0, 0, W, H);
+      // Clouds drift slowly and shift a little against Duncan, so the sky sits far behind the castle.
+      const drift = reduced ? 0 : Math.sin(core.tickCount * .008) * .008 - (h.x - W / 2) / W * .022;
+      if (light.ok) { b.drawImage(light.draw(hdArt, normals, assets.hd.skies?.get('B' + room.id), h.x + 16, h.y + 16, flicker, drift), 0, 0, W, H); lit = true; } else b.drawImage(art, 0, 0, W, H);
     } else if (art) b.drawImage(art, 0, 0, W, H);
     p.fullColour = !!hdArt;
+    if (lit) p.openStage();
     for (const e of core.entities) if (!['knight', 'lever'].includes(e.type)) drawEntity(p, e, core, reduced);
     // A pulled lever brings out its half of the bridge, behind Duncan (CODE 4 $2574-$257c).
     for (const e of core.entities) if (e.type === 'lever' && e.pulled) p.reel('B919', e.chain ? 1 : 0, e.chain ? 245 : 232, 141);
@@ -536,7 +565,8 @@
       if (shot.life < 6 && !shot.fire) p.reel('A138', shot.life, shot.x - 8, shot.y);
     }
     const front = (hdArt && assets.hd.fronts?.get(room.id)) || assets.fronts?.get(room.id);
-    if (front) b.drawImage(front, 0, 0, W, H);
+    if (front) p.b.drawImage(front, 0, 0, W, H);
+    if (lit) p.closeStage(core.hero.x + 16, core.hero.y + 16);
     if (core.mode === 'leaving') p.plaque('You have the ' + core.reward.name + '.', 30);
     if (core.flash && !reduced) { b.fillStyle = 'rgba(255,255,255,.65)'; b.fillRect(0, 0, W, STATUS_Y); }
     drawStatus(p, core);
