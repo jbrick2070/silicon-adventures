@@ -1,9 +1,22 @@
 /* One ray per screen column. Room faces sample the source drawing from its
    original eye point; optional refresh layers keep CODE 1 dither tiles steady
    and add carved reverse stone faces without altering source assets. */
+// Where a clean plate has taken an object off the wall. Dither makes single pixels differ everywhere, so this reads the neighbourhood.
+const liftedArea = (a, b) => {
+  const {w, h} = a, grid = new Int32Array((w + 1) * (h + 1)), out = new Uint8Array(w * h), r = 4;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++)
+    grid[(y + 1) * (w + 1) + x + 1] = (a.bits[y * w + x] !== b.bits[y * w + x]) + grid[y * (w + 1) + x + 1] + grid[(y + 1) * (w + 1) + x] - grid[y * (w + 1) + x];
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const x0 = Math.max(0, x - r), x1 = Math.min(w, x + r + 1), y0 = Math.max(0, y - r), y1 = Math.min(h, y + r + 1);
+    const sum = grid[y1 * (w + 1) + x1] - grid[y0 * (w + 1) + x1] - grid[y1 * (w + 1) + x0] + grid[y0 * (w + 1) + x0];
+    out[y * w + x] = sum > (x1 - x0) * (y1 - y0) * .3 ? 1 : 0;
+  }
+  return out;
+};
 class PlateView {
   // Rooms repainted in the castle's lit style. Others keep Lit colour.
-  static painted = new Set([21149, 7990, 24338, 25936, 2577, 25694, 4315, 4957, 20301, 14688, 10472, 23272, 4223, 20598, 18366]);
+  static painted = new Set([21149, 7990, 24338, 25936, 2577, 25694, 4315, 4957, 20301, 14688, 10472, 23272, 4223, 20598, 18366,
+    21083, 17872, 17888, 3099, 14750, 29408, 14057, 31514, 32256]);
   constructor(canvas) {
     this.canvas = canvas;
     this.w = canvas.width = 338;
@@ -192,7 +205,7 @@ class PlateView {
     ]);
     if (serial !== this.serial) return;
     Object.assign(this, {
-      meta, source, paint, axialPlateDepth: Boolean(reviewed),
+      meta, source, paint, lifted: paint && refreshClean !== source ? liftedArea(source, refreshClean) : null, axialPlateDepth: Boolean(reviewed),
       colourRoom: window.RoomColour ? new RoomColour.Room(meta,refreshRig,refreshSolids || origSolids) : null,
       origRig, refreshRig,
       origClean, refreshClean,
@@ -466,7 +479,7 @@ class PlateView {
             tex=solid ? solid.layer : clean;uv=py*w+px;
           }
           // Where a clean plate has lifted an object off the wall, the painting would still show it.
-          if(this.paint && tex && uv<this.paint.length && (tex!==clean || clean===source || clean.bits[uv]===source.bits[uv])){
+          if(this.paint && tex && uv<this.paint.length && !(tex===clean && this.lifted?.[uv])){
             pix[idx]=this.paint[uv];
             continue;
           }
