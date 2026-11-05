@@ -85,6 +85,15 @@ class PlateView {
     const art = await this.decodeImage(`art/es-3d/ASCN-${id}.png`);
     return art.w === this.w && art.h === this.h ? new Uint32Array(art.rgba.buffer.slice(0)) : null;
   }
+  // Past the drawing's edges, each unseen wall and floor is laid with the painting's own surfaces.
+  beyond(face, x, y, z, r) {
+    const fold = (a, n) => { a = ((Math.floor(a) % (2*n)) + 2*n) % (2*n); return a < n ? a : 2*n-1-a; };
+    const k = r.focal / r.back, flat = Math.abs(face) === 3, band = this.h * .2;
+    const u = fold(r.cx + (Math.abs(face) === 1 ? z : x) * k, this.w);
+    const v = flat ? (face > 0 ? this.h - 1 - fold(z * k * .5, band) : fold(z * k * .5, band)) : fold(r.cy - (y - r.eye) * k, this.h);
+    const c = this.paint[Math.floor(v) * this.w + u];
+    return 0xff000000 | (c >> 16 & 255) * .78 << 16 | (c >> 8 & 255) * .78 << 8 | (c & 255) * .78;
+  }
   async buildSolids(rig) {
     const R = window.RefreshEngine;
     return Promise.all(rig.solids.map(async spec => {
@@ -465,6 +474,11 @@ class PlateView {
           let tag=tex && uv>=tex.bits.length ? 64 : tex?.materials?.[uv] || 0;
           if(!(tag&31))tag|=unseenMaterial || solid?.layer?.dominant || C.fallback(face,y);
           pix[idx]=C.pixel(pix[idx]===ink,tag,face,solid && hitUsed?.plane,solid,x,y,z,dy*inverseRayLength,tex?.tones?.[uv]||0);
+          if(this.paint){
+            const seen=this.beyond(face,x,y,z,r);
+            // Boundaries stay visible as a darker shape in the painting's own surface.
+            pix[idx]=fenced?0xff000000|(seen>>17&127)<<16|(seen>>9&127)<<8|(seen>>1&127):seen;
+          }
         }
       }
     }
