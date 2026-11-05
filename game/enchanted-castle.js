@@ -15,6 +15,7 @@
   const HD_PAINTED = new Set(['B1000', 'B2020', 'B4020', 'B1010', 'B1020', 'B2000', 'B2010', 'B2030', 'B3000', 'B3010', 'B3020', 'B3030', 'B4000', 'B4010', 'A101', 'A105', 'A106', 'A112', 'B300', 'B310', 'B350', 'B412', 'B435', 'B710', 'B902', 'B903', 'B906', 'B908', 'A102', 'A103', 'A104', 'A107', 'A108', 'A109', 'A110', 'A114', 'A115', 'A116', 'A117', 'A118', 'A119', 'A120', 'A123', 'A125', 'A126', 'A128', 'A129', 'A130', 'A131', 'A149', 'B132', 'B133', 'B134', 'B146', 'B147', 'B155', 'B142', 'B143', 'B150', 'B151', 'B154', 'B157', 'B158', 'A124', 'A135', 'A136', 'A137', 'B139', 'B140', 'B141', 'B148', 'B152', 'B153', 'B156', 'A144', 'A145', 'B709', 'A113', 'A127', 'A138', 'A520', 'B904', 'B905', 'B910', 'B911', 'B912', 'B913', 'B914', 'B915', 'B916', 'B917', 'B920', 'B921', 'B712', 'B918', 'B919', 'B907', 'B922', 'B715', 'B716', 'B717', 'B200', 'B400', 'B401', 'B438', 'B410', 'B411', 'B413', 'B700', 'B900', 'B901', 'B311', 'B351', 'B352', 'B353', 'B354', 'B355', 'B356', 'B357', 'B405', 'B406', 'B407', 'B408', 'B414', 'B415', 'B416', 'B417', 'B418', 'B420', 'B421', 'B422', 'B423', 'B424', 'B425', 'B426', 'B428', 'B429', 'B430', 'B431', 'B432', 'B433', 'B434', 'B436', 'B437']);
   const HD_MIRRORS = {A100: 'A101', A111: 'A112'};
   // Painted rooms with a surface map take the moving torchlight. Only light moves, never geometry.
+  const CINE_W = 640, CINE_H = 428, CINE_FRAMES = 48, CINE_RATE = 16, CINE_SHOT = CINE_FRAMES / CINE_RATE;
   const HD_NORMALS = ['B1000', 'B1010', 'B1020', 'B2000', 'B2010', 'B2020', 'B2030', 'B3000', 'B3010', 'B3020', 'B3030', 'B4000', 'B4010', 'B4020'];
   // These tiles are opaque on the disk. Their outer white must clear to show the room behind them.
   const HD_OPEN_TILES = new Set(['B510', 'B511', 'A5000']);
@@ -74,6 +75,8 @@
     for (const key of HD_NORMALS) jobs.push(loadImage(`art/castle-3d/normals/B-PSCR-${key.slice(1)}.png`).then(img => assets.hd.normals.set(key, img)).catch(() => {}));
     assets.hd.skies = new Map();
     for (const key of HD_SKIES) jobs.push(loadImage(`art/castle-3d/sky/B-PSCR-${key.slice(1)}.png`).then(img => assets.hd.skies.set(key, img)).catch(() => {}));
+    assets.hd.cine = new Map();
+    for (const key of ['knight', 'empty']) loadImage(`art/castle-3d/finale-${key}.png`).then(img => assets.hd.cine.set(key, img)).catch(() => {});
     assets.hdLoaded = Promise.all(jobs).then(prepareHDForegrounds);
     return assets.hdLoaded;
   }
@@ -701,7 +704,7 @@
     const $ = q => dialog.querySelector(q), canvas = $('canvas'), line = $('#castleLine');
     // A key tapped between two ticks still counts for one tick.
     const painter = new Painter(canvas), keys = new Set(), tapped = new Set(), input = {};
-    let core = null, view = 'loading', frame = 0, last = 0, spare = 0, paused = false, tick = 0;
+    let core = null, view = 'loading', frame = 0, last = 0, spare = 0, paused = false, tick = 0, cine = null;
     let pointer = null, usedMouse = false, lineUntil = 0;
     const options = {classic: false, ward: false, vertical: false, captions: true, remastered: false};
     try { Object.assign(options, JSON.parse(localStorage.getItem('castle-options') || '{}')); } catch { /* Storage may be blocked. */ }
@@ -739,6 +742,21 @@
       host.onCue?.('dc:' + organ[tick % organ.length]);
     }
     function showScores(message) { view = 'scores'; panel('menu'); $('.castle-touch').hidden = true; say(message || 'Scores of Merit'); }
+    // Rendered 3D shots of the throne, for the Remastered look only. Any key skips them.
+    function playCine(key, then, hold) {
+      const img = assets.hd?.cine?.get(key);
+      if (painter.scale === 1 || !img) { then(); return; }
+      cine = {img, start: performance.now(), then, hold, armed: false};
+      view = 'cine'; $('.castle-touch').hidden = true;
+    }
+    function drawCine() {
+      const b = painter.b, age = (performance.now() - cine.start) / 1000, shot = (reduced.matches ? 0 : CINE_SHOT) + cine.hold;
+      const f = reduced.matches ? CINE_FRAMES - 1 : Math.min(CINE_FRAMES - 1, Math.floor(age * CINE_RATE));
+      b.save(); b.imageSmoothingEnabled = true; b.imageSmoothingQuality = 'high';
+      b.drawImage(cine.img, f % 8 * CINE_W, Math.floor(f / 8) * CINE_H, CINE_W, CINE_H, 0, 0, W, H);
+      b.fillStyle = '#000'; b.globalAlpha = Math.max(0, 1 - age / .4, 1 - (shot - age) / .4); b.fillRect(0, 0, W, H);
+      b.restore();
+    }
     function onEvents(list) {
       for (const event of list) {
         if (event.type === 'sound') {
@@ -755,7 +773,7 @@
           const text = recordScore(event.score);
           host.onFinish?.({won: true, score: event.score});
           banner = 'Elron: Bravo! You have saved Callion!';
-          showScores(text ? text.replace('^0', event.score.toLocaleString('en-US')) : banner);
+          playCine('empty', () => showScores(text ? text.replace('^0', event.score.toLocaleString('en-US')) : banner), 3);
         }
       }
     }
@@ -800,6 +818,12 @@
     }
     function step() {
       tick++;
+      if (cine) {
+        if (!keys.size) cine.armed = true;
+        const age = (performance.now() - cine.start) / 1000, shot = (reduced.matches ? 0 : CINE_SHOT) + cine.hold;
+        if ((cine.armed && keys.size) || age > shot) { const {then} = cine; cine = null; then(); }
+        return;
+      }
       if (view !== 'game' || paused || !core) return;
       if (core.demo) {
         onEvents(core.tick(core.demoInput()));
@@ -808,6 +832,11 @@
       }
       readInput();
       onEvents(core.tick(input));
+      // The first sight of the Black Knight's wing.
+      if (view === 'game' && !core.sawKnight && !core.preview && core.mode === 'room' && core.room?.id === 4000) {
+        core.sawKnight = true;
+        playCine('knight', () => { view = 'game'; $('.castle-touch').hidden = false; }, 1.2);
+      }
     }
     function paint() {
       const b = painter.b;
@@ -815,6 +844,7 @@
       if (view === 'title') { drawTitle(painter, tick, reduced.matches); painter.show(false); return; }
       if (view === 'scores') { drawScores(painter, tick, reduced.matches); painter.show(false); return; }
       if (view === 'loading') { b.fillStyle = '#000'; b.fillRect(0, 0, W, H); painter.show(false); return; }
+      if (cine) { drawCine(); painter.show(false); return; }
       if (!core) return;
       if (core.mode === 'hall' || core.mode === 'run') {
         const now = new Date();
@@ -910,7 +940,7 @@
     say('Loading the castle…');
     session = {dialog, used: painter.used, core: () => core};
     window.EnchantedCastle.session = session;
-    window.EnchantedCastle.debug = {begin, view: () => view, painter, keys, fronts: () => [...(assets.hd?.fronts?.keys() || [])]};
+    window.EnchantedCastle.debug = {begin, playCine, view: () => view, painter, keys, fronts: () => [...(assets.hd?.fronts?.keys() || [])]};
     loadAssets().then(() => {
       if (!dialog.open) return;
       if (options.remastered) applyLook();
