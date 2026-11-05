@@ -23,8 +23,8 @@ You are repainting the Great Hall of a 1986 Macintosh game into a rich, truly li
 
 ## Repairs
 
-- `A-PPCT-10012.png`, frame 3: remove the hollow outline beside the elbow, keeping the original mask.
 - `A-PPCT-10034.png`, frame 3: the rear shin is a thin dark stick. Repaint it to match the other leg, keeping the original mask.
+- `A-PPCT-10050.png`: its report shows a 4 pixel shift. Bring the arches within 1 pixel of the original.
 
 ## Before you finish
 
