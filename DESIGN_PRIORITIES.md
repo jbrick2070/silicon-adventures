@@ -45,3 +45,16 @@ The four picture IDs in order are 16192, 11543, 3992 and 4051. Reserve the hatch
 **What remains to verify.** This is a design plan. The current selector result and original script rules were checked during review. The proposed UI, real-engine acceptance cases and human comprehension tests have not run. Observe at least one first-time player and one returning player when available. Record what they saw, which choice they made, what they expected to happen and how much help they requested before funding the next pass.
 
 [Design review and grounding notes](kibitz-runs/2026-11-03-whole-game-priorities/review.md)
+
+## Docket: real 3D and firmer edges for the adventure
+
+Requested on 5 November 2026, to start after the castle art is finished. The castle got today's 3D work, so the adventure needs its own pass. The goal is to stop players wandering endlessly through alike rooms such as the marsh, and to give the 200 rooms the same lit, solid look as the castle.
+
+| Order | Work | Where it stands |
+| --- | --- | --- |
+| 1. Marsh pilot | Make the six marsh rooms (24338, 25936, 2577, 25694, 4315, 4957) easy to tell apart and hard to get lost in. | Reed barriers and marsh hints exist in `game/boundary.js` and `game/hints.js`, but the rooms still read alike. Keep the disk's exits and words. |
+| 2. Clearer edges everywhere | Make every blocked side and real exit obvious at a glance, outdoors and undersea. | Barriers and marker posts exist. Test them with a player who has not seen the map. |
+| 3. Colour art | Repaint the room plates in the castle's lit style, keeping each drawing's layout and clickable objects in place. | Lit colour exists as atlases in `art/colour`. Argon repainted the castle rooms at four times their size, so try it on the six marsh rooms first. |
+| 4. Real 3D view | Add surface maps and moving light, then decide whether to replace the view. | `game/view.js` is a canvas ray view at 338 by 314. Torchlight on painted art needs WebGL and more resolution here, so measure a marsh room before committing to all 200. |
+
+Decide scale from the marsh pilot: the cost per room, whether clicks still land on the right objects, and whether a new player gets out of the marsh unaided. Nothing here may change the disk's text, exits, puzzles or Java engine.
