@@ -12,7 +12,7 @@ Start with room 21149 only, so its result can be checked before you do the rest.
 ## Shared prompt
 
 ```text
-Repaint this exact scene as a rich, truly lit 3D render. Keep the camera, horizon and perspective, and keep every wall edge, doorway, object and landmark exactly where it is in this image. Do not add, remove or move anything. No new text, people, frames or borders. Solid realistic materials, warm key light from the upper left, cool slate fill, soft detail. Do not add a dark vignette.
+Repaint this exact scene as a rich, truly lit 3D render. Keep the camera, horizon and perspective, and keep every wall edge, doorway, object and landmark exactly where it is in this image. Do not add, remove or move anything. No new text, people, frames or borders. Solid realistic materials, muted dark yellow key light from the upper left, cool slate fill, no orange, soft detail. Do not add a dark vignette.
 ```
 
 ## Opening

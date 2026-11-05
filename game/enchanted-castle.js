@@ -94,7 +94,7 @@
           float solid = smoothstep(.2, .6, length(raw)); // Sky has no surface, so it stays as painted.
           vec3 to = vec3((torch.x - v.x) * 3., (v.y - torch.y) * 2.004, .35);
           float away = length(to), fall = 1. / (1. + away * away * 2.56), lit = max(dot(n, to / away), 0.);
-          vec3 room = base * (mix(vec3(1.), vec3(.6, .62, .68), solid) + solid * 2.1 * glow * lit * fall * vec3(1., .78, .5));
+          vec3 room = base * (mix(vec3(1.), vec3(.6, .62, .68), solid) + solid * 1.7 * glow * lit * fall * vec3(.9, .8, .5));
           float open = outdoors * texture2D(sky, v).a;
           gl_FragColor = vec4(mix(room, texture2D(sky, .5 + (v - .5) * .96 + drift).rgb, open), 1.);
         }`));
@@ -212,7 +212,7 @@
     }
     closeStage(x, y) {
       const s = this.b, g = s.createRadialGradient(x, y, 0, x, y, 340);
-      g.addColorStop(0, 'rgba(255, 190, 110, .1)'); g.addColorStop(.14, 'rgba(255, 190, 110, .05)'); g.addColorStop(.26, 'rgba(12, 15, 24, 0)');
+      g.addColorStop(0, 'rgba(214, 192, 120, .1)'); g.addColorStop(.14, 'rgba(214, 192, 120, .05)'); g.addColorStop(.26, 'rgba(12, 15, 24, 0)');
       g.addColorStop(.6, 'rgba(12, 15, 24, .26)'); g.addColorStop(1, 'rgba(12, 15, 24, .38)');
       s.globalCompositeOperation = 'source-atop'; s.fillStyle = g; s.fillRect(0, 0, W, H); s.globalCompositeOperation = 'source-over';
       this.b = this.main; this.b.drawImage(s.canvas, 0, 0, W, H);
