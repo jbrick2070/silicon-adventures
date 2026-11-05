@@ -2,6 +2,8 @@
    original eye point; optional refresh layers keep CODE 1 dither tiles steady
    and add carved reverse stone faces without altering source assets. */
 class PlateView {
+  // Rooms repainted in the castle's lit style. Others keep Lit colour.
+  static painted = new Set();
   constructor(canvas) {
     this.canvas = canvas;
     this.w = canvas.width = 338;
@@ -73,6 +75,11 @@ class PlateView {
       return {w:base.w, h:base.h, bits, tones, borders, fields, rimBits, swapBits, materials, dominant};
     })());
     return this.cache.get(url);
+  }
+  // A painted room shares its drawing's picture positions, so it follows every ray the plate does.
+  async painting(id) {
+    const art = await this.decodeImage(`art/es-3d/ASCN-${id}.png`);
+    return art.w === this.w && art.h === this.h ? new Uint32Array(art.rgba.buffer.slice(0)) : null;
   }
   async buildSolids(rig) {
     const R = window.RefreshEngine;
@@ -162,16 +169,17 @@ class PlateView {
       new RegExp('\\b' + d + '(ern|erly)?\\b[^.!?]{0,30}\\b(door|doorway|passage|exit|opening|arch|archway|tunnel|hallway|path|road|gate|stairs?)\\b', 'i').test(text);
     const exits = {};
     for (const d of ['north', 'south', 'east', 'west']) exits[d] = !(meta.blocked && meta.blocked[d]) || names(d);
-    const [source, origClean, refreshClean, origSolids, refreshSolids] = await Promise.all([
+    const [source, origClean, refreshClean, origSolids, refreshSolids, paint] = await Promise.all([
       this.texture(meta.path),
       this.texture(origRig.clean || meta.path),
       this.texture(refreshRig.clean || meta.path),
       this.buildSolids(origRig),
-      refreshRig === origRig ? null : this.buildSolids(refreshRig)
+      refreshRig === origRig ? null : this.buildSolids(refreshRig),
+      PlateView.painted.has(meta.id) ? this.painting(meta.id).catch(() => null) : null
     ]);
     if (serial !== this.serial) return;
     Object.assign(this, {
-      meta, source, axialPlateDepth: Boolean(reviewed),
+      meta, source, paint, axialPlateDepth: Boolean(reviewed),
       colourRoom: window.RoomColour ? new RoomColour.Room(meta,refreshRig,refreshSolids || origSolids) : null,
       origRig, refreshRig,
       origClean, refreshClean,
@@ -443,6 +451,11 @@ class PlateView {
           if(diskEye){tex=source;uv=idx;}
           else if(!fenced && z>.02 && visible && px>=0 && py>=0 && px<w && py<h && (!solid || layerBit)){
             tex=solid ? solid.layer : clean;uv=py*w+px;
+          }
+          // Where a clean plate has lifted an object off the wall, the painting would still show it.
+          if(this.paint && tex && uv<this.paint.length && (tex!==clean || clean===source || clean.bits[uv]===source.bits[uv])){
+            pix[idx]=this.paint[uv];
+            continue;
           }
           // Spikes has a 313-row plate in the 314-row viewport.
           let tag=tex && uv>=tex.bits.length ? 64 : tex?.materials?.[uv] || 0;
