@@ -46,6 +46,30 @@ The four picture IDs in order are 16192, 11543, 3992 and 4051. Reserve the hatch
 
 [Design review and grounding notes](kibitz-runs/2026-11-03-whole-game-priorities/review.md)
 
+## Release plan: midnight on 6 November 2026
+
+Ship the finished castle plus about 24 repainted rooms in the adventure, chosen so a player meets something striking early and at every big moment. The other 176 rooms keep Lit colour, so nothing is left unfinished. If the painted rooms are not ready, the castle still ships alone.
+
+| When | Work | Done means |
+| --- | --- | --- |
+| Thursday day | Finish the castle: check and load the last three Argon waves, then the scepters. | Every castle sprite is painted or deliberately left on the Codex pack. |
+| Thursday day | Run the pilot, `archive/dc/AGY_WAVE_SCEPTERS_PILOT.md`: quarters, high altar and the six marsh rooms. | Eight rooms delivered and checked. |
+| Thursday night | Load painted rooms into `game/view.js` in Lit colour, using the same picture positions as the disk plate. Add firmer marsh edges. | Walking, turning and clicking all work in the eight rooms. |
+| Friday morning | Paint the other 16 rooms in two tasks, if the pilot passes. | 24 rooms delivered and checked. |
+| Friday afternoon | Add moving light to painted rooms if time allows. Run the full test set and a muted play-through of the winning route. | No errors, and the winning route still wins. |
+| Friday evening | Final check, then merge to main, deploy the web edition and rebuild the Windows ZIP. Finish by 9 pm to leave a margin. | Live site and ZIP tested. |
+
+**The 24 rooms**
+
+| Group | Rooms |
+| --- | --- |
+| Opening | quarters 21149, great hall 21083, court 17872, throne room 17888, high altar 7990 |
+| Marsh | marsh 24338, slough 25936, bog 2577, swamp 25694, stagnant pool 4315, slip 4957 |
+| Big moments | volcano top 3099, devil's sanctum 14750, Wizard's Sanctum 29408, Neptune's Throne 14057, queen 31514, palace 32256 |
+| Memorable places | silicon beach 20301, salty bar 14688, helm room 10472, control 23272, desert 4223, elven throne 20598, Finale 18366 |
+
+**What gets cut first:** moving light in the adventure, then the Memorable places, then the Big moments. The marsh, the opening rooms and the castle stay. Stop adding features on Friday at 5 pm.
+
 ## Docket: real 3D and firmer edges for the adventure
 
 Requested on 5 November 2026, to start after the castle art is finished. The castle got today's 3D work, so the adventure needs its own pass. The goal is to stop players wandering endlessly through alike rooms such as the marsh, and to give the 200 rooms the same lit, solid look as the castle.
