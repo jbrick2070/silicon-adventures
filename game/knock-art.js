@@ -372,14 +372,30 @@
     }
   }
 
+  // Lit colour flies a real 3D model of the courier, rendered through one slow banking turn.
+  const fleet=new Image();fleet.src='art/es-3d/aircraft/courier.png';
+  const towerArt=new Image();towerArt.src='art/es-3d/aircraft/tower.png';
+  const FRAMES=16,FW=256,FH=160;
+  const ready=img=>img.complete&&img.naturalWidth>0;
+  function flyModel(ctx,x,y,width,turn){
+    const f=((Math.floor(turn*FRAMES)%FRAMES)+FRAMES)%FRAMES,h=width*FH/FW;
+    ctx.save();ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+    ctx.drawImage(fleet,f%4*FW,Math.floor(f/4)*FH,FW,FH,x-width/2,y-h/2,width,h);ctx.restore();
+  }
   function draw(canvas,{stage,colour,elapsed=0,active=-1,flash=false,open=false,bearing='east',success=false}){
     const ctx=canvas.getContext('2d',{alpha:false,willReadFrequently:true});
-    const key=stage+'-'+colour+'-'+open;
+    const painted=colour&&ready(towerArt)&&['tower','beacon','approach'].includes(stage);
+    const model=colour&&ready(fleet);
+    const key=stage+'-'+colour+'-'+open+'-'+painted;
     let plate=cache.get(canvas);
     if(plate?.key!==key){
       const frame=ctx.createImageData(W,H),pixels=new Uint32Array(frame.data.buffer);
       const g=painter(pixels,colour);
-      if(stage==='tower'||stage==='beacon'||stage==='approach')tower(g);
+      if(painted){
+        const c=document.createElement('canvas');c.width=W;c.height=H;
+        const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(towerArt,0,0,W,H);
+        pixels.set(new Uint32Array(x.getImageData(0,0,W,H).data.buffer));
+      }else if(stage==='tower'||stage==='beacon'||stage==='approach')tower(g);
       else if(stage==='guardroom')guardroom(g,open);
       else threshold(g);
       plate={key,frame,pixels,base:pixels.slice(),g};
@@ -387,14 +403,22 @@
     }
     plate.pixels.set(plate.base);
     if(stage==='beacon'){
-      aircraft(plate.g,elapsed);beaconDesk(plate.g);compass(plate.g,bearing);shutterLamp(plate.g,bearing,flash);
+      if(!model)aircraft(plate.g,elapsed);
+      beaconDesk(plate.g);compass(plate.g,bearing);shutterLamp(plate.g,bearing,flash);
     }else if(stage==='approach'){
-      courier(plate.g,elapsed,success);
+      if(!model||success)courier(plate.g,elapsed,success);
       beaconDesk(plate.g);compass(plate.g,'east');shutterLamp(plate.g,'east',flash);
-    }else if(stage==='tower')aircraft(plate.g,elapsed);
+    }else if(stage==='tower'){if(!model)aircraft(plate.g,elapsed);}
     else if(stage==='guardroom')shields.forEach((_,i)=>shield(plate.g,i,i===active&&flash,elapsed));
     else knocker(plate.g,flash);
     ctx.putImageData(plate.frame,0,0);
+    if(model&&(stage==='tower'||stage==='beacon')){
+      // It circles the valley, so the player keeps watching the sky. The sky target is unchanged.
+      const a=elapsed*.16;
+      flyModel(ctx,169+118*Math.cos(a),78+24*Math.sin(a),58+16*Math.sin(a),.28-a/(Math.PI*2));
+    }else if(model&&stage==='approach'){
+      flyModel(ctx,205+Math.round(32*Math.sin(elapsed*.24)),78+Math.round(5*Math.sin(elapsed*.35)),150,.3+Math.sin(elapsed*.4)*.03);
+    }
   }
   window.KnockArt={draw,shields,beaconRegions};
 })();
