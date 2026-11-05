@@ -598,6 +598,27 @@
     x.globalCompositeOperation = 'lighten'; x.fillStyle = '#1c1618'; x.fillRect(0, 0, c.width, c.height);
     return assets.sepiaHall = c;
   }
+  // A painted door opens inside the painted wall, so its masonry fades into the stone around it.
+  function softDoor(key, frame) {
+    const hd = assets.hd?.reels.get(key), info = assets.info.get(key), id = key + frame;
+    if (!hd || !info) return null;
+    assets.softDoors ||= new Map();
+    if (assets.softDoors.has(id)) return assets.softDoors.get(id);
+    const w = info.width * HD_SCALE, h = info.height * HD_SCALE, f = frame % info.frames;
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const x = c.getContext('2d');
+    x.drawImage(hd.img, f * w, 0, w, h, 0, 0, w, h);
+    x.globalCompositeOperation = 'multiply'; x.fillStyle = '#c4bcae'; x.fillRect(0, 0, w, h);
+    x.globalCompositeOperation = 'destination-in';
+    const fade = (x0, y0, x1, y1) => {
+      const g = x.createLinearGradient(x0, y0, x1, y1);
+      g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(.16, '#000'); g.addColorStop(.84, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      x.fillStyle = g; x.fillRect(0, 0, w, h);
+    };
+    fade(0, 0, w, 0); fade(0, 0, 0, h * 1.1);
+    assets.softDoors.set(id, c);
+    return c;
+  }
   function drawHall(p, core, holiday) {
     const b = p.b, hall = assets.paper.get('A-PICT-10000'), door = core.plan.DOORS[core.door];
     b.fillStyle = '#000'; b.fillRect(0, 0, W, H);
@@ -607,7 +628,11 @@
     if (holiday) { const tree = assets.paper.get('A-PICT-10004'); if (tree) b.drawImage(assets.hd?.tree && p.fullColour ? assets.hd.tree : tree, 347, 82, 57, 87); }
     if (core.mode === 'run') {
       const path = core.run.path, step = path.steps[core.run.step];
-      if (path.door && core.run.step > 2) p.reel('A' + path.door, Math.min(2, Math.floor(core.run.step / 6)), path.doorX, path.doorY);
+      if (path.door && core.run.step > 2) {
+        const key = 'A' + path.door, frame = Math.min(2, Math.floor(core.run.step / 6)), soft = p.fullColour ? softDoor(key, frame) : null;
+        if (soft) b.drawImage(soft, path.doorX, path.doorY, soft.width / HD_SCALE, soft.height / HD_SCALE);
+        else p.reel(key, frame, path.doorX, path.doorY);
+      }
       if (step && step.frame >= 0) p.reel('A' + path.reels[Math.max(0, step.reel)], step.frame, step.x, step.y);
     } else {
       p.reel('A10008', Math.floor(core.tickCount / 12), 220, 208);
