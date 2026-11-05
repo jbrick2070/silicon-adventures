@@ -12,7 +12,7 @@
   // full relief pack covers the rest, and the disk's art is the last resort. Duncan's left walk and
   // left arm are exact mirrors of the right ones, so one painted strip serves both.
   const HD_SCALE = 4;
-  const HD_PAINTED = new Set(['B1000', 'B2020', 'B4020', 'B1010', 'B1020', 'B2000', 'B2010', 'B2030', 'B3000', 'B3010', 'B3020', 'B3030', 'B4000', 'B4010', 'A101', 'A105', 'A106', 'A112', 'B300', 'B310', 'B350', 'B412', 'B435', 'B710', 'B902', 'B903', 'B906', 'B908', 'A102', 'A103', 'A104', 'A107', 'A108', 'A109', 'A110', 'A114', 'A115', 'A116', 'A117', 'A118', 'A119', 'A120', 'A123', 'A125', 'A126', 'A128', 'A129', 'A130', 'A131', 'A149', 'B132', 'B133', 'B134', 'B146', 'B147', 'B155', 'B142', 'B143', 'B150', 'B151', 'B154', 'B157', 'B158', 'A124', 'A135', 'A136', 'A137', 'B139', 'B140', 'B141', 'B148', 'B152', 'B153', 'B156', 'A144', 'A145', 'B709', 'A113', 'A127', 'A138', 'A520', 'B904', 'B905', 'B910', 'B911', 'B912', 'B913', 'B914', 'B915', 'B916', 'B917', 'B920', 'B921', 'B712', 'B918', 'B919', 'B907', 'B922', 'B715', 'B716', 'B717', 'B200', 'B400', 'B401', 'B438', 'B410', 'B411', 'B413', 'B700', 'B900', 'B901', 'B311', 'B351', 'B352', 'B353', 'B354', 'B355', 'B356', 'B357', 'B405', 'B406', 'B407', 'B408', 'B414', 'B415', 'B416', 'B417', 'B418', 'B420', 'B421', 'B422', 'B423', 'B424', 'B425', 'B426', 'B428', 'B429', 'B430', 'B431', 'B432', 'B433', 'B434', 'B436', 'B437', 'A5000', 'A5010', 'B121', 'B122', 'B510', 'B511', 'B521', 'B522', 'B701', 'B702', 'B703', 'B704', 'B705', 'B706', 'B707', 'B708', 'B711', 'B714']);
+  const HD_PAINTED = new Set(['B1000', 'B2020', 'B4020', 'B1010', 'B1020', 'B2000', 'B2010', 'B2030', 'B3000', 'B3010', 'B3020', 'B3030', 'B4000', 'B4010', 'A101', 'A105', 'A106', 'A112', 'B300', 'B310', 'B350', 'B412', 'B435', 'B710', 'B902', 'B903', 'B906', 'B908', 'A102', 'A103', 'A104', 'A107', 'A108', 'A109', 'A110', 'A114', 'A115', 'A116', 'A117', 'A118', 'A119', 'A120', 'A123', 'A125', 'A126', 'A128', 'A129', 'A130', 'A131', 'A149', 'B132', 'B133', 'B134', 'B146', 'B147', 'B155', 'B142', 'B143', 'B150', 'B151', 'B154', 'B157', 'B158', 'A124', 'A135', 'A136', 'A137', 'B139', 'B140', 'B141', 'B148', 'B152', 'B153', 'B156', 'A144', 'A145', 'B709', 'A113', 'A127', 'A138', 'A520', 'B904', 'B905', 'B910', 'B911', 'B912', 'B913', 'B914', 'B915', 'B916', 'B917', 'B920', 'B921', 'B712', 'B918', 'B919', 'B907', 'B922', 'B715', 'B716', 'B717', 'B200', 'B400', 'B401', 'B438', 'B410', 'B411', 'B413', 'B700', 'B900', 'B901', 'B311', 'B351', 'B352', 'B353', 'B354', 'B355', 'B356', 'B357', 'B405', 'B406', 'B407', 'B408', 'B414', 'B415', 'B416', 'B417', 'B418', 'B420', 'B421', 'B422', 'B423', 'B424', 'B425', 'B426', 'B428', 'B429', 'B430', 'B431', 'B432', 'B433', 'B434', 'B436', 'B437', 'A5000', 'A5010', 'B121', 'B122', 'B510', 'B511', 'B521', 'B522', 'B701', 'B702', 'B703', 'B704', 'B705', 'B706', 'B707', 'B708', 'B711', 'B714', 'A10008', 'A10010', 'A10011', 'A10012', 'A10013', 'A10020', 'A10021', 'A10022', 'A10023', 'A10024', 'A10030', 'A10031', 'A10032', 'A10033', 'A10034', 'A10040', 'A10041', 'A10042', 'A10043', 'A10050', 'A10051', 'A10052']);
   const HD_MIRRORS = {A100: 'A101', A111: 'A112'};
   // Painted rooms with a surface map take the moving torchlight. Only light moves, never geometry.
   const CINE_W = 640, CINE_H = 428, CINE_FRAMES = 48, CINE_RATE = 16, CINE_SHOT = CINE_FRAMES / CINE_RATE;
@@ -77,6 +77,10 @@
     for (const key of HD_SKIES) jobs.push(loadImage(`art/castle-3d/sky/B-PSCR-${key.slice(1)}.png`).then(img => assets.hd.skies.set(key, img)).catch(() => {}));
     assets.hd.scepters = new Map();
     for (const wing of Object.values(window.CastlePlan.WINGS)) jobs.push(loadImage(wing.scepter.plate.replace('archive/es/plates/', 'art/es-3d/scepters/4x/')).then(img => assets.hd.scepters.set(wing.scepter.id, img)).catch(() => {}));
+    assets.hd.spins = new Map();
+    for (const id of ['earth', 'fire', 'air', 'water']) loadImage(`art/es-3d/scepters/spin-${id}.png`).then(img => assets.hd.spins.set(id, img)).catch(() => {});
+    loadImage('art/castle-3d/4x/A-PICT-10000.png').then(img => { assets.hd.hall = img; }).catch(() => {});
+    loadImage('art/castle-3d/4x/A-PICT-10004.png').then(img => { assets.hd.tree = img; }).catch(() => {});
     assets.hd.cine = new Map();
     for (const key of ['knight', 'empty']) loadImage(`art/castle-3d/finale-${key}.png`).then(img => assets.hd.cine.set(key, img)).catch(() => {});
     assets.hdLoaded = Promise.all(jobs).then(prepareHDForegrounds);
@@ -572,15 +576,35 @@
     const front = (hdArt && assets.hd.fronts?.get(room.id)) || assets.fronts?.get(room.id);
     if (front) p.b.drawImage(front, 0, 0, W, H);
     if (lit) p.closeStage(core.hero.x + 16, core.hero.y + 16);
+    // The scepter just won, turning in the air: a real 3D model, in the Remastered look only.
+    const spin = core.mode === 'leaving' && hdArt ? assets.hd.spins?.get(core.reward.id) : null;
+    if (spin) {
+      const age = core.tickCount - core.reward.at, f = reduced ? 0 : Math.floor(age / 2) % 24;
+      p.b.save(); p.b.imageSmoothingEnabled = true; p.b.globalAlpha = Math.min(1, age / 10);
+      p.b.drawImage(spin, f % 6 * 256, Math.floor(f / 6) * 256, 256, 256, W / 2 - 110, 56, 220, 220);
+      p.b.restore();
+    }
     if (core.mode === 'leaving') p.plaque('You have the ' + core.reward.name + '.', 30);
     if (core.flash && !reduced) { b.fillStyle = 'rgba(255,255,255,.65)'; b.fillRect(0, 0, W, STATUS_Y); }
     drawStatus(p, core);
   }
+  // Until the hall has its painting, the disk's picture takes the tone of the painted figures.
+  function sepia(hall) {
+    if (!hall) return null;
+    if (assets.sepiaHall) return assets.sepiaHall;
+    const c = document.createElement('canvas'); c.width = hall.width || hall.naturalWidth; c.height = hall.height || hall.naturalHeight;
+    const x = c.getContext('2d'); x.drawImage(hall, 0, 0);
+    x.globalCompositeOperation = 'multiply'; x.fillStyle = '#c9a56c'; x.fillRect(0, 0, c.width, c.height);
+    x.globalCompositeOperation = 'lighten'; x.fillStyle = '#1c1618'; x.fillRect(0, 0, c.width, c.height);
+    return assets.sepiaHall = c;
+  }
   function drawHall(p, core, holiday) {
     const b = p.b, hall = assets.paper.get('A-PICT-10000'), door = core.plan.DOORS[core.door];
     b.fillStyle = '#000'; b.fillRect(0, 0, W, H);
-    if (hall) b.drawImage(hall, 0, 0);
-    if (holiday) { const tree = assets.paper.get('A-PICT-10004'); if (tree) b.drawImage(tree, 347, 82); }
+    p.fullColour = p.scale > 1;
+    const painted = p.fullColour ? assets.hd?.hall || sepia(hall) : hall;
+    if (painted) b.drawImage(painted, 0, 0, W, H);
+    if (holiday) { const tree = assets.paper.get('A-PICT-10004'); if (tree) b.drawImage(assets.hd?.tree && p.fullColour ? assets.hd.tree : tree, 347, 82, 57, 87); }
     if (core.mode === 'run') {
       const path = core.run.path, step = path.steps[core.run.step];
       if (path.door && core.run.step > 2) p.reel('A' + path.door, Math.min(2, Math.floor(core.run.step / 6)), path.doorX, path.doorY);
