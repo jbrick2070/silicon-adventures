@@ -8,12 +8,12 @@
   const W = 512, H = 342, STATUS_Y = 309;
   const PALETTE = {hall: '#efe3cb', trouble: '#e9dcc3', fireball: '#f1d9b4', shield: '#d9e3da', knight: '#ddd3e8'};
   const INK = '#21163a';
-  // Trial art, drawn only when the Remastered option is on. These are agy's 4x masters from the art
-  // bakeoff. Anything not listed, or missing, keeps the disk's art. Duncan's left walk is an exact
-  // mirror of his right walk, so one strip serves both. The gargoyle's two directions differ.
+  // Trial art, drawn only when the Remastered option is on and only in rooms that have new art. These
+  // are 4x masters that passed review. Anything not listed, or missing, keeps the disk's art. Duncan's
+  // left walk and left arm are exact mirrors of the right ones, so one strip serves both. Other pairs differ.
   const HD_SCALE = 4;
-  const HD_SCREENS = {B4020: 'art/castle-3d/4x/B-PSCR-4020.png'};
-  const HD_REELS = {A101: {path: 'art/castle-3d/4x/A-PPCT-101.png'}, A100: {path: 'art/castle-3d/4x/A-PPCT-101.png', mirror: true}, B906: {path: 'art/castle-3d/4x/B-PPCT-906.png'}};
+  const HD_ROOMS = ['B1000', 'B2020', 'B4020'];
+  const HD_REELS = {A100: {from: 'A101', mirror: true}, A101: {}, A105: {}, A106: {}, A111: {from: 'A112', mirror: true}, A112: {}, B300: {}, B310: {}, B350: {}, B412: {}, B435: {}, B710: {}, B902: {}, B903: {}, B906: {}, B908: {}};
   const CAPTIONS = {bat: 'Leathery wings', rat: 'A rat squeaks', door: 'A door grinds', guard: 'A guard calls', guardDie: 'A guard falls', mutant: 'A mutant grunts',
     whip: 'A whip cracks', henchman: 'A boulder is heaved', boulder: 'Stone strikes stone', dragon: 'Dragon breath roars', drip: 'Something drips', eye: 'The eye crackles',
     gargoyle: 'Stone wings', knight: 'The Black Knight laughs', throne: 'The throne groans', mug: 'A mug flies', lever: 'A chain rattles', storm: 'Thunder', wizard: 'The wizard chants',
@@ -56,10 +56,29 @@
     if (assets.hdLoaded) return assets.hdLoaded;
     assets.hd = {screens: new Map(), reels: new Map()};
     const jobs = [];
-    for (const [key, path] of Object.entries(HD_SCREENS)) jobs.push(loadImage(path).then(img => assets.hd.screens.set(key, img)).catch(() => {}));
-    for (const [key, reel] of Object.entries(HD_REELS)) jobs.push(loadImage(reel.path).then(img => assets.hd.reels.set(key, {img, mirror: !!reel.mirror})).catch(() => {}));
-    assets.hdLoaded = Promise.all(jobs);
+    for (const key of HD_ROOMS) jobs.push(loadImage(`art/castle-3d/4x/B-PSCR-${key.slice(1)}.png`).then(img => assets.hd.screens.set(key, img)).catch(() => {}));
+    for (const [key, reel] of Object.entries(HD_REELS)) {
+      const source = reel.from || key, name = `art/castle-3d/4x/${source[0]}-PPCT-${source.slice(1)}.png`;
+      jobs.push(loadImage(name).then(img => assets.hd.reels.set(key, {img, mirror: !!reel.mirror})).catch(() => {}));
+    }
+    assets.hdLoaded = Promise.all(jobs).then(prepareHDForegrounds);
     return assets.hdLoaded;
+  }
+  // The disk's masks still decide what stands in front of Duncan. Only the pixels are new.
+  function prepareHDForegrounds() {
+    assets.hd.fronts = new Map();
+    for (const [room, key] of Object.entries(window.CastlePlan.SCREENS.masks)) {
+      const base = assets.hd.screens.get('B' + room), mask = assets.screens.get(key);
+      if (!base || !mask) continue;
+      const width = W * HD_SCALE, height = H * HD_SCALE, c = document.createElement('canvas'), m = document.createElement('canvas');
+      c.width = m.width = width; c.height = m.height = height;
+      const ctx = c.getContext('2d', {willReadFrequently: true}), mctx = m.getContext('2d', {willReadFrequently: true});
+      ctx.drawImage(base, 0, 0); mctx.imageSmoothingEnabled = false; mctx.drawImage(mask, 0, 0, width, height);
+      const pix = ctx.getImageData(0, 0, width, height), bits = mctx.getImageData(0, 0, width, height).data;
+      for (let i = 0; i < pix.data.length; i += 4) if (bits[i] < 128) pix.data[i + 3] = 0;
+      ctx.putImageData(pix, 0, 0);
+      assets.hd.fronts.set(+room, c);
+    }
   }
   // The disk's three mask screens mark what stands in front of the hero.
   function prepareForegrounds() {
@@ -100,7 +119,7 @@
       this.used.add(key);
       const f = ((frame % info.frames) + info.frames) % info.frames;
       const fx = img.naturalWidth > info.width ? f * info.width : 0, fy = img.naturalWidth > info.width ? 0 : f * info.height;
-      const hd = this.scale > 1 ? assets.hd?.reels.get(key) : null, k = hd ? HD_SCALE : 1, source = hd ? hd.img : img;
+      const hd = this.fullColour ? assets.hd?.reels.get(key) : null, k = hd ? HD_SCALE : 1, source = hd ? hd.img : img;
       if (!!flip !== !!hd?.mirror) {
         this.b.save(); this.b.translate(Math.round(x) + info.width, Math.round(y)); this.b.scale(-1, 1);
         this.b.drawImage(source, fx * k, fy * k, info.width * k, info.height * k, 0, 0, info.width, info.height); this.b.restore();
@@ -432,8 +451,8 @@
       if (shot.y > 296) p.reel('A127', shot.frame, shot.x - 16, 300);
       if (shot.life < 6 && !shot.fire) p.reel('A138', shot.life, shot.x - 8, shot.y);
     }
-    const front = assets.fronts?.get(room.id);
-    if (front) b.drawImage(front, 0, 0);
+    const front = (hdArt && assets.hd.fronts?.get(room.id)) || assets.fronts?.get(room.id);
+    if (front) b.drawImage(front, 0, 0, W, H);
     if (core.mode === 'leaving') p.plaque('You have the ' + core.reward.name + '.', 30);
     if (core.flash && !reduced) { b.fillStyle = 'rgba(255,255,255,.65)'; b.fillRect(0, 0, W, STATUS_Y); }
     drawStatus(p, core);
@@ -550,8 +569,12 @@
         <label><input type="checkbox" data-opt="ward"> Elron’s ward: blows cost bonus instead of a life</label>
         <label><input type="checkbox" data-opt="vertical"> Classic mouse moves the arm up and down, not left and right</label>
         <label><input type="checkbox" data-opt="captions" checked> Sound captions</label>
-        <label><input type="checkbox" data-opt="remastered"> Remastered art test: the throne room, Duncan’s walk and one gargoyle</label>
-        <button type="button" data-do="remaster">See the remastered throne room</button>
+        <label><input type="checkbox" data-opt="remastered"> Remastered art test, in the three rooms painted so far</label>
+        <div class="castle-buttons">
+          <button type="button" data-do="remaster" data-room="4020">See the remastered throne room</button>
+          <button type="button" data-do="remaster" data-room="2020">See the remastered river</button>
+          <button type="button" data-do="remaster" data-room="1000">See the remastered first room</button>
+        </div>
         <p class="castle-volume"><img src="archive/dc/paper/Data-A-PICT-32000.png" alt="">Sound Volume follows the Effects slider above the game.</p>
         <button type="button" data-do="menu">Back</button>
       </div>
@@ -718,7 +741,7 @@
         // A preview: it starts in the last room, with Elron's ward, and records no score.
         options.remastered = true; $('[data-opt=remastered]').checked = true;
         try { localStorage.setItem('castle-options', JSON.stringify(options)); } catch { /* Storage may be blocked. */ }
-        applyLook().then(() => { begin(0); core.preview = true; core.ward = true; core.enter(4020, 0); say('Remastered art test. Arrows walk, and everything without new art keeps its original look.'); });
+        applyLook().then(() => { begin(0); core.preview = true; core.ward = true; core.enter(+button.dataset.room, 0); say('Remastered art test. Everything without new art keeps its original look.'); });
       }
       else if (act === 'menu') toTitle();
       else if (act === 'pause') togglePause();
@@ -773,7 +796,7 @@
     say('Loading the castle…');
     session = {dialog, used: painter.used, core: () => core};
     window.EnchantedCastle.session = session;
-    window.EnchantedCastle.debug = {begin, view: () => view, painter, keys};
+    window.EnchantedCastle.debug = {begin, view: () => view, painter, keys, fronts: () => [...(assets.hd?.fronts?.keys() || [])]};
     loadAssets().then(() => {
       if (!dialog.open) return;
       if (options.remastered) applyLook();
