@@ -8,6 +8,12 @@
   const W = 512, H = 342, STATUS_Y = 309;
   const PALETTE = {hall: '#efe3cb', trouble: '#e9dcc3', fireball: '#f1d9b4', shield: '#d9e3da', knight: '#ddd3e8'};
   const INK = '#21163a';
+  // Trial art, drawn only when the Remastered option is on. These are agy's 4x masters from the art
+  // bakeoff. Anything not listed, or missing, keeps the disk's art. Duncan's left walk is an exact
+  // mirror of his right walk, so one strip serves both. The gargoyle's two directions differ.
+  const HD_SCALE = 4;
+  const HD_SCREENS = {B4020: 'art/castle-3d/4x/B-PSCR-4020.png'};
+  const HD_REELS = {A101: {path: 'art/castle-3d/4x/A-PPCT-101.png'}, A100: {path: 'art/castle-3d/4x/A-PPCT-101.png', mirror: true}, B906: {path: 'art/castle-3d/4x/B-PPCT-906.png'}};
   const CAPTIONS = {bat: 'Leathery wings', rat: 'A rat squeaks', door: 'A door grinds', guard: 'A guard calls', guardDie: 'A guard falls', mutant: 'A mutant grunts',
     whip: 'A whip cracks', henchman: 'A boulder is heaved', boulder: 'Stone strikes stone', dragon: 'Dragon breath roars', drip: 'Something drips', eye: 'The eye crackles',
     gargoyle: 'Stone wings', knight: 'The Black Knight laughs', throne: 'The throne groans', mug: 'A mug flies', lever: 'A chain rattles', storm: 'Thunder', wizard: 'The wizard chants',
@@ -46,6 +52,15 @@
     assets.loaded = Promise.all(jobs).then(prepareForegrounds);
     return assets.loaded;
   }
+  function loadHD() {
+    if (assets.hdLoaded) return assets.hdLoaded;
+    assets.hd = {screens: new Map(), reels: new Map()};
+    const jobs = [];
+    for (const [key, path] of Object.entries(HD_SCREENS)) jobs.push(loadImage(path).then(img => assets.hd.screens.set(key, img)).catch(() => {}));
+    for (const [key, reel] of Object.entries(HD_REELS)) jobs.push(loadImage(reel.path).then(img => assets.hd.reels.set(key, {img, mirror: !!reel.mirror})).catch(() => {}));
+    assets.hdLoaded = Promise.all(jobs);
+    return assets.hdLoaded;
+  }
   // The disk's three mask screens mark what stands in front of the hero.
   function prepareForegrounds() {
     assets.fronts = new Map();
@@ -70,7 +85,14 @@
       this.canvas = canvas; this.ctx = canvas.getContext('2d');
       this.buffer = document.createElement('canvas'); this.buffer.width = W; this.buffer.height = H;
       this.b = this.buffer.getContext('2d'); this.b.imageSmoothingEnabled = false; this.ctx.imageSmoothingEnabled = false;
-      this.used = new Set();
+      this.used = new Set(); this.scale = 1; this.fullColour = false;
+    }
+    // Every drawing call keeps its 512 by 342 coordinates. The Remastered look only enlarges the page.
+    setScale(scale) {
+      this.scale = scale;
+      for (const c of [this.buffer, this.canvas]) { c.width = W * scale; c.height = H * scale; }
+      this.b.setTransform(scale, 0, 0, scale, 0, 0);
+      this.b.imageSmoothingEnabled = false; this.ctx.imageSmoothingEnabled = false;
     }
     reel(key, frame, x, y, flip) {
       const img = assets.reels.get(key), info = assets.info.get(key);
@@ -78,10 +100,11 @@
       this.used.add(key);
       const f = ((frame % info.frames) + info.frames) % info.frames;
       const fx = img.naturalWidth > info.width ? f * info.width : 0, fy = img.naturalWidth > info.width ? 0 : f * info.height;
-      if (flip) {
+      const hd = this.scale > 1 ? assets.hd?.reels.get(key) : null, k = hd ? HD_SCALE : 1, source = hd ? hd.img : img;
+      if (!!flip !== !!hd?.mirror) {
         this.b.save(); this.b.translate(Math.round(x) + info.width, Math.round(y)); this.b.scale(-1, 1);
-        this.b.drawImage(img, fx, fy, info.width, info.height, 0, 0, info.width, info.height); this.b.restore();
-      } else this.b.drawImage(img, fx, fy, info.width, info.height, Math.round(x), Math.round(y), info.width, info.height);
+        this.b.drawImage(source, fx * k, fy * k, info.width * k, info.height * k, 0, 0, info.width, info.height); this.b.restore();
+      } else this.b.drawImage(source, fx * k, fy * k, info.width * k, info.height * k, Math.round(x), Math.round(y), info.width, info.height);
     }
     // Text comes from the disks' own bitmap fonts, so every mode stays strictly two-colour.
     measure(name, text) {
@@ -107,10 +130,12 @@
     show(colour, tone) {
       const c = this.ctx;
       c.globalCompositeOperation = 'source-over';
-      if (!colour) { c.drawImage(this.buffer, 0, 0); return; }
-      c.fillStyle = PALETTE[tone] || PALETTE.hall; c.fillRect(0, 0, W, H);
+      // Painted art already has its colour, so the two-colour tint must not wash over it.
+      if (!colour || this.fullColour) { c.drawImage(this.buffer, 0, 0); return; }
+      const width = this.canvas.width, height = this.canvas.height;
+      c.fillStyle = PALETTE[tone] || PALETTE.hall; c.fillRect(0, 0, width, height);
       c.globalCompositeOperation = 'multiply'; c.drawImage(this.buffer, 0, 0);
-      c.globalCompositeOperation = 'lighten'; c.fillStyle = INK; c.fillRect(0, 0, W, H);
+      c.globalCompositeOperation = 'lighten'; c.fillStyle = INK; c.fillRect(0, 0, width, height);
       c.globalCompositeOperation = 'source-over';
     }
   }
@@ -388,9 +413,10 @@
     slots.forEach(([power, frame], i) => { if (core.powers.has(power)) p.reel('A5010', frame, 443 + i * 23, STATUS_Y + 12); });
   }
   function drawRoom(p, core, reduced) {
-    const b = p.b, room = core.room, art = assets.screens.get('B' + room.id);
+    const b = p.b, room = core.room, hdArt = p.scale > 1 ? assets.hd?.screens.get('B' + room.id) : null, art = hdArt || assets.screens.get('B' + room.id);
     b.fillStyle = '#000'; b.fillRect(0, 0, W, H);
-    if (art) b.drawImage(art, 0, 0);
+    if (art) b.drawImage(art, 0, 0, W, H);
+    p.fullColour = !!hdArt;
     for (const e of core.entities) if (!['knight', 'lever'].includes(e.type)) drawEntity(p, e, core, reduced);
     // A pulled lever brings out its half of the bridge, behind Duncan (CODE 4 $2574-$257c).
     for (const e of core.entities) if (e.type === 'lever' && e.pulled) p.reel('B919', e.chain ? 1 : 0, e.chain ? 245 : 232, 141);
@@ -443,6 +469,7 @@
     return scoreList;
   }
   function recordScore(points) {
+    if (session?.core()?.preview) return null;
     const list = scores(), place = list.findIndex(s => points > s.points);
     const at = place < 0 ? list.length : place;
     if (at >= 8) return null;
@@ -523,6 +550,8 @@
         <label><input type="checkbox" data-opt="ward"> Elron’s ward: blows cost bonus instead of a life</label>
         <label><input type="checkbox" data-opt="vertical"> Classic mouse moves the arm up and down, not left and right</label>
         <label><input type="checkbox" data-opt="captions" checked> Sound captions</label>
+        <label><input type="checkbox" data-opt="remastered"> Remastered art test: the throne room, Duncan’s walk and one gargoyle</label>
+        <button type="button" data-do="remaster">See the remastered throne room</button>
         <p class="castle-volume"><img src="archive/dc/paper/Data-A-PICT-32000.png" alt="">Sound Volume follows the Effects slider above the game.</p>
         <button type="button" data-do="menu">Back</button>
       </div>
@@ -537,13 +566,14 @@
     const painter = new Painter(canvas), keys = new Set(), tapped = new Set(), input = {};
     let core = null, view = 'loading', frame = 0, last = 0, spare = 0, paused = false, tick = 0;
     let pointer = null, usedMouse = false, lineUntil = 0;
-    const options = {classic: false, ward: false, vertical: false, captions: true};
+    const options = {classic: false, ward: false, vertical: false, captions: true, remastered: false};
     try { Object.assign(options, JSON.parse(localStorage.getItem('castle-options') || '{}')); } catch { /* Storage may be blocked. */ }
     for (const box of dialog.querySelectorAll('[data-opt]')) {
       box.checked = !!options[box.dataset.opt];
       box.addEventListener('change', () => {
         options[box.dataset.opt] = box.checked;
         showControls();
+        if (box.dataset.opt === 'remastered') applyLook();
         try { localStorage.setItem('castle-options', JSON.stringify(options)); } catch { /* Storage may be blocked. */ }
       });
     }
@@ -552,6 +582,10 @@
       window.SiliconChronicle?.note(text, 0, '');
     };
     const panel = name => { for (const p of dialog.querySelectorAll('[data-panel]')) p.hidden = p.dataset.panel !== name; };
+    function applyLook() {
+      const on = !!options.remastered;
+      return (on ? loadHD() : Promise.resolve()).then(() => { painter.setScale(on ? HD_SCALE : 1); canvas.classList.toggle('castle-hd', on); });
+    }
     function showControls() { for (const table of dialog.querySelectorAll('[data-controls]')) table.innerHTML = controlsTable(options.classic); }
     showControls();
     function begin(level, demo = false) {
@@ -640,6 +674,7 @@
     }
     function paint() {
       const b = painter.b;
+      painter.fullColour = false;
       if (view === 'title') { drawTitle(painter, tick, reduced.matches); painter.show(false); return; }
       if (view === 'scores') { drawScores(painter, tick, reduced.matches); painter.show(false); return; }
       if (view === 'loading') { b.fillStyle = '#000'; b.fillRect(0, 0, W, H); painter.show(false); return; }
@@ -679,6 +714,12 @@
       else if (act === 'scores') showScores();
       else if (act === 'info') host.openInfo?.();
       else if (act === 'options') panel('options');
+      else if (act === 'remaster') {
+        // A preview: it starts in the last room, with Elron's ward, and records no score.
+        options.remastered = true; $('[data-opt=remastered]').checked = true;
+        try { localStorage.setItem('castle-options', JSON.stringify(options)); } catch { /* Storage may be blocked. */ }
+        applyLook().then(() => { begin(0); core.preview = true; core.ward = true; core.enter(4020, 0); say('Remastered art test. Arrows walk, and everything without new art keeps its original look.'); });
+      }
       else if (act === 'menu') toTitle();
       else if (act === 'pause') togglePause();
     });
@@ -735,6 +776,7 @@
     window.EnchantedCastle.debug = {begin, view: () => view, painter, keys};
     loadAssets().then(() => {
       if (!dialog.open) return;
+      if (options.remastered) applyLook();
       view = 'title'; say(''); last = performance.now();
       frame = requestAnimationFrame(loop);
     }).catch(error => {

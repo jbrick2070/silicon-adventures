@@ -210,6 +210,20 @@ def smoke(page, base):
     print("castle canvas colours in the default mode:", colours)
 
     page.evaluate(TOUR)
+
+    # The Remastered art test keeps the game's coordinates and only paints the room it has art for.
+    page.locator("#castleGame .knock-tools [data-do=menu]").click()
+    page.get_by_role("button", name="Options").click()
+    page.get_by_role("button", name="See the remastered throne room").click()
+    page.wait_for_function("EnchantedCastle.session.core()?.room?.id===4020", timeout=15000)
+    time.sleep(.4)
+    size = page.evaluate("[document.getElementById('castleCanvas').width, document.getElementById('castleCanvas').height]")
+    assert size == [2048, 1368], size
+    assert page.evaluate("EnchantedCastle.debug.painter.fullColour"), "Remastered room was not drawn"
+    shades = page.evaluate("""() => { const c = document.getElementById('castleCanvas'), d = c.getContext('2d').getImageData(0, 0, 2048, 1200).data, s = new Set();
+      for (let i = 0; i < d.length; i += 400) s.add(d[i] + ',' + d[i + 1] + ',' + d[i + 2]); return s.size; }""")
+    assert shades > 500, shades
+    page.evaluate("localStorage.removeItem('castle-options')")
     used = set(page.evaluate("[...EnchantedCastle.debug.painter.used]"))
     text = (ROOT / "art/castle-index.js").read_text(encoding="utf8")
     reels = {f"{x['fork'][-1]}{x['id']}" for x in json.loads(text[text.index("["):text.rindex("]") + 1]) if x["type"] == "PPCT"}

@@ -134,6 +134,7 @@ dialog:has(.folio){max-width:min(660px,95vw);width:660px}
 .castle-controls th,.castle-controls td{padding:2px 8px 2px 0;text-align:left;vertical-align:top;border-top:1px solid var(--line,#8886)}
 .castle-controls td:last-child,.castle-controls tr:first-child th:last-child{white-space:nowrap}
 #castleCanvas{cursor:crosshair}
+#castleCanvas.castle-hd{image-rendering:auto}
 .castle-touch-note{display:none;font:12px var(--mono)}
 @media(hover:none) and (pointer:coarse){.castle-controls{display:none}.castle-touch-note{display:block}}
 .castle-touch{display:flex;justify-content:space-between;gap:10px;padding:6px 10px;touch-action:none;user-select:none}
