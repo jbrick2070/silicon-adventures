@@ -14,6 +14,8 @@
   const HD_SCALE = 4;
   const HD_PAINTED = new Set(['B1000', 'B2020', 'B4020', 'A101', 'A105', 'A106', 'A112', 'B300', 'B310', 'B350', 'B412', 'B435', 'B710', 'B902', 'B903', 'B906', 'B908']);
   const HD_MIRRORS = {A100: 'A101', A111: 'A112'};
+  // Painted rooms with a surface map take the moving torchlight. Only light moves, never geometry.
+  const HD_NORMALS = ['B1000', 'B2020', 'B4020'];
   // These tiles are opaque on the disk. Their outer white must clear to show the room behind them.
   const HD_OPEN_TILES = new Set(['B510', 'B511', 'A5000']);
   const CAPTIONS = {bat: 'Leathery wings', rat: 'A rat squeaks', door: 'A door grinds', guard: 'A guard calls', guardDie: 'A guard falls', mutant: 'A mutant grunts',
@@ -68,8 +70,53 @@
         else assets.hd.reels.set(key, {img: HD_OPEN_TILES.has(key) ? openTile(img, key) : img, mirror: !!mirror});
       }).catch(() => {}));
     }
+    assets.hd.normals = new Map();
+    for (const key of HD_NORMALS) jobs.push(loadImage(`art/castle-3d/normals/B-PSCR-${key.slice(1)}.png`).then(img => assets.hd.normals.set(key, img)).catch(() => {}));
     assets.hdLoaded = Promise.all(jobs).then(prepareHDForegrounds);
     return assets.hdLoaded;
+  }
+  // Relights a painted room from its surface map. Without WebGL the room simply stays as painted.
+  class RoomLight {
+    constructor() {
+      this.canvas = document.createElement('canvas'); this.canvas.width = W * 2; this.canvas.height = H * 2;
+      const gl = this.gl = this.canvas.getContext('webgl', {alpha: false, antialias: false});
+      if (!gl) return;
+      const shader = (type, code) => { const o = gl.createShader(type); gl.shaderSource(o, code); gl.compileShader(o); return o; };
+      const program = gl.createProgram();
+      gl.attachShader(program, shader(gl.VERTEX_SHADER, 'attribute vec2 p; varying vec2 v; void main() { v = vec2(p.x + 1., 1. - p.y) / 2.; gl_Position = vec4(p, 0., 1.); }'));
+      gl.attachShader(program, shader(gl.FRAGMENT_SHADER, `precision mediump float; varying vec2 v; uniform sampler2D art, normals; uniform vec2 torch; uniform float glow;
+        void main() {
+          vec3 base = texture2D(art, v).rgb, n = normalize(texture2D(normals, v).rgb * 2. - 1.);
+          vec3 to = vec3((torch.x - v.x) * 3., (v.y - torch.y) * 2.004, .35);
+          float away = length(to), fall = 1. / (1. + away * away * 2.56), lit = max(dot(n, to / away), 0.);
+          gl_FragColor = vec4(base * (vec3(.6, .62, .68) + 2.1 * glow * lit * fall * vec3(1., .78, .5)), 1.);
+        }`));
+      gl.linkProgram(program); gl.useProgram(program);
+      this.ok = gl.getProgramParameter(program, gl.LINK_STATUS);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+      const at = gl.getAttribLocation(program, 'p'); gl.enableVertexAttribArray(at); gl.vertexAttribPointer(at, 2, gl.FLOAT, false, 0, 0);
+      gl.uniform1i(gl.getUniformLocation(program, 'art'), 0); gl.uniform1i(gl.getUniformLocation(program, 'normals'), 1);
+      this.torch = gl.getUniformLocation(program, 'torch'); this.glow = gl.getUniformLocation(program, 'glow');
+      this.textures = new Map(); this.key = null;
+    }
+    texture(image) {
+      const gl = this.gl; let t = this.textures.get(image);
+      if (t) return t;
+      t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+      for (const [name, value] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, name, value);
+      this.textures.set(image, t); return t;
+    }
+    draw(art, normals, x, y, glow) {
+      const gl = this.gl;
+      gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, this.texture(art));
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, this.texture(normals));
+      gl.uniform2f(this.torch, x / W, y / H); gl.uniform1f(this.glow, glow);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      return this.canvas;
+    }
   }
   // Floods from each frame's border through the disk art's white, and clears those pixels at 4x.
   function openTile(img, key) {
@@ -465,7 +512,12 @@
   function drawRoom(p, core, reduced) {
     const b = p.b, room = core.room, hdArt = p.scale > 1 ? assets.hd?.screens.get('B' + room.id) : null, art = hdArt || assets.screens.get('B' + room.id);
     b.fillStyle = '#000'; b.fillRect(0, 0, W, H);
-    if (art) b.drawImage(art, 0, 0, W, H);
+    const normals = hdArt ? assets.hd.normals?.get('B' + room.id) : null;
+    if (normals) {
+      assets.roomLight ||= new RoomLight();
+      const light = assets.roomLight, h = core.hero, flicker = reduced ? 1 : .94 + .06 * Math.sin(core.tickCount * .37) * Math.sin(core.tickCount * .13);
+      if (light.ok) b.drawImage(light.draw(hdArt, normals, h.x + 16, h.y + 16, flicker), 0, 0, W, H); else b.drawImage(art, 0, 0, W, H);
+    } else if (art) b.drawImage(art, 0, 0, W, H);
     p.fullColour = !!hdArt;
     for (const e of core.entities) if (!['knight', 'lever'].includes(e.type)) drawEntity(p, e, core, reduced);
     // A pulled lever brings out its half of the bridge, behind Duncan (CODE 4 $2574-$257c).
