@@ -45,6 +45,21 @@ Read the journal after each action. It keeps the whole session, survives a reloa
 
 Manual saves and checkpoints now keep a matching journal record. Older saves still restore their world and viewpoint; an unmatched older journal is omitted. The King’s unanswered question is recovered from the original room state even when an older save has no reply metadata. Reloading during a native session keeps the live viewpoint and checkpoint ownership, and a command typed during a busy turn stays in the command line.
 
+## Spoiler alert: the Enchanted Castle flowchart
+
+Open this only if you want the whole castle mapped out, with every wing, danger and scepter.
+
+<details>
+<summary><strong>Show the flowchart (contains spoilers)</strong></summary>
+
+<br>
+
+<a href="art/castle-flowchart.png"><img src="art/castle-flowchart.png" alt="Flowchart of The Enchanted Castle. From the Great Hall, doors lead to the Trouble, Fireball and Shield wings, each ending in a scepter. Three scepters open the Black Knight's door, and the fourth scepter wins the game."></a>
+
+Select the picture to see it full size.
+
+</details>
+
 ## What came from the disks
 
 The adventure uses the Enchanted Scepters scene and global scripts, map connections, objects, inhabitants, inventory changes, traps, and four-scepter ending. All 200 rooms have a first-person view. Twenty-two have individually separated foreground geometry. The other 178 project the original illustration onto a walkable room. In the refreshed layer mode, twelve landmark rooms along the campaign (the throne room, marble hall, banquet hall, armory, bridge room, mirror room, lava tunnel, dogleg, Queen’s Chamber, Finale, cavern and cave entrance) also use measured horizons and wall depths, three of them with the throne, dais, trestle table and platform lifted off the walls as separate layers, and doorways appear on unseen walls only where the map or the room text opens them. Eighteen rooms use automatically measured rigs. Seventy more have individually reviewed layouts or surface tones. The remaining 78 use their environment’s box, with a decision recorded for each drawing. [149-room survey and native-size comparison sheets](art/refresh/review/README.md). A hand-checked table classifies every room as chamber, cave, open or submerged, so turning in a desert shows a fixed horizon rather than a castle wall and caves show rock rather than ashlar. Depths and surfaces hidden in the original illustration are interpretations.
