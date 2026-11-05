@@ -72,7 +72,11 @@ class PlateView {
       }
       const materials = window.RoomColour ? await RoomColour.materialMap(url,base.w,base.h) : null;
       const dominant = window.ColourIndex?.dominant[url] || 0;
-      return {w:base.w, h:base.h, bits, tones, borders, fields, rimBits, swapBits, materials, dominant};
+      // Painted inhabitants share their plate's shape and frames, so they are read at the same positions.
+      const figure = url.match(/ACHR-\d+\.png$/);
+      const art = figure ? await this.decodeImage('art/es-3d/inhabitants/'+figure[0]).catch(() => null) : null;
+      const paint = art?.w === base.w && art.h === base.h ? new Uint32Array(art.rgba.buffer.slice(0)) : null;
+      return {w:base.w, h:base.h, bits, tones, borders, fields, rimBits, swapBits, materials, dominant, paint};
     })());
     return this.cache.get(url);
   }
@@ -499,7 +503,8 @@ class PlateView {
           const tIdx=sy*tex.w+offsetX+(s.flip?fw-1-sx:sx);
           const bit=bits[tIdx] || (rim ? rim[tIdx] : 0);
           if(bit){
-            pix[idx]=C ? (bits[tIdx]?C.spritePixel(bit,tex.materials?.[tIdx],material,3):paper) : bit===1?ink:paper;
+            const painted=C && tex.paint && tex.paint[tIdx]>>>24>127 ? tex.paint[tIdx] : 0;
+            pix[idx]=painted || (C ? (bits[tIdx]?C.spritePixel(bit,tex.materials?.[tIdx],material,3):paper) : bit===1?ink:paper);
             plotted++;
           }
         }
