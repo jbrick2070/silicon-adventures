@@ -92,52 +92,69 @@ One line needs a pirated copy: "The pirate laughs: Har, Har, Har!" sits behind t
 | Role | SOUN |
 | --- | --- |
 | ambience | 1 |
-| bat | 69 85 |
-| boulder | 35 86 |
-| broom | 60 |
-| climb | 99 |
-| dragon | 30 31 |
+| bat | 69 |
+| batDie | 85 |
+| boulder | 35 |
+| broom | 46 |
+| broomStun | 45 |
+| bump | 78 |
+| chute | 79 |
+| climb | 14 |
+| dizzy | 2 |
+| door | 60 |
+| dragon | 30 |
+| dragonDie | 31 |
 | drip | 33 |
-| duck | 78 |
-| elixir | 13 |
-| ending | 0 89 |
-| extraMan | 10 |
-| eye | 45 46 |
-| fall | 6 |
-| fireball | 42 |
-| fountain | 61 62 63 64 |
-| gargoyle | 37 51 |
-| gate | 40 |
-| guard | 47 56 57 58 65 |
-| guardDie | 66 82 |
-| hall | 92 93 94 |
-| hallRun | 84 |
-| hatch | 41 |
+| elixir | 12 |
+| ending | 50 |
+| extraMan | 8 |
+| eye | 43 |
+| fall | 83 |
+| fireball | 9 |
+| flail | 84 |
+| full | 13 |
+| gainFire | 3 |
+| gargoyle | 51 |
+| gate | 41 |
+| gateWrong | 40 |
+| guard | 66 |
+| guardDie | 82 |
+| guardThrow | 58 |
+| hall | 88 89 |
+| hallRun | 0 |
+| handLever | 42 |
+| hatch | 73 |
 | henchman | 48 |
-| heroDie | 7 |
-| heroHit | 50 |
-| jump | 14 |
-| knight | 53 54 |
-| ladder | 79 |
+| heroDie | 10 |
+| knight | 53 |
+| knightFall | 54 |
 | lever | 29 |
-| mug | 36 |
-| mutant | 67 68 |
-| pickup | 5 |
-| plague | 12 |
-| rat | 70 87 |
-| rockHit | 4 |
-| rope | 83 |
-| splat | 11 |
-| step | 88 |
+| mug | 36 55 |
+| mugBounce | 37 |
+| mutant | 68 |
+| mutantDie | 67 |
+| pickup | 11 |
+| rat | 70 |
+| ratDie | 87 |
+| ricochet | 56 |
+| river | 95 |
+| scores | 90 91 |
+| shield | 99 |
+| slip | 5 |
+| splash | 86 |
+| splat | 6 |
 | storm | 34 |
-| swing | 2 |
-| throne | 39 55 |
-| throwRock | 3 |
-| title | 90 91 95 |
-| vulture | 32 |
-| weight | 8 |
-| whip | 73 |
-| wizard | 9 43 49 52 |
+| swing | 4 |
+| throne | 39 |
+| throwRock | 7 |
+| thud | 61 |
+| title | 92 93 94 |
+| vulture | 63 64 |
+| vultureDie | 62 |
+| weight | 32 |
+| whip | 47 65 |
+| whipFall | 57 |
+| wizard | 49 52 |
 
 ### Pictures
 
@@ -154,9 +171,21 @@ A-PICT-10000 A-PICT-10004 A-PICT-12100 A-PICT-12200 A-PICT-15100 A-PICT-15101 A-
 | Typed verbs | The command line, plus a Try button for keyboard-free play. Riddle and password answers are held back. |
 | Save, Revert | Save, Restore, doorway checkpoints. |
 | About box | VERS credits in the Archive. |
-| Dark Castle keys | W S A D, Space, Q, E, Tab, mouse aim and click, plus arrows, F, gamepad and touch buttons. Each input keeps one job, and the title and pause screens show one controls card. Modern controls are the default. Classic 1986 controls in Options restore fixed jumps, the one-axis mouse arm, throwing only when standing, and Q to pick things up. |
+| Dark Castle keys | W S A D, Space, Q, E, Tab, mouse aim and click, plus arrows, F, gamepad and touch buttons. Each input keeps one job, and the title and pause screens show one controls card. On a rope, Left and Right change rope, and Space leaps off. Modern controls are the default. Classic 1986 controls in Options restore fixed jumps, the one-axis mouse arm, throwing only when standing, and Q to pick things up. |
 | Duncan's arm | The mouse sets the arm, and the rock's speed, drop and bounds follow CODE 2. Holding the button repeats on the disk's six updates. Modern aim points the same arm at the pointer. |
 | Joining ladders | Span kinds 38 and 39, which carry Duncan between rooms with no key held. They decide how the Shield room is entered. |
+| Rules from the code | Five lives, 60 rocks, no elixir at the start, bags of 10 refused at 80, a top-up to 10 rocks after a death, Stbl points, and extra men at 5,000, 7,500, 10,000 and 15,000. The game speed is 12 updates a second (5 VBLs). |
+| Pits and water | Every pit drops Duncan down the chute into the Dungeon with no life lost. Water drowns. |
+| Ropes | 8 pixels an update, neighbouring ropes, catch zones, the greased rope, and the disk's leap, which is the tail of the standing jump. |
+| River logs | Logs ride both rivers in room 2020, and carry Duncan from the end of the upper river to the start of the lower. |
+| Hidden ledges | One of eight patterns per level in the Shield room, with the wall switch lighting the real ledges. |
+| Spiked flail | Taken from the Dungeon wall, carried, and swung to fell the Whip Guard. |
+| Knight's bridge | Two floor levers, the half-bridge trap, and the solid bridge that carries the third chain. |
+| Wizard's gate | Three chains in an order set for each visit. |
+| Magic broom | Splits twice, and the smallest can only be stunned. |
+| Shield | Held, up to 30 updates, freezing Duncan. It stops contact and missiles, but not lightning or a gargoyle. |
+| Spawns | Door guards, bats and rats are generated from the CODE 5 calls at each level. The other creatures are matched level by level by hand, except rope-rat nests. |
+| Sounds | Every role uses the meaning traced from its call sites. |
 | Difficulty levels | Beginner, Intermediate, Advanced, with the disk's bonus and extra-man values. |
 | Scores of Merit | Opens with the disk's shipped scores. |
 | December 25 tree | In the Archive and in play. |

@@ -60,7 +60,8 @@ Then attack these player-visible scenarios.
    motion. Leaving the castle must return input to the adventure, with no stuck
    keys.
    Controls must be consistent. Space always jumps, including from ropes and swings.
-   A direction alone must never leave a rope. Q always acts. A click throws at the
+   On a rope in Modern controls, Left and Right move to the next rope and never drop
+   Duncan into open air. Q always acts, and holding it raises the Shield. A click throws at the
    pointer, F throws at the nearest foe, and holding either keeps throwing. Down
    climbs where it can and ducks on open floor. Esc, P and Tab all pause, and
    repeated Esc must never close the window. Check that the title and pause cards
@@ -69,16 +70,28 @@ Then attack these player-visible scenarios.
    Then turn on Classic 1986 controls and repeat. Jumps must follow the disk's
    fixed paths with no steering, Duncan must throw only while standing, the mouse
    must move his arm on one axis, Q must pick things up, and the Options box must
-   switch that axis. Every room must still be completable in Classic.
+   switch that axis. On a rope, a direction turns Duncan, the next press moves or
+   leaps, and Space does nothing. Every room must still be completable in Classic.
    Compare against: the arm and rock code at CODE 2 $33e6-$3598 and $3364, and the
    joining ladders at CODE 2 $8b0-$8e6. Room 3030 is entered by climbing, and the
    Air Scepter is on its top floor. Status digits and high scores use the disk's
    bitmap fonts, and the Demo replays the recorded input.
+   Rules come from archive/dc/rooms/trace/. Read CORRECTIONS.md there first, because
+   its README is wrong in places. Test these against the disk's rules: five lives,
+   60 rocks, no starting elixir, bags of 10 refused at 80, pits that drop into the
+   Dungeon with no life lost, water that drowns, the river logs in room 2020 that
+   carry Duncan from the upper river to the lower, the eight hidden ledge patterns
+   in room 3030 and their wall switch, the spiked flail and Whip Guard in room 1020,
+   the two floor levers and half-bridge trap in room 4020, the three chains in an
+   order set for each visit in room 2030, the splitting broom, the held Shield, and
+   the ceiling weight that is the only thing able to kill the dragon.
 8. Hosted edition. Run web/stage.py to a new empty folder and check that all new
    scripts and assets load. Report anything you cannot verify here, such as real
    phones, real Safari, and real audio output.
 9. Regressions. Saves, checkpoints, bookmarks, the Answering Knock, the Beacon,
    hints, the Archive and picture modes must behave as they did before this branch.
+
+The Enchanted Castle's win is four scepters, not the disk's loop back to the Great Hall at a higher level. That difference is deliberate, so do not report it.
 
 Report findings ranked by severity. For each give exact reproduction steps,
 expected and actual behaviour, and the evidence. Say plainly what you did not

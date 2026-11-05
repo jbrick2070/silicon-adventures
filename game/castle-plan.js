@@ -3,11 +3,13 @@
    Room floors, stairs, ladders, ropes, exits, entry points and per-room sound
    tables are decoded from Dark Castle's CODE 5 into archive/dc/castle-data.js.
    The placements below are read from the same room routines (the numbers are the
-   routine's own arguments), with `min` the lowest difficulty that spawns them.
+   routine's own arguments), with `min` the lowest difficulty that spawns them. Door
+   guards, bats and rats are not listed here: the build writes them to CASTLE_DATA.spawns.
    Duncan's jumps, his walk, ladder and fall rates, and most of his reels are the
    hero code's own, traced in archive/dc/rooms/assets/hero-reels.json.
-   How each creature behaves is rebuilt for this edition from the disk's manual
-   cards, because the 1986 game logic is not reused. */
+   Rules, rates, scores and sound meanings come from the hero and creature code,
+   traced in archive/dc/rooms/trace/ and checked against the disassembly. Creature
+   paths that are not listed there are rebuilt for this edition. */
 (() => {
   'use strict';
   const root = typeof window !== 'undefined' ? window : globalThis;
@@ -26,51 +28,50 @@
     {path: 10030, wing: 'shield', x: 480, label: 'Shield'}
   ];
 
-  const g = (x, y, left, right, speed, hits = 1, min = 0) => ({type: 'doorGuard', x, y, left, right, speed, hits, min});
-  const bat = (x, y, floor, min = 0) => ({type: 'bat', x, y, floor, min});
-  const rat = (x, y, left, right, min = 0) => ({type: 'rat', x, y, left, right, min});
   const climber = (x, top, bottom, min = 0) => ({type: 'ropeRat', x, top, bottom, min});
   const mutant = (x, y, left, right, speed, min = 0) => ({type: 'mutant', x, y, left, right, speed, min});
   const ROOMS = {
-    1000: [g(0, 262, 6, 200, 2, 2), g(0, 182, 6, 280, 2, 1, 1), g(0, 112, 6, 240, 2, 1, 1),
-      bat(475, 82, 298, 1), bat(330, 4, 298, 2), bat(27, 4, 298, 2), bat(247, 4, 298, 2), bat(112, 4, 298, 2),
-      rat(0, 212, 0, 310, 2), rat(100, 142, 100, 260, 2)],
-    1010: [g(486, 165, 273, 474, -2, 1), g(486, 242, 160, 474, -2, 2, 1), g(486, 88, 408, 474, -2, 1, 1),
-      rat(484, 272, 170, 480), rat(484, 195, 255, 480, 1), bat(90, 4, 298, 1), bat(250, 4, 298, 1), bat(414, 139, 298), bat(442, 4, 298, 1),
+    1000: [
+      
+      ],
+    1010: [
+      
       {type: 'swingRope', x: 158, y: -16, reel: 'left'}, {type: 'swingRope', x: 366, y: -16, reel: 'right'}],
     1020: [{type: 'item', x: 179, y: 249, item: 'bag'}, {type: 'item', x: 484, y: 259, item: 'elixir'},
-      g(0, 41, 6, 166, 1, 1), g(483, 101, 132, 475, -1, 1, 1), g(483, 163, 300, 475, -1, 1, 1),
-      bat(40, 4, 298, 1), bat(320, 4, 298, 1), bat(271, 152, 298, 1), bat(122, 122, 298), bat(306, 219, 298, 1),
-      rat(135, 193, 135, 200, 1), rat(484, 131, 130, 480), {type: 'guard', x: 305, y: 248, left: 200, right: 440, whip: true, min: 1},
+      {type: 'guard', x: 305, y: 248, left: 200, right: 440, whip: true},
       {type: 'faces', x: 356, y: 250}, {type: 'faces', x: 390, y: 250}, {type: 'faces', x: 424, y: 250}],
-    2000: [{type: 'guard', x: 300, y: 258, left: 210, right: 450, whip: true, min: 1}, g(0, 241, 6, 180, 2, 1),
-      mutant(490, 269, 216, 480, -3), {type: 'vulture', x: 170, y: 60}, {type: 'vulture', x: 300, y: 92, min: 1}],
-    2010: [bat(6, 121, 275), bat(250, 4, 275), bat(420, 4, 275), bat(32, 94, 275, 1),
-      {type: 'platforms'}, {type: 'drip', x: 100, y: 0, floor: 275}, {type: 'drip', x: 200, y: 0, floor: 275, min: 1},
-      {type: 'drip', x: 275, y: 0, floor: 275}, {type: 'drip', x: 350, y: 0, floor: 275, min: 1}, {type: 'drip', x: 400, y: 0, floor: 275}],
-    2020: [{type: 'bridge', x: 112, y: 150}, {type: 'boulder', x: 498, y: 3, speed: -2.4, min: 1}, {type: 'boulder', x: 1, y: 160, speed: 2.4, min: 1},
-      bat(65, 28, 110, 1), bat(81, 171, 298), bat(232, 28, 110, 1), bat(282, 173, 298, 1), mutant(505, 252, 412, 482, -3)],
-    2030: [{type: 'gates'}, {type: 'wizard', x: 430, y: 36}, mutant(122, 5, 5, 60, -3), {type: 'eye', x: 250, y: 100}, {type: 'eye', x: 350, y: 250, min: 1},
-      {type: 'fountain', x: 300, y: 215}, {type: 'broom', x: 380, y: 247, left: 200, right: 430}, {type: 'torch', x: 28, y: 214}, {type: 'torch', x: 278, y: 214}],
-    3000: [{type: 'henchman', x: 330, y: 5}, {type: 'weight', x: 240, min: 1}, mutant(159, 87, 5, 410, 3, 1), mutant(490, 99, 80, 480, -3, 1), mutant(490, 46, 408, 480, -3, 2)],
-    3010: [{type: 'dragon', x: 408, y: 144}, {type: 'hatch', x: 440, y: 72}, mutant(490, 240, 340, 480, -3, 2), {type: 'storm', every: 150}, {type: 'clouds', x: 30, y: 8}, {type: 'clouds', x: 210, y: 18}],
+    2000: [{type: 'guard', x: 300, y: 258, left: 210, right: 450, min: 2},
+      mutant(490, 269, 216, 480, -3), {type: 'vulture', x: 170, y: 60}],
+    2010: [
+      {type: 'platforms'}, {type: 'drip', x: 100, y: 0, floor: 275}, {type: 'drip', x: 200, y: 0, floor: 275},
+      {type: 'drip', x: 275, y: 0, floor: 275}, {type: 'drip', x: 350, y: 0, floor: 275}, {type: 'drip', x: 400, y: 0, floor: 275}],
+    2020: [{type: 'logs'}, {type: 'boulder', x: 498, y: 3, speed: -2.4}, {type: 'boulder', x: 1, y: 160, speed: 2.4},
+      mutant(505, 252, 412, 482, -3)],
+    2030: [{type: 'gates'}, {type: 'wizard', x: 430, y: 36}, mutant(122, 5, 5, 60, -3), {type: 'eye', x: 250, y: 100}, {type: 'eye', x: 350, y: 250, min: 2},
+      {type: 'fountain', x: 300, y: 215}, {type: 'broom', x: 300, y: 268, left: 120, right: 442}, {type: 'torch', x: 28, y: 214}, {type: 'torch', x: 278, y: 214}],
+    3000: [{type: 'henchman', x: 330, y: 5}, mutant(159, 87, 5, 410, 3), mutant(490, 99, 80, 480, -3, 1), mutant(490, 46, 408, 480, -3, 2)],
+    3010: [{type: 'dragon', x: 408, y: 144}, {type: 'hatch', x: 440, y: 72}, {type: 'weight', x: 420}, {type: 'vulture', x: 250, y: 60}, mutant(490, 240, 340, 480, -3, 1), {type: 'clouds', x: 30, y: 8}, {type: 'clouds', x: 210, y: 18}],
     3020: [climber(39, 40, 247), climber(68, 40, 132), climber(97, 40, 247), climber(155, 40, 247), climber(213, 40, 247), climber(271, 40, 247), climber(300, 40, 247),
-      climber(335, 40, 131), climber(422, 40, 181), bat(44, 15, 275), bat(376, 151, 275), bat(240, 15, 275), bat(470, 83, 275), bat(463, 237, 275, 1)],
-    3030: [{type: 'item', x: 394, y: 48, item: 'bag'}, {type: 'storm', every: 100}, {type: 'storm', every: 170, min: 1}, {type: 'clouds', x: 60, y: 4}, {type: 'clouds', x: 300, y: 12},
-      bat(158, 97, 275, 1), bat(340, 97, 275, 1), bat(119, 193, 275), bat(299, 193, 275), bat(86, 193, 275, 1), bat(271, 97, 275, 1)],
-    4000: [{type: 'gargoyle', x: 120, y: 60, right: 335}, {type: 'gargoyle', x: 330, y: 150, right: 335, min: 2},
-      climber(142, 40, 281, 1), climber(229, 40, 223, 1), climber(258, 40, 281, 1), climber(287, 40, 281, 1), climber(316, 40, 281, 1), climber(368, 40, 281, 1), climber(432, 40, 134, 1),
-      g(486, 222, 425, 478, -2, 1, 1), g(486, 163, 425, 478, -2, 1, 1)],
-    4010: [{type: 'gargoyle', x: 30, y: 60, right: 265}, {type: 'platforms'}, {type: 'henchman', x: 18, y: 39}, {type: 'weight', x: 240, min: 1},
-      rat(399, 40, 274, 473, 1), rat(494, 80, 399, 494, 1)],
-    4020: [{type: 'gargoyle', x: 105, y: 60, right: 395, min: 1}, {type: 'knight', x: 232, y: 90}, {type: 'lever', x: 0, y: 256, chain: 0}, {type: 'lever', x: 480, y: 256, chain: 1},
-      rat(192, 245, 95, 195, 1), rat(303, 245, 298, 401, 1), climber(97, 40, 161, 1), climber(397, 40, 161, 1)]
+      climber(335, 40, 131), climber(422, 40, 181), ],
+    3030: [{type: 'item', x: 394, y: 48, item: 'bag'}, {type: 'storm', every: 100}, {type: 'storm', every: 170}, {type: 'clouds', x: 60, y: 4}, {type: 'clouds', x: 300, y: 12},
+      ],
+    4000: [{type: 'gargoyle', x: 120, y: 60, right: 335},
+      climber(142, 40, 281), climber(229, 40, 223), climber(258, 40, 281), climber(287, 40, 281), climber(316, 40, 281), climber(368, 40, 281), climber(432, 40, 134),
+      ],
+    4010: [{type: 'gargoyle', x: 30, y: 60, right: 265}, {type: 'platforms'}, {type: 'henchman', x: 18, y: 39},
+      ],
+    4020: [{type: 'gargoyle', x: 105, y: 60, right: 395}, {type: 'knight', x: 232, y: 90}, {type: 'lever', x: 0, y: 256, chain: 0}, {type: 'lever', x: 480, y: 256, chain: 1},
+      climber(97, 40, 161), climber(397, 40, 161)]
   };
 
   // Points from the disk's scoring card, Data A PICT 20005, and its rules.
-  const POINTS = {bat: 30, vulture: 30, rat: 20, ropeRat: 20, mutant: 30, eye: 30, broom: 30, guard: 50, henchman: 100, whip: 150, dragon: 150, gargoyle: 100};
-  const RULES = {startRocks: 60, rockCap: 80, bagRocks: 20, lives: 3, power: 1000, throne: 5000,
-    bonus: [2000, 3000, 4000], extraMan: [5000, 7500, 10000], shieldTicks: 110};
+  // The Stbl score tables, one entry for each kind of foe.
+  const POINTS = {bat: 30, vulture: 30, rat: 20, ropeRat: 20, mutant: 30, eye: 25, broom: 25, guard: 50, henchman: 100, whip: 150, dragon: 150, gargoyle: 100};
+  // Start values are CODE 1 $23a8-$23f0. A death tops rocks up to ten (CODE 2 $430). A bag holds ten
+  // and is refused at 80 (CODE 2 $26de-$2706). The Shield lasts 30 updates (CODE 2 $259e), and an
+  // Elixir covers 20 updates of plague (CODE 2 $558). The fourth Stbl table is the Black Knight level.
+  const RULES = {startRocks: 60, respawnRocks: 10, rockCap: 80, bagRocks: 10, lives: 5, startElixir: 0, power: 1000, throne: 5000, flail: 50,
+    bonus: [2000, 3000, 4000, 5000], extraMan: [5000, 7500, 10000, 15000], shieldUpdates: 30, plagueUpdates: 20};
 
   // Every reel on the disk and the moment it appears in play. A test requires all 172.
   const REELS = {
@@ -100,14 +101,18 @@
   const SCREENS = {title: 'A12000', flash: 'A12010', scores: 'A15000', masks: {2020: 'B2022', 3010: 'B3012', 3030: 'B3032'}};
   // Every recording's role. Numbers follow the sound calls in each 1986 routine, or the
   // room's SFTR table where the routine alone does not settle it.
+  // What each sound means on the disk, from every call site (archive/dc/rooms/trace/sounds.json).
+  // SOUN 1 is never called there, so it is this edition's ambience.
   const SOUNDS = {
-    step: [84, 88], jump: [14], land: [11], ladder: [79], climb: [99], rope: [83], fall: [6], duck: [78],
-    throwRock: [3], rockHit: [4], fireball: [42], pickup: [5], elixir: [13], plague: [12], heroHit: [50], heroDie: [7], splat: [11], extraMan: [10],
-    bat: [69, 85], rat: [70, 87], door: [60], guard: [47, 56, 57, 58, 65], guardDie: [66, 82], mutant: [67, 68], whip: [73],
-    henchman: [32, 48], boulder: [35, 86], dragon: [30, 31], drip: [33], eye: [45, 46], fountain: [61, 62, 63, 64],
-    gargoyle: [37, 51], knight: [36, 53, 54], throne: [39, 55], mug: [36], lever: [29], storm: [34], wizard: [9, 43, 49, 52],
-    gate: [40, 41], broom: [60], vulture: [32], hatch: [41], weight: [8], swing: [2], hallRun: [84], title: [90, 91, 95], hall: [92, 93, 94],
-    ending: [0, 89], ambience: [1]
+    step: [0], jump: [4], land: [4], ladder: [14], climb: [14], rope: [4], slip: [5], fall: [83], bump: [78], chute: [79],
+    throwRock: [7], ricochet: [56], fireball: [9], pickup: [11], full: [13], elixir: [12], heroHit: [10], heroDie: [10], splat: [6], dizzy: [2, 3],
+    extraMan: [8], gainShield: [50], gainFire: [3], shield: [99], flail: [84], chain: [73], handLever: [42], lever: [29],
+    bat: [69], batDie: [85], rat: [70], ratDie: [87], door: [60], guard: [66], guardThrow: [58], guardDie: [82],
+    whip: [47, 65], whipFall: [57], mutant: [68], mutantDie: [67], thud: [61], vulture: [63, 64], vultureDie: [62],
+    henchman: [48], boulder: [35], splash: [86], dragon: [30], dragonDie: [31], weight: [32], drip: [33], eye: [43], broom: [46], broomStun: [45],
+    gargoyle: [51], knight: [53], knightFall: [54], mug: [55, 36], mugBounce: [37], throne: [39], storm: [34], wizard: [49, 52],
+    gate: [41], gateWrong: [40], hatch: [73], swing: [4], river: [95], hallRun: [0], hall: [88, 89], title: [92, 93, 94], scores: [90, 91],
+    ending: [50], ambience: [1]
   };
   // The rock henchman's throw is 19 updates long. The boulder leaves on the 15th (CODE 4 $176a-$17bc).
   const HENCHMAN = {steps: 19, release: 14};

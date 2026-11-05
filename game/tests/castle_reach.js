@@ -25,13 +25,15 @@ function boot() {
 let built = null;
 const MODERN = process.argv.includes('--modern');
 const WAITS = [0, 25, 50, 75, 100, 125, 150, 175];
-function explore(context, id, variant) {
+function explore(context, id, variant, ledges = 0, difficulty = 0) {
   const make = ticks => {
-    const core = new context.CastleCore({data: context.CASTLE_DATA, plan: context.CastlePlan, ward: true, rooms: built, modern: MODERN});
+    const core = new context.CastleCore({data: context.CASTLE_DATA, plan: context.CastlePlan, ward: true, rooms: built, modern: MODERN, fixedLedges: ledges, difficulty});
     built = core.rooms;
     core.say = () => {}; core.tell = () => {}; core.enter(id, variant);
     core.entities = core.entities.filter(e => e.type === 'swingRope' || e.type === 'platform');
-    for (let t = 0; t < 200 && core.hero.ladder?.auto; t++) core.tick({}); // A joining ladder carries Duncan in.
+    for (let t = 0; t < 200 && (core.hero.ladder?.auto || core.hero.state === 'chute' || core.hero.stun > 0); t++) core.tick({}); // Joining ladders and the chute carry Duncan in.
+    // The solver takes the Knight's two floor levers as pulled, and a test proves they can be reached.
+    if (id === 4020) { core.levers = new Set(['left', 'right']); core.setBridge(); }
     for (let t = 0; t < (ticks || 0); t++) for (const e of core.entities) if (e.type === 'platform') core.run_platform(e);
     return core;
   };
@@ -41,7 +43,7 @@ function explore(context, id, variant) {
   const place = state => {
     const core = make(state.time), hero = core.hero;
     Object.assign(hero, {x: state.x, y: state.y, vx: 0, vy: 0, state: 'stand', floor: null, rope: null, swing: null, ladder: null, stairs: null, safe: 0, face: state.face || 1});
-    if (state.rope) { hero.state = 'rope'; hero.rope = core.room.ropes[state.rope - 1]; }
+    if (state.rope) { hero.state = 'rope'; hero.rope = core.room.ropes[state.rope - 1]; hero.x = hero.rope.x0; }
     else if (state.swing !== undefined) {
       const e = core.entities[state.swing]; e.phase = state.phase; hero.state = 'swing'; hero.swing = e;
     } else {
@@ -113,7 +115,9 @@ function explore(context, id, variant) {
         push(place(here), label + ' climb', state.time);
         for (const wait of movers ? WAITS : [0]) for (const side of [-1, 0, 1]) {
           const walk = {left: side < 0, right: side > 0};
-          run({...here, time: (state.time || 0) + wait}, t => ({...walk, jump: t === 1}), label + ' rope-jump');
+          // On the disk a direction turns Duncan, and the next press moves or leaps. Space is the modern leap.
+          run({...here, time: (state.time || 0) + wait, face: -side || 1}, t => (t === 1 || t === 5 ? walk : {jump: t === 3 && MODERN}), label + ' rope-tap');
+          run({...here, time: (state.time || 0) + wait, face: side || 1}, t => ({...(t < 2 ? walk : {}), jump: t === 1 && MODERN}), label + ' rope-leap');
         }
       }
     } else if (state.swing !== undefined) {
@@ -135,6 +139,7 @@ function make0(context, id) {
 function arrivals(context) {
   const {rooms, order} = context.CASTLE_DATA, used = new Set(), plan = context.CastlePlan;
   for (const wing of Object.values(plan.WINGS)) used.add(wing.first + ':0');
+  used.add('1020:0'); // Every pit drops into the Dungeon by this entry.
   for (const id of order) for (const floor of rooms[id].floors) for (const span of floor.spans)
     if (span[3] === 5 && span[4] >= 0) used.add(order[span[4]] + ':' + span[5]);
   return used;
@@ -150,6 +155,14 @@ function main() {
       if (!used.has(id + ':' + variant)) continue;
       const {nodes, reached, spots} = explore(context, id, variant);
       let note = '';
+      // The Shield room has a table of hidden ledge patterns for each level. Every one must work.
+      if (id === 3030) {
+        const prize = scepters[id];
+        context.CASTLE_DATA.steps.masks.forEach((list, level) => list.forEach((_, i) => {
+          const got = explore(context, id, variant, i, level).spots.some(s => s.seg && prize.x + 30 > s.seg.x0 + 8 && prize.x - 6 < s.seg.x1 + 24 && Math.abs(s.seg.y + 20 - (prize.y + 15)) < 42);
+          if (!got) { note += ` LEDGES ${level}:${i} UNREACHED`; missing++; }
+        }));
+      }
       const prize = scepters[id];
       if (prize) {
         const got = spots.some(s => s.seg && prize.x + 30 > s.seg.x0 + 8 && prize.x - 6 < s.seg.x1 + 24 && Math.abs(s.seg.y + 20 - (prize.y + 15)) < 42);

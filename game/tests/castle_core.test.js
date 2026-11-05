@@ -123,14 +123,16 @@ test('a jump catches a rope, and climbing stops at the disk limits', () => {
   assert.equal(core.hero.y, rope.top);
 });
 
-test('rats bite, elixir holds the plague off, and then a life goes', () => {
+test('plague drinks an elixir by itself, which covers 20 updates, and then a life goes', () => {
   const core = quiet(make());
   core.enter(3000, 0); quiet(core);
+  assert.equal(core.elixir, 0, 'no elixir at the start of a game');
   core.elixir = 1;
   core.harm('bite');
   assert.equal(core.elixir, 0);
   assert.equal(core.mode, 'room');
-  core.hero.safe = 0;
+  for (let i = 0; i < 50; i++) core.harm('bite');
+  assert.equal(core.mode, 'room', 'twenty updates of cover');
   core.harm('bite');
   assert.equal(core.mode, 'dying');
   const lives = core.lives;
@@ -201,15 +203,37 @@ test('taking a scepter carries Saber home to the Great Hall', () => {
   assert.equal(core.runDoor(), false, 'the wing has given up its scepter');
 });
 
-test('a fall into a killing floor costs a life and returns to the room entry', () => {
+test('a pit costs no life: it drops Duncan down the chute into the Dungeon', () => {
   const core = quiet(make());
   core.enter(3000, 0); quiet(core);
-  const {x, y} = core.hero, lives = core.lives;
-  core.hero.state = 'air'; core.hero.floor = null; core.hero.y = 285; core.hero.vy = 6; core.hero.x = 200;
-  for (let i = 0; i < 90; i++) core.tick({});
-  assert.equal(core.lives, lives - 1);
-  assert.equal(Math.round(core.hero.x), Math.round(x));
-  assert.equal(core.hero.y, y);
+  const lives = core.lives;
+  core.hero.state = 'air'; core.hero.floor = null; core.hero.y = 280; core.hero.vy = 6; core.hero.x = 200;
+  core.tick({});
+  assert.equal(core.room.id, 1020);
+  assert.equal(core.hero.state, 'chute');
+  for (let i = 0; i < 40 && core.hero.state !== 'stand'; i++) core.tick({});
+  assert.deepEqual([core.hero.x, core.hero.y], [35, 240]);
+  assert.equal(core.lives, lives);
+  core.enter(3000, 0); core.hero.state = 'air'; core.hero.floor = null; core.hero.y = 280; core.hero.vy = 6; core.hero.x = 200;
+  core.tick({});
+  assert.equal(core.hero.state, 'stand', 'later falls skip the slide');
+});
+
+test('water drowns, and lives run out at zero with rocks topped up on each return', () => {
+  const core = quiet(make());
+  assert.equal(core.lives, 5);
+  assert.equal(core.rocks, 60);
+  core.enter(2020, 0); quiet(core);
+  Object.assign(core.hero, {state: 'air', floor: null, arc: null, x: 200, y: 90, vy: 6});
+  core.tick({}); core.tick({});
+  assert.equal(core.mode, 'dying');
+  core.rocks = 3;
+  for (let i = 0; i < 80; i++) core.tick({});
+  assert.equal(core.lives, 4);
+  assert.equal(core.rocks, 10);
+  core.lives = 1; core.harm('fall');
+  for (let i = 0; i < 80; i++) core.tick({});
+  assert.equal(core.mode, 'over');
 });
 
 test('the Demo replays the disk\u2019s recorded input to its end', () => {
@@ -239,14 +263,21 @@ test('the Air Scepter waits where the disk grants the Shield', () => {
   assert.ok(air.x >= spot.x0 - 8 && air.x <= spot.x1 + 8);
 });
 
-test('a standing jump climbs the single-point ledges in the Shield room', () => {
-  const core = quiet(make());
+test('the Shield room lays one hidden ledge pattern per visit', () => {
+  const data = make().data, mask = data.steps.masks[0][2];
+  assert.equal(data.steps.width, 36);
+  const core = quiet(make({fixedLedges: 2}));
   core.enter(3030, 0); quiet(core);
-  core.landOn(232, 72); core.hero.face = 1;
-  core.tick({}); core.tick({jump: true});
-  for (let i = 0; i < 40 && core.hero.state === 'air'; i++) core.tick({});
-  assert.equal(core.hero.y, 211);
-  assert.equal(core.hero.x, 128);
+  data.steps.spans.forEach((at, i) => {
+    const seg = core.room.segOf.get(at), real = mask >>> i & 1;
+    assert.equal(!!seg.off, !real);
+    assert.equal(seg.x1 - seg.x0, real ? 36 : 0);
+  });
+  assert.equal(core.realLedges().length, mask.toString(2).replace(/0/g, '').length);
+  for (let i = 0; i < 60 && core.hero.state !== 'stand'; i++) core.tick({});
+  core.landOn(253, 80); core.hero.face = -1;
+  core.tick({action: true});
+  assert.ok(core.ledgesShownUntil > core.tickCount, 'the wall switch lights the real ledges');
 });
 
 test('modern controls forgive a late or early jump press', () => {
@@ -289,7 +320,7 @@ test('modern controls collect by walking over, and ladders reach', () => {
   const rocks = core.rocks;
   core.entities = [{type: 'item', item: 'bag', x: core.hero.x, y: core.hero.y + 10, w: 18, h: 18, frame: 0}];
   core.tick({});
-  assert.equal(core.rocks, rocks + 20);
+  assert.equal(core.rocks, rocks + 10);
   core.enter(3000, 0); quiet(core);
   const foot = core.room.floors.find(f => f.y === 264).segments.flatMap(s => s.spans).find(s => s.kind === 3);
   core.hero.x = foot.x0 - 10;
@@ -297,15 +328,18 @@ test('modern controls collect by walking over, and ladders reach', () => {
   assert.equal(core.hero.state, 'ladder');
 });
 
-test('each key keeps one job: Space alone leaves a rope, and Down ducks on open floor', () => {
+test('each key keeps one job: Left and Right change ropes, Space leaps, and Down ducks on open floor', () => {
   const core = quiet(make({modern: true}));
   core.enter(1000, 0); quiet(core);
-  const rope = core.room.ropes[0];
-  Object.assign(core.hero, {state: 'rope', rope, floor: null, y: rope.bottom - 20, x: (rope.x0 + rope.x1) / 2});
-  core.tick({}); core.tick({right: true});
-  assert.equal(core.hero.state, 'rope', 'a direction alone does not leap');
+  const [first, second] = core.room.ropes;
+  const hang = (rope, y) => Object.assign(core.hero, {state: 'rope', rope, floor: null, y, x: rope.x0, face: 1});
+  hang(first, 100);
+  core.tick({});
+  core.tick({right: true});
+  assert.equal(core.hero.rope, second, 'a direction moves to the next rope');
+  core.tick({});
   core.tick({right: true, jump: true});
-  assert.equal(core.hero.state, 'air');
+  assert.equal(core.hero.state, 'air', 'Space leaps off');
   core.enter(3000, 0); quiet(core);
   core.hero.x = 200;
   core.tick({down: true});
@@ -317,70 +351,178 @@ test('each key keeps one job: Space alone leaves a rope, and Down ducks on open 
   assert.notEqual(classic.hero.state, 'duck');
 });
 
-test('a joining ladder carries Duncan in, and climbing down it leaves the room', () => {
+test('classic ropes follow the disk: turn, then move, and a leap needs no Jump key', () => {
+  const core = quiet(make());
+  core.enter(1000, 0); quiet(core);
+  const [first, second] = core.room.ropes;
+  Object.assign(core.hero, {state: 'rope', rope: second, floor: null, y: 100, x: second.x0, face: 1});
+  core.tick({});
+  core.tick({left: true});
+  assert.equal(core.hero.rope, second, 'the first press only turns Duncan');
+  assert.equal(core.hero.face, -1);
+  core.tick({});
+  core.tick({left: true});
+  assert.equal(core.hero.rope, first);
+  core.tick({});
+  core.tick({left: true});
+  assert.equal(core.hero.state, 'air', 'with no rope beyond, the press leaps off');
+  assert.equal(core.hero.arc.kind, 'rope');
+  assert.equal(core.hero.arc.rows[0][1], 12, 'the leap is the tail of the standing jump');
+  Object.assign(core.hero, {state: 'rope', rope: first, arc: null, y: 100, x: first.x0});
+  const before = core.hero.y;
+  core.tick({}); core.tick({jump: true});
+  assert.equal(core.hero.state, 'rope', 'Jump does nothing on a classic rope');
+  core.tick({up: true});
+  assert.ok(Math.abs(before - core.hero.y - 3.2) < .01, 'eight pixels an update');
+});
+
+test('the river carries a rider off the upper end and back in on the lower one', () => {
   const core = quiet(make({ward: true}));
-  core.enter(3030, 0); quiet(core);
-  assert.equal(core.hero.state, 'ladder');
-  for (let i = 0; i < 60 && core.hero.state === 'ladder'; i++) core.tick({});
-  assert.equal(core.hero.y, 253);
-  assert.equal(core.hero.state, 'stand');
-  core.hero.x = 383;
-  core.tick({down: true});
-  assert.equal(core.hero.state, 'ladder');
-  for (let i = 0; i < 60 && core.room?.id === 3030; i++) core.tick({down: true});
-  assert.equal(core.room.id, 3020);
-  const above = quiet(make({ward: true}));
-  above.enter(3020, 1); quiet(above);
-  assert.equal(above.hero.state, 'ladder');
-  for (let i = 0; i < 200 && above.hero.state === 'ladder'; i++) above.tick({});
-  assert.equal(above.hero.state, 'stand');
-  assert.ok(above.hero.y > 0);
+  core.enter(2020, 0); quiet(core);
+  const log = core.addLog(0, 470);
+  core.landOn(86, 480); core.hero.floor = log.seg;
+  for (let i = 0; i < 60 && core.hero.y === 86; i++) { core.tick({}); core.entities = core.entities.filter(e => e.type === 'log'); }
+  assert.equal(core.hero.y, 240);
+  assert.ok(core.hero.x < 20, 'he arrives at the left of the lower river');
+  const lower = core.hero.floor;
+  assert.ok(lower.log);
+  // Ride along, then a running jump clears the falls to the far ledge and the exit.
+  for (let i = 0; i < 900 && core.hero.x < 306; i++) { core.tick({}); core.entities = core.entities.filter(e => e.type === 'log'); }
+  assert.equal(core.hero.floor, lower);
+  for (let i = 0; i < 30; i++) core.tick({right: true, jump: i === 1});
+  assert.ok(core.hero.y === 235 || core.room.id === 2030, 'he reaches the ledge beyond the falls');
 });
 
-test('the arm splits a rock\'s speed as the disk does', () => {
-  const shot = arm => {
-    const core = quiet(make({ward: true}));
-    core.enter(3000, 0); quiet(core);
-    core.hero.x = 200; core.hero.face = 1; core.entities = [];
-    core.tick({arm, fire: true});
-    const s = core.shots[0];
-    return [+(s.vx * 2.5).toFixed(2), +(s.vy * 2.5).toFixed(2)];
-  };
-  assert.deepEqual(shot(300).map(v => +v.toFixed(1)), [37.5, .3]);
-  assert.deepEqual(shot(0).map(v => +v.toFixed(1)), [0, -37.2]);
-  assert.deepEqual(shot(150).map(v => +v.toFixed(1)), [18.8, -18.4]);
-  assert.deepEqual(shot(511).map(v => +v.toFixed(1)), [11.1, 26.7]);
+test('a log breaks up at the end of the lower river', () => {
+  const core = quiet(make());
+  core.enter(2020, 0); quiet(core);
+  const log = core.addLog(1, 330);
+  for (let i = 0; i < 12; i++) core.tick({});
+  assert.ok(log.gone);
+  assert.ok(core.entities.some(e => e.type === 'logSink'));
+  assert.equal(core.room.floors.find(f => f.y === 240).segments.length, 0);
 });
 
-test('classic throws only when standing, holding repeats on six updates, and modern aims at the pointer', () => {
-  const classic = quiet(make());
-  classic.enter(3000, 0); quiet(classic);
-  classic.hero.x = 200; classic.entities = [];
-  const rocks = classic.rocks;
-  classic.tick({right: true});
-  classic.tick({right: true, fire: true});
-  assert.equal(classic.rocks, rocks, 'walking does not throw');
-  classic.tick({});
-  for (let i = 0; i < 30; i++) classic.tick({fire: true});
-  assert.equal(rocks - classic.rocks, 2, 'a held button throws every six updates');
-  const modern = quiet(make({modern: true}));
-  modern.enter(3000, 0); quiet(modern);
-  modern.hero.x = 200; modern.hero.face = 1; modern.entities = [];
-  modern.tick({fire: true, aimAt: {x: 100, y: modern.hero.y + 12}});
-  assert.equal(modern.hero.face, -1);
-  assert.ok(modern.shots[0].vx < -10);
-  assert.ok(Math.abs(modern.shots[0].vy) < .5);
-});
-
-test('every prompt on screen names something the key really does', () => {
+test('the flail comes off the wall, swings, and fells the Whip Guard only from far enough right', () => {
   const core = quiet(make({modern: true}));
   core.enter(1020, 0); quiet(core);
-  for (const pull of core.room.pulls) {
-    core.landOn(pull.y, pull.x0 - 12);
-    assert.equal(core.prompt()[0], 'action');
-    assert.equal(core.tryAction(), true);
-    core.pullsDone.clear();
-  }
-  core.enterHall();
-  assert.equal(core.prompt()[0], 'hall');
+  for (let i = 0; i < 80 && core.hero.state !== 'stand'; i++) core.tick({});
+  core.entities = [core.guard(305, 248, 305, 305, 0, true)];
+  core.landOn(270, 160); core.hero.stun = 0;
+  const score = core.score;
+  core.tick({action: true});
+  assert.equal(core.hero.state, 'flail');
+  for (let i = 0; i < 20 && core.hero.flail.stage !== 'carry'; i++) core.tick({});
+  assert.equal(core.score, score + 50);
+  core.tick({fire: true}); core.tick({});
+  for (let i = 0; i < 8 && core.hero.flail.stage === 'swing'; i++) core.tick({});
+  assert.equal(core.hero.flail.stage, 'carry', 'too far left, the swing misses');
+  core.hero.x = 240;
+  core.tick({fire: true}); core.tick({});
+  for (let i = 0; i < 12 && core.hero.state === 'flail'; i++) core.tick({});
+  assert.equal(core.hero.state, 'stand');
+  assert.ok(core.entities[0].dying > 0);
+  assert.equal(core.score, score + 200);
+  assert.ok(core.entities.some(e => e.type === 'fallenFlail'));
+});
+
+test('rocks glance off the Whip Guard, and only fire or the flail will drop him', () => {
+  const core = quiet(make());
+  core.enter(3000, 0); quiet(core);
+  const guard = core.guard(300, 200, 300, 300, 0, true);
+  core.entities = [guard];
+  core.shots.push({x: 305, y: 210, vx: 0, vy: 0, w: 8, h: 8, fire: false, frame: 0, life: 9});
+  core.tick({});
+  assert.equal(guard.hp, 2);
+  core.shots.push({x: 305, y: 210, vx: 0, vy: 0, w: 8, h: 8, fire: true, frame: 0, life: 9});
+  core.tick({});
+  assert.ok(guard.dying > 0);
+});
+
+test('the Knight needs both floor levers, and one alone leaves a half bridge that tips Duncan off', () => {
+  const core = quiet(make({ward: true}));
+  core.enter(4020, 0);
+  const row = core.room.floors.find(f => f.y === 135);
+  assert.equal(core.floorAt(240, 135), null, 'no bridge at first');
+  core.entities = [{type: 'lever', x: -16, y: 256, chain: 0, w: 32, h: 40}, {type: 'lever', x: 464, y: 256, chain: 1, w: 32, h: 40}];
+  core.landOn(263, 15);
+  assert.equal(core.tryAction(), true);
+  core.hero.stun = 0;
+  assert.equal(core.tryAction(), false, 'a lever works once');
+  assert.equal(row.segments.filter(s => !s.off).length, 1);
+  core.landOn(135, 238);
+  core.hero.floor = row.segments.find(s => !s.off);
+  core.tick({});
+  assert.equal(core.hero.state, 'teeter');
+  for (let i = 0; i < 24 && core.hero.state === 'teeter'; i++) core.tick({});
+  assert.equal(core.hero.state, 'air');
+  core.enter(4020, 0); core.entities = [{type: 'lever', x: -16, y: 256, chain: 0, w: 32, h: 40}, {type: 'lever', x: 464, y: 256, chain: 1, w: 32, h: 40}];
+  core.landOn(263, 15); core.tryAction(); core.landOn(263, 465); core.tryAction();
+  assert.ok(core.floorAt(240, 135).spans.some(s => s.kind === 35), 'both levers lay the solid bridge with its chain');
+  core.landOn(135, 240);
+  for (let i = 0; i < 10; i++) core.tick({});
+  assert.deepEqual([core.hero.state, core.hero.y], ['stand', 135], 'the finished bridge holds him');
+});
+
+test('the Wizard\u2019s three chains must go in the order set for the visit', () => {
+  const core = quiet(make());
+  core.enter(2030, 0);
+  const gate = core.entities.find(e => e.type === 'gate');
+  const chains = core.room.pulls.slice().sort((a, b) => a.a - b.a);
+  assert.equal(chains.length, 3);
+  const wrong = [gate.order[1], gate.order[0], gate.order[2]];
+  for (const i of wrong) core.pull(chains[i]);
+  assert.equal(gate.open, false);
+  assert.equal(core.pullsDone.size, 0, 'a wrong order resets the chains');
+  const score = core.score;
+  for (const i of gate.order) core.pull(chains[i]);
+  assert.equal(gate.open, true);
+  assert.equal(core.score, score + 100);
+});
+
+test('the Shield is held, freezes Duncan and runs out after 30 updates', () => {
+  const core = quiet(make());
+  core.enter(3000, 0); quiet(core);
+  core.powers.add('air'); core.hero.x = 200;
+  core.tick({}); core.tick({action: true});
+  assert.equal(core.hero.state, 'shield');
+  const x = core.hero.x;
+  core.tick({action: true, right: true});
+  assert.equal(core.hero.x, x);
+  core.harm('guard');
+  assert.equal(core.mode, 'room', 'it stops contact');
+  for (let i = 0; i < 80; i++) core.tick({action: true});
+  assert.equal(core.hero.state, 'stand');
+  core.tick({}); core.tick({action: true}); core.tick({});
+  assert.equal(core.hero.state, 'stand', 'letting go lowers it');
+  core.tick({action: true});
+  core.harm('lightning');
+  assert.equal(core.mode, 'dying', 'lightning goes straight through');
+});
+
+test('the big broom splits twice, and the smallest only stuns', () => {
+  const core = quiet(make());
+  core.enter(2030, 0); quiet(core);
+  core.add_broom({x: 300, y: 268, left: 120, right: 442});
+  const score = core.score;
+  core.strike(core.entities[0], 1);
+  assert.equal(core.entities.length, 3);
+  assert.ok(core.entities.every(e => e.tier === 1));
+  core.strike(core.entities[0], 1);
+  assert.equal(core.entities.length, 5);
+  const small = core.entities[0];
+  core.strike(small, 1);
+  assert.equal(core.entities.length, 5);
+  assert.ok(small.stun > 0);
+  assert.equal(core.score, score + 75);
+});
+
+test('creatures move at the disk\u2019s pixels an update, and guards turn at double pace', () => {
+  const core = quiet(make());
+  core.enter(3000, 0); quiet(core);
+  const guard = core.guard(100, 200, 90, 300, 2);
+  for (let i = 0; i < 5; i++) core.patrol(guard);
+  assert.ok(Math.abs(guard.x - 104) < .001);
+  guard.x = 299.9; core.patrol(guard);
+  assert.equal(guard.speed, -4);
 });

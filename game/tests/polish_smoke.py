@@ -379,6 +379,15 @@ def smoke(page, base, home):
         assert cuts <= 2, "WEB.1 remained after encounter handling and two CUT commands"
     hint_without_turn("Go west")
     command("west")
+    # The spider can stop a move on the original engine, as the hint warns. A player simply tries
+    # again, so the test does too. It never restarts or changes the engine's dice.
+    for _ in range(6):
+        snapshot = api("state")
+        if snapshot["ended"] or not any(actor["id"] == 30432 for actor in snapshot["characters"]):
+            break
+        if page.locator("#roomTitle").inner_text().strip().lower() != "web":
+            break
+        command("west")
     room("squasher")
     hint_without_turn("Click the door")
     click_object("AOBJ/27105")

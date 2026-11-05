@@ -40,14 +40,14 @@ async () => {
   for (const vx of [4, -4]) await show({type: 'arrow', vx, life: 40});
   for (const v of [{type: 'rat', speed: 2, ...base}, {type: 'rat', speed: -2, ...base}, {type: 'ropeRat', speed: 1, top: 0, bottom: 300}, {type: 'bat', state: 'perch', timer: 99},
     {type: 'mutant', speed: 2, ...base}, {type: 'mutant', speed: 2, ...base, hurt: 8}, {type: 'mutant', speed: 2, ...base, dying: 18}, {type: 'vulture', homeY: 200, timer: 0}, {type: 'feather', vy: .1},
-    {type: 'eye', phase: 1}, {type: 'eye', phase: 1, dying: 18}, {type: 'broom', speed: 1, ...base}, {type: 'broom', speed: 1, ...base, hurt: 8}, {type: 'broom', speed: 1, ...base, dying: 18},
+    {type: 'eye', phase: 1}, {type: 'eye', phase: 1, dying: 18}, {type: 'broom', speed: 1, ...base}, {type: 'broom', speed: 1, ...base, tier: 1}, {type: 'broom', speed: 1, ...base, tier: 2}, {type: 'broom', speed: 1, ...base, tier: 2, stun: 99},
     {type: 'fountain', timer: 0}, {type: 'torch'}, {type: 'faces', timer: 99}, {type: 'item', item: 'bag'}, {type: 'henchman', timer: 99}, {type: 'henchman', timer: 99, step: 2}, {type: 'henchman', timer: 99, step: 6}, {type: 'henchman', timer: 99, step: 9}, {type: 'henchman', timer: 99, step: 12}, {type: 'henchman', timer: 99, step: 14}, {type: 'henchman', timer: 99, step: 16},
     {type: 'rock', vx: 0, vy: 0}, {type: 'shards', broken: 9, vx: 0, vy: 0}, {type: 'weight', falling: true, timer: 99, x: 300}, {type: 'dragon', timer: 99, breath: 0, hp: 9},
     {type: 'dragon', timer: 99, breath: 30, hp: 9, x: 300}, {type: 'dragon', timer: 99, breath: 0, hp: 9, dying: 18}, {type: 'wizard', timer: 99}, {type: 'wizard', timer: 44}, {type: 'wizard', timer: 8}, {type: 'wizard', timer: 3},
     {type: 'wizard', timer: 99, hurt: 8}, {type: 'wizard', timer: 99, dying: 18}, {type: 'bolt', vx: 0, vy: 0, life: 40}, {type: 'gargoyle', homeY: 200, speed: 1, right: 400},
     {type: 'gargoyle', homeY: 200, speed: -1, right: 400}, {type: 'gargoyle', homeY: 200, speed: 1, right: 400, dying: 18}, {type: 'drip', state: 'wait', timer: 40, startY: 10, floor: 300},
     {type: 'drip', state: 'fall', y: 40, startY: 10, floor: 300}, {type: 'drip', state: 'splash', timer: 12, y: 200, startY: 10, floor: 300}, {type: 'storm', every: 900, timer: 900, live: 16, bolt: 'B705'},
-    {type: 'storm', every: 900, timer: 900, live: 7, bolt: 'B706'}, {type: 'clouds'}, {type: 'bridge'}, {type: 'hatch', open: false, t: 0}, {type: 'hatch', open: true, t: 8}, {type: 'gate', open: false}, {type: 'gate', open: true},
+    {type: 'storm', every: 900, timer: 900, live: 7, bolt: 'B706'}, {type: 'clouds'}, {type: 'log', seg: {x0: 200, x1: 239, y: 86}, river: 2}, {type: 'logSink', step: 0}, {type: 'hatch', open: false, t: 0}, {type: 'hatch', open: true, t: 8}, {type: 'gate', open: false}, {type: 'gate', open: true},
     {type: 'portcullis'}, {type: 'mug', vx: 0, vy: 0, life: 60}, {type: 'mug', vx: 0, vy: 0, life: 90, frame: 22}, {type: 'scepter', scepter: CastlePlan.WINGS.shield.scepter}]) await show(v);
   for (const e of [{type: 'guard', ...base, speed: 2, hurt: 7}, {type: 'bat', state: 'perch', timer: 99, dying: 18}]) await show(e, 180);
   for (const face of [1, -1]) {
@@ -56,11 +56,10 @@ async () => {
     const stride = face > 0 ? 'd' : 'a'; keys.add(stride); await wait(240); keys.delete(stride); h.x = 300; await wait(40);
     keys.add('e'); await wait(110); keys.delete('e'); core.powers.add('air'); keys.add('e'); await wait(110); keys.delete('e');
     keys.add('q'); await wait(180); keys.delete('q'); core.powers.delete('air'); await wait(40);
-    h.armUntil = core.tickCount + 20; await wait(100); h.flail = core.tickCount + 12; await wait(110); h.landed = core.tickCount; await wait(1000);
-    h.settled = core.tickCount; await wait(450); h.pullAt = core.tickCount; await wait(1400); h.x = 100; h.leverAt = core.tickCount; await wait(450); h.x = 300; h.leverAt = core.tickCount; await wait(450);
+    h.armUntil = core.tickCount + 20; await wait(100); for (const stage of ['reach', 'lift', 'carry', 'swing', 'drop']) { h.state = 'flail'; h.flail = {span: {a: 0, b: 500, c: 238}, stage, t: stage === 'swing' ? 1 : 0, moving: false}; await wait(60); h.state = 'stand'; h.flail = null; } h.landed = core.tickCount; await wait(1000);
+    h.settled = core.tickCount; await wait(450); h.pullAt = core.tickCount; await wait(1400); h.x = 100; h.leverAt = core.tickCount; await wait(450); h.x = 300; h.leverAt = core.tickCount; await wait(1000);
     core.shots.push({x: 200, y: 299, vx: 0, vy: 0, w: 8, h: 8, fire: false, frame: 0, life: 12}, {x: 240, y: 200, vx: 0, vy: 0, w: 8, h: 8, fire: true, frame: 0, life: 12}); await wait(260);
     h.state = 'air'; h.floor = null; h.y = 40; h.vy = 8.9; h.vx = 1; await wait(120);
-    h.state = 'air'; h.floor = null; h.y = 40; h.vy = 0; h.light = true; await wait(120); h.light = false;
     core.enter(3000, 0); core.entities = []; core.hero.x = 240; core.hero.face = face; keys.add(' '); await wait(70); keys.delete(' '); await wait(600);
     core.hero.x = 240; const leap = face > 0 ? 'd' : 'a'; keys.add(leap); await wait(40); keys.add(' '); await wait(70); keys.delete(' '); await wait(600); keys.delete(leap);
     core.enter(1000, 0); core.entities = []; const r = core.hero, rope = core.room.ropes[0]; r.face = face;
@@ -76,6 +75,7 @@ async () => {
     core.claim({id, name: id + ' scepter'}); await wait(2300);
   }
   core.powers.clear(); core.enter(3000, 0); core.entities = []; core.hero.face = 1; core.claim({id: 'air', name: 'air scepter'}); await wait(2300);
+  core.enter(3030, 0); core.entities = []; core.ledgesShownUntil = core.tickCount + 40; await wait(200);
   core.ward = false; core.elixir = 0;
   for (const cause of ['fall', 'bite', 'bat', 'guard', 'whip', 'mutant', 'fire', 'lightning', 'crush', 'weight', 'acid', 'throw', 'mug']) {
     core.enter(3000, 0); core.entities = []; core.hero.safe = 0; core.harm(cause);
@@ -196,7 +196,7 @@ def smoke(page, base):
     page.keyboard.press("Escape")
     time.sleep(.1)
     assert page.locator("[data-panel=pause]").is_visible()
-    assert page.locator("[data-panel=pause] tr").count() == 8
+    assert page.locator("[data-panel=pause] tr").count() == 9
     for _ in range(3):
         page.keyboard.press("Escape")
         time.sleep(.05)

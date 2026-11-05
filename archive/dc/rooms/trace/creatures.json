@@ -1,0 +1,3088 @@
+{
+  "offset_convention": "CODE segment-body hex offsets ($xxxx), excluding the 4-byte resource header and 4-byte CODE segment header.",
+  "object_loop_and_scoring_convention": {
+    "object_list_and_dispatch": "All room entities are heap blocks linked at -$182(a5). Each room tick, $33a(a5) (CODE 4:$4e92) walks -$182(a5), sets a6 = a0 + $8, and calls the function pointer at $4(a0) (clearing $4(a0) unlinks and frees the block via _DisposPtr $a01f). Contact hazards register in -$20c(a5) via CODE 4:$594a (unlinked via $597c); player rocks/fireballs live in -$194(a5) and are tested against hitboxes via CODE 4:$58d0.",
+    "stbl_scoring_mechanism": "Enemy/puzzle points are awarded via jump-table $3ea(a5) -> CODE 4:$5c14, passing d0 = 2 * stbl_index (even byte offset $00..$26 into the 16-bit packed-BCD word array at the start of Data A Stbl 0..3). Stbl 0, 1, 2, and 3 contain identical point values for all 20 indices (0..19) and differ only in the 32-bit BCD extra-life threshold at byte offset $44.",
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 4:$4e92-$4f12",
+      "CODE 4:$58d0-$599e",
+      "CODE 4:$5c14-$5c28",
+      "Data A Stbl 0..3 ($00..$47)"
+    ],
+    "stbl_index_table": [
+      {
+        "stbl_index": 0,
+        "byte_offset": "$00",
+        "points": 20,
+        "awarded_by": "Rat killed by rock or fireball ($28a / $292 -> CODE 4:$15fa)"
+      },
+      {
+        "stbl_index": 1,
+        "byte_offset": "$02",
+        "points": 150,
+        "awarded_by": "Dungeon Whip Guard knocked down by State-26 mace chain or Fireball ($26a -> CODE 4:$0bf2)"
+      },
+      {
+        "stbl_index": 2,
+        "byte_offset": "$04",
+        "points": 50,
+        "awarded_by": "Guard knocked down or disintegrated by rock or fireball ($272 / $27a -> CODE 4:$0e6a)"
+      },
+      {
+        "stbl_index": 3,
+        "byte_offset": "$06",
+        "points": 30,
+        "awarded_by": "Plague Bat killed by rock or fireball ($282 -> CODE 4:$1352)"
+      },
+      {
+        "stbl_index": 4,
+        "byte_offset": "$08",
+        "points": 50,
+        "awarded_by": "Hero pulling State-26 spiked mace chain in Room 1020 (CODE 2:$2050)"
+      },
+      {
+        "stbl_index": 5,
+        "byte_offset": "$0a",
+        "points": 50,
+        "awarded_by": "Hero picking up key (CODE 2:$2224)"
+      },
+      {
+        "stbl_index": 6,
+        "byte_offset": "$0c",
+        "points": 500,
+        "awarded_by": "Hero unlocking door or cage with key (CODE 2:$2280)"
+      },
+      {
+        "stbl_index": 7,
+        "byte_offset": "$0e",
+        "points": 100,
+        "awarded_by": "Solving Wizard 3-switch forcefield lock in Room 2030 ($30a -> CODE 4:$3ac2)"
+      },
+      {
+        "stbl_index": 8,
+        "byte_offset": "$10",
+        "points": 25,
+        "awarded_by": "Splitting or stunning Magic Broom in Room 2030 ($32a -> CODE 4:$493a)"
+      },
+      {
+        "stbl_index": 9,
+        "byte_offset": "$12",
+        "points": 25,
+        "awarded_by": "Stunning Floating Burning Eye in Room 2030 ($332 -> CODE 4:$4632)"
+      },
+      {
+        "stbl_index": 10,
+        "byte_offset": "$14",
+        "points": 30,
+        "awarded_by": "Vulture hit by rock or fireball ($322 -> CODE 4:$4dee)"
+      },
+      {
+        "stbl_index": 11,
+        "byte_offset": "$16",
+        "points": 30,
+        "awarded_by": "Mutant killed by rock or fireball ($2b2 -> CODE 4:$2230)"
+      },
+      {
+        "stbl_index": 12,
+        "byte_offset": "$18",
+        "points": 150,
+        "awarded_by": "Dragon crushed by ceiling weight in Room 3010 ($2a2 -> CODE 4:$1c54)"
+      },
+      {
+        "stbl_index": 13,
+        "byte_offset": "$1a",
+        "points": 1000,
+        "awarded_by": "Acquiring Fireball power in Room 2030 (CODE 2:$22fc)"
+      },
+      {
+        "stbl_index": 14,
+        "byte_offset": "$1c",
+        "points": 1000,
+        "awarded_by": "Acquiring Shield power in Room 3030 (CODE 2:$2500)"
+      },
+      {
+        "stbl_index": 15,
+        "byte_offset": "$1e",
+        "points": 100,
+        "awarded_by": "Boulder Henchman crushed by ceiling weight in Rooms 3000/4010 ($29a -> CODE 4:$1846)"
+      },
+      {
+        "stbl_index": 16,
+        "byte_offset": "$20",
+        "points": 100,
+        "awarded_by": "Each of the 5 Black Knight pillar levers hit by a rock/fireball in Room 4020 ($2da -> CODE 4:$2c16)"
+      },
+      {
+        "stbl_index": 17,
+        "byte_offset": "$22",
+        "points": 0,
+        "awarded_by": "Toggling either Room 4020 drawbridge lever ($2d2 -> CODE 4:$2584; Stbl entry is $0000 = 0 pts)"
+      },
+      {
+        "stbl_index": 18,
+        "byte_offset": "$24",
+        "points": 100,
+        "awarded_by": "Gargoyle downed by a Fireball ($2ea -> CODE 4:$3048)"
+      },
+      {
+        "stbl_index": 19,
+        "byte_offset": "$26",
+        "points": 5000,
+        "awarded_by": "Toppling the Black Knight via span kind 21 with all 5 pillars lowered in Room 4020 ($2da -> CODE 4:$2b54)"
+      }
+    ]
+  },
+  "previously_untraced_highlights": {
+    "$32a": "Splitting Magic Broom in Room 2030 (CODE 4:$4958 -> update $467a, PPCT 420..423, SOUN 45/46): ±2 px/update patrol between X=120..442, 1 hit per split into 3x medium -> 9x smallest brooms (smallest stunned 24 updates on hit, self-retire by hopping into right pit up to difficulty quota -$27e(a5) = 6/4/2), Stbl index 8 = 25 pts per hit.",
+    "$332": "Floating Burning Eye in Room 2030 on Advanced/Black Knight only (CODE 4:$464c -> update $419a, PPCT 426 + fireball PPCT 138, SOUN 9/43): 50% hover bob (net 0) / 50% ±1 px/update X,Y homing toward hero's 32-px cell (firing 8-way ±4.9999 px/update fireball on half of homing cycles), infinite HP (1 rock/fireball stuns stationary for 70 updates), Stbl index 9 = 25 pts per stun."
+  },
+  "total_unique_routines_in_spawns_json": 50,
+  "routines": {
+    "$1a2": {
+      "segment": 1,
+      "offset": "$1a62",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Room Background Patch Stamp (`_CopyBits` `srcXor` of `-$222(a5)` `PPCT` onto static room bitmap)",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "1010",
+        "2020",
+        "2030"
+      ],
+      "call_sites_in_spawns_json": 5,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "One-shot graphics helper called during room setup in Rooms 1010, 2020, and 2030 to XOR-stamp a room patch sprite (`-$222(a5)`) onto background port `-$32(a5)` (and secondary page `-$40(a5)` if page-flipped) before gameplay begins.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$1a62-$1b16"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "One-shot graphics helper called during room setup in Rooms 1010, 2020, and 2030 to XOR-stamp a room patch sprite (`-$222(a5)`) onto background port `-$32(a5)` (and secondary page `-$40(a5)` if page-flipped) before gameplay begins.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$1a62-$1b16"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "One-shot graphics helper called during room setup in Rooms 1010, 2020, and 2030 to XOR-stamp a room patch sprite (`-$222(a5)`) onto background port `-$32(a5)` (and secondary page `-$40(a5)` if page-flipped) before gameplay begins.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$1a62-$1b16"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$1a62-$1b16"
+        ]
+      }
+    },
+    "$1c2": {
+      "segment": 1,
+      "offset": "$1c78",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Room Background `PICT` / Bitmap Loader & Decompressor",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "1000",
+        "1010",
+        "1020",
+        "2000",
+        "2010",
+        "2020",
+        "2030",
+        "3000",
+        "3010",
+        "3020",
+        "3030",
+        "4000",
+        "4010",
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 14,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "One-shot room initializer called first in all 14 rooms with the room's resource ID (1000..4020) on the stack to load and render the room's static background artwork into `-$32(a5)`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$1c78-$1e10"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "One-shot room initializer called first in all 14 rooms with the room's resource ID (1000..4020) on the stack to load and render the room's static background artwork into `-$32(a5)`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$1c78-$1e10"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "One-shot room initializer called first in all 14 rooms with the room's resource ID (1000..4020) on the stack to load and render the room's static background artwork into `-$32(a5)`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$1c78-$1e10"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$1c78-$1e10"
+        ]
+      }
+    },
+    "$1d68(pc)": {
+      "segment": 5,
+      "offset": "$1d68",
+      "update_handler": "CODE 5:$1dd4",
+      "spawns_json_label": null,
+      "verified_role": "Shield-Room Randomised Rope-Pulley & Wall-Lever Controller (Room 3030 Shield 4)",
+      "category": "interactive_mechanism",
+      "rooms": [
+        "3030"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        712
+      ],
+      "soun": [
+        29
+      ],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Stationary wall lever (PPCT 712) and pulley controller in Room 3030; randomly permutes which rope segments drop/raise when lever is pulled or hit (SOUN 29 at CODE 5:$1eac, $1ef6).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$1d68-$1f68"
+        ]
+      },
+      "hit_points": {
+        "value": "Toggleable via player rock/fireball hit (-$194(a5)) or hero lever pull",
+        "fireball_and_special_interactions": "Toggles rope spans and plays SOUN 29; cannot be destroyed.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$1dd4-$1f68"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary puzzle mechanism.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$1d68-$1f68"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Never calls $5c14 / $3ea(a5).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$1d68-$1f68"
+        ]
+      }
+    },
+    "$1f2": {
+      "segment": 2,
+      "offset": "$3234",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Hero (Duncan) Runtime Object Allocator & Entry Span Initializer",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "1000",
+        "1010",
+        "1020",
+        "2000",
+        "2010",
+        "2020",
+        "2030",
+        "3000",
+        "3010",
+        "3020",
+        "3030",
+        "4000",
+        "4010",
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 14,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "Allocates the $42-byte hero object at `-$86(a5)` with update handler `CODE 2:$2a80` and places Duncan on his entry floor/rope/ladder span (`d0`, `d1`, `a2`). Duncan's movement speeds (8 walk, 10 ladder, jump/fall tables) are already settled in the brief.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$3234-$32d0"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Allocates the $42-byte hero object at `-$86(a5)` with update handler `CODE 2:$2a80` and places Duncan on his entry floor/rope/ladder span (`d0`, `d1`, `a2`). Duncan's movement speeds (8 walk, 10 ladder, jump/fall tables) are already settled in the brief.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$3234-$32d0"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Allocates the $42-byte hero object at `-$86(a5)` with update handler `CODE 2:$2a80` and places Duncan on his entry floor/rope/ladder span (`d0`, `d1`, `a2`). Duncan's movement speeds (8 walk, 10 ladder, jump/fall tables) are already settled in the brief.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$3234-$32d0"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$3234-$32d0"
+        ]
+      }
+    },
+    "$1f6a(pc)": {
+      "segment": 5,
+      "offset": "$1f6a",
+      "update_handler": "CODE 5:$1f92",
+      "spawns_json_label": null,
+      "verified_role": "Entry Wooden Door Closing Animation Object (Rooms 1000 Trouble 1, 4020 Black Knight 3)",
+      "category": "static_or_ambient_prop",
+      "rooms": [
+        "1000",
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 2,
+      "ppct": [
+        200
+      ],
+      "soun": [
+        60
+      ],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Stationary door-closing animation (PPCT 200 = -$1a4(a5)) spawned when Duncan enters Room 1000 via entry 0 or Room 4020; steps frames, plays door-slam SOUN 60 ($1fc8), and unlinks itself (`clr.l -$4(a6)` at $1fcc).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$1f6a-$1fd6"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Non-interactive entry door animation.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$1f6a-$1fd6"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary (0 px/update).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$1f6a-$1fd6"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Never calls $5c14 / $3ea(a5).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$1f6a-$1fd6"
+        ]
+      }
+    },
+    "$222": {
+      "segment": 4,
+      "offset": "$4a0",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "One-Shot Offscreen Bitmap Sprite Blitter (Word-Aligned Copy)",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "2020"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "Immediate bitmap copy helper called once during Room 2020 setup (`CODE 5:$0d7c`) to stamp frame `d2` of `PPCT` `a1` into bitmap `a0` at `(d0, d1)`; allocates no object.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$04a0-$04f2"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Immediate bitmap copy helper called once during Room 2020 setup (`CODE 5:$0d7c`) to stamp frame `d2` of `PPCT` `a1` into bitmap `a0` at `(d0, d1)`; allocates no object.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$04a0-$04f2"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Immediate bitmap copy helper called once during Room 2020 setup (`CODE 5:$0d7c`) to stamp frame `d2` of `PPCT` `a1` into bitmap `a0` at `(d0, d1)`; allocates no object.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$04a0-$04f2"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$04a0-$04f2"
+        ]
+      }
+    },
+    "$26a": {
+      "segment": 4,
+      "offset": "$806",
+      "update_handler": "CODE 4:$0878",
+      "spawns_json_label": "guard and whip man",
+      "verified_role": "Dungeon Whip Guard / Torturer (Room 1020 Trouble 3)",
+      "category": "creature",
+      "rooms": [
+        "1020"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        405,
+        406,
+        407,
+        408
+      ],
+      "soun": [
+        47,
+        56,
+        57,
+        65
+      ],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Stationary post at spawned (d0, d1) = (252, 166) in Room 1020 ($0806-$0876); base anchor ($0(a6), $2(a6)) never translates, using only temporary per-frame sprite offsets from lash tables $0ad2/$0afc during whip swings.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0806-$0b4c",
+          "CODE 5:$06a6-$06b2"
+        ]
+      },
+      "hit_points": {
+        "value": "Immune to ordinary rocks; 1 hit from State-26 spiked mace chain (-$274(a5)) or 1 Fireball knocks down for 118 updates (revives)",
+        "fireball_and_special_interactions": "At CODE 4:$0b4e-$0b9e, if Fireball power is NOT owned (!btst #0, -$276(a5)), player rocks hitting his box bounce backward at -1/4 velocity (asr.l #2; neg.l at $0b5c-$0b6a) and play ricochet SOUN 56 ($0b72) with zero damage. At $0ba0-$0c04, he is knocked down if -$274(a5) != 0 (Duncan pulled the State-26 spiked mace chain in Room 1020) OR if btst #0, -$276(a5) (Fireball owned) and a fireball hits him ($0bac-$0bca). Knockdown plays SOUN 57 ($0c00), scores Stbl index 1, unlinks his hazard, and runs 8 fall frames + 90 updates prone ($5a at $0928) + 20 stand-up frames = 118 updates (~9.81 s) before reviving ($0908-$0984).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0908-$0984",
+          "CODE 4:$0b4e-$0c04"
+        ]
+      },
+      "direction_choice": {
+        "value": "Stationary body; compares guard X against hero X ($14(a4) at $09a6) when hero is on the same 32-px Y band ($0986-$09a4): lashes left (state 1, PPCT 406, SOUN 65) if guard_X >= hero_X, else winds up and lashes right (state 2, PPCT 405, SOUN 47 + SOUN 65).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0986-$0ad0"
+        ]
+      },
+      "stbl_index": {
+        "value": 1,
+        "byte_offset_d0": "$02",
+        "points": 150,
+        "notes": "Awarded on each mace-chain or Fireball knockdown via move.w #$2, d0; jsr $5c14(pc) at CODE 4:$0bf2-$0bf6.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0bf2-$0bf6",
+          "Data A Stbl 0..3 offset $02"
+        ]
+      }
+    },
+    "$272": {
+      "segment": 4,
+      "offset": "$ec0",
+      "update_handler": "CODE 4:$0f04",
+      "spawns_json_label": "door that releases guards",
+      "verified_role": "Guard Door Spawner (opens wooden door and releases $c3c Guards)",
+      "category": "creature_spawner",
+      "rooms": [
+        "1000",
+        "1010",
+        "1020",
+        "2000",
+        "4000"
+      ],
+      "call_sites_in_spawns_json": 12,
+      "ppct": [
+        400,
+        401,
+        350,
+        351,
+        352,
+        353,
+        354,
+        355,
+        356,
+        357,
+        409
+      ],
+      "soun": [
+        58,
+        60,
+        66,
+        82
+      ],
+      "speed_px_per_update": {
+        "value": 0,
+        "spawned_creature_speed_px_per_update": {
+          "initial_patrol_vx": [
+            -2,
+            2
+          ],
+          "post_bound_turn_vx": [
+            -4,
+            4
+          ],
+          "thrown_projectile_vx": [
+            -16,
+            16
+          ],
+          "thrown_projectile_initial_vy": -2.5,
+          "thrown_projectile_gravity": 0.25
+        },
+        "details": "Door controller itself is stationary (0 px/update at d0, d1); when triggered it animates PPCT 400/401 (SOUN 60 at $0fd6) and spawns Guard objects running update handler CODE 4:$0c3c (same AI as $27a), which start at vx = d4 (±2 px/update) and accelerate permanently to ±4 px/update after reaching a patrol boundary ($0cfa, $0d1c).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0ec0-$1006",
+          "CODE 4:$0c3c-$0e72"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "spawned_creature_hit_points": 1,
+        "why_null": "Door spawner $272 itself has no hitbox and never checks -$194(a5); each Guard it spawns ($0c3c) takes 1 rock or fireball hit ($0e2c-$0e72).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0f04-$1006",
+          "CODE 4:$0e2c-$0e72"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "spawned_creature_direction_choice": "Spawned Guard starts with vx = constructor d4 (±2); every 10 updates tests PRNG <= 1000 ($03e8 at $0d26, ~1.5% chance) to reverse vx and play SOUN 66; reverses to +4 at xmin ($e(a6)) and -4 at xmax ($10(a6)) with SOUN 66 ($0ce6-$0d36).",
+        "why_null": "Door spawner $272 is fixed in place; direction logic belongs to its spawned $0c3c Guard children.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0ce6-$0d36",
+          "CODE 4:$0f04-$1006"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "spawned_creature_stbl_index": 2,
+        "spawned_creature_points": 50,
+        "why_null": "Door spawner $272 never calls $5c14; each spawned Guard ($0c3c) awards Stbl index 2 (50 pts) when hit at CODE 4:$0e6a.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0e6a-$0e6e",
+          "CODE 4:$0f04-$1006"
+        ]
+      }
+    },
+    "$27a": {
+      "segment": 4,
+      "offset": "$e74",
+      "update_handler": "CODE 4:$0c3c",
+      "spawns_json_label": null,
+      "verified_role": "Patrolling Spear / Torch Guard (direct spawn without door)",
+      "category": "creature",
+      "rooms": [
+        "2000"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        350,
+        351,
+        352,
+        353,
+        354,
+        355,
+        356,
+        357,
+        409
+      ],
+      "soun": [
+        58,
+        66,
+        82
+      ],
+      "speed_px_per_update": {
+        "value": [
+          2,
+          4
+        ],
+        "signed_components": {
+          "initial_vx_px_per_update": [
+            -2,
+            2
+          ],
+          "post_boundary_vx_px_per_update": [
+            -4,
+            4
+          ],
+          "vy_px_per_update": 0,
+          "thrown_projectile": "vx = ±16 ($00100000 / $fff00000), initial vy = -2.5 ($fffd8000), gravity = +0.25 ($00004000) px/update² (CODE 4:$0da2-$0df0)"
+        },
+        "details": "Constructor CODE 4:$0e74 sets initial vx $4(a6) = d4 (in Room 2000: -2 or +2). Guard walks horizontally by $4(a6) each update ($0ce4). The first time it reaches xmin ($6(a6)) or xmax ($8(a6)), $0cfa / $0d1c overwrites $4(a6) with +4 or -4 px/update.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0ce0-$0d3e",
+          "CODE 4:$0da2-$0df0",
+          "CODE 4:$0e74-$0ebe",
+          "CODE 5:$090e-$0978"
+        ]
+      },
+      "hit_points": {
+        "value": 1,
+        "fireball_and_special_interactions": "1 player rock or fireball ($0e2c-$0e72) plays SOUN 82 ($0e5e), unlinks hazard, and scores 50 pts. Without Fireball (!btst #0, -$276(a5)), $a(a6) becomes -($16(a6)+1) (knockdown/recover or despawn per guard mode d5); with Fireball owned, $a(a6) is forced to -21 ($ffeb at $0e4a-$0e54), running the 20-update PPCT 409 burn disintegration ($0c6c-$0c90).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0c6c-$0c90",
+          "CODE 4:$0e2c-$0e72"
+        ]
+      },
+      "direction_choice": {
+        "value": "Starts moving at d4 (-2 or +2); reverses to +4 at X <= xmin ($0ce6-$0cfa) and to -4 at X >= xmax ($0d08-$0d1c), playing SOUN 66; every 10 updates ($10(a6) timer) calls PRNG $5c68 and if unsigned d0 <= 1000 ($03e8) negates vx ($0d20-$0d36, SOUN 66). Throws projectile (SOUN 58) when hero is on the same 32-px Y band in the facing direction within 200 px ($0d40-$0dc4).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0ce6-$0dc4"
+        ]
+      },
+      "stbl_index": {
+        "value": 2,
+        "byte_offset_d0": "$04",
+        "points": 50,
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$0e6a-$0e6e",
+          "Data A Stbl 0..3 offset $04"
+        ]
+      }
+    },
+    "$282": {
+      "segment": 4,
+      "offset": "$1008",
+      "update_handler": "CODE 4:$105c",
+      "spawns_json_label": "bat",
+      "verified_role": "Plague Bat",
+      "category": "creature",
+      "rooms": [
+        "1000",
+        "1010",
+        "1020",
+        "2010",
+        "2020",
+        "3020",
+        "3030"
+      ],
+      "call_sites_in_spawns_json": 33,
+      "ppct": [
+        300
+      ],
+      "soun": [
+        69,
+        85
+      ],
+      "speed_px_per_update": {
+        "value": 3,
+        "signed_components": {
+          "flying_vx_px_per_update": [
+            -3,
+            0,
+            3
+          ],
+          "flying_vy_px_per_update": [
+            -3,
+            0,
+            3
+          ],
+          "roosting_or_latched_speed": 0,
+          "corpse_fall_vy_px_per_update": 15
+        },
+        "details": "Constructor CODE 4:$1008 stores initial roost delay d4 at $1e(a0), retarget base d2 at $16/$1a(a0), random mask d3 at $18(a0), and ceiling/floor Y bounds d5/d6 at $20/$22(a0). Upon waking ($1086-$108e) and on each retarget ($114c-$1198), vx ($8(a6)) and vy ($a(a6)) are each independently set to -3, 0, or +3 px/update. When killed, corpse falls at +15 px/update ($0f at $12dc).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1008-$119a",
+          "CODE 4:$12d8-$12e2"
+        ]
+      },
+      "hit_points": {
+        "value": 1,
+        "fireball_and_special_interactions": "1 rock or fireball hit via -$194(a5) (checked both while flying at $121e-$1232 and while latched on hero at $129c-$12b8, decrementing latched counter -$25e(a5) if latched) kills the bat, plays SOUN 85 ($132c), awards 30 pts ($1352), and drops the corpse at +15 px/update.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$121e-$1358"
+        ]
+      },
+      "direction_choice": {
+        "value": "Waits d4 updates on ceiling roost, then takes off at (+3, +3). Every d2 + (rand & d3) updates ($10f8-$1106), plays SOUN 69 ($110a) and runs a 6-iteration binary midpoint search ($111e-$1198) comparing bat (X, Y) to hero (X, Y) across [0..512]x[0..342] to set vx in {-3, 0, +3} and vy in {-3, 0, +3} toward Duncan. Bounces off X <= 5 / X >= 492 ($11ec-$1204) and Y <= d5 / Y >= d6 ($1206-$121c) by negating vx or vy. Latches onto hero on overlap (-$25e(a5) += 1 at $11d0).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$107a-$121c"
+        ]
+      },
+      "stbl_index": {
+        "value": 3,
+        "byte_offset_d0": "$06",
+        "points": 30,
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1352-$1356",
+          "Data A Stbl 0..3 offset $06"
+        ]
+      }
+    },
+    "$28a": {
+      "segment": 4,
+      "offset": "$135c",
+      "update_handler": "CODE 4:$13de",
+      "spawns_json_label": "rat",
+      "verified_role": "Single-Rat Constructor (patrolling Plague Rat)",
+      "category": "creature",
+      "rooms": [
+        "1000",
+        "1010",
+        "1020",
+        "4010",
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 10,
+      "ppct": [
+        310,
+        311
+      ],
+      "soun": [
+        70,
+        87
+      ],
+      "speed_px_per_update": {
+        "value": 2,
+        "signed_components": {
+          "patrol_vx_px_per_update": [
+            -2,
+            2
+          ],
+          "ledge_drop_vy_px_per_update": [
+            10,
+            15
+          ]
+        },
+        "details": "Constructor CODE 4:$135c sets $8(a6) = d4 (in all spawns.json calls, d4 = +2 or -2 px/update). Horizontal patrol adds $8(a6) each update ($14fc). Rats that walk off a ledge when drop-mode is enabled fall at +10 px/update on the transition step and +15 px/update thereafter ($140a, $1448, $1476).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$135c-$13ac",
+          "CODE 4:$13de-$155a"
+        ]
+      },
+      "hit_points": {
+        "value": 1,
+        "fireball_and_special_interactions": "1 player rock or fireball hit via -$194(a5) ($15a6-$1600) kills the rat, plays SOUN 87 ($15e0), unlinks its plague contact hazard (type 5), and awards 20 pts ($15fa).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$15a6-$1600"
+        ]
+      },
+      "direction_choice": {
+        "value": "Starts with vx = d4 (±2); reverses vx and plays SOUN 70 when X <= xmin ($6(a6)) or X >= xmax ($4(a6)) ($1526-$1556), or randomly every (rand & $3f) + 10 = 10..73 updates ($150a-$1524).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$150a-$1556"
+        ]
+      },
+      "stbl_index": {
+        "value": 0,
+        "byte_offset_d0": "$00",
+        "points": 20,
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$15fa-$15fe",
+          "Data A Stbl 0..3 offset $00"
+        ]
+      }
+    },
+    "$292": {
+      "segment": 4,
+      "offset": "$13ae",
+      "update_handler": "CODE 4:$1602",
+      "spawns_json_label": "rats",
+      "verified_role": "Rat Nest / Multi-Rat Spawner (spawns $13de Plague Rats from table)",
+      "category": "creature_spawner",
+      "rooms": [
+        "1000",
+        "3020",
+        "4000",
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 16,
+      "ppct": [
+        310,
+        311
+      ],
+      "soun": [
+        70,
+        87
+      ],
+      "speed_px_per_update": {
+        "value": 0,
+        "spawned_creature_speed_px_per_update": {
+          "patrol_vx_px_per_update": [
+            -2,
+            2
+          ],
+          "ledge_drop_vy_px_per_update": [
+            10,
+            15
+          ]
+        },
+        "details": "Spawner object ($13ae -> $1602) is invisible and stationary (0 px/update); whenever active rat count < max and spawn timer expires, it plays SOUN 70 ($16ca) and spawns a $13de Rat whose walk speed from all CODE 5 tables is ±2 px/update.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$13ae-$13dc",
+          "CODE 4:$1602-$16d0"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "spawned_creature_hit_points": 1,
+        "why_null": "Spawner $292 is an invisible controller with no hitbox; each Rat ($13de) it spawns has 1 HP.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1602-$16d0",
+          "CODE 4:$15a6-$1600"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "spawned_creature_direction_choice": "Identical to $28a ($13de): patrols at ±2 px/update between table xmin/xmax and reverses randomly every 10..73 updates (SOUN 70).",
+        "why_null": "Spawner $292 does not move; direction choice belongs to its spawned $13de Rats.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1602-$16d0",
+          "CODE 4:$150a-$1556"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "spawned_creature_stbl_index": 0,
+        "spawned_creature_points": 20,
+        "why_null": "Spawner $292 never calls $5c14; each spawned Rat ($13de) scores Stbl index 0 (20 pts) at CODE 4:$15fa.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$15fa-$15fe",
+          "CODE 4:$1602-$16d0"
+        ]
+      }
+    },
+    "$29a": {
+      "segment": 4,
+      "offset": "$16d2",
+      "update_handler": "CODE 4:$172a",
+      "spawns_json_label": "rock henchman with weight",
+      "verified_role": "Boulder Henchman with Suspended Ceiling Weight (Rooms 3000 Shield 1, 4010 Black Knight 2)",
+      "category": "creature",
+      "rooms": [
+        "3000",
+        "4010"
+      ],
+      "call_sites_in_spawns_json": 2,
+      "ppct": [
+        703,
+        704,
+        521,
+        428
+      ],
+      "soun": [
+        32,
+        35,
+        48
+      ],
+      "speed_px_per_update": {
+        "value": 0,
+        "Projectiles_and_weight_speeds": {
+          "henchman_body_px_per_update": 0,
+          "falling_ceiling_weight_vy_px_per_update": 14,
+          "rising_ceiling_weight_vy_px_per_update": -2,
+          "thrown_boulder": "16.16 fixed-point vx from room table (e.g. ±4 to ±8 px/update), gravity +$aaaa (+2/3 px/update²), bounces on floor spans with SOUN 35 ($1870-$1a36)"
+        },
+        "details": "Henchman stands stationary at (d0, d1) ($16d2-$1728) and hurls bouncing boulders (PPCT 428, SOUN 48 at $17c8). When hero pulls the room's wall lever (setting -$39a(a5)), the ceiling weight drops at +14 px/update ($0e at $1800) and retracts at -2 px/update ($185a).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$16d2-$1a36"
+        ]
+      },
+      "hit_points": {
+        "value": "Invulnerable to rocks and fireballs; killed in 1 crush by dropping the suspended ceiling weight (-$39a(a5))",
+        "fireball_and_special_interactions": "Henchman never checks player-projectile list -$194(a5). Pulling the room lever triggers the ceiling weight drop ($17fa-$1856), which crushes the Henchman on contact, plays SOUN 32 ($1840), and awards 100 pts ($1846).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$172a-$186e"
+        ]
+      },
+      "direction_choice": {
+        "value": "Stationary facing fixed by constructor d2 (0 = right PPCT 703, nonzero = left PPCT 704); boulder velocity entries are selected from the room table pointed to by constructor a0 using PRNG $5c68 ($17a0-$17d0).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$16d2-$17f8"
+        ]
+      },
+      "stbl_index": {
+        "value": 15,
+        "byte_offset_d0": "$1e",
+        "points": 100,
+        "notes": "Awarded when the ceiling weight crushes the Henchman via move.w #$1e, d0; jsr $5c14(pc) at CODE 4:$1846-$184a.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1846-$184a",
+          "Data A Stbl 0..3 offset $1e"
+        ]
+      }
+    },
+    "$2a2": {
+      "segment": 4,
+      "offset": "$1a38",
+      "update_handler": "CODE 4:$1a7c",
+      "spawns_json_label": "dragon",
+      "verified_role": "Fire-Breathing Dragon (Room 3010 Shield 2)",
+      "category": "creature",
+      "rooms": [
+        "3010"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        710,
+        711,
+        714
+      ],
+      "soun": [
+        30,
+        31
+      ],
+      "speed_px_per_update": {
+        "value": 6,
+        "signed_components": {
+          "emerge_left_vx_px_per_update": -6,
+          "breathe_fire_vx_px_per_update": 0,
+          "retreat_right_vx_px_per_update": 6,
+          "vy_px_per_update": 0
+        },
+        "details": "Waits in cave for timer $a(a6) (unless weight is dropping, -$31c(a5) == -2 at $1aa6). Snaps X to 448 ($1c0 at $1ab6), advances left by -6 px/update for 4 updates ($1ace-$1ad6, total -24 px to X=424), holds 4 updates, breathes fire (PPCT 711, SOUN 30 at $1afe, hazard type 4), then retreats right by +6 px/update for 5 updates ($1b96-$1b9e).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1a38-$1ca0"
+        ]
+      },
+      "hit_points": {
+        "value": "Invulnerable to rocks and fireballs; killed in 1 crush by $2aa ceiling weight while head is extended",
+        "fireball_and_special_interactions": "Dragon never checks -$194(a5). While extended/breathing, if $2aa's falling weight triggers crush state ($1c24-$1c6e), Dragon plays SOUN 31 ($1c66), switches to crushed sprite PPCT 714, and awards 150 pts ($1c54).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1c24-$1ca0"
+        ]
+      },
+      "direction_choice": {
+        "value": "Fixed horizontal cycle out of right-hand cave mouth: waits d2 + (rand & d3) updates between emergences ($1bb2-$1bc2), steps left (-6 px/update), breathes fire leftward, and retreats right (+6 px/update).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1a7c-$1bc8"
+        ]
+      },
+      "stbl_index": {
+        "value": 12,
+        "byte_offset_d0": "$18",
+        "points": 150,
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1c54-$1c58",
+          "Data A Stbl 0..3 offset $18"
+        ]
+      }
+    },
+    "$2aa": {
+      "segment": 4,
+      "offset": "$1ca2",
+      "update_handler": "CODE 4:$1cda",
+      "spawns_json_label": "shield chamber",
+      "verified_role": "Dragon-Chamber Ceiling Weight & Pulley Mechanism (Room 3010 Shield 2)",
+      "category": "interactive_mechanism",
+      "rooms": [
+        "3010"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        521,
+        712
+      ],
+      "soun": [
+        86
+      ],
+      "speed_px_per_update": {
+        "value": 14,
+        "signed_components": {
+          "idle": 0,
+          "drop_vy_px_per_update": 14,
+          "retract_vy_px_per_update": -2
+        },
+        "details": "Stationary at ceiling until hero pulls Room 3010 lever (-$39a(a5)), then drops at +14 px/update ($0e at $1d52, playing thud SOUN 86 at $1ddc/$1dfe) to crush Dragon $2a2 if extended, then winches back up at -2 px/update ($1e12).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1ca2-$1e78"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Indestructible room mechanism; never checks -$194(a5).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1ca2-$1e78"
+        ]
+      },
+      "direction_choice": {
+        "value": "Vertical 1D motion triggered by lever global -$39a(a5): +14 px/update down, then -2 px/update up to ceiling stop.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1cda-$1e40"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Weight itself scores no points; crushing Dragon $2a2 awards Stbl index 12 (150 pts) inside $2a2.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1ca2-$1e78",
+          "CODE 4:$1c54"
+        ]
+      }
+    },
+    "$2b2": {
+      "segment": 4,
+      "offset": "$1e7a",
+      "update_handler": "CODE 4:$2298 (spawner) -> spawns CODE 4:$1e9e (Mutant)",
+      "spawns_json_label": "mutant",
+      "verified_role": "Mutant Spawner & Jumping/Climbing Mutant",
+      "category": "creature_spawner",
+      "rooms": [
+        "2000",
+        "2020",
+        "2030",
+        "3000",
+        "3010"
+      ],
+      "call_sites_in_spawns_json": 8,
+      "ppct": [
+        434,
+        435,
+        436
+      ],
+      "soun": [
+        61,
+        67,
+        68
+      ],
+      "speed_px_per_update": {
+        "value": 0,
+        "spawned_creature_speed_px_per_update": {
+          "walk_vx_px_per_update": [
+            -3,
+            3
+          ],
+          "climb_ladder_vy_px_per_update": [
+            -10,
+            10
+          ],
+          "fall_vy_px_per_update": 15,
+          "corpse_fall_vy_px_per_update": 15,
+          "jump_arc": "Table-driven dx = ±$8(a6) (±3 px/update) + arc dy table at CODE 4:$1f46"
+        },
+        "details": "Spawner $2298 is stationary (0 px/update) and copies 19 words from its CODE 5 config table. Across all 10 Mutant config tables in CODE 5 (Rooms 2000 $8fc, 2020 $d92/$da6, 2030 $ea8/$ebc, 3000 $ff6/$100a/$101e, 3010 $1126/$113a), walk speed word $8(a6) is PROVEN to be +3 or -3 px/update.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1e7a-$2362",
+          "CODE 5:$08fc, $0d92, $0da6, $0ea8, $0ebc, $0ff6, $100a, $101e, $1126, $113a"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "spawned_creature_hit_points": 1,
+        "fireball_and_special_interactions": "Spawner $2298 has no hitbox; each spawned Mutant ($1e9e) dies in 1 rock or fireball hit via -$194(a5) ($220a-$2268), playing SOUN 67 ($222a), awarding 30 pts ($2230), falling at +15 px/update to ground impact SOUN 61 ($21ae), and incrementing spawner available-slot count $e(a0) ($227a) so a replacement can spawn later.",
+        "why_null": "Routine $2b2 allocates the invisible spawner; its spawned $1e9e Mutants have 1 HP.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2180-$2298"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "spawned_creature_direction_choice": "Walks at ±3 px/update between table x0 ($4(a6)) and x1 ($6(a6)), reversing at bounds ($1f02-$1f1c); on random checks ($20be-$20fc) pauses to growl (SOUN 68) or reverses when unsigned rand >= $f060 (~6% per check); in ladder/ledge modes ($a(a6) in {1,2}) chooses among 3 target Y/X waypoints randomly ($2310-$2334, thirds at $5555/$aaaa).",
+        "why_null": "Spawner $2298 is stationary; direction choice belongs to spawned $1e9e Mutants.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$1edc-$211a",
+          "CODE 4:$22e0-$2362"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "spawned_creature_stbl_index": 11,
+        "spawned_creature_points": 30,
+        "why_null": "Spawner $2298 never calls $5c14; each spawned Mutant ($1e9e) awards Stbl index 11 (30 pts) at CODE 4:$2230.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2230-$2234",
+          "Data A Stbl 0..3 offset $16"
+        ]
+      }
+    },
+    "$2ba": {
+      "segment": 4,
+      "offset": "$2364",
+      "update_handler": "CODE 4:$2380",
+      "spawns_json_label": null,
+      "verified_role": "Timed Floor Pit-Gate Cover (Room 4000)",
+      "category": "interactive_mechanism",
+      "rooms": [
+        "4000"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        900
+      ],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Draws static grate sprite PPCT 900 (-$316(a5)): 1 gate cover at (1, 303) lasting 25 ($19) updates before calling $452(a5) (CODE 5:$59be), then unlinks itself.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2364"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Timed floor-grate hazard cover, not a targetable entity.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2364"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary (0 px/update).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2364"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Never calls $5c14; simply opens pit spans via $452(a5) when countdown reaches 0.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2364"
+        ]
+      }
+    },
+    "$2c2": {
+      "segment": 4,
+      "offset": "$23aa",
+      "update_handler": "CODE 4:$23cc",
+      "spawns_json_label": null,
+      "verified_role": "Timed Floor Pit-Gate Cover (Room 4010)",
+      "category": "interactive_mechanism",
+      "rooms": [
+        "4010"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        900
+      ],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Draws static grate sprite PPCT 900 (-$316(a5)): 2 gate covers at (2, 304) and (231, 304) lasting 25 ($19) and 40 ($28) updates before calling $45a(a5) (CODE 5:$5f42), then unlinks itself.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$23aa"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Timed floor-grate hazard cover, not a targetable entity.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$23aa"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary (0 px/update).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$23aa"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Never calls $5c14; simply opens pit spans via $45a(a5) when countdown reaches 0.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$23aa"
+        ]
+      }
+    },
+    "$2ca": {
+      "segment": 4,
+      "offset": "$2428",
+      "update_handler": "CODE 4:$2450",
+      "spawns_json_label": null,
+      "verified_role": "Timed Floor Pit-Gate Cover (Room 4020)",
+      "category": "interactive_mechanism",
+      "rooms": [
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        900
+      ],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Draws static grate sprite PPCT 900 (-$316(a5)): 3 gate covers at (72, 303), (228, 303), (387, 303) lasting 40 ($28), 25 ($19), and 60 ($3c) updates before calling $46a(a5) (CODE 5:$67de), then unlinks itself.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2428"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Timed floor-grate hazard cover, not a targetable entity.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2428"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary (0 px/update).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2428"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Never calls $5c14; simply opens pit spans via $46a(a5) when countdown reaches 0.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2428"
+        ]
+      }
+    },
+    "$2d2": {
+      "segment": 4,
+      "offset": "$24d4",
+      "update_handler": "CODE 4:$250c",
+      "spawns_json_label": "levers",
+      "verified_role": "Drawbridge / Ledge Toggle Lever (Room 4020 Black Knight 3, span kind 36)",
+      "category": "interactive_mechanism",
+      "rooms": [
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 2,
+      "ppct": [
+        901
+      ],
+      "soun": [
+        29
+      ],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Stationary wall lever at (167, 232) or (311, 232); shifts paired floor span X-coordinates instantaneously by ±68 ($44) px when toggled ($2550-$257e).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$24d4-$25bc",
+          "CODE 5:$1dfa-$1e26"
+        ]
+      },
+      "hit_points": {
+        "value": "Toggleable indefinitely: 1 rock/fireball hit via -$194(a5) OR hero pulling kind-36 lever",
+        "fireball_and_special_interactions": "Each rock/fireball hit ($251e-$258c) or hero pull flips lever state, plays SOUN 29 ($2542), shifts its paired walkway span by ±68 px, and calls $5c14 with d0 = $22 (Stbl index 17 = 0 pts). Does NOT affect Black Knight pillar switches (see kinds.json).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$250c-$25bc"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary wall lever; toggles binary state (left/right ±68 px span shift).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$24d4-$25bc"
+        ]
+      },
+      "stbl_index": {
+        "value": 17,
+        "byte_offset_d0": "$22",
+        "points": 0,
+        "notes": "Calls move.w #$22, d0; jsr $5c14(pc) at CODE 4:$2584-$2588; Stbl 0..3 word at offset $22 is $0000 (0 points, preventing infinite point farming).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2584-$2588",
+          "Data A Stbl 0..3 offset $22"
+        ]
+      }
+    },
+    "$2da": {
+      "segment": 4,
+      "offset": "$25be",
+      "update_handler": "CODE 4:$260e",
+      "spawns_json_label": "Black Knight",
+      "verified_role": "The Black Knight & 5 Throne-Pillar Levers (Room 4020 Black Knight 3)",
+      "category": "boss",
+      "rooms": [
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        902,
+        903,
+        904,
+        905,
+        908,
+        909,
+        910,
+        911,
+        912,
+        913,
+        914,
+        915,
+        916,
+        917,
+        918,
+        919,
+        920,
+        921,
+        922
+      ],
+      "soun": [
+        36,
+        37,
+        39,
+        53,
+        54,
+        55
+      ],
+      "speed_px_per_update": {
+        "value": 0,
+        "thrown_projectiles_and_pillars": {
+          "knight_throne_body_px_per_update": 0,
+          "thrown_boulder_or_mug": "16.16 fixed-point velocity aimed by hero zone table CODE 4:$29d0-$2a60, gravity +$aaaa (+2/3 px/update²), bounces with SOUN 37 ($3296-$33c2)"
+        },
+        "details": "Black Knight stands/drinks/throws on his elevated throne platform without horizontal locomotion (0 px/update) until toppled.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$25be-$2c90",
+          "CODE 4:$3296-$33c2"
+        ]
+      },
+      "hit_points": {
+        "value": "Invulnerable to direct hits; defeated by hitting all 5 pillar levers with rocks/fireballs and running across span kind 21 before he resets a pillar",
+        "fireball_and_special_interactions": "Projectiles in -$194(a5) are tested against the 5 throne-pillar switches ($2bc0-$2c38), NOT the Knight's body. Each switch hit lowers its pillar segment and awards 100 pts ($2c16). Periodically the Knight drinks from his mug (SOUN 55 / SOUN 36) or steps over to raise a lowered pillar back up (SOUN 39 at $268e). When all 5 pillars are simultaneously down, he summons a Gargoyle ($2ea) and becomes vulnerable to Duncan triggering span kind 21 (hero state 32 -> -$274(a5)), which topples his throne (SOUN 54 at $2b44, 5,000 pts at $2b54, victory exit -$18a(a5) = -1 at $275c).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$260e-$2c90",
+          "CODE 2:$2140-$217a"
+        ]
+      },
+      "direction_choice": {
+        "value": "Stationary on throne; selects projectile aim vector from hero's current (X, Y) region ($2950-$29ce, SOUN 53) and cycles between throwing, drinking beer (SOUN 55, 36), and resetting lowered pillars (SOUN 39).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$260e-$2a60"
+        ]
+      },
+      "stbl_index": {
+        "value": [
+          16,
+          19
+        ],
+        "byte_offset_d0": [
+          "$20",
+          "$26"
+        ],
+        "points": [
+          100,
+          5000
+        ],
+        "notes": "Awards Stbl index 16 ($20 = 100 pts at CODE 4:$2c16) each time a rock/fireball lowers one of the 5 pillar levers, and Stbl index 19 ($26 = 5,000 pts at CODE 4:$2b54) upon toppling the Black Knight.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2b54-$2b58",
+          "CODE 4:$2c16-$2c1a",
+          "Data A Stbl 0..3 offsets $20, $26"
+        ]
+      }
+    },
+    "$2ea": {
+      "segment": 4,
+      "offset": "$2e3a",
+      "update_handler": "CODE 4:$2e7c",
+      "spawns_json_label": "gargoyle",
+      "verified_role": "Swooping Gargoyle (Rooms 4000, 4010, 4020)",
+      "category": "creature",
+      "rooms": [
+        "4000",
+        "4010",
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 3,
+      "ppct": [
+        906,
+        907,
+        922
+      ],
+      "soun": [
+        30,
+        51
+      ],
+      "speed_px_per_update": {
+        "value": 16,
+        "signed_components": {
+          "swoop_vx_px_per_update": [
+            -16,
+            16
+          ],
+          "dive_vy_tracking": "Tracks hero_Y - 36 ($24) vertically while swooping across screen ($2f1a-$2f60)",
+          "carry_off_hero_vy_px_per_update": -6,
+          "fireball_killed_fall_vy_px_per_update": 12
+        },
+        "details": "Perched Gargoyle waits on countdown timer, plays wing-flap SOUN 51, and launches from screen edge at vx = +16 ($10) from X = 0 or vx = -16 ($fff0) from X = 478 ($1de) ($2ee0-$2f0c). If hit by a Fireball, falls at +12 px/update ($0c at $3070).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2e3a-$3294"
+        ]
+      },
+      "hit_points": {
+        "value": "Immune to ordinary rocks; 1 Fireball hit downs it (respawns on timer)",
+        "fireball_and_special_interactions": "CODE 4:$3028 tests btst #0, -$276(a5); when Fireball is not owned, it branches past -$194(a5) collision completely ($302e). With Fireball active, 1 hit ($3030-$305a) awards 100 pts ($3048), plays SOUN 30 ($3056), and drops the burning Gargoyle at +12 px/update before resetting its respawn timer. Note: Gargoyle grab ($2f88-$2fa8) bypasses Duncan's Shield (state 37), stopping SOUN 99 via $5a(a5) and carrying Duncan off!",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2f88-$3090"
+        ]
+      },
+      "direction_choice": {
+        "value": "At launch ($2ed6-$2f0c), reads hero X ($14(a3)): if hero_X >= 246 ($f6), enters from left edge (X = 0) flying right at +16 px/update; if hero_X < 246, enters from right edge (X = 478) flying left at -16 px/update, steering Y toward hero_Y - 36.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$2ed6-$2f60"
+        ]
+      },
+      "stbl_index": {
+        "value": 18,
+        "byte_offset_d0": "$24",
+        "points": 100,
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3048-$304c",
+          "Data A Stbl 0..3 offset $24"
+        ]
+      }
+    },
+    "$2f2": {
+      "segment": 4,
+      "offset": "$33c4",
+      "update_handler": "CODE 4:$33fe",
+      "spawns_json_label": "moving platforms",
+      "verified_role": "Horizontal Moving Platforms (Rooms 2010 Fireball 2, 4010 Black Knight 2)",
+      "category": "moving_hazard_or_platform",
+      "rooms": [
+        "2010",
+        "4010"
+      ],
+      "call_sites_in_spawns_json": 2,
+      "ppct": [
+        410,
+        901
+      ],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": [
+          2,
+          3,
+          4
+        ],
+        "per_room_speeds_px_per_update": {
+          "room_2010_novice": [
+            3,
+            -3,
+            4,
+            -2,
+            -2,
+            -3,
+            4
+          ],
+          "room_2010_intermediate": [
+            4,
+            -3,
+            3,
+            -4,
+            3,
+            -3,
+            2
+          ],
+          "room_2010_advanced_and_black_knight": [
+            4,
+            -3,
+            3,
+            4,
+            -4,
+            -3,
+            4
+          ],
+          "room_4010_all_difficulties": [
+            3,
+            -3,
+            -3,
+            3
+          ]
+        },
+        "details": "Updates linked list of platform span records in-place: each update adds record+$c (vx) to span x0 ((a4)) and x1 ($2(a4)) at CODE 4:$3432-$343c. In Room 2010, acid drips ($2fa) can dissolve platforms (setting x0 negative, skipped at $340a).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$33c4-$3456",
+          "CODE 5:$34f4-$366f",
+          "CODE 5:$5ee8-$5f2f"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Walkway platform controller; never checks player projectiles -$194(a5) (dissolved only by $2fa acid drips in Room 2010).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$33c4-$3456"
+        ]
+      },
+      "direction_choice": {
+        "value": "Oscillates horizontally between per-platform xmin ($6(a4)) and xmax ($8(a4)), negating vx ($c(a4)) at CODE 4:$341a-$3430 upon reaching either bound.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$341a-$3430"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Platform controller never calls $5c14.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$33c4-$3456"
+        ]
+      }
+    },
+    "$2fa": {
+      "segment": 4,
+      "offset": "$3458",
+      "update_handler": "CODE 4:$3498",
+      "spawns_json_label": "drips",
+      "verified_role": "Corrosive Ceiling Acid / Water Drips (Room 2010 Fireball 2)",
+      "category": "moving_hazard_or_platform",
+      "rooms": [
+        "2010"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        414
+      ],
+      "soun": [
+        33,
+        86
+      ],
+      "speed_px_per_update": {
+        "value": "vy starts at +3 px/update and accelerates by +3 px/update² (3, 6, 9, 12, ... px/update)",
+        "details": "Forms on ceiling (state 0, 20 updates trembling in state 1 with 1-px X jitter), detaches into state 2 ($3528: initial $6(a3) = 3), and each falling update adds $6(a3) to Y and adds +3 to $6(a3) (`add.w $6(a3), d1; addq.w #$3, $6(a3)` at CODE 4:$3548-$354e). Splashes on floor/platform (SOUN 33 at $3600/$361c, corroding moving platforms) or water (SOUN 86 at $3658).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3458-$36f0"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Environmental hazard (type 6 on -$20c(a5)); cannot be hit by projectiles.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3458-$36f0"
+        ]
+      },
+      "direction_choice": {
+        "value": "Strictly vertical fall (dx = 0) from fixed ceiling drip coordinates in CODE 5 tables $343c (Novice: 5 drips), $3464 (Intermediate: 6 drips), or $3496 (Advanced+: 7 drips).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3458-$359c",
+          "CODE 5:$0b66-$0b8e"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Environmental hazard; never calls $5c14.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3458-$36f0"
+        ]
+      }
+    },
+    "$302": {
+      "segment": 4,
+      "offset": "$36f2",
+      "update_handler": "CODE 4:$374a (spawner) -> CODE 4:$3818 (log)",
+      "spawns_json_label": "bridge",
+      "verified_role": "Underground River Floating Logs Spawner & Logs (Room 2020 Fireball 3)",
+      "category": "moving_hazard_or_platform",
+      "rooms": [
+        "2020"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        412
+      ],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": 2,
+        "details": "Spawner $374a initializes each spawned log span at x0 = -5 ($fffb), x1 = 34 ($22), width 39 px, and vx = +2 px/update ($6(a2) = 2 at $37b8). Log update $3818 -> $386c adds +2 px/update to both x0 and x1 until x0 > 490 ($1ea at $387c), where it sinks/despawns.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$36f2-$39e2"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Rideable floating log platforms; not targetable.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$36f2-$39e2"
+        ]
+      },
+      "direction_choice": {
+        "value": "Unidirectional rightward river drift (+2 px/update) from X = -5 to X = 490, spawned every d0 + (rand & d1) updates.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$374a-$3884",
+          "CODE 5:$0cd2-$0cf4"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Platform spawner; never calls $5c14.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$36f2-$39e2"
+        ]
+      }
+    },
+    "$30a": {
+      "segment": 4,
+      "offset": "$39e4",
+      "update_handler": "CODE 4:$3a0c",
+      "spawns_json_label": "gate",
+      "verified_role": "Wizard's 3-Switch Forcefield Gate Controller (Room 2030 Fireball 4)",
+      "category": "interactive_mechanism",
+      "rooms": [
+        "2030"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        424,
+        425
+      ],
+      "soun": [
+        40,
+        41
+      ],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Stationary forcefield barrier and 3 wall switches guarding the Fireball pedestal.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$39e4-$3b28"
+        ]
+      },
+      "hit_points": {
+        "value": "3 ordered projectile hits on the 3 switches (wrong switch resets progress)",
+        "fireball_and_special_interactions": "Player rocks (or fireballs) hitting switches in the required sequence advance lock state; hitting an out-of-order switch resets the switches and plays SOUN 40 ($3a7e). Completing all 3 plays SOUN 41 ($3a6a), drops the forcefield (-$31c(a5) set), and awards 100 pts ($3ac2).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3a0c-$3ad0"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary puzzle lock.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$39e4-$3b28"
+        ]
+      },
+      "stbl_index": {
+        "value": 7,
+        "byte_offset_d0": "$0e",
+        "points": 100,
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3ac2-$3ac6",
+          "Data A Stbl 0..3 offset $0e"
+        ]
+      }
+    },
+    "$312": {
+      "segment": 4,
+      "offset": "$3b2a",
+      "update_handler": "CODE 4:$3b64 (spawner) -> CODE 4:$3bec (boulder)",
+      "spawns_json_label": "boulder",
+      "verified_role": "Rolling / Bouncing Cliff Boulders Spawner & Boulders (Room 2020 Fireball 3)",
+      "category": "moving_hazard_or_platform",
+      "rooms": [
+        "2020"
+      ],
+      "call_sites_in_spawns_json": 2,
+      "ppct": [
+        428
+      ],
+      "soun": [
+        35,
+        86
+      ],
+      "speed_px_per_update": {
+        "value": 5.999985,
+        "signed_components": {
+          "vx_16_16_fixed": "$0005ffff (+5.999985 px/update) or $fffa0001 (-5.999985 px/update) per spawner d3",
+          "gravity_16_16_fixed": "+$0000aaaa (+0.66667 px/update²) added to vy each update at CODE 4:$3c4a"
+        },
+        "details": "Room 2020 registers two $312 spawners (CODE 5:$0d0a right-rolling d3=$0005ffff from X=2, and $0d2c left-rolling d3=$fffa0001 from X=492). Boulders bounce along floor spans (SOUN 35 at $3d14) and splash into river spans (SOUN 86 at $3d54).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3b2a-$3d7a",
+          "CODE 5:$0cfa-$0d30"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Indestructible hazard (type 7 on -$20c(a5)); ignores -$194(a5).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3b90-$3d7a"
+        ]
+      },
+      "direction_choice": {
+        "value": "Constant horizontal vx from constructor d3 (+5.999985 from left cliff or -5.999985 from right cliff) until exiting [0, 510] or splashing in water.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3c0e-$3d7a",
+          "CODE 5:$0cfa-$0d30"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Environmental hazard; never calls $5c14.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3b2a-$3d7a"
+        ]
+      }
+    },
+    "$31a": {
+      "segment": 4,
+      "offset": "$3d7c",
+      "update_handler": "CODE 4:$3db0",
+      "spawns_json_label": "wizard",
+      "verified_role": "Wizard (Room 2030 Fireball 4)",
+      "category": "creature",
+      "rooms": [
+        "2030"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        430,
+        431,
+        432,
+        433,
+        437
+      ],
+      "soun": [
+        34,
+        49,
+        52
+      ],
+      "speed_px_per_update": {
+        "value": 0,
+        "cast_projectile_speeds": {
+          "wizard_body_px_per_update": 0,
+          "arcing_fireball_dx_px_per_update": -4,
+          "lightning_bolt": "Instantaneous vertical/angled column strike on hero zone"
+        },
+        "details": "Wizard stands / teleports between fixed pedestals in Room 2030 with 0 px/update continuous walking speed; his cast fireballs travel left at -4 px/update along trajectory tables ($3f00-$4198).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3d7c-$4198"
+        ]
+      },
+      "hit_points": {
+        "value": "Invulnerable (cannot be damaged by rocks or fireballs; neutralized by solving the $30a 3-switch forcefield puzzle)",
+        "fireball_and_special_interactions": "Wizard never checks player projectiles -$194(a5); solving $30a sets -$31c(a5) and disables his attacks so Duncan can claim the Fireball.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3d7c-$3f60",
+          "CODE 4:$3a60-$3ad0"
+        ]
+      },
+      "direction_choice": {
+        "value": "Faces leftward from right-side sanctum and alternates timed spell cycles (staff lightning SOUN 52 + SOUN 34 vs fireball SOUN 49) based on hero position and PRNG.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3db0-$3f30"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Wizard cannot be hit or killed and never calls $5c14 (solving his $30a forcefield switches awards Stbl index 7 = 100 pts).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$3d7c-$4198"
+        ]
+      }
+    },
+    "$322": {
+      "segment": 4,
+      "offset": "$4e3a",
+      "update_handler": "CODE 4:$4e3a (spawns 8 Vultures running CODE 4:$4978)",
+      "spawns_json_label": null,
+      "verified_role": "Vulture Flock Spawner & Swooping Vultures (Rooms 2000 Fireball 1, 3010 Shield 2)",
+      "category": "creature_spawner",
+      "rooms": [
+        "2000",
+        "3010"
+      ],
+      "call_sites_in_spawns_json": 2,
+      "ppct": [
+        700,
+        701
+      ],
+      "soun": [
+        61,
+        62,
+        63,
+        64
+      ],
+      "speed_px_per_update": {
+        "value": 12,
+        "signed_components": {
+          "swoop_vx_px_per_update": [
+            -12,
+            12
+          ],
+          "dive_climb_vy_px_per_update": [
+            -12,
+            0,
+            12
+          ],
+          "turnaround_arc_dx": [
+            -10,
+            -8,
+            -6,
+            6,
+            8,
+            10
+          ],
+          "killed_fall_vy_px_per_update": 30
+        },
+        "details": "Constructor CODE 4:$4e3a is a one-shot loop (`moveq #7, d6` at $4e40) that immediately allocates 8 Vulture objects running update handler CODE 4:$4978 (no persistent spawner object remains). Active vultures fly horizontally at ±12 px/update ($0c / $fff4 at $4a80-$4ce0), dive/climb up to ±12 px/update, and fall straight down at +30 px/update ($1e at $4bfe) when shot.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4978-$4e90"
+        ]
+      },
+      "hit_points": {
+        "value": 1,
+        "fireball_and_special_interactions": "1 rock or fireball hit via -$194(a5) ($4dce-$4e38) plays SOUN 62 ($4e02), awards 30 pts ($4dee), drops the vulture at +30 px/update to ground impact SOUN 61 ($4c1c), and recycles the vulture into a timed offscreen respawn.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4bf0-$4c40",
+          "CODE 4:$4dce-$4e38"
+        ]
+      },
+      "direction_choice": {
+        "value": "Perches on ledge/branch (SOUN 64 at $49fc) until countdown expires, takes off (SOUN 63 at $4a64), and at $4a96-$4ac0 chooses flight direction: flies left (-12 px/update) if vulture_X >= 110 ($6e) AND hero_X <= vulture_X, otherwise flies right (+12 px/update), banking and swooping through hero's altitude.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$49fc-$4b60"
+        ]
+      },
+      "stbl_index": {
+        "value": 10,
+        "byte_offset_d0": "$14",
+        "points": 30,
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4dee-$4df2",
+          "Data A Stbl 0..3 offset $14"
+        ]
+      }
+    },
+    "$32a": {
+      "segment": 4,
+      "offset": "$4958",
+      "update_handler": "CODE 4:$467a",
+      "spawns_json_label": "fountain and vulture",
+      "verified_role": "Splitting Magic Broom (Room 2030 Fireball 4)",
+      "category": "creature",
+      "rooms": [
+        "2030"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        420,
+        421,
+        422,
+        423
+      ],
+      "soun": [
+        45,
+        46
+      ],
+      "speed_px_per_update": {
+        "value": 2,
+        "signed_components": {
+          "patrol_vx_px_per_update": [
+            -2,
+            2
+          ],
+          "patrol_vy_px_per_update": 0,
+          "superimposed_rocking_dx_per_6_updates": "Zero net displacement per 6 updates (6-step table offsets at CODE 4:$47de-$4898 added to X alongside patrol_vx $24(a6) at $48ca)",
+          "pit_hop_off_arc_smallest_tier": [
+            {
+              "update": 1,
+              "dx": 6,
+              "dy": 8
+            },
+            {
+              "update": 2,
+              "dx": 0,
+              "dy": 8
+            },
+            {
+              "update": 3,
+              "dx": 0,
+              "dy": 8
+            }
+          ]
+        },
+        "details": "Constructor CODE 4:$4958 reads initial table CODE 5:$0ed0 (X=300, Y=268, tier=0, patrol_vx=-2, xmin=120, xmax=442). Every active update adds patrol_vx ($24(a6) = -2 or +2) plus a 6-step bristle-rocking dx byte (zero net sum) at CODE 4:$48c6-$48d2, with dy = 0 except when a smallest-tier broom hops off the right ledge at X >= 442 using table $489a ((+6,+8), (0,+8), (0,+8)) before despawning ($47c8).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$467a-$48d2",
+          "CODE 4:$4958-$4976",
+          "CODE 5:$0ed0-$0edd"
+        ]
+      },
+      "hit_points": {
+        "value": "1 hit per split tier (tier 0 -> 3 tier-1 brooms; tier 1 -> 3 tier-2 brooms each, up to 9); tier 2+ cannot be killed by projectiles (stunned 24 updates, self-retires via pit quota -$27e(a5))",
+        "fireball_and_special_interactions": "Both ordinary rocks and fireballs hit via -$194(a5) at CODE 4:$48d4-$4956 (no Fireball bit check). Tier 0 ($22(a6)==0, PPCT 420) splits into 3 tier-1 medium brooms (PPCT 421: parent at X plus 2 children spawned at X-23 and X+23, playing SOUN 46 at $4926). Each tier-1 broom hit splits into 3 tier-2 smallest brooms (PPCT 422, SOUN 46). Hitting a tier-2+ broom plays SOUN 45 ($4934), unlinks its hazard box for 4 + 20 = 24 updates ($4766-$47ba, PPCT 423), and revives it as patrolling tier 4 ($47b4). Smallest brooms permanently despawn only by hopping into the right pit at X >= 442 while quota counter -$27e(a5) >= 0 (initialized at CODE 5:$0e56-$0e78 to 6 on Novice, 4 on Intermediate, 2 on Advanced/Black Knight).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$474a-$47dc",
+          "CODE 4:$48d4-$4956",
+          "CODE 5:$0e56-$0e78"
+        ]
+      },
+      "direction_choice": {
+        "value": "Starts left (-2 px/update) from X=300; reverses to +2 at X <= 120 ($46f0) and to -2 at X >= 442 ($46ea), except tier >= 2 at X >= 442 when (--(-$27e(a5))) >= 0 hops right into the pit ($4712-$4728). On any projectile hit ($48e8-$4920), child/stunned vx is set to +2 if projectile vx ($c(a0)) >= 0 else -2, while a splitting parent's own vx is set to +2 ($4946).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$46e0-$4730",
+          "CODE 4:$48e8-$494a",
+          "CODE 5:$0ed0-$0edd"
+        ]
+      },
+      "stbl_index": {
+        "value": 8,
+        "byte_offset_d0": "$10",
+        "points": 25,
+        "notes": "Scored on every rock/fireball hit against any broom tier (including non-lethal stun hits on smallest tier 2+ brooms) via move.w #$10, d0; jsr $5c14(pc) at CODE 4:$493a-$493e.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$493a-$493e",
+          "Data A Stbl 0..3 offset $10"
+        ]
+      },
+      "spawns_json_correction": "spawns.json listed meaning 'fountain and vulture' (marked INFERRED from an earlier brief); CODE 4:$467a-$4976 and CODE 6:$0bfa-$0c1a (-$320..-$32c(a5) = PPCT 420..423) prove $32a is the Splitting Magic Broom."
+    },
+    "$332": {
+      "segment": 4,
+      "offset": "$464c",
+      "update_handler": "CODE 4:$419a",
+      "spawns_json_label": "burning eye",
+      "verified_role": "Floating Burning Eye (Room 2030 Fireball 4)",
+      "category": "creature",
+      "rooms": [
+        "2030"
+      ],
+      "call_sites_in_spawns_json": 2,
+      "ppct": [
+        426,
+        138
+      ],
+      "soun": [
+        9,
+        43
+      ],
+      "speed_px_per_update": {
+        "value": 1,
+        "signed_components": {
+          "homing_vx_px_per_update": [
+            -1,
+            0,
+            1
+          ],
+          "homing_vy_px_per_update": [
+            -1,
+            0,
+            1
+          ],
+          "hover_bob_dx_px_per_update": 0,
+          "hover_bob_dy_px_per_update": [
+            -1,
+            0,
+            1
+          ],
+          "stunned_or_forcefield_solved_px_per_update": 0,
+          "spawned_fireball_speed_16_16_fixed": {
+            "positive_component_hex": "$0004fffb (+4.99992 px/update)",
+            "negative_component_hex": "$fffb0005 (-4.99992 px/update)",
+            "zero_component_hex": "$00000000 (0 px/update)",
+            "gravity": 0
+          }
+        },
+        "details": "Spawned in Room 2030 only on Advanced and Black Knight difficulties (-$18e(a5) >= 2, CODE 5:$0e3c-$0e4e) at (X=164, Y=110). Freezes at 0 px/update whenever -$31c(a5) != 0 ($41d4). Otherwise 50% of AI cycles bob in place (net 0 displacement over 12 updates via table $45ca) and 50% home at vx in {-1,0,+1}, vy in {-1,0,+1} px/update for 18 updates (with 8-way fireball shot) or 27 updates (without shot), clamped to X in [20, 492], Y in [20, 278] ($4598-$45c8).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$419a-$4396",
+          "CODE 4:$4598-$45ee",
+          "CODE 4:$464c-$4678",
+          "CODE 5:$0e3c-$0e54"
+        ]
+      },
+      "hit_points": {
+        "value": "infinite (stun-only: 1 rock or fireball stuns stationary for 70 updates)",
+        "fireball_and_special_interactions": "Checked against player projectiles -$194(a5) at CODE 4:$45f0-$464a (only while unstunned, $24(a6)==0 at $41be-$41c2). Any 1 rock or fireball hit clears the projectile, sets stun state $24(a6) = 1 and stun countdown $20(a6) = 70 ($46 at $41b2: 70 updates = ~5.82 s), unlinks its contact hazard from -$20c(a5) while stunned ($4626, re-linked on wake at $41ca), plays SOUN 43 ($462c), and awards 25 points ($4632). Cannot be permanently destroyed.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$41ac-$41d2",
+          "CODE 4:$45f0-$464a"
+        ]
+      },
+      "direction_choice": {
+        "value": "When action countdown $20(a6) expires ($41e8), calls PRNG $5c68(pc) and masks d0 & $1c for an 8-way jump table ($41f6): slots 0..3 (50%) hover in place for 12 updates; slots 4..5 (25%) compute target = ((hero_X + 16) & $ffe0, (hero_Y + 20) & $ffe0), set vx = sgn(target_X - X) in {-1,0,+1} and vy = sgn(target_Y - Y) in {-1,0,+1} for 18 updates ($424a-$42a8), AND fire a straight-line PPCT 138 fireball along the 8-way sign vector toward hero (SOUN 9 at $4386); slots 6..7 (25%) compute the same ±1 px/update homing vector toward hero's 32-px cell for 27 updates ($1b at $4398-$43ec) without firing.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$41e8-$43ec"
+        ]
+      },
+      "stbl_index": {
+        "value": 9,
+        "byte_offset_d0": "$12",
+        "points": 25,
+        "notes": "Awarded on every stun hit via move.w #$12, d0; jsr $5c14(pc) at CODE 4:$4632-$4636.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4632-$4636",
+          "Data A Stbl 0..3 offset $12"
+        ]
+      }
+    },
+    "$33a": {
+      "segment": 4,
+      "offset": "$4e92",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Room Gameplay Main Object-Update & Teardown Loop",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "1000",
+        "1010",
+        "1020",
+        "2000",
+        "2010",
+        "2020",
+        "2030",
+        "3000",
+        "3010",
+        "3020",
+        "3030",
+        "4000",
+        "4010",
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 14,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "Runs the per-frame linked-list object loop (`-$182(a5)`) for the room until room-exit flag `-$183(a5)` becomes nonzero (calling frame barrier `$24a(a5)` inside the enclosing loop / per tick), then stops all sounds via `$6a(a5)` (`$4f02`) and frees all room objects (`_DisposPtr` `$a01f` at `$4efc`).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4e92-$4f12"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Runs the per-frame linked-list object loop (`-$182(a5)`) for the room until room-exit flag `-$183(a5)` becomes nonzero (calling frame barrier `$24a(a5)` inside the enclosing loop / per tick), then stops all sounds via `$6a(a5)` (`$4f02`) and frees all room objects (`_DisposPtr` `$a01f` at `$4efc`).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4e92-$4f12"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Runs the per-frame linked-list object loop (`-$182(a5)`) for the room until room-exit flag `-$183(a5)` becomes nonzero (calling frame barrier `$24a(a5)` inside the enclosing loop / per tick), then stops all sounds via `$6a(a5)` (`$4f02`) and frees all room objects (`_DisposPtr` `$a01f` at `$4efc`).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4e92-$4f12"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4e92-$4f12"
+        ]
+      }
+    },
+    "$342": {
+      "segment": 4,
+      "offset": "$4f14",
+      "update_handler": "CODE 4:$4f3e",
+      "spawns_json_label": "swinging ropes",
+      "verified_role": "Swinging Pendulum / Trap-Bridge Controller (Room 1010 Trouble 2, span kind 525)",
+      "category": "interactive_mechanism",
+      "rooms": [
+        "1010"
+      ],
+      "call_sites_in_spawns_json": 2,
+      "ppct": [
+        510,
+        511
+      ],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": "Table-driven angular swing frames (zero-net-translation pivot anchor; dynamically opens/closes floor span x1 by +95 ($5f) or -1 px at specific frame durations)",
+        "details": "Steps through 6-byte swing-frame tuples `(frame, side, duration)` at `(a4, d3.w)` ($4f3e-$4ffa) and syncs hero X/Y when Duncan clings to kind 525 (see ropes.json).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4f14-$5046"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Indestructible room mechanism.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4f14-$5046"
+        ]
+      },
+      "direction_choice": {
+        "value": "Periodic pendulum cycle driven by circular frame table `(a4, d3.w)` (resets `d3 = 0` on negative sentinel at $4f80-$4f86).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4f7e-$4f8e"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Never calls $5c14.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$4f14-$5046"
+        ]
+      }
+    },
+    "$34a": {
+      "segment": 4,
+      "offset": "$5048",
+      "update_handler": "CODE 4:$5074",
+      "spawns_json_label": "item",
+      "verified_role": "Static / Animated Room Prop Stamp (Torch / Pedestal / Shield Stand in Rooms 1020, 3030)",
+      "category": "static_or_ambient_prop",
+      "rooms": [
+        "1020",
+        "3030"
+      ],
+      "call_sites_in_spawns_json": 4,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Stationary prop object that redraws sprite handle `a1` ($6(a6)) frame `d2` ($4(a6)) at fixed `(d0, d1)` every update via `CODE 4:$0320`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5048-$508a"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Purely visual prop; no collision or hit check.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5048-$508a"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary (0 px/update).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5048-$508a"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Never calls $5c14.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5048-$508a"
+        ]
+      }
+    },
+    "$34c8(pc)": {
+      "segment": 5,
+      "offset": "$34c8",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Room 2010 Moving-Platform Difficulty Preset Copier",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "2010"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 2010 that copies 7 moving-platform span records (`7 * 18 = 126` bytes) for difficulty `min(-$18e(a5), 2)` from preset table `CODE 5:$34f4` into live room span table `CODE 5:$32b4`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$34c8-$34ea"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 2010 that copies 7 moving-platform span records (`7 * 18 = 126` bytes) for difficulty `min(-$18e(a5), 2)` from preset table `CODE 5:$34f4` into live room span table `CODE 5:$32b4`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$34c8-$34ea"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 2010 that copies 7 moving-platform span records (`7 * 18 = 126` bytes) for difficulty `min(-$18e(a5), 2)` from preset table `CODE 5:$34f4` into live room span table `CODE 5:$32b4`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$34c8-$34ea"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$34c8-$34ea"
+        ]
+      }
+    },
+    "$372": {
+      "segment": 4,
+      "offset": "$529c",
+      "update_handler": "CODE 4:$52fa",
+      "spawns_json_label": null,
+      "verified_role": "Randomised Rock-Bag Pickup Spawner (span kind 26 = $1a)",
+      "category": "pickup_spawner",
+      "rooms": [
+        "1000",
+        "1010",
+        "1020",
+        "2000",
+        "2010",
+        "2020",
+        "2030",
+        "3000",
+        "3010",
+        "3020",
+        "4000",
+        "4010",
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 13,
+      "ppct": [
+        265
+      ],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Randomly enables candidate floor spans as kind 26 ($1a, rock bag, PPCT 265 frame 4) vs kind 1 (plain floor) using PRNG `(rand & 7) <= d0`, and draws remaining bags at fixed `(span.x + 12, span.y + 28)`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$529c-$5350"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Pickup item spawner/renderer (collected by Duncan standing + pressing Action in hero state 38, CODE 2:$26be).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$529c-$5350",
+          "CODE 2:$26be-$272e"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary pickup items.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$529c-$5350"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Rock bags award 0 points (only +10 BCD rocks in -$2c2(a5)); never calls $5c14.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$529c-$5350",
+          "CODE 2:$26e6-$2718"
+        ]
+      }
+    },
+    "$382": {
+      "segment": 4,
+      "offset": "$53a4",
+      "update_handler": "CODE 4:$5408",
+      "spawns_json_label": null,
+      "verified_role": "Randomised Elixir Bottle Pickup Spawner (span kind 32 = $20)",
+      "category": "pickup_spawner",
+      "rooms": [
+        "1010",
+        "1020",
+        "2000",
+        "2030",
+        "3000",
+        "3010",
+        "3020",
+        "4000",
+        "4010",
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 10,
+      "ppct": [
+        265
+      ],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Randomly enables candidate floor spans as kind 32 ($20, elixir bottle, PPCT 265 frame 6) vs kind 1 using PRNG `(rand & 7) <= d0`, and draws remaining bottles at fixed `(span.x + 12, span.y + 28)`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$53a4-$5452"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Pickup item spawner/renderer (collected by Duncan in hero state 43, CODE 2:$2734).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$53a4-$5452",
+          "CODE 2:$2734-$27b0"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary pickup items.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$53a4-$5452"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Elixirs award 0 points (+1 elixir in -$33c(a5)); never calls $5c14.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$53a4-$5452",
+          "CODE 2:$278a-$27a8"
+        ]
+      }
+    },
+    "$38a": {
+      "segment": 4,
+      "offset": "$5454",
+      "update_handler": "CODE 4:$5484",
+      "spawns_json_label": "storm",
+      "verified_role": "Drifting Storm Cloud & Lightning Hazard (Room 3030 Shield 4)",
+      "category": "moving_hazard_or_platform",
+      "rooms": [
+        "3030"
+      ],
+      "call_sites_in_spawns_json": 6,
+      "ppct": [
+        707,
+        708,
+        709
+      ],
+      "soun": [
+        34
+      ],
+      "speed_px_per_update": {
+        "value": [
+          -3,
+          3,
+          -4,
+          4
+        ],
+        "per_cloud_speeds_px_per_update": {
+          "cloud_1_initial_x_100": 4,
+          "cloud_2_initial_x_320": -3
+        },
+        "details": "Room 3030 spawns two clouds on every difficulty (CODE 5:$1618-$1680): Cloud 1 at X = 100 ($64) with initial vx = +4 (`d1 = 4`, negating to ±4), and Cloud 2 at X = 320 ($140) with initial vx = -3 (`d1 = $fffd`, negating to ±3). Flashes lightning every `d0` updates (30/40 on Novice, 30/20 on Intermediate, 30/15 on Advanced+, playing SOUN 34 at $54b4/$5628/$565e).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5454-$5734",
+          "CODE 5:$1612-$1682"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Indestructible weather hazard; electrocutes hero if Y <= 69 ($45) during strike or if hero touches Shield pedestal ($12(a1) == $24 at $54ee).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5484-$5734"
+        ]
+      },
+      "direction_choice": {
+        "value": "Oscillates horizontally at Y = 0 between X <= 50 ($32 at $54be) and X >= 350 ($15e at $54ca), negating vx (`neg.w $8(a6)`) at each bound.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$54ba-$54d4"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Weather hazard; never calls $5c14.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5454-$5734"
+        ]
+      }
+    },
+    "$392": {
+      "segment": 4,
+      "offset": "$5736",
+      "update_handler": "CODE 4:$5752",
+      "spawns_json_label": null,
+      "verified_role": "Timed Floor Pit-Gate Cover (Room 3000)",
+      "category": "interactive_mechanism",
+      "rooms": [
+        "3000"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        900
+      ],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Draws static grate sprite PPCT 900 (-$316(a5)): 1 gate cover at (0, 304) lasting 30 ($1e) updates before calling $442(a5) (CODE 5:$436a), then unlinks itself.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5736"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Timed floor-grate hazard cover, not a targetable entity.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5736"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary (0 px/update).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5736"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Never calls $5c14; simply opens pit spans via $442(a5) when countdown reaches 0.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5736"
+        ]
+      }
+    },
+    "$39a": {
+      "segment": 4,
+      "offset": "$577a",
+      "update_handler": "CODE 4:$5796",
+      "spawns_json_label": null,
+      "verified_role": "Timed Floor Pit-Gate Cover (Room 3010)",
+      "category": "interactive_mechanism",
+      "rooms": [
+        "3010"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [
+        900
+      ],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": 0,
+        "details": "Draws static grate sprite PPCT 900 (-$316(a5)): 1 gate cover at (249, 303) lasting 30 ($1e) updates before calling $44a(a5) (CODE 5:$46ee), then unlinks itself.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$577a"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Timed floor-grate hazard cover, not a targetable entity.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$577a"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stationary (0 px/update).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$577a"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "Never calls $5c14; simply opens pit spans via $44a(a5) when countdown reaches 0.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$577a"
+        ]
+      }
+    },
+    "$3e2": {
+      "segment": 4,
+      "offset": "$5c2a",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Room Compass / Map / Bonus Timer Metadata Initializer",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "1000",
+        "1010",
+        "1020",
+        "2000",
+        "2010",
+        "2020",
+        "2030",
+        "3000",
+        "3010",
+        "3020",
+        "3030",
+        "4000",
+        "4010",
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 14,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "Stores room identifier byte/word `d0` into `-$242(a5)` and loads the corresponding word from table handle `-$258(a5)` into `-$236(a5)` during room setup.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5c2a-$5c46"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Stores room identifier byte/word `d0` into `-$242(a5)` and loads the corresponding word from table handle `-$258(a5)` into `-$236(a5)` during room setup.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5c2a-$5c46"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Stores room identifier byte/word `d0` into `-$242(a5)` and loads the corresponding word from table handle `-$258(a5)` into `-$236(a5)` during room setup.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5c2a-$5c46"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5c2a-$5c46"
+        ]
+      }
+    },
+    "$3fa": {
+      "segment": 4,
+      "offset": "$5c68",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "16-Bit Pseudo-Random Number Generator (`_Random` / Demo Table)",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "1020"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "Returns a 16-bit pseudo-random word in `d0` (using Mac Toolbox `_Random` `$a861` in live play, or deterministic 8-word table `$5c98` XORed with `$abcd` during demo playback `-$2ee(a5) != 0`). Called directly in Room 1020 setup (`CODE 5:$05a2`) to randomly pick left vs right prison cell entry.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5c68-$5c96"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Returns a 16-bit pseudo-random word in `d0` (using Mac Toolbox `_Random` `$a861` in live play, or deterministic 8-word table `$5c98` XORed with `$abcd` during demo playback `-$2ee(a5) != 0`). Called directly in Room 1020 setup (`CODE 5:$05a2`) to randomly pick left vs right prison cell entry.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5c68-$5c96"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Returns a 16-bit pseudo-random word in `d0` (using Mac Toolbox `_Random` `$a861` in live play, or deterministic 8-word table `$5c98` XORed with `$abcd` during demo playback `-$2ee(a5) != 0`). Called directly in Room 1020 setup (`CODE 5:$05a2`) to randomly pick left vs right prison cell entry.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5c68-$5c96"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 4:$5c68-$5c96"
+        ]
+      }
+    },
+    "$4360(pc)": {
+      "segment": 5,
+      "offset": "$4360",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Room 3000 Pit-Span Initializer (Pre-$392 Gate Reset)",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "3000"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 3000 that resets mutable pit-floor span `CODE 5:$429c` to its closed coordinates before `$392` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$4360-$4378"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 3000 that resets mutable pit-floor span `CODE 5:$429c` to its closed coordinates before `$392` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$4360-$4378"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 3000 that resets mutable pit-floor span `CODE 5:$429c` to its closed coordinates before `$392` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$4360-$4378"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$4360-$4378"
+        ]
+      }
+    },
+    "$46e4(pc)": {
+      "segment": 5,
+      "offset": "$46e4",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Room 3010 Pit-Span Initializer (Pre-$39a Gate Reset)",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "3010"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 3010 that resets mutable pit-floor span `CODE 5:$4626` to its closed coordinates before `$39a` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$46e4-$46fc"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 3010 that resets mutable pit-floor span `CODE 5:$4626` to its closed coordinates before `$39a` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$46e4-$46fc"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 3010 that resets mutable pit-floor span `CODE 5:$4626` to its closed coordinates before `$39a` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$46e4-$46fc"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$46e4-$46fc"
+        ]
+      }
+    },
+    "$52": {
+      "segment": 1,
+      "offset": "$118",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Play `SOUN` Effect by ID in `d0`",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "2020"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [],
+      "soun": [
+        95
+      ],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "Sound playback routine called directly once in Room 2020 setup (`CODE 5:$0d86` with `d0 = $5f` = `SOUN 95`) to trigger the Underground River ambient entry sound.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$0118-$0156"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Sound playback routine called directly once in Room 2020 setup (`CODE 5:$0d86` with `d0 = $5f` = `SOUN 95`) to trigger the Underground River ambient entry sound.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$0118-$0156"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Sound playback routine called directly once in Room 2020 setup (`CODE 5:$0d86` with `d0 = $5f` = `SOUN 95`) to trigger the Underground River ambient entry sound.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$0118-$0156"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$0118-$0156"
+        ]
+      }
+    },
+    "$59b4(pc)": {
+      "segment": 5,
+      "offset": "$59b4",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Room 4000 Pit-Span Initializer (Pre-$2ba Gate Reset)",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "4000"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4000 that resets mutable pit-floor span `CODE 5:$596c` to its closed coordinates before `$2ba` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$59b4-$59cc"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4000 that resets mutable pit-floor span `CODE 5:$596c` to its closed coordinates before `$2ba` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$59b4-$59cc"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4000 that resets mutable pit-floor span `CODE 5:$596c` to its closed coordinates before `$2ba` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$59b4-$59cc"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$59b4-$59cc"
+        ]
+      }
+    },
+    "$5ea8(pc)": {
+      "segment": 5,
+      "offset": "$5ea8",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Room 4010 Moving-Platform & Pit-Span Reset Helper",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "4010"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4010 that copies the 4 initial moving-platform records from `CODE 5:$5ee8-$5f2f` into live span records `$5bea, $5bfc, $5d1c, $5d2e` and branches to `$5f5e`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$5ea8-$5ee6"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4010 that copies the 4 initial moving-platform records from `CODE 5:$5ee8-$5f2f` into live span records `$5bea, $5bfc, $5d1c, $5d2e` and branches to `$5f5e`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$5ea8-$5ee6"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4010 that copies the 4 initial moving-platform records from `CODE 5:$5ee8-$5f2f` into live span records `$5bea, $5bfc, $5d1c, $5d2e` and branches to `$5f5e`.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$5ea8-$5ee6"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$5ea8-$5ee6"
+        ]
+      }
+    },
+    "$5f30(pc)": {
+      "segment": 5,
+      "offset": "$5f30",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Room 4010 Dual Pit-Span Initializer (Pre-$2c2 Gate Reset)",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "4010"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4010 that resets mutable pit-floor spans `CODE 5:$5de2` and `$5e06` to closed state before `$2c2` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$5f30-$5f5e"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4010 that resets mutable pit-floor spans `CODE 5:$5de2` and `$5e06` to closed state before `$2c2` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$5f30-$5f5e"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4010 that resets mutable pit-floor spans `CODE 5:$5de2` and `$5e06` to closed state before `$2c2` counts down.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$5f30-$5f5e"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$5f30-$5f5e"
+        ]
+      }
+    },
+    "$6770(pc)": {
+      "segment": 5,
+      "offset": "$6770",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Room 4020 Triple Pit-Span & Drawbridge Span Reset Helper",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 1,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4020 that resets the 3 pit-gate spans (`$6686, $66aa, $66ce`) for `$2ca` and restores initial drawbridge/ledge coordinates (`$5fce, $663e, $6716`) before room start.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$6770-$67a4"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4020 that resets the 3 pit-gate spans (`$6686, $66aa, $66ce`) for `$2ca` and restores initial drawbridge/ledge coordinates (`$5fce, $663e, $6716`) before room start.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$6770-$67a4"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "One-shot setup helper in Room 4020 that resets the 3 pit-gate spans (`$6686, $66aa, $66ce`) for `$2ca` and restores initial drawbridge/ledge coordinates (`$5fce, $663e, $6716`) before room start.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$6770-$67a4"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$6770-$67a4"
+        ]
+      }
+    },
+    "$80(pc)": {
+      "segment": 5,
+      "offset": "$80",
+      "update_handler": null,
+      "spawns_json_label": null,
+      "verified_role": "Common Room-State Reset & `SFTR` Sound-Bank Loader",
+      "category": "room_setup_or_loop_helper",
+      "rooms": [
+        "1000",
+        "1010",
+        "1020",
+        "2000",
+        "2010",
+        "2020",
+        "2030",
+        "3000",
+        "3010",
+        "3020",
+        "3030",
+        "4000",
+        "4010",
+        "4020"
+      ],
+      "call_sites_in_spawns_json": 14,
+      "ppct": [],
+      "soun": [],
+      "speed_px_per_update": {
+        "value": null,
+        "why_null": "Called near the start of all 14 room setup routines: loads the room's `SFTR` sound set `-$188(a5)` via `$62(a5)`, clears object/projectile/hazard/bat counters (`-$182`, `-$19c`, `-$1a0`, `-$25e`), refreshes the HUD, and resets room globals.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$0080-$00cc"
+        ]
+      },
+      "hit_points": {
+        "value": null,
+        "why_null": "Called near the start of all 14 room setup routines: loads the room's `SFTR` sound set `-$188(a5)` via `$62(a5)`, clears object/projectile/hazard/bat counters (`-$182`, `-$19c`, `-$1a0`, `-$25e`), refreshes the HUD, and resets room globals.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$0080-$00cc"
+        ]
+      },
+      "direction_choice": {
+        "value": null,
+        "why_null": "Called near the start of all 14 room setup routines: loads the room's `SFTR` sound set `-$188(a5)` via `$62(a5)`, clears object/projectile/hazard/bat counters (`-$182`, `-$19c`, `-$1a0`, `-$25e`), refreshes the HUD, and resets room globals.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$0080-$00cc"
+        ]
+      },
+      "stbl_index": {
+        "value": null,
+        "why_null": "One-shot setup/engine helper; never awards Stbl points.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 5:$0080-$00cc"
+        ]
+      }
+    }
+  }
+}

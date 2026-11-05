@@ -127,7 +127,16 @@
     const h = core.hero, tick = core.tickCount, left = h.face < 0, step = Math.floor(tick / 3);
     const x = h.x, y = h.y, age = at => at === undefined ? 1e9 : (tick - at) / UPDATE;
     if (h.safe > 0 && !reduced && tick % 4 < 2) return;
-    if (h.flail > tick) { p.reel(left ? 'B133' : 'B134', 12 - (h.flail - tick), x - 8, y - 12); return; }
+    if (h.state === 'flail') {
+      // Reach, lift, carry, swing and let go, from CODE 2 $1f34, $2028, $2150, $2106 and $2062.
+      const f = h.flail;
+      if (f.stage === 'reach') p.reel('B132', 0, x, y - 11);
+      else if (f.stage === 'lift') p.reel('B134', 2, x, y - 18);
+      else if (f.stage === 'swing') p.reel('B134', f.t < 1 ? 0 : 1, x, y - 18);
+      else if (f.stage === 'drop') p.reel('B133', 2, x, y - 2);
+      else p.reel('B133', f.moving ? Math.floor(tick / UPDATE) % 2 : 3, x, y - 2);
+      return;
+    }
     if (age(h.landed) < LONG_FALL.length) { upright(p, left ? 'A130' : 'A131', LONG_FALL[Math.floor(age(h.landed))], h); return; }
     if (age(h.pullAt) < 15) { upright(p, 'B147', age(h.pullAt) < 4 ? 0 : 1, h); return; }
     if (age(h.leverAt) < LEVER_PULL.length) { upright(p, x <= 200 ? 'B146' : 'B155', LEVER_PULL[Math.floor(age(h.leverAt))], h); return; }
@@ -139,8 +148,7 @@
           const row = h.arc.rows[Math.min(h.arc.rows.length - 1, Math.floor(h.arc.t))];
           const reel = h.arc.kind === 'running' ? (left ? 'A104' : 'A105') : (left ? 'A117' : 'A118');
           p.reel(reel, row[2], x, y + row[3]);
-        } else if (h.light) p.reel('B132', 0, x, y - 11);
-        else p.reel('A123', Math.floor(tick / 4), x, y - 8);
+        } else p.reel('A123', Math.floor(tick / 4), x, y - 8);
         break;
       }
       case 'duck': p.reel(core.powers.has('air') ? 'A149' : left ? 'A119' : 'A120', core.powers.has('air') && left ? 1 : 0, x, y + (core.powers.has('air') ? 14 : 8)); break;
@@ -148,10 +156,19 @@
       case 'stairs': p.reel(h.stairs.up ? (left ? 'A109' : 'A107') : (left ? 'A110' : 'A108'), step, x, y - 8); break;
       case 'rope': {
         const r = h.rope;
-        if (y <= r.top + 2 || y >= r.bottom - 2) p.reel('A116', left ? 0 : 1, x, y - 16);
-        else p.reel(left ? 'A114' : 'A115', Math.floor(y / 8), x, y - 8);
+        // Duncan hangs on the rope's near side, 5 or 10 pixels in (CODE 2 $1906-$1928).
+        const inset = left ? 10 : 5;
+        if (y <= r.top + 2 || y >= r.bottom - 2) p.reel('A116', left ? 0 : 1, x + inset, y - 16);
+        else p.reel(left ? 'A114' : 'A115', Math.floor(y / 8), x + inset, y - 8);
         break;
       }
+      case 'chute': p.reel('A125', 3, x, y); break;
+      case 'teeter': {
+        const age = Math.min(7, Math.floor((tick - h.teeterAt) / UPDATE));
+        p.reel(left ? 'B152' : 'B153', [0, 1, 2, 1, 2, 1, 2, 3][age], x, y - 4);
+        break;
+      }
+      case 'shield': p.reel(left ? 'A144' : 'A145', Math.floor(tick / UPDATE) & 1, x, y); break;
       case 'swing': {
         const a = Math.sin(h.swing.phase);
         p.reel(Math.cos(h.swing.phase) > 0 ? 'B121' : 'B122', Math.round((a + 1) * 2.5), x - 8, y - 16);
@@ -172,7 +189,6 @@
       const frame = since < update ? 8 : throwing ? (h.arm > 192 ? 9 : 10) : h.armUntil > tick ? h.arm >> 6 : 7;
       p.reel(left ? 'A111' : 'A112', frame, x + (left ? (throwing ? 2 : -14) : (throwing ? -12 : 4)), y - 6);
     }
-    if (h.shield > 0) p.reel(left ? 'A144' : 'A145', Math.floor(tick / 3), x - 8, y - 3);
   }
   // Gaining a power, in the hero code's own order: states 35, 36 and 50.
   const SHIMMER = [0, 1, 2, 3, 4, 5, 6, 5, 6, 5, 4, 3, 2, 1, 0, 0], FLEX = [0, 1, 2, 1];
@@ -247,8 +263,20 @@
       case 'vulture': p.reel('B701', Math.floor(e.frame / 3), e.x, e.y); break;
       case 'feather': p.reel('B702', Math.floor(e.frame / 3), e.x, e.y); break;
       case 'eye': p.reel(e.dying ? 'B426' : 'B425', Math.floor(e.frame / 2), e.x, e.y); break;
-      case 'broom': p.reel(e.dying ? 'B423' : e.hurt ? 'B421' : 'B422', Math.floor(e.frame / 3), e.x, e.y, e.speed < 0); break;
-      case 'fountain': p.reel('B420', slow, e.x, e.y); p.reel('B411', 0, e.x - 12, e.y + 52); break;
+      case 'broom': {
+        // The big broom is PPCT 420, then 421 and 422 as it splits, and 423 when stunned.
+        const tier = e.tier || 0;
+        p.reel(e.stun ? 'B423' : ['B420', 'B421', 'B422'][tier], Math.floor(e.frame / 3), e.x, e.y + [-25, 0, 11][tier], e.speed < 0);
+        break;
+      }
+      case 'fountain': p.reel('B411', 0, e.x - 12, e.y + 52); break;
+      case 'log': p.reel('B412', 0, e.x + 8, e.seg.y + 40); break;
+      case 'logSink': {
+        // Dropped pieces of the log, from the offset table at CODE 4 $3976.
+        const row = [[8, 8, 0], [12, 14, 1], [16, 8, 2], [28, 10, 3], [32, 14, 4], [34, 18, 5], [34, 22, 5]][Math.min(6, Math.floor(e.step))];
+        p.reel('B413', row[2], e.x + row[0], e.y + row[1]);
+        break;
+      }
       case 'torch': p.reel('A5000', slow, e.x, e.y); break;
       case 'faces': p.reel('B522', e.pose || 0, e.x, e.y); break;
       case 'item': p.reel('A5010', e.item === 'bag' ? 4 : 6, e.x, e.y); break;
@@ -297,10 +325,6 @@
         if (tip.y < 0) p.reel('A520', 0, tip.x, 0);
         break;
       }
-      case 'bridge':
-        p.reel('B413', Math.floor(tick / 9), e.x, e.y);
-        p.reel('B412', 0, e.x, e.y + 56); p.reel('B700', 0, e.x + 8, e.y - 6);
-        break;
       case 'hatch':
         p.reel('B715', e.open ? HATCH_SWING[Math.floor(e.t)] : 0, e.x, e.y);
         if (e.open) p.reel('B717', Math.floor(tick / 10), e.x - 8, e.y + 28);
@@ -308,6 +332,7 @@
         break;
       case 'gate': p.reel('B438', e.open ? 1 : 0, e.x, e.open ? e.y - 60 : e.y); break;
       case 'platform': p.reel(core.room.id >= 4000 ? 'B901' : 'B410', e.mover.frame, e.x, e.y); break;
+      case 'fallenFlail': p.reel('A520', 0, e.x, e.y); break;
       case 'portcullis': p.reel('B200', Math.min(2, Math.floor(e.frame / 9)), -24, core.hero.y - 43 > 0 ? e.fixedY ??= core.hero.y - 43 : 0); break;
       case 'throne':
         {
@@ -329,7 +354,7 @@
         break;
       case 'lever':
         p.reel(e.chain ? 'B918' : 'B712', e.pulled ? 4 : 0, e.x, e.y);
-        if (core.pullsDone.size) { p.reel('B919', Math.floor(tick / 4), e.x + 8, e.y + 28); p.reel('B920', 0, e.x + 8, e.y + 34); p.reel('B921', Math.floor(tick / 6), e.x + 8, e.y + 22); }
+        if (core.pullsDone.size) { p.reel('B919', 2 + Math.floor(tick / 4) % 4, e.x + 8, e.y + 28); p.reel('B920', 0, e.x + 8, e.y + 34); p.reel('B921', Math.floor(tick / 6), e.x + 8, e.y + 22); }
         break;
       case 'scepter': {
         const img = assets.plates.get(e.scepter.id);
@@ -367,6 +392,10 @@
     b.fillStyle = '#000'; b.fillRect(0, 0, W, H);
     if (art) b.drawImage(art, 0, 0);
     for (const e of core.entities) if (!['knight', 'lever'].includes(e.type)) drawEntity(p, e, core, reduced);
+    // A pulled lever brings out its half of the bridge, behind Duncan (CODE 4 $2574-$257c).
+    for (const e of core.entities) if (e.type === 'lever' && e.pulled) p.reel('B919', e.chain ? 1 : 0, e.chain ? 245 : 232, 141);
+    // The wall switch in the Shield room lights only the real ledges.
+    if (room.id === 3030 && core.ledgesShownUntil > core.tickCount) for (const seg of core.realLedges()) p.reel('B700', 0, seg.x0 + 16, seg.y + 40);
     if (core.mode === 'dying') drawDeath(p, core);
     else if (core.mode === 'leaving') drawReward(p, core);
     else drawHero(p, core, reduced);
@@ -449,10 +478,11 @@
   const controlRows = classic => [
     ['Move', 'Left and Right, or A and D', 'Stick or pad'],
     ['Climb', 'Up and Down, or W and S', 'Stick or pad'],
+    ['Ropes', classic ? 'Left or Right turns, then changes rope or leaps off' : 'Left or Right changes rope. Space leaps off', 'Stick, then A'],
     ['Jump', 'Space. Hold Down too for a low jump', 'A'],
     classic ? ['Throw', 'Move the mouse to set the arm, then click. Stand still to throw', 'X']
       : ['Throw', 'Click to throw at the pointer, or F for the nearest foe. Hold to keep throwing', 'X'],
-    ['Act', classic ? 'Q pulls, presses, picks up and raises the shield' : 'Q pulls, presses and raises the shield', 'B'],
+    ['Act', classic ? 'Q pulls, presses and picks up. Hold it to raise the shield' : 'Q pulls and presses. Hold it to raise the shield', 'B'],
     ['Duck', classic ? 'E' : 'Down on open floor, or E', 'Y'],
     ['Pause', 'Esc, P or Tab', 'Start'],
   ];
@@ -591,7 +621,7 @@
       paused = !paused; keys.clear(); panel(paused ? 'pause' : '');
       $('.knock-tools [data-do=pause]').textContent = paused ? 'Resume' : 'Pause';
     }
-    const KEY_WORDS = {action: 'Q · ', up: 'Up · ', down: 'Down · ', jump: 'Space · ', climb: 'Up or Down · ', hall: ''};
+    const KEY_WORDS = {action: 'Q · ', up: 'Up · ', down: 'Down · ', jump: 'Space · ', climb: 'Up or Down · ', fire: 'Click or F · ', hall: ''};
     function showPrompt() {
       if (view !== 'game' || !core || core.demo || lineUntil) return;
       const prompt = core.prompt(), text = prompt ? KEY_WORDS[prompt[0]] + prompt[1] : '';

@@ -38,8 +38,8 @@ test('every picture on the disk has a home', () => {
 test('every sound role is played by the game', () => {
   const said = new Set([...core.matchAll(/say\('(\w+)'\)/g)].map(m => m[1]));
   for (const pattern of [/say\(\{([^}]+)\}/g]) for (const m of core.matchAll(pattern)) for (const r of m[1].matchAll(/: '(\w+)'/g)) said.add(r[1]);
-  said.add('fireball'); said.add('throwRock'); said.add('fall'); said.add('heroHit'); said.add('guardDie'); // Chosen by a ternary in the core.
-  said.add('title'); // The shell plays these on the title screen.
+  said.add('fireball'); said.add('throwRock'); said.add('fall'); said.add('heroHit'); said.add('guardDie'); said.add('whipFall'); said.add('gainShield'); said.add('gainFire'); // Chosen by a ternary in the core.
+  said.add('title'); said.add('scores'); // The shell plays these on its own screens.
   const missing = Object.keys(context.CastlePlan.SOUNDS).filter(role => !said.has(role));
   assert.equal(missing.join(' '), '');
 });

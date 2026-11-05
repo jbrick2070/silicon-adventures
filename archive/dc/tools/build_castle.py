@@ -174,6 +174,54 @@ def preferences():
     return {'scores': scores, 'keys': [c for c in struct.unpack('>10H', fork[(b'KDEF', 0)])]}
 
 
+def hidden_steps(code):
+    """The Shield room's hidden ledges (CODE 5 $15f4-$160e, $1d68-$1dac). Each difficulty has a
+    table of patterns. A visit picks one at random. A set bit gives that ledge its width, and a
+    clear bit takes the ledge away."""
+    tables = []
+    for start in (0x4fd2, 0x4ff4, 0x5016):
+        count = struct.unpack_from('>H', code, start)[0]
+        tables.append(list(struct.unpack_from(f'>{count}I', code, start + 2)))
+    return {'width': signed(code, 0x5038), 'spans': [signed(code, 0x503a + 2 * i) for i in range(20)], 'masks': tables}
+
+
+def level_formula(formula, level):
+    """Evaluates a spawn guard from the trace at one difficulty. Entry guards count as true."""
+    if formula == 'true' or '-$18c' in formula or '-$280' in formula:
+        return True
+    return eval(formula.replace('-$18e(a5)', str(level)).replace('&&', ' and ').replace('||', ' or '))
+
+
+def number(text):
+    return int(str(text).split(' ')[0])
+
+
+def spawn_table():
+    """Door guards, bats and rats, one entry per level group, from the CODE 5 calls in
+    archive/dc/rooms/trace/conditions.json."""
+    calls = json.loads((ROOT / 'archive/dc/rooms/trace/conditions.json').read_text(encoding='utf8'))['all_room_calls_complete']
+    table = {}
+    for room, listing in calls.items():
+        rows = table.setdefault(room, [])
+        for call in listing['calls']:
+            if call['routine'] not in ('$272', '$282', '$28a'):
+                continue
+            guard = call['execution_condition']['formula']
+            for variant in call['conditional_arguments']['variants']:
+                levels = [n for n in range(4) if level_formula(guard, n) and level_formula(variant['formula'], n)]
+                if not levels:
+                    continue
+                a = variant['args']
+                if call['routine'] == '$272':
+                    row = {'type': 'doorGuard', 'x': number(a['d0']), 'y': number(a['d1']), 'left': number(a['d2']), 'right': number(a['d3']), 'speed': number(a['d4']), 'hits': number(a['d5'])}
+                elif call['routine'] == '$282':
+                    row = {'type': 'bat', 'x': number(a['d0']), 'y': number(a['d1']), 'floor': number(a['d6'])}
+                else:
+                    row = {'type': 'rat', 'x': number(a['d0']), 'y': number(a['d1']), 'left': number(a['d2']), 'right': number(a['d3']), 'speed': number(a['d6'])}
+                rows.append({**row, 'levels': levels})
+    return table
+
+
 def main():
     fork_a = {(r.type.decode('mac_roman'), r.id): bytes(r)
               for r in parse_file((ROOT / 'archive/dc/Data A.rsrc').read_bytes())}
@@ -191,6 +239,8 @@ def main():
         'rooms': rooms,
         'order': [room for room, _ in ROOMS],
         'paths': {rid: path(fork_a[('GPTH', rid)]) for rid in (10010, 10020, 10030, 10040)},
+        'steps': hidden_steps(code),
+        'spawns': spawn_table(),
         # Duncan's three jumps from the hero code, CODE 2. The manual card draws the same three arcs.
         'jumps': {name: jump_rows(fork_a[('CODE', 2)][4:], at)
                   for name, at in (('running', 0x13a4), ('standing', 0x13e4), ('downward', 0x1434))},
