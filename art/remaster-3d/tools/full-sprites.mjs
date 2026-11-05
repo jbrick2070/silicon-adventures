@@ -10,8 +10,8 @@ const familyByReel = new Map(
 const materials = {
   skin: [239, 182, 126],
   hair: [139, 91, 58],
-  jacket: [222, 125, 106],
-  breeches: [207, 164, 114],
+  jacket: [216, 205, 182],
+  breeches: [122, 136, 170],
   leather: [178, 138, 87],
   iron: [140, 155, 174],
   plate: [153, 173, 191],

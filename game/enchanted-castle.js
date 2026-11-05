@@ -8,12 +8,14 @@
   const W = 512, H = 342, STATUS_Y = 309;
   const PALETTE = {hall: '#efe3cb', trouble: '#e9dcc3', fireball: '#f1d9b4', shield: '#d9e3da', knight: '#ddd3e8'};
   const INK = '#21163a';
-  // Trial art, drawn only when the Remastered option is on and only in rooms that have new art. These
-  // are 4x masters that passed review. Anything not listed, or missing, keeps the disk's art. Duncan's
-  // left walk and left arm are exact mirrors of the right ones, so one strip serves both. Other pairs differ.
+  // The Remastered look draws the best art for each file. Painted files in art/castle-3d win, Codex's
+  // full relief pack covers the rest, and the disk's art is the last resort. Duncan's left walk and
+  // left arm are exact mirrors of the right ones, so one painted strip serves both.
   const HD_SCALE = 4;
-  const HD_ROOMS = ['B1000', 'B2020', 'B4020'];
-  const HD_REELS = {A100: {from: 'A101', mirror: true}, A101: {}, A105: {}, A106: {}, A111: {from: 'A112', mirror: true}, A112: {}, B300: {}, B310: {}, B350: {}, B412: {}, B435: {}, B710: {}, B902: {}, B903: {}, B906: {}, B908: {}};
+  const HD_PAINTED = new Set(['B1000', 'B2020', 'B4020', 'A101', 'A105', 'A106', 'A112', 'B300', 'B310', 'B350', 'B412', 'B435', 'B710', 'B902', 'B903', 'B906', 'B908']);
+  const HD_MIRRORS = {A100: 'A101', A111: 'A112'};
+  // These tiles are opaque on the disk. Their outer white must clear to show the room behind them.
+  const HD_OPEN_TILES = new Set(['B510', 'B511', 'A5000']);
   const CAPTIONS = {bat: 'Leathery wings', rat: 'A rat squeaks', door: 'A door grinds', guard: 'A guard calls', guardDie: 'A guard falls', mutant: 'A mutant grunts',
     whip: 'A whip cracks', henchman: 'A boulder is heaved', boulder: 'Stone strikes stone', dragon: 'Dragon breath roars', drip: 'Something drips', eye: 'The eye crackles',
     gargoyle: 'Stone wings', knight: 'The Black Knight laughs', throne: 'The throne groans', mug: 'A mug flies', lever: 'A chain rattles', storm: 'Thunder', wizard: 'The wizard chants',
@@ -56,13 +58,42 @@
     if (assets.hdLoaded) return assets.hdLoaded;
     assets.hd = {screens: new Map(), reels: new Map()};
     const jobs = [];
-    for (const key of HD_ROOMS) jobs.push(loadImage(`art/castle-3d/4x/B-PSCR-${key.slice(1)}.png`).then(img => assets.hd.screens.set(key, img)).catch(() => {}));
-    for (const [key, reel] of Object.entries(HD_REELS)) {
-      const source = reel.from || key, name = `art/castle-3d/4x/${source[0]}-PPCT-${source.slice(1)}.png`;
-      jobs.push(loadImage(name).then(img => assets.hd.reels.set(key, {img, mirror: !!reel.mirror})).catch(() => {}));
+    const masks = new Set(Object.values(window.CastlePlan.SCREENS.masks));
+    for (const a of window.CastleGraphics) {
+      const key = a.fork.slice(-1) + a.id, file = a.path.split('/').pop(), mirror = a.type === 'PPCT' ? HD_MIRRORS[key] : null;
+      if (a.type === 'PSCR' && (masks.has(key) || !+a.id || +a.id >= 12000)) continue; // Masks stay binary, and title and score screens stay as drawn.
+      const painted = mirror || key, name = mirror ? `art/castle-3d/4x/${mirror[0]}-PPCT-${mirror.slice(1)}.png` : `art/${HD_PAINTED.has(key) ? 'castle-3d' : 'remaster-3d/full'}/4x/${file}`;
+      jobs.push(loadImage(name).then(img => {
+        if (a.type === 'PSCR') assets.hd.screens.set(key, img);
+        else assets.hd.reels.set(key, {img: HD_OPEN_TILES.has(key) ? openTile(img, key) : img, mirror: !!mirror});
+      }).catch(() => {}));
     }
     assets.hdLoaded = Promise.all(jobs).then(prepareHDForegrounds);
     return assets.hdLoaded;
+  }
+  // Floods from each frame's border through the disk art's white, and clears those pixels at 4x.
+  function openTile(img, key) {
+    const info = assets.info.get(key), source = assets.reels.get(key), c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext('2d', {willReadFrequently: true}); ctx.drawImage(img, 0, 0);
+    const s = document.createElement('canvas'); s.width = source.naturalWidth; s.height = source.naturalHeight;
+    const sctx = s.getContext('2d', {willReadFrequently: true}); sctx.drawImage(source, 0, 0);
+    const bits = sctx.getImageData(0, 0, s.width, s.height).data, pix = ctx.getImageData(0, 0, c.width, c.height);
+    const white = (x, y) => bits[(y * s.width + x) * 4 + 3] > 0 && bits[(y * s.width + x) * 4] > 128;
+    const horizontal = s.width > info.width;
+    for (let f = 0; f < info.frames; f++) {
+      const left = horizontal ? f * info.width : 0, top = horizontal ? 0 : f * info.height, seen = new Set(), stack = [];
+      for (let i = 0; i < info.width; i++) stack.push([left + i, top], [left + i, top + info.height - 1]);
+      for (let i = 0; i < info.height; i++) stack.push([left, top + i], [left + info.width - 1, top + i]);
+      while (stack.length) {
+        const [x, y] = stack.pop(), id = y * s.width + x;
+        if (x < left || y < top || x >= left + info.width || y >= top + info.height || seen.has(id) || !white(x, y)) continue;
+        seen.add(id); stack.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+        for (let v = 0; v < HD_SCALE; v++) for (let u = 0; u < HD_SCALE; u++) pix.data[((y * HD_SCALE + v) * c.width + x * HD_SCALE + u) * 4 + 3] = 0;
+      }
+    }
+    ctx.putImageData(pix, 0, 0);
+    return c;
   }
   // The disk's masks still decide what stands in front of Duncan. Only the pixels are new.
   function prepareHDForegrounds() {
@@ -569,7 +600,7 @@
         <label><input type="checkbox" data-opt="ward"> Elron’s ward: blows cost bonus instead of a life</label>
         <label><input type="checkbox" data-opt="vertical"> Classic mouse moves the arm up and down, not left and right</label>
         <label><input type="checkbox" data-opt="captions" checked> Sound captions</label>
-        <label><input type="checkbox" data-opt="remastered"> Remastered art test, in the three rooms painted so far</label>
+        <label><input type="checkbox" data-opt="remastered"> Remastered art: full colour in every room</label>
         <div class="castle-buttons">
           <button type="button" data-do="remaster" data-room="4020">See the remastered throne room</button>
           <button type="button" data-do="remaster" data-room="2020">See the remastered river</button>
@@ -741,7 +772,7 @@
         // A preview: it starts in the last room, with Elron's ward, and records no score.
         options.remastered = true; $('[data-opt=remastered]').checked = true;
         try { localStorage.setItem('castle-options', JSON.stringify(options)); } catch { /* Storage may be blocked. */ }
-        applyLook().then(() => { begin(0); core.preview = true; core.ward = true; core.enter(+button.dataset.room, 0); say('Remastered art test. Everything without new art keeps its original look.'); });
+        applyLook().then(() => { begin(0); core.preview = true; core.ward = true; core.enter(+button.dataset.room, 0); say('Remastered art preview.'); });
       }
       else if (act === 'menu') toTitle();
       else if (act === 'pause') togglePause();
