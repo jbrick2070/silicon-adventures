@@ -19,7 +19,7 @@ ASSETS = (
     "art/refresh/forms/**/*.png", "art/refresh/sprites/**/*.png",
     "art/remaster-3d/full/4x/*.png", "art/castle-3d/4x/*.png", "art/castle-3d/finale-*.png",
     "art/castle-3d/normals/*.png", "art/castle-3d/sky/*.png",
-    "art/es-3d/inhabitants/*.png", "art/es-3d/scepters/4x/*.png", "art/es-3d/scepters/spin-*.png",
+    "art/es-3d/ASCN-*.png", "art/es-3d/inhabitants/*.png", "art/es-3d/scepters/4x/*.png", "art/es-3d/scepters/spin-*.png",
     "audio/dark-castle-bank.js", "audio/vault-audio.js", "audio/region-music.js",
     "audio/music/*.wav", "engine/adventure.jar", "engine/vendor/LICENSE-WAGE.txt",
 )

@@ -3,7 +3,7 @@
    and add carved reverse stone faces without altering source assets. */
 class PlateView {
   // Rooms repainted in the castle's lit style. Others keep Lit colour.
-  static painted = new Set();
+  static painted = new Set([21149, 7990, 24338, 25936, 2577, 25694, 4315, 4957, 20301, 14688, 10472, 23272, 4223, 20598, 18366]);
   constructor(canvas) {
     this.canvas = canvas;
     this.w = canvas.width = 338;
