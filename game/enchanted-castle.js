@@ -75,6 +75,8 @@
     for (const key of HD_NORMALS) jobs.push(loadImage(`art/castle-3d/normals/B-PSCR-${key.slice(1)}.png`).then(img => assets.hd.normals.set(key, img)).catch(() => {}));
     assets.hd.skies = new Map();
     for (const key of HD_SKIES) jobs.push(loadImage(`art/castle-3d/sky/B-PSCR-${key.slice(1)}.png`).then(img => assets.hd.skies.set(key, img)).catch(() => {}));
+    assets.hd.scepters = new Map();
+    for (const wing of Object.values(window.CastlePlan.WINGS)) jobs.push(loadImage(wing.scepter.plate.replace('archive/es/plates/', 'art/es-3d/scepters/4x/')).then(img => assets.hd.scepters.set(wing.scepter.id, img)).catch(() => {}));
     assets.hd.cine = new Map();
     for (const key of ['knight', 'empty']) loadImage(`art/castle-3d/finale-${key}.png`).then(img => assets.hd.cine.set(key, img)).catch(() => {});
     assets.hdLoaded = Promise.all(jobs).then(prepareHDForegrounds);
@@ -508,10 +510,10 @@
         if (core.pullsDone.size) { p.reel('B919', 2 + Math.floor(tick / 4) % 4, e.x + 8, e.y + 28); p.reel('B920', 0, e.x + 8, e.y + 34); p.reel('B921', Math.floor(tick / 6), e.x + 8, e.y + 22); }
         break;
       case 'scepter': {
-        const img = assets.plates.get(e.scepter.id);
+        const hd = p.fullColour ? assets.hd?.scepters?.get(e.scepter.id) : null, img = hd || assets.plates.get(e.scepter.id);
         if (img) {
           // The drawings are room-sized, so the castle shows them at half scale, centred on the spot.
-          const w = img.naturalWidth >> 1, h = img.naturalHeight >> 1;
+          const w = img.naturalWidth / (hd ? HD_SCALE : 1) >> 1, h = img.naturalHeight / (hd ? HD_SCALE : 1) >> 1;
           p.b.drawImage(img, Math.round(e.x + 12 - w / 2), Math.round(e.y + 15 - h / 2 + Math.sin(tick * .1) * (reduced ? 0 : 2)), w, h);
         }
         if (e.scepter.id === 'air') p.reel('B709', 0, e.x + 8, e.y - 26);
