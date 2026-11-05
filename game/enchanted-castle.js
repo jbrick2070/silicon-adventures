@@ -12,7 +12,7 @@
   // full relief pack covers the rest, and the disk's art is the last resort. Duncan's left walk and
   // left arm are exact mirrors of the right ones, so one painted strip serves both.
   const HD_SCALE = 4;
-  const HD_PAINTED = new Set(['B1000', 'B2020', 'B4020', 'A101', 'A105', 'A106', 'A112', 'B300', 'B310', 'B350', 'B412', 'B435', 'B710', 'B902', 'B903', 'B906', 'B908']);
+  const HD_PAINTED = new Set(['B1000', 'B2020', 'B4020', 'A101', 'A105', 'A106', 'A112', 'B300', 'B310', 'B350', 'B412', 'B435', 'B710', 'B902', 'B903', 'B906', 'B908', 'A102', 'A103', 'A104', 'A107', 'A108', 'A109', 'A110', 'A114', 'A115', 'A116', 'A117', 'A118', 'A119', 'A120', 'A123', 'A125', 'A126', 'A128', 'A129', 'A130', 'A131', 'A149', 'B132', 'B133', 'B134', 'B146', 'B147', 'B155', 'B142', 'B143', 'B150', 'B151', 'B154', 'B157', 'B158', 'A124', 'A135', 'A136', 'A137', 'B139', 'B140', 'B141', 'B148', 'B152', 'B153', 'B156', 'A144', 'A145', 'B709', 'A113', 'A127', 'A138', 'A520', 'B904', 'B905', 'B910', 'B911', 'B912', 'B913', 'B914', 'B915', 'B916', 'B917', 'B920', 'B921', 'B712', 'B918', 'B919', 'B907', 'B922', 'B715', 'B716', 'B717', 'B200', 'B400', 'B401', 'B438', 'B410', 'B411', 'B413', 'B700', 'B900', 'B901']);
   const HD_MIRRORS = {A100: 'A101', A111: 'A112'};
   // Painted rooms with a surface map take the moving torchlight. Only light moves, never geometry.
   const HD_NORMALS = ['B1000', 'B2020', 'B4020'];
