@@ -174,6 +174,8 @@ def smoke(page, base):
 
     # The Enchanted Castle opens from a game in progress and spends no turn.
     frozen = api("state")
+    # New players get the Remastered look. The reel coverage below runs in the classic look, where every frame is cheap.
+    page.evaluate("localStorage.setItem('castle-options', JSON.stringify({remastered: false}))")
     page.locator("#bookmarks").click()
     page.get_by_role("button", name="The Enchanted Castle", exact=True).click()
     page.wait_for_selector("#castleGame[open]")
@@ -216,7 +218,7 @@ def smoke(page, base):
     page.get_by_role("button", name="Options").click()
     page.get_by_role("button", name="See the remastered throne room").click()
     page.wait_for_function("EnchantedCastle.session.core()?.room?.id===4020", timeout=15000)
-    time.sleep(.4)
+    page.wait_for_function("EnchantedCastle.debug.painter.fullColour", timeout=15000)
     size = page.evaluate("[document.getElementById('castleCanvas').width, document.getElementById('castleCanvas').height]")
     assert size == [2048, 1368], size
     assert page.evaluate("EnchantedCastle.debug.painter.fullColour"), "Remastered room was not drawn"

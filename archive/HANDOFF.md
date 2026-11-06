@@ -2,8 +2,6 @@
 
 You are taking over as lead engineer and coordinator. Read this file, then `DESIGN_PRIORITIES.md` (start at "Release plan"), then `README.md`. Check `git log`, `git status` and the wave reports before acting, because this brief may be behind the repository.
 
-**Deadline:** midnight at the end of Friday 6 November 2026. Aim to finish by 9 pm Pacific.
-
 **Branch:** `feature/asset-parity`. Commit and push checked work without asking. Do not merge to `main` until the release step. Never force-push.
 
 ## The project
@@ -32,24 +30,13 @@ Shape reports from agents have passed visibly bad art. Measure each delivery and
 
 ## Current state
 
-- **Castle:** all 14 rooms are painted and lit, with drifting sky outdoors and light on sprites. 144 reels are painted.
-- **Waiting on Argon:** `archive/dc/AGY_WAVE_FITTINGS.md` and `archive/dc/AGY_WAVE_HALL.md`. Their reports land in `art/castle-3d/WAVE_*_REPORT.md`.
-- **Adventure:** `game/view.js` can show painted rooms, but `PlateView.painted` is empty. Add a room id only after its art passes.
-- **Waiting on Argon for the adventure:** `AGY_WAVE_SCEPTERS_PILOT.md`, `_ROOMS_A.md`, `_ROOMS_B.md`, `_ART.md` and `_INHABITANTS.md`, all in `archive/dc/`. Files and reports land in `art/es-3d/`.
-- **Google Flow fallback:** `archive/dc/FLOW_ROOMS.md`. The user drops results in `art/es-3d/incoming/`. These need aligning to the plate and resizing to 338 x 314, with a 4x master. Uploads are in `art/es-3d/guides/`, which is not committed.
+Released on 6 November 2026: PR 1 is merged to `main`, GitHub Pages is live, and the Windows zip is on the `remaster-2026-11-06` release.
 
-## Still to do
-
-1. When a castle report lands: run the checks below, view every frame, repair or reject, add reels with `add_painted.py`, test, commit and push. Stage only the wave's own files.
-2. When adventure rooms land: compare each with its plate, add the id to `PlateView.painted`, test with `paint_test.py <id> <file>`, then commit and push.
-3. When turning, players see parts the disk never drew, which stay in Lit colour. Tint them to match each room's painting in the `if(C)` block of `PlateView.render`.
-4. Painted inhabitants need code: `render` still draws sprites from 1-bit bits with `C.spritePixel`. Drop this if time runs short.
-5. Make the marsh rooms harder to get lost in, using `game/boundary.js` and `game/hints.js`.
-6. Scepters: the castle draws black-and-white plates in `case 'scepter'` of `drawEntity`. Use the new art, and make Pixal3D spins from the `hero/` images if time allows.
-7. Rebuild the flowchart with `python archive/dc/tools/build_flowchart.py <folder of room shots>`, after running `tour_rooms.py`.
-8. Add `art/castle-3d`, `art/remaster-3d/full`, `art/es-3d` and any other new art folders to the file list in `web/stage.py`. The web build does not include them yet. Keep guides, previews and `art/castle-models` out.
-9. Release: update `archive/PARITY.md` and the README, run every test, play the winning route muted, open a pull request, merge to `main` only with the user's go-ahead, confirm the GitHub Pages deploy, and rebuild the Windows ZIP.
-10. Stop ComfyUI when finished.
+- **Castle:** every screen in play is painted, with all 172 reels.
+- **Adventure:** 185 of 200 rooms and all 28 inhabitants are painted. Batch 5 has 15 rooms unpainted, in `archive/dc/AGY_WAVE_SCEPTERS_ROOMS_05.md`.
+- **Objects:** the King, the Guard and the other 148 objects are still dotted. Briefs are `AGY_WAVE_SCEPTERS_OBJECTS_A.md` and `_B.md`; `PlateView.paintedObjects` switches them on after checking.
+- **Known limits:** seams when walking far off-centre outdoors, a hard Beginner castle, rebuilt step lists not replayed end to end, and no real controller test.
+- **Windows zip:** rebuild with `web/package_windows.py <old zip> <new zip>`, then upload it to a release. Do not commit it: it is over GitHub's file limit.
 
 ## Tools
 
