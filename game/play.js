@@ -84,7 +84,7 @@
     if(goal!==hintGoal){hintGoal=goal;hintTier=0;}
     const tierIndex=Math.min(hintTier,Math.max(0,milestone.tiers.length-1));
     const tier=milestone.tiers[tierIndex],exhausted=hintTier>=milestone.tiers.length;
-    const text=Array.isArray(tier)?'Exactly: '+tier.join(' · ')+'.':tier;
+    const text=Array.isArray(tier)?'Step by step: '+tier.join(' · ')+'. A fight or a thief can add turns.':tier;
     const local=goal.startsWith('local/');
     const heading=local?milestone.title:'Step '+(index+1)+' of '+count+' · '+milestone.title;
     tabs('journal');line(heading+(tierIndex?' · clue '+(tierIndex+1):'')+'. '+text,'aside hint');

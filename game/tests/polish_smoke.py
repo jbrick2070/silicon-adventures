@@ -389,7 +389,7 @@ def smoke(page, base, home):
             break
         command("west")
     room("squasher")
-    hint_without_turn("Click the door")
+    hint_without_turn("Click the narrow door")
     click_object("AOBJ/27105")
     hint_without_turn("Go west immediately")
     command("west")
