@@ -99,13 +99,22 @@ class PlateView {
     const art = await this.decodeImage(`art/es-3d/ASCN-${id}.png`);
     return art.w === this.w && art.h === this.h ? new Uint32Array(art.rgba.buffer.slice(0)) : null;
   }
+  // Painted rooms are blended between pixels, so they stay smooth up close.
+  smooth(u, v) {
+    const w = this.w, h = this.h, p = this.paint;
+    const x = u < 0 ? 0 : u > w - 1.001 ? w - 1.001 : u, y = v < 0 ? 0 : v > h - 1.001 ? h - 1.001 : v;
+    const x0 = x | 0, y0 = y | 0, fx = x - x0, fy = y - y0, i = y0 * w + x0;
+    const a = p[i], b = p[i + 1], c = p[i + w], d = p[i + w + 1];
+    const mix = s => ((a >>> s & 255) * (1 - fx) + (b >>> s & 255) * fx) * (1 - fy) + ((c >>> s & 255) * (1 - fx) + (d >>> s & 255) * fx) * fy;
+    return 0xff000000 | mix(16) << 16 | mix(8) << 8 | mix(0);
+  }
   // Past the drawing's edges, each unseen wall and floor is laid with the painting's own surfaces.
   beyond(face, x, y, z, r) {
-    const fold = (a, n) => { a = ((Math.floor(a) % (2*n)) + 2*n) % (2*n); return a < n ? a : 2*n-1-a; };
     const k = r.focal / r.back, flat = Math.abs(face) === 3, band = this.h * .2;
-    const u = fold(r.cx + (Math.abs(face) === 1 ? z : x) * k, this.w);
-    const v = flat ? (face > 0 ? this.h - 1 - fold(z * k * .5, band) : fold(z * k * .5, band)) : fold(r.cy - (y - r.eye) * k, this.h);
-    const c = this.paint[Math.floor(v) * this.w + u];
+    const fu = r.cx + (Math.abs(face) === 1 ? z : x) * k, fv = flat ? z * k * .5 : r.cy - (y - r.eye) * k;
+    const tri = (a, n) => { a = ((a % (2*n)) + 2*n) % (2*n); return a < n ? a : 2*n - a; };
+    const u = tri(fu, this.w - 1), v = flat ? (face > 0 ? this.h - 1 - tri(fv, band) : tri(fv, band)) : tri(fv, this.h - 1);
+    const c = this.smooth(u, v);
     return 0xff000000 | (c >> 16 & 255) * .78 << 16 | (c >> 8 & 255) * .78 << 8 | (c & 255) * .78;
   }
   async buildSolids(rig) {
@@ -410,7 +419,7 @@ class PlateView {
         depth[idx]=t;
         const x=p.x+dx*t, y=eye+dy*t,z=p.z+dz*t;
         const fx=cx+f*x/z, fy=cy-f*(y-r.eye)/z, px=Math.floor(fx), py=Math.floor(fy);
-        let unseenMaterial=0,fenced=false;
+        let unseenMaterial=0,fenced=false,onTrail=false;
         const plateHere=z>.02 && visible && !solid && px>=0&&px<w&&py>=0&&py<h;
         if(fenceEdge && !diskEye && !layerBit && !solid && fenceT<=t+1e-4){
           const fenceY=eye+dy*fenceT;
@@ -442,6 +451,7 @@ class PlateView {
           pix[idx]=cBit===1?ink:paper;
         } else if(R){
           const trail=fence&&face===3&&B.onTrail(fence,x,z);
+          onTrail=trail;
           const sample=trail?R.shadeTrail(sx,sy):R.shadeUnseenWorld(this,face,x,y,z,t,sx,sy,dx,dy,dz,C?.surround);
           pix[idx]=(sample&3)===1?ink:paper;
           unseenMaterial=sample>>>2;
@@ -481,17 +491,23 @@ class PlateView {
           }
           // Where a clean plate has lifted an object off the wall, the painting would still show it.
           if(this.paint && tex && uv<this.paint.length && !(tex===clean && this.lifted?.[uv])){
-            pix[idx]=this.paint[uv];
+            pix[idx]=this.smooth(fx-.5,fy-.5);
             continue;
           }
           // Spikes has a 313-row plate in the 314-row viewport.
           let tag=tex && uv>=tex.bits.length ? 64 : tex?.materials?.[uv] || 0;
           if(!(tag&31))tag|=unseenMaterial || solid?.layer?.dominant || C.fallback(face,y);
           pix[idx]=C.pixel(pix[idx]===ink,tag,face,solid && hitUsed?.plane,solid,x,y,z,dy*inverseRayLength,tex?.tones?.[uv]||0);
+          // A boundary across the drawn picture stays in the room data, so the painting shows through it.
+          if(this.paint && fenced && z>.02 && px>=0 && py>=0 && px<w && py<h && visible && !solid){
+            pix[idx]=this.smooth(fx-.5,fy-.5);
+            continue;
+          }
           if(this.paint){
             const seen=this.beyond(face,x,y,z,r);
             // Boundaries stay visible as a darker shape in the painting's own surface.
-            pix[idx]=fenced?0xff000000|(seen>>17&127)<<16|(seen>>9&127)<<8|(seen>>1&127):seen;
+            pix[idx]=fenced?0xff000000|(seen>>17&127)<<16|(seen>>9&127)<<8|(seen>>1&127)
+              :onTrail?0xff000000|Math.min(255,(seen>>16&255)*1.5+36)<<16|Math.min(255,(seen>>8&255)*1.5+30)<<8|Math.min(255,(seen&255)*1.5+18):seen;
           }
         }
       }
