@@ -2,7 +2,7 @@
 
 [Play Enchanted Scepters in your browser](https://jbrick2070.github.io/silicon-adventures/). Open the link on your Mac or PC, let the game engine load, then choose **Begin the full adventure** or **Enter the High Altar**. The web edition loads its Java runtime over the internet and runs the original game scripts on your device. Saves stay in that browser profile. Clearing the site's data erases its save. [Built with CheerpJ](https://cheerpj.com/)
 
-For offline play on 64-bit Windows, extract the Windows ZIP and double-click **Play Enchanted Scepters.exe**. The launcher opens the game in your desktop browser. The game, Macintosh disks, sound banks, and interpreter are included.
+For offline play on 64-bit Windows, [download the Windows ZIP](https://github.com/jbrick2070/silicon-adventures/releases/latest/download/Enchanted-Scepters-Windows.zip), extract it and double-click **Play Enchanted Scepters.exe**. The launcher opens the game in your desktop browser. The game, Macintosh disks, sound banks, and interpreter are included.
 
 **Lit colour** shows 185 rooms and all 28 inhabitants in painted 3D, with the disk's own layouts kept in place. The other 15 rooms and the objects in your pack use lit materials over the disk drawings. At the High Altar, the ochre pillars cast shadows onto the paving and the aubergine at the foot of the walls blends into the upper slate. The jungle, wreck, desert and palace have their own materials. Click **Classic B/W** or press **L** at any point to see the original Macintosh picture. Press it again to return. [Colour plates and comparison](art/colour/README.md)
 
