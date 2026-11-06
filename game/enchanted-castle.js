@@ -694,8 +694,8 @@
     ['Climb', 'Up and Down, or W and S', 'Stick or pad'],
     ['Ropes', classic ? 'Left or Right turns, then changes rope or leaps off' : 'Left or Right changes rope. Space leaps off', 'Stick, then A'],
     ['Jump', 'Space. Hold Down too for a low jump', 'A'],
-    classic ? ['Throw', 'Move the mouse to set the arm, then click. Stand still to throw', 'X']
-      : ['Throw', 'Click to throw at the pointer, or F for the nearest foe. Hold to keep throwing', 'X'],
+    classic ? ['Throw', 'Move the mouse to set the arm, then click. Stand still to throw', 'Right stick aims. X throws']
+      : ['Throw', 'Click to throw at the pointer, or F for the nearest foe. Hold to keep throwing', 'Right stick aims. X throws'],
     ['Act', classic ? 'Q pulls, presses and picks up. Hold it to raise the shield' : 'Q pulls and presses. Hold it to raise the shield', 'B'],
     ['Duck', classic ? 'E' : 'Down on open floor, or E', 'Y'],
     ['Pause', 'Esc, P or Tab', 'Start'],
