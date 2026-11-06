@@ -376,6 +376,11 @@
   const fleet=new Image();fleet.src='art/es-3d/aircraft/courier.png';
   const towerArt=new Image();towerArt.src='art/es-3d/aircraft/tower.png';
   const FRAMES=16,FW=256,FH=160;
+  // Painted station overlays, one for each lantern bearing, lit and unlit. Any that are missing use the drawing.
+  const station={};
+  for(const b of ['north','east','south','west'])for(const f of ['','-flash']){
+    const img=new Image();img.src=`art/es-3d/aircraft/lamp-${b}${f}.png`;station[b+f]=img;
+  }
   const ready=img=>img.complete&&img.naturalWidth>0;
   function flyModel(ctx,x,y,width,turn){
     const f=((Math.floor(turn*FRAMES)%FRAMES)+FRAMES)%FRAMES,h=width*FH/FW;
@@ -386,6 +391,7 @@
     const ctx=canvas.getContext('2d',{alpha:false,willReadFrequently:true});
     const painted=colour&&ready(towerArt)&&['tower','beacon','approach'].includes(stage);
     const model=colour&&ready(fleet);
+    const overlay=(b,f)=>{const img=painted?station[b+(f?'-flash':'')]:null;return img&&ready(img)?img:null;};
     const key=stage+'-'+colour+'-'+open+'-'+painted;
     let plate=cache.get(canvas);
     if(plate?.key!==key){
@@ -404,14 +410,15 @@
     plate.pixels.set(plate.base);
     if(stage==='beacon'){
       if(!model)aircraft(plate.g,elapsed);
-      beaconDesk(plate.g);compass(plate.g,bearing);shutterLamp(plate.g,bearing,flash);
+      if(!overlay(bearing,flash))beaconDesk(plate.g),compass(plate.g,bearing),shutterLamp(plate.g,bearing,flash);
     }else if(stage==='approach'){
       if(!model||success)courier(plate.g,elapsed,success);
-      beaconDesk(plate.g);compass(plate.g,'east');shutterLamp(plate.g,'east',flash);
+      if(!overlay('east',flash))beaconDesk(plate.g),compass(plate.g,'east'),shutterLamp(plate.g,'east',flash);
     }else if(stage==='tower'){if(!model)aircraft(plate.g,elapsed);}
     else if(stage==='guardroom')shields.forEach((_,i)=>shield(plate.g,i,i===active&&flash,elapsed));
     else knocker(plate.g,flash);
     ctx.putImageData(plate.frame,0,0);
+    const front=stage==='beacon'?overlay(bearing,flash):stage==='approach'?overlay('east',flash):null;
     if(model&&(stage==='tower'||stage==='beacon')){
       // It circles the valley, so the player keeps watching the sky. The sky target is unchanged.
       const a=elapsed*.16;
@@ -419,6 +426,7 @@
     }else if(model&&stage==='approach'){
       flyModel(ctx,205+Math.round(32*Math.sin(elapsed*.24)),78+Math.round(5*Math.sin(elapsed*.35)),150,.3+Math.sin(elapsed*.4)*.03);
     }
+    if(front)ctx.drawImage(front,0,0,W,H);
   }
   window.KnockArt={draw,shields,beaconRegions};
 })();
