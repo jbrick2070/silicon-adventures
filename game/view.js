@@ -129,7 +129,14 @@ class PlateView {
     const u = tri(fu, this.w - 1), v = flat ? (face > 0 ? this.h - 1 - tri(fv, band) : tri(fv, band)) : tri(fv, this.h - 1);
     const c = this.smooth(u, v);
     // Unseen ground leans to the room's own ground colour, so a pool in the drawing cannot repeat as a wedge.
+    // Next to the drawing, the ground starts from the painting's own edge, so there is no hard line.
     const t = flat ? this.groundTone : null, m = flat ? .78 : 0;
+    if (flat && z > .02) {
+      const ex = r.cx + r.focal * x / z, ey = r.cy - r.focal * (y - r.eye) / z;
+      const cx = ex < 0 ? 0 : ex > this.w - 1 ? this.w - 1 : ex, cy = ey < 0 ? 0 : ey > this.h - 1 ? this.h - 1 : ey;
+      const far = Math.min(1, .55 + Math.hypot(ex - cx, ey - cy) / 90), e = this.smooth(cx, cy), blend = n => (e >> n & 255) * (1 - far) + (t ? t[n / 8] : 0) * far;
+      return 0xff000000 | blend(16) << 16 | blend(8) << 8 | blend(0);
+    }
     const shade = n => ((c >> n & 255) * (1 - m) + (t ? t[n / 8] : 0) * m) * .95;
     return 0xff000000 | shade(16) << 16 | shade(8) << 8 | shade(0);
   }

@@ -92,7 +92,7 @@ window.ScepterHints = (() => {
     20189: ['Squasher · temple gauntlet', [
       'The walls close in with every turn, and OPEN alone will not unlock the western door.',
       'Look for the secret button drawn on the door itself.',
-      'Click the door to hit its secret button, then go west into the High Altar.'
+      'Click the narrow door high up on the far wall, not the large door below it, to hit the secret button. Then go west into the High Altar.'
     ]]
   };
   const milestones = [
@@ -114,12 +114,12 @@ window.ScepterHints = (() => {
     { title: 'The boiling pool',
       done: (has) => has(FLUTE),
       tiers: ['A boiling pool bars the way below. Cold would help, and the lab beyond has music in it.',
-        'Well tunnel east, cavern pool south, landing west to the boiling pool: cast freeze. Pedestal south, lab east, music room north: SEARCH, then take the flute.',
-        ['cast freeze', 'south', 'east', 'north', 'search', 'get flute']] },
+        'Well tunnel east, cavern pool south, landing west to the boiling pool: cast freeze. Pedestal south, lab east, art east, great hall east, fountain east, music room north: SEARCH, then take the flute.',
+        ['cast freeze', 'south', 'east', 'east', 'east', 'east', 'north', 'search', 'get flute']] },
     { title: 'The snake and the wand',
       done: (has) => has(WAND),
       tiers: ['Music soothes what guards the cavern, and an altar answers prayer.',
-        'Cavern, south of the great hall: play flute. Altar to the west: pray, then take the wand.',
+        'Cavern, south of the lab: play flute. Altar to the west: pray, then take the wand.',
         ['play flute', 'west', 'pray', 'get wand']] },
     { title: 'The Earth Scepter',
       done: (has) => has(EARTH),
@@ -139,13 +139,13 @@ window.ScepterHints = (() => {
     { title: 'Diving gear',
       done: (has) => has(SUIT),
       tiers: ['The sea road needs a suit. A tavern on the dunes keeps one in a closet.',
-        'Marsh: get sword. Slough south, ledge west, lava path south, dunes west, salty bar: OPEN. Drinks west, gambling south: OPEN. Closet west: get diving suit, diving helmet, air tank.',
-        ['get sword', 'south', 'west', 'south', 'west', 'open', 'west', 'south', 'open', 'west', 'get diving suit', 'get diving helmet', 'get air tank']] },
+        'Marsh: get sword. Slough south, cliff road south, ledge west, lava path south, lava tunnel south, sea cliff west to the dunes, salty bar west: OPEN. Drinks west, gambling south: OPEN. Closet west: get diving suit, diving helmet, air tank.',
+        ['get sword', 'south', 'south', 'west', 'south', 'south', 'south', 'west', 'west', 'open', 'west', 'south', 'open', 'west', 'get diving suit', 'get diving helmet', 'get air tank']] },
     { title: 'Oil and a chip',
       done: (has) => has(CHIP) || has(PEARL) || has(TRIDENT) || has(WATER),
       tiers: ['The dock keeps oil. The beach keeps a small thing worth searching for, and keep it safe: a thief would end the sea voyage.',
         'Salty bar south to the dock: get oil can. Seaside east, silicon beach: SEARCH, get chip.',
-        ['south', 'get oil can', 'east', 'search', 'get chip']] },
+        ['south', 'get oil can', 'east', 'east', 'search', 'get chip']] },
     { title: 'The wreck’s pearl',
       done: (has, seen, scene, _named, objects) =>
         has(PEARL) || has(TRIDENT) || has(IRONKEY) || has(WATER) ||
@@ -161,8 +161,8 @@ window.ScepterHints = (() => {
     { title: 'The hatch and the Queen',
       done: (has) => has(IRONKEY) || has(WATER),
       tiers: ['A hatch in the sea floor leads to an airlock that needs oil, and to a Queen who asks for what you carry.',
-        'Hatch, south of Neptune’s Throne: open, down. Airlock: close hatch, turn, oil airlock, open airlock. Greeting east: wait, drop. Court north, then east: wait, say SCEPTER, and take the iron key.',
-        ['open', 'down', 'close hatch', 'turn', 'oil airlock', 'open airlock', 'east', 'wait', 'drop', 'north', 'east', 'wait', 'scepter', 'get iron key']] },
+        'Hatch, south of Neptune’s Throne: open, down. Airlock: close hatch, turn, oil airlock, open airlock. Greeting east: wait, drop. Court north, then east twice to the Queen: wait, say SCEPTER, and take the iron key.',
+        ['open', 'down', 'close hatch', 'turn', 'oil airlock', 'open airlock', 'east', 'wait', 'drop', 'north', 'east', 'east', 'wait', 'scepter', 'get iron key']] },
     { title: 'The Water Scepter',
       done: (has) => has(WATER),
       tiers: ['A grate past the bend hides a lair; a thrown trident settles it. Then the Queen’s own chamber.',
