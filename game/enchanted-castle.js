@@ -630,7 +630,7 @@
       const path = core.run.path, step = path.steps[core.run.step];
       if (path.door && core.run.step > 2) {
         const key = 'A' + path.door, frame = Math.min(2, Math.floor(core.run.step / 6)), soft = p.fullColour ? softDoor(key, frame) : null;
-        if (soft) b.drawImage(soft, path.doorX, path.doorY, soft.width / HD_SCALE, soft.height / HD_SCALE);
+        if (soft) { p.used.add(key); b.drawImage(soft, path.doorX, path.doorY, soft.width / HD_SCALE, soft.height / HD_SCALE); }
         else p.reel(key, frame, path.doorX, path.doorY);
       }
       if (step && step.frame >= 0) p.reel('A' + path.reels[Math.max(0, step.reel)], step.frame, step.x, step.y);
@@ -757,7 +757,7 @@
     const painter = new Painter(canvas), keys = new Set(), tapped = new Set(), input = {};
     let core = null, view = 'loading', frame = 0, last = 0, spare = 0, paused = false, tick = 0, cine = null, padDir = 0, padA = false, padLock = false;
     let pointer = null, usedMouse = false, lineUntil = 0;
-    const options = {classic: false, ward: false, vertical: false, captions: true, remastered: false};
+    const options = {classic: false, ward: false, vertical: false, captions: true, remastered: true};
     try { Object.assign(options, JSON.parse(localStorage.getItem('castle-options') || '{}')); } catch { /* Storage may be blocked. */ }
     for (const box of dialog.querySelectorAll('[data-opt]')) {
       box.checked = !!options[box.dataset.opt];
