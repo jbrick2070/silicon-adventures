@@ -105,8 +105,13 @@ class PlateView {
     const x = u < 0 ? 0 : u > w - 1.001 ? w - 1.001 : u, y = v < 0 ? 0 : v > h - 1.001 ? h - 1.001 : v;
     const x0 = x | 0, y0 = y | 0, fx = x - x0, fy = y - y0, i = y0 * w + x0;
     const a = p[i], b = p[i + 1], c = p[i + w], d = p[i + w + 1];
-    const mix = s => ((a >>> s & 255) * (1 - fx) + (b >>> s & 255) * fx) * (1 - fy) + ((c >>> s & 255) * (1 - fx) + (d >>> s & 255) * fx) * fy;
-    return 0xff000000 | mix(16) << 16 | mix(8) << 8 | mix(0);
+    // Weights in 1/256ths, written out because this runs for every pixel.
+    const gx = fx * 256 | 0, gy = fy * 256 | 0, hx = 256 - gx, hy = 256 - gy;
+    const wa = hx * hy, wb = gx * hy, wc = hx * gy, wd = gx * gy;
+    const r = (a & 255) * wa + (b & 255) * wb + (c & 255) * wc + (d & 255) * wd >>> 16;
+    const g = (a >>> 8 & 255) * wa + (b >>> 8 & 255) * wb + (c >>> 8 & 255) * wc + (d >>> 8 & 255) * wd >>> 16;
+    const l = (a >>> 16 & 255) * wa + (b >>> 16 & 255) * wb + (c >>> 16 & 255) * wc + (d >>> 16 & 255) * wd >>> 16;
+    return (0xff000000 | l << 16 | g << 8 | r) >>> 0;
   }
   // Past the drawing's edges, each unseen wall and floor is laid with the painting's own surfaces.
   beyond(face, x, y, z, r) {
