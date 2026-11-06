@@ -68,7 +68,7 @@ for name in ("c-dragon", "marsh", "neptune", "c-ropes", "sanctum", "volcano", "c
     frames(name, 2.2, name + ".mp4"); seq.append(name)
 atlas(ROOT / "art/es-3d/scepters/spin-fire.png", 256, 256, 6, 24, 2, "sp1.mp4"); atlas(ROOT / "art/es-3d/scepters/spin-water.png", 256, 256, 6, 24, 2, "sp2.mp4"); seq += ["sp1", "sp2"]
 atlas(ROOT / "art/castle-3d/finale-empty.png", 640, 428, 8, 48, 3.5, "e.mp4"); seq.append("e")
-card("t1.png", [("scepters", "Happy Birthday", 8, GOLD), ("dialog", "Some games never get old.", 4, PAPER), ("dialog", "Neither do you.", 4, PAPER)]); still("t1.png", 5, "t1.mp4"); seq.append("t1")
+card("t1.png", [("scepters", "Happy Birthday", 8, GOLD)]); still("t1.png", 5, "t1.mp4"); seq.append("t1")
 (W / "list.txt").write_text("".join(f"file '{(W / (s + '.mp4')).as_posix()}'\n" for s in seq), encoding="utf8")
 ff("-f", "concat", "-safe", "0", "-i", str(W / "list.txt"), "-c:v", "libx264", "-crf", "20", "-r", "30", "-c:a", "aac", "-ar", "48000", str(W / "all.mp4"))
 dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(W / "all.mp4")], capture_output=True, text=True).stdout)

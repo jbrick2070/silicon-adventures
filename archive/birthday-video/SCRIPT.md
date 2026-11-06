@@ -16,7 +16,7 @@ A surprise for 7 November 2026, about 90 seconds. The video never shows or names
 | 8 | 5 | Black and white floods with colour, and they fall into the Great Hall. | |
 | 9 | 26 | Real gameplay: the marsh, the shark, the dragon, the ropes, the Black Knight on his throne, and a scepter turning in the air. | Game sound only. |
 | 10 | 8 | The empty throne. | |
-| 11 | 6 | Title card in the disk's font. | Happy Birthday. Some games never get old. Neither do you. |
+| 11 | 6 | Title card in the disk's font. | Happy Birthday |
 
 **Sound:** the disks' own sounds and music. No film music.
 
