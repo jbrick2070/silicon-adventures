@@ -1001,6 +1001,7 @@
     canvas.addEventListener('pointermove', e => { pointer = point(e); usedMouse = e.pointerType === 'mouse'; });
     canvas.addEventListener('pointerdown', e => {
       canvas.focus({preventScroll: true}); pointer = point(e); usedMouse = e.pointerType === 'mouse';
+      if (paused) return;
       if (core?.mode === 'hall') {
         const p = point(e), doors = core.plan.DOORS;
         let best = 0; doors.forEach((d, i) => { if (Math.abs(d.x - p.x) < Math.abs(doors[best].x - p.x)) best = i; });

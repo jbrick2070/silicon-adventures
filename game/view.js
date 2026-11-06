@@ -120,7 +120,7 @@ class PlateView {
     const tri = (a, n) => { a = ((a % (2*n)) + 2*n) % (2*n); return a < n ? a : 2*n - a; };
     const u = tri(fu, this.w - 1), v = flat ? (face > 0 ? this.h - 1 - tri(fv, band) : tri(fv, band)) : tri(fv, this.h - 1);
     const c = this.smooth(u, v);
-    return 0xff000000 | (c >> 16 & 255) * .78 << 16 | (c >> 8 & 255) * .78 << 8 | (c & 255) * .78;
+    return 0xff000000 | (c >> 16 & 255) * .95 << 16 | (c >> 8 & 255) * .95 << 8 | (c & 255) * .95;
   }
   async buildSolids(rig) {
     const R = window.RefreshEngine;
@@ -510,9 +510,8 @@ class PlateView {
           }
           if(this.paint){
             const seen=this.beyond(face,x,y,z,r);
-            // Boundaries stay visible as a darker shape in the painting's own surface.
-            pix[idx]=fenced?0xff000000|(seen>>17&127)<<16|(seen>>9&127)<<8|(seen>>1&127)
-              :onTrail?0xff000000|Math.min(255,(seen>>16&255)*1.5+36)<<16|Math.min(255,(seen>>8&255)*1.5+30)<<8|Math.min(255,(seen&255)*1.5+18):seen;
+            // Painted rooms carry on as painted. The worn trail still shows the way to a real exit.
+            pix[idx]=onTrail?0xff000000|Math.min(255,(seen>>16&255)*1.14+12)<<16|Math.min(255,(seen>>8&255)*1.14+9)<<8|Math.min(255,(seen&255)*1.14+4):seen;
           }
         }
       }
