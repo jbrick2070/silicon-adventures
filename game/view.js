@@ -15,6 +15,7 @@ const liftedArea = (a, b) => {
 };
 class PlateView {
   // Rooms repainted in the castle's lit style. Others keep Lit colour.
+  static paintedObjects = new Set();
   static painted = new Set([21149, 7990, 24338, 25936, 2577, 25694, 4315, 4957, 20301, 14688, 10472, 23272, 4223, 20598, 18366,
     21083, 17872, 17888, 3099, 14750, 29408, 14057, 31514, 32256,
     1092, 26474, 9514, 22673, 29467, 22733, 23229, 32726, 23147, 7747, 7820, 29361, 17639, 27025, 5196, 10021, 28593, 12615, 18391, 9567, 11672, 23935]);
@@ -87,8 +88,9 @@ class PlateView {
       const materials = window.RoomColour ? await RoomColour.materialMap(url,base.w,base.h) : null;
       const dominant = window.ColourIndex?.dominant[url] || 0;
       // Painted inhabitants share their plate's shape and frames, so they are read at the same positions.
-      const figure = url.match(/ACHR-\d+\.png$/);
-      const art = figure ? await this.decodeImage('art/es-3d/inhabitants/'+figure[0]).catch(() => null) : null;
+      const figure = url.match(/ACHR-\d+\.png$/), thing = url.match(/AOBJ-(\d+)\.png$/);
+      const art = figure ? await this.decodeImage('art/es-3d/inhabitants/'+figure[0]).catch(() => null)
+        : thing && PlateView.paintedObjects.has(+thing[1]) ? await this.decodeImage('art/es-3d/objects/'+thing[0]).catch(() => null) : null;
       const paint = art?.w === base.w && art.h === base.h ? new Uint32Array(art.rgba.buffer.slice(0)) : null;
       return {w:base.w, h:base.h, bits, tones, borders, fields, rimBits, swapBits, materials, dominant, paint};
     })());
@@ -98,6 +100,12 @@ class PlateView {
   async painting(id) {
     const art = await this.decodeImage(`art/es-3d/ASCN-${id}.png`);
     return art.w === this.w && art.h === this.h ? new Uint32Array(art.rgba.buffer.slice(0)) : null;
+  }
+  // The average colour of the bottom of a painting, kept to the same channel order as its pixels.
+  ground(paint) {
+    const sum = [0, 0, 0], from = paint.length * .78 | 0; let n = 0;
+    for (let i = from; i < paint.length; i += 5, n++) for (let c = 0; c < 3; c++) sum[c] += paint[i] >>> c * 8 & 255;
+    return sum.map(v => v / n);
   }
   // Painted rooms are blended between pixels, so they stay smooth up close.
   smooth(u, v) {
@@ -120,7 +128,10 @@ class PlateView {
     const tri = (a, n) => { a = ((a % (2*n)) + 2*n) % (2*n); return a < n ? a : 2*n - a; };
     const u = tri(fu, this.w - 1), v = flat ? (face > 0 ? this.h - 1 - tri(fv, band) : tri(fv, band)) : tri(fv, this.h - 1);
     const c = this.smooth(u, v);
-    return 0xff000000 | (c >> 16 & 255) * .95 << 16 | (c >> 8 & 255) * .95 << 8 | (c & 255) * .95;
+    // Unseen ground leans to the room's own ground colour, so a pool in the drawing cannot repeat as a wedge.
+    const t = flat ? this.groundTone : null, m = flat ? .78 : 0;
+    const shade = n => ((c >> n & 255) * (1 - m) + (t ? t[n / 8] : 0) * m) * .95;
+    return 0xff000000 | shade(16) << 16 | shade(8) << 8 | shade(0);
   }
   async buildSolids(rig) {
     const R = window.RefreshEngine;
@@ -220,7 +231,7 @@ class PlateView {
     ]);
     if (serial !== this.serial) return;
     Object.assign(this, {
-      meta, source, paint, lifted: paint && refreshClean !== source ? liftedArea(source, refreshClean) : null, axialPlateDepth: Boolean(reviewed),
+      meta, source, paint, groundTone: paint ? this.ground(paint) : null, lifted: paint && refreshClean !== source ? liftedArea(source, refreshClean) : null, axialPlateDepth: Boolean(reviewed),
       colourRoom: window.RoomColour ? new RoomColour.Room(meta,refreshRig,refreshSolids || origSolids) : null,
       origRig, refreshRig,
       origClean, refreshClean,
@@ -306,6 +317,7 @@ class PlateView {
     if(ticket!==this.serial) return;
     const sprite=Object.assign(this.pointFromPlate(meta),{key,texture,cols:1,row:0,frame:0,...options});
     if(options.x===undefined && options.z===undefined) sprite.plate=meta; // Seated by the active rig horizon
+    if(key==='AOBJ/27297') sprite.front=3; // The disk draws the King over his throne, so its 3D form must not hide him.
     if(this.meta?.id===7990 && key==='AOBJ/14168') {
       sprite.altarLid = meta;
       if (this.refreshed && window.AltarRefresh?.lid) Object.assign(sprite, window.AltarRefresh.lid);
@@ -545,7 +557,7 @@ class PlateView {
         if(j>clipBottom)break;
         for(let i=Math.max(0,Math.ceil(left-.5));i<Math.min(w,left+sw-.5);i++){
           const idx=i+j*w;
-          if(t>depth[idx]+.025)continue;
+          if(t-(s.front||0)>depth[idx]+.025)continue;
           if(wither && ((i*7919+j*104729)%97)/97<wither)continue;
           const sx=Math.min(fw-1,Math.floor((i+.5-left)*fw/sw));
           const tIdx=sy*tex.w+offsetX+(s.flip?fw-1-sx:sx);
@@ -567,7 +579,7 @@ class PlateView {
       if(px<left||px>=left+sw||py<top||py>=top+sh)continue;
       const fw=s.fw||s.texture.w,fh=s.fh||s.texture.h, ix=Math.floor((px-left)*fw/sw);
       const bit=((this.refreshed&&!this.colour&&s.texture.swapBits)||s.texture.bits)[(s.row*fh+Math.floor((py-top)*fh/sh))*s.texture.w+(s.frame%s.cols)*fw+(s.flip?fw-1-ix:ix)];
-      if((s.solidHit||bit) && t<=this.depth[Math.floor(py)*this.w+Math.floor(px)]+.025)return a;
+      if((s.solidHit||bit) && t-(s.front||0)<=this.depth[Math.floor(py)*this.w+Math.floor(px)]+.025)return a;
     }
     return null;
   }

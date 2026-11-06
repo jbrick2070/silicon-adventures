@@ -19,7 +19,7 @@ ASSETS = (
     "art/refresh/forms/**/*.png", "art/refresh/sprites/**/*.png",
     "art/remaster-3d/full/4x/*.png", "art/castle-3d/4x/*.png", "art/castle-3d/finale-*.png",
     "art/castle-3d/normals/*.png", "art/castle-3d/sky/*.png",
-    "art/es-3d/ASCN-*.png", "art/es-3d/inhabitants/*.png", "art/es-3d/scepters/4x/*.png", "art/es-3d/scepters/spin-*.png", "art/es-3d/aircraft/*.png",
+    "art/es-3d/ASCN-*.png", "art/es-3d/inhabitants/*.png", "art/es-3d/objects/*.png", "art/es-3d/scepters/4x/*.png", "art/es-3d/scepters/spin-*.png", "art/es-3d/aircraft/*.png",
     "audio/dark-castle-bank.js", "audio/vault-audio.js", "audio/region-music.js",
     "audio/music/*.wav", "engine/adventure.jar", "engine/vendor/LICENSE-WAGE.txt",
 )
@@ -58,7 +58,7 @@ def stage(destination):
 
     for pattern in ASSETS:
         files = sorted(ROOT.glob(pattern))
-        if not files:
+        if not files and "es-3d/objects" not in pattern:
             raise SystemExit(f"No files matched {pattern}")
         for source in files:
             target = destination / source.relative_to(ROOT)
