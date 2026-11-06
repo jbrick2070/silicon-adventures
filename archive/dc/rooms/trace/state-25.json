@@ -1,0 +1,176 @@
+{
+  "offset_convention": "CODE segment-body hex offsets ($xxxx), excluding the 4-byte resource header and 4-byte CODE segment header.",
+  "summary": {
+    "entry_span_kind": 17,
+    "entry_helper_states": [22, 29],
+    "room_used": "1020",
+    "room_name": "Trouble 3 (Dungeon)",
+    "reel_90_a4": {
+      "fork": "Data B",
+      "ppct_id": 132,
+      "frames": 1,
+      "size": [16, 43],
+      "role": "Duncan reaching up to grab the spiked flail on the wall rack (used in prelude state 29)"
+    },
+    "reel_94_a4": {
+      "fork": "Data B",
+      "ppct_id": 133,
+      "frames": 4,
+      "size": [48, 34],
+      "role": "Duncan holding/shuffling horizontally with the spiked flail at waist level (frames 0-1 shuffle, frame 2 drop/release flail in state 28, frame 3 idle)"
+    },
+    "reel_98_a4": {
+      "fork": "Data B",
+      "ppct_id": 134,
+      "frames": 3,
+      "size": [48, 50],
+      "role": "Duncan overhead flail animation (frame 2 pulling flail down off rack in state 26; frames 0 and 1 overhead swing in states 25->27)"
+    },
+    "soun_84_meaning": "Heavy overhead swing whoosh of the spiked flail when mouse button is clicked in state 25",
+    "global_minus_274_a5_effect": "Setting -$274(a5) = 1 signals the Room 1020 Whip Guard ($26a) that Duncan swung the spiked flail within range (x >= 238); the Whip Guard clears -$274(a5), scores Stbl index 1 (150 pts), plays SOUN 57, unlinks its 3 hazard/whip collision boxes, and collapses stunned for 106 updates.",
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 2:$07ba-$07c0",
+      "CODE 2:$1f0a-$1f66",
+      "CODE 2:$1fd6-$2180",
+      "CODE 2:$2af2",
+      "CODE 2:$2afe-$2b0e",
+      "CODE 6:$05ba-$05de",
+      "CODE 5:$0036-$0042",
+      "CODE 4:$0908-$09e4",
+      "CODE 4:$0ba0-$0c06"
+    ]
+  },
+  "entry_to_state_26": {
+    "span_kind": 17,
+    "span_dispatch": "CODE 2:$07ba-$07c0 sets hero state $12(a6) = $16 (state 22, dispatched at CODE 2:$2af2 -> CODE 2:$1fd6).",
+    "room": {
+      "id": "1020",
+      "label": "Trouble 3 (Dungeon)",
+      "span_record": {
+        "span_byte_offset": 1152,
+        "floor_y": 270,
+        "x0": 150,
+        "x1": 169,
+        "kind": 17,
+        "arg_a_min_x": 107,
+        "arg_b_max_x": 468,
+        "arg_c_hit_threshold_x": 238
+      },
+      "uniqueness": "Room 1020 is the only room in castle-data.js containing a span of kind 17."
+    },
+    "sequence": [
+      "1. Standing on kind-17 span [150, 169] at y = 270 puts Duncan in state 22 (CODE 2:$1fd6-$201e), which delegates normal ground movement to $0c6c until Action (bit 2 of $14(a6)) is pressed while neither bit 3 ('flail already taken') nor bit 4 ('crouching') of $15(a6) is set ($1fd6-$1fec).",
+      "2. On Action press ($1ff2-$201e), state 22 clears Action bit 2 of $14(a6), copies the wall-mounted flail prop pointer -$262(a5) (Data A PPCT 519, spawned by CODE 5:$054c) into $2c(a6), sets bit 3 of $15(a6) so the rack can only be used once per life/visit, snaps hero X ($c(a6)) to span.x0 + 8 = 158, and calls jsr $1f0a(pc).",
+      "3. Helper $1f0a-$1f66 saves return address $2012 in $30(a6), sets timer $34(a6) = 5, plays SOUN 73 ($49) at $1f26, and runs state 29 ($1f2c) for 5 updates drawing $90(a4) (Data B PPCT 132, frame 0) at y - 11. On the 5th update, $1f50-$1f64 unlinks the wall prop at $2c(a6) (clr.l 4(obj)), restores state, and jumps to $2012.",
+      "4. Resuming at CODE 2:$2012-$201e sets hero state $12(a6) = $1a (state 26) and countdown timer $2c(a6) = 2."
+    ],
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 2:$07ba-$07c0",
+      "CODE 2:$1f0a-$1f66",
+      "CODE 2:$1fd6-$201e",
+      "CODE 5:$0542-$0550"
+    ]
+  },
+  "reels": {
+    "pointer_table_binding": {
+      "confidence": "PROVEN",
+      "evidence": [
+        "CODE 2:$327a",
+        "CODE 6:$05ba-$05de",
+        "CODE 5:$0036-$0042"
+      ],
+      "mechanism": "Hero field $16(a6) holds A4 = A5 - $17e (initialized at CODE 2:$327a). Room 1020's asset loader in CODE 6:$05ba-$05de loads Data B PPCTs 132, 133, 134 into -$ee(a5), -$ea(a5), -$e6(a5), which equal $90(a4), $94(a4), $98(a4) respectively (-$17e + $90 = -$ee; -$17e + $94 = -$ea; -$17e + $98 = -$e6). CODE 6:$06c4-$06d8 unloads them on room exit."
+    },
+    "$90(a4)": {
+      "a5_slot": "-$ee(a5)",
+      "ppct_id": 132,
+      "fork": "Data B",
+      "frames": 1,
+      "dimensions": [16, 43],
+      "loader_evidence": "CODE 6:$05ba-$05c2 (move.w #$84, -(a7); jsr $268(pc); move.l (a7)+, -$ee(a5))",
+      "usage": "Drawn in state 29 (CODE 2:$1f34, frame 0 at y - 11) while reaching up to pull the flail off the wall."
+    },
+    "$94(a4)": {
+      "a5_slot": "-$ea(a5)",
+      "ppct_id": 133,
+      "fork": "Data B",
+      "frames": 4,
+      "dimensions": [48, 34],
+      "loader_evidence": "CODE 6:$05c8-$05d0 (move.w #$85, -(a7); jsr $268(pc); move.l (a7)+, -$ea(a5))",
+      "usage": "Drawn at y - 2 in state 25 (CODE 2:$2150: frames 0 and 1 while shuffling left/right; frame 3 while standing idle with $8(a6) == 0) and in state 28 (CODE 2:$2062: frame 2 when dropping/releasing the flail).",
+      "confidence": "PROVEN"
+    },
+    "$98(a4)": {
+      "a5_slot": "-$e6(a5)",
+      "ppct_id": 134,
+      "fork": "Data B",
+      "frames": 3,
+      "dimensions": [48, 50],
+      "loader_evidence": "CODE 6:$05d6-$05de (move.w #$86, -(a7); jsr $268(pc); move.l (a7)+, -$e6(a5))",
+      "usage": "Drawn at y - 18 in state 26 (CODE 2:$2028: frame 2 for 2 updates pulling flail down), in state 25 on click (CODE 2:$2106: frame 0 start of overhead swing), and in state 27 (CODE 2:$20a8: frame 1 follow-through of overhead swing).",
+      "confidence": "PROVEN"
+    }
+  },
+  "states": {
+    "25": {
+      "dispatch_offset": "CODE 2:$2afe",
+      "body_range": "CODE 2:$20de-$2180",
+      "confidence": "PROVEN",
+      "behaviour": {
+        "on_mouse_click": "Tests bit 1 of $14(a6) ($20de). If set, clears bit 1 ($20e6), plays SOUN 84 ($54) via $52(a5) ($20ee-$20f2), transitions to state 27 ($1b at $20f8), draws $98(a4) (PPCT 134) frame 0 at y - 18 ($2106-$2110), and runs plague/hazard check $0514 ($217c). Does NOT throw a rock.",
+        "without_click_movement": "Reads toggle $10(a6) into D2 ($211a). If horizontal input $8(a6) < 0 and D2 == 0, subtracts 6 from X ($212a); if $8(a6) > 0 and D2 != 0, adds 6 to X ($2132). Clamps X to [span.a = 107, span.b = 468] ($2134-$2146). Because D2 increments mod 2 every update ($216c-$217a), X advances 6 pixels every 2nd update = 3 pixels/update average (~36.09 px/s).",
+        "without_click_draw": "Draws $94(a4) (PPCT 133) at y - 2 using frame D2 in {0, 1} when $8(a6) != 0, or frame 3 when $8(a6) == 0 ($2154-$2164), then calls $0514 ($217c)."
+      }
+    },
+    "26": {
+      "dispatch_offset": "CODE 2:$2b02",
+      "body_range": "CODE 2:$2020-$2058",
+      "confidence": "PROVEN",
+      "behaviour": "Entered from state 22->29 with $2c(a6) = 2. Each update draws $98(a4) (PPCT 134) frame 2 at y - 18 ($2028-$2034), runs $0514 ($203c), and decrements $2c(a6) ($2040). On the 2nd update ($2c(a6) == 0), transitions to state 25 ($19 at $2046), clears frame toggle $10(a6) ($204c), and awards Stbl byte offset $08 = index 4 = 50 points via $3ea(a5) ($2050-$2054)."
+    },
+    "27": {
+      "dispatch_offset": "CODE 2:$2b06",
+      "body_range": "CODE 2:$20a0-$20dc",
+      "confidence": "PROVEN",
+      "behaviour": "Second update of overhead flail swing. Draws $98(a4) (PPCT 134) frame 1 at y - 18 ($20a8-$20b4), defaults hero state back to 25 ($19 at $20bc) and clears $10(a6) ($20c2), then compares hero X (D0) against span.c ($a(a2,d4.w) = 238 at $20c6). If X < 238 ($20ca), Duncan swung too far left: stays in state 25 and can keep walking/clicking. If X >= 238, sets -$274(a5) = 1 ($20cc) and transitions to state 28 ($1c at $20d2). Runs $0514 ($20d8)."
+    },
+    "28": {
+      "dispatch_offset": "CODE 2:$2b0a",
+      "body_range": "CODE 2:$205a-$209e",
+      "confidence": "PROVEN",
+      "behaviour": "Final flail release update after a successful hit. Draws $94(a4) (PPCT 133) frame 2 at y - 2 ($2062-$206c), runs $0514 ($2074), advances hero's active span offset D4/$4(a6) by +$12 bytes ($2078-$207c, moving off kind-17 span 1152 onto adjacent kind-1 floor span 1170 [170, 259]), sets facing $1e(a6) = +8 (right, $2080), calls $0722 ($2088, resetting hero state $12(a6) to 0), and spawns a permanent static floor prop via $34a(a5) at (265, 301) frame 0 using -$1b4(a5) = Data A PPCT 520 (fallen spiked flail on floor, loaded at CODE 6:$0536-$0540)."
+    }
+  },
+  "soun_84": {
+    "soun_id": 84,
+    "hex": "$54",
+    "fork": "Data B",
+    "call_site": "CODE 2:$20ee-$20f2",
+    "only_call_site_in_game": true,
+    "meaning": "Spiked flail overhead swing sound triggered when the player clicks the mouse button in state 25.",
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 2:$20de-$20f6"
+    ]
+  },
+  "effect_of_setting_minus_274_a5": {
+    "global": "-$274(a5)",
+    "initialized_at": "Cleared to 0 on room setup at CODE 5:$0034 (clr.w -$274(a5)).",
+    "set_at": "CODE 2:$20cc (move.w #$1, -$274(a5)) in hero state 27 when swinging the flail at X >= 238.",
+    "consumed_at": "CODE 4:$0ba0-$0c06 inside Whip Guard routine $26a (spawned in Room 1020 at CODE 5:$0490).",
+    "exact_consequences": [
+      "1. Every update, Whip Guard ($26a) tests tst.w -$274(a5) at CODE 4:$0ba0. When nonzero, it branches to $0bc4.",
+      "2. At $0bc4-$0c04, the Whip Guard clears -$274(a5) = 0, sets its internal state $c(a6) = 5 (collapse), sets frame counter $4(a6) = 0, unlinks all three of its collision boxes from -$20c(a5) ($12(a6), $16(a6), and $e(a6) by clearing offset +4 of each rect node), awards Stbl byte offset $02 = index 1 = 150 points via $3ea(a5) ($0bf2-$0bf6), and plays SOUN 57 ($39, guard knockdown thud) via $52(a5) ($0bfc-$0c00).",
+      "3. State 5 of $26a (CODE 4:$0908-$0996) animates Data B PPCT 408 collapse frames 0..3 over 8 updates (2 updates per frame), then holds frame 3 on the floor for 90 updates ($4(a6) = 8..97, cmpi.w #$62 at $0954), then transitions to state 6 ($0998-$09e4) which plays rising frames for 8 updates ($4(a6) = 12..19) before re-linking its collision box and resuming guard AI — 106 updates (~8.81 s) total incapacitated time so Duncan can pass or unlock the prison cages."
+    ],
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 5:$0034",
+      "CODE 2:$20cc",
+      "CODE 4:$0908-$09e4",
+      "CODE 4:$0ba0-$0c06"
+    ]
+  }
+}

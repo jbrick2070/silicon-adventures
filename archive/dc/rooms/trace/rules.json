@@ -1,0 +1,178 @@
+{
+  "offset_convention": "CODE segment-body hex offsets ($xxxx), excluding the 4-byte resource header and 4-byte CODE segment header.",
+  "lives": {
+    "starting_lives": 5,
+    "global_variable": "-$234(a5)",
+    "initial_inventory": {
+      "rocks_bcd": "$10 (10 rocks, stored in -$2c2(a5) at CODE 1:$20ac)",
+      "elixirs": "0 (stored in -$33c(a5), cleared at CODE 1:$20bc)",
+      "powers_bitmask": "0 (stored in -$276(a5), cleared at CODE 1:$23f6)"
+    },
+    "what_costs_a_life": "Lethal death states (neck-break fall, lethal enemy/projectile hit, drowning/lava kind 22, crushing, lightning, depleted plague collapse, or Gargoyle carry-off) invoke $3ba(a5) -> CODE 4:$5ac4-$5ad6, which decrements -$234(a5) by 1 (subq.w #$1, -$234(a5) at $5acc) and redraws the HUD ($3d2(a5)).",
+    "pit_to_dungeon_exception": "Falling through a bottomless pit span (kind 29, state 40 at CODE 2:$2578-$2588) sets next-room selector -$18a(a5) = -42 ($ffd6) and room-exit flag -$183(a5) = $ff WITHOUT calling $3ba(a5). CODE 1:$2180-$21e4 catches -$18a(a5) == -42 and routes Duncan into Room 1020 (Trouble 3 / Dungeon) via its zip-line entry with no life lost.",
+    "hud_cap_note": "Lives counter -$234(a5) is a signed 16-bit integer with no upper cap in $5b28, though HUD display $3d2(a5) draws up to the status-bar slot limit.",
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 1:$20a6-$20c0",
+      "CODE 1:$2180-$21e4",
+      "CODE 1:$23f0-$23f8",
+      "CODE 2:$2578-$2588",
+      "CODE 4:$5ac4-$5ad6"
+    ]
+  },
+  "plague_and_elixir": {
+    "elixir_pickup": {
+      "span_kind": 32,
+      "hero_state": 43,
+      "handler": "CODE 2:$0832-$0838 -> state 43 ($2b46 -> CODE 2:$2734-$27b0)",
+      "behaviour": "Pressing Action while standing (not crouching) on kind-32 span plays a 3-update stoop animation (Data A PPCT 149, $d4(a4)), plays SOUN 11 ($0b) at $2790, increments elixir count -$33c(a5) by 1 ($2796), unlinks the bottle sprite via $35a(a5) ($279a), and converts the span's kind at $4(a2,d4.w) to 1 (normal floor, $279e)."
+    },
+    "plague_sources": [
+      {
+        "source": "Rat bite (contact hazard type 5 = $05000000 on -$20c(a5))",
+        "evidence": "CODE 2:$052e-$0534, CODE 4:$138e",
+        "rule": "Checked in CODE 2:$0514-$0576 only when Duncan is NOT crouching (!btst #4, $15(a6) at $0514 — crouching makes Duncan miss rat-height plague checks, though rat collision boxes can still interact if standing)."
+      },
+      {
+        "source": "Latched Plague Bat (-$25e(a5) >= 1)",
+        "evidence": "CODE 2:$0578-$05b6, CODE 4:$11ae-$11d4",
+        "rule": "When a Plague Bat ($282) overlaps Duncan's box, it increments latched-bat counter -$25e(a5) (CODE 4:$11d0). Every hero update that runs $0514 tests cmpi.w #$1, -$25e(a5) at CODE 2:$0578 (even while crouching)."
+      }
+    ],
+    "how_elixir_cures_it": {
+      "immunity_timer_field": "$2a(a6) (initialized to 0 on room entry at CODE 2:$3292)",
+      "exact_cure_logic": [
+        "1. When either a rat bite ($0530) or a latched plague bat ($0578) triggers, CODE 2 checks hero immunity timer $2a(a6) ($051c / $057e).",
+        "2. If $2a(a6) > 0, it decrements $2a(a6) by 1 ($0526 / $058a) and returns harmlessly — granting 1 update of protection per count.",
+        "3. If $2a(a6) <= 0, it tests elixir inventory -$33c(a5) ($053c / $0590). If -$33c(a5) > 0, Duncan automatically consumes 1 elixir: plays SOUN 12 ($0c, gulp/cure chime) via $52(a5) ($054a / $05a0), decrements -$33c(a5) by 1 ($0550 / $05a6), redraws HUD via $3d2(a5) ($0554 / $05aa), and sets $2a(a6) = 20 ($14 at $0558 / $05ae).",
+        "4. Thus each Elixir grants 20 updates (~1.66 seconds at 12.03 updates/s) of plague-tick immunity. Importantly, drinking an elixir does NOT detach latched bats (-$25e(a5) is unchanged), so if bats remain latched after 20 updates, another elixir is consumed automatically (or Duncan succumbs if -$33c(a5) == 0).",
+        "5. If $2a(a6) <= 0 and -$33c(a5) <= 0 ($05b8-$05dc), Duncan plays SOUN 10 ($0a) at $05c4 and enters fatal/incapacitating collapse sequence $05de -> state 12 ($0360)."
+      ]
+    },
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 2:$0514-$05dc",
+      "CODE 2:$2734-$27b0",
+      "CODE 4:$11ae-$11d4",
+      "CODE 4:$138e"
+    ]
+  },
+  "shield": {
+    "acquisition": {
+      "span_kind": 25,
+      "room": "3030 (Shield 4)",
+      "hero_state": 36,
+      "handler": "CODE 2:$07fa-$0800 -> state 36 ($2b2a -> CODE 2:$23c2-$2576)",
+      "grants": "Calls $36a(a5) with d0 = 1 ($24f8-$24fc), which sets bit 1 of persistent power bitmask -$276(a5) and hero runtime bitmask $15(a6) (CODE 4:$59d0-$59ec), awards Stbl byte offset $1c = index 14 = 1,000 points ($2500-$2504), plays SOUN 50 ($32) ($250c-$2510), displays a 30-update flashing preview, and exits the room back to the Great Hall ($252e -> $08e8)."
+    },
+    "activation_and_timing": {
+      "trigger": "Pressing Action (bit 2 of $14(a6)) while standing upright (!btst #4, $15(a6)) in ground state 0 calls jsr $258a(pc) at CODE 2:$0c84.",
+      "entry_check": "CODE 2:$258a tests btst #1, $15(a6). If the Shield power is owned, it starts looping SOUN 99 ($63) via $52(a5) ($2594-$2598), sets duration timer $2c(a6) = 30 ($1e at $259e), saves prior state in $2e(a6) ($25a4), pops return address ($25b0), and enters hero state 37 ($25 at $25aa -> $25b6).",
+      "duration": "Maximum 30 updates (~2.49 seconds at 12.03 updates/s) per Action press, decrementing $2c(a6) by 1 each update ($25e2). Ends immediately early if the player releases the Action key (!btst #2, $14(a6) at $2606-$260e). On exit ($25e8-$2604), restores state $12(a6) from $2e(a6), clears Action bit 2 of $14(a6), and stops SOUN 99 ($63) via $5a(a5) ($25fa-$25fe). Can be re-activated unlimited times while owned, with 0 cooldown (only requiring a fresh Action press).",
+      "movement_while_active": "None — Duncan stands frozen in place flashing Data A PPCT 144 (left, $c0(a4)) or PPCT 145 (right, $c4(a4)) alternating frames ($2c & 1) and cannot walk, jump, or throw."
+    },
+    "what_it_blocks": {
+      "blocks": [
+        "All contact hazards in the -$20c(a5) hazard list (Guards, Mutants, Rats, Bats' plague tick, Dragon flame, Wizard bolts on -$20c, Broom, Burning Eye, Stalactites, Pendulum blades, etc.), because state 37 ($25b6-$2610) returns directly via rts at $2610 WITHOUT calling $0514 (the hero hazard & plague check).",
+        "All enemy projectiles in the -$19c(a5) projectile list (Boulder/Barrel Thrower rocks/barrels, Spear/Torch Guard thrown spears/torches, Wizard fireballs), because projectile-vs-hero check CODE 2:$357e explicitly tests cmpi.w #$25, $12(a6) at $3582 and branches out ($35dc) when Duncan is in state 37 ($25)."
+      ],
+      "does_not_block": [
+        "Gargoyle ($2ea) swoop-grab: CODE 4:$2f88-$2fa8 explicitly checks if hero state $12(a3) == $25 (state 37); if so, it forcibly stops Shield sound SOUN 99 via $5a(a5) ($2f9c-$2fa0) and still grabs and carries Duncan off to his death!",
+        "Exterior storm lightning ($38a in Room 3030): CODE 4:$55f0-$5634 checks Duncan's Y <= 69 ($45) directly and overwrites hero state to 39 ($27, electrocuted) without exempting state 37.",
+        "Plague Bat ($282) latching onto Duncan: CODE 4:$11ae-$11d4 checks overlap against Duncan's box and increments -$25e(a5) even during state 37 (the plague damage tick itself is deferred while state 37 skips $0514, then fires once state 37 ends)."
+      ]
+    },
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 2:$0c6c-$0c86",
+      "CODE 2:$23c2-$2610",
+      "CODE 2:$357e-$3588",
+      "CODE 4:$11ae-$11d4",
+      "CODE 4:$2f88-$2fa8",
+      "CODE 4:$55f0-$5634",
+      "CODE 4:$59d0-$59ec"
+    ]
+  },
+  "fireball": {
+    "acquisition": {
+      "span_kind": 24,
+      "room": "2030 (Fireball 4)",
+      "hero_state": 35,
+      "handler": "CODE 2:$07f2-$07f8 -> state 35 ($2b26 -> CODE 2:$22a0-$23c0)",
+      "grants": "Triggered when room puzzle sets -$31c(a5) (Wizard's 3-switch forcefield lock $30a solved in Room 2030). Calls $36a(a5) with d0 = 0 ($22f6-$22f8), setting bit 0 of -$276(a5) and $15(a6) (CODE 4:$59d0-$59ec), awards Stbl byte offset $1a = index 13 = 1,000 points ($22fc-$2300), plays SOUN 3 ($2314-$2318), and exits back to the Great Hall ($23bc -> $08e8)."
+    },
+    "throwing_and_ammo_rules": {
+      "ammo": "Uses the exact same BCD rock counter -$2c2(a5) as ordinary rocks — 1 rock consumed per throw via sbcd at CODE 2:$355e-$3578; cannot fire when -$2c2(a5) == 0 ($34e4-$34e8 / $34fc-$3500; skips SOUN 7 / SOUN 9 and performs a silent dry throw, whereas SOUN 13 at $2720 is the full-bag chime when rock count > $7f).",
+      "cadence_and_trajectory": "Identical arm aim ($20(a6)), 6-update auto-repeat ($28(a6) = 4 plus arm-cycle state updates = 6 updates per throw at $3448-$3498), initial speed ($3528-$3546), and gravity ($d555 at $334e) as normal rocks. Uses Data A PPCT 138 ($ac(a4), 3-frame animated 8x9 fireball) instead of PPCT 112 ($50(a4), 2x2 rock) and plays SOUN 9 ($3504-$3508) instead of SOUN 7 ($34ec-$34f0)."
+    },
+    "combat_effects_vs_rocks": [
+      "Gargoyles ($2ea): Immune to ordinary rocks (CODE 4:$3028-$302e tests btst #0, -$276(a5) and skips projectile collision when Fireball is inactive), whereas 1 Fireball hit ($3030-$305a) drops the Gargoyle in flames (+12 px/update fall, SOUN 30, Stbl index 18 = 100 pts at $3048, respawning on timer).",
+      "Guards ($272, $27a): At CODE 4:$0e3a-$0e72, hitting a Guard plays SOUN 82 ($0e5e) and awards Stbl index 2 = 50 pts ($0e6a); without Fireball, $a(a6) is set from $16(a6) ($0e42 -> -(mode+1)), whereas with Fireball active (btst #0, -$276(a5) at $0e3a), $a(a6) is forced to -21 ($ffeb at $0e4a-$0e54) for the fireball burn/disintegration animation (PPCT 409 at $0c6c-$0c90).",
+      "Whip Guard ($26a): Immune to ordinary rocks (deflected at -1/4 velocity with SOUN 56 at CODE 4:$0b4e-$0b76; CODE 4:$0bac tests btst #0, -$276(a5) before accepting projectile knockdown), whereas 1 Fireball hit knocks the Whip Guard down just like the State-26 spiked mace chain (Stbl index 1 = 150 pts at $0bf2, SOUN 57 at $0c00).",
+      "Wizard's Forcefield Switches ($30a in Room 2030) & Mutants ($2b2) & Rats ($28a/$292) & Bats ($282) & Vultures ($322) & Broom ($32a) & Burning Eye ($332): Hit by both rocks and fireballs via the shared player-projectile list -$194(a5)."
+    ],
+    "loss_of_powers": "Both Fireball (bit 0) and Shield (bit 1) in -$276(a5) persist across rooms and across hero deaths within a game, and are cleared ONLY on starting a new game (CODE 1:$23f6) or upon defeating the Black Knight when advancing to the next difficulty loop (CODE 6:$0b60: clr.w -$276(a5)).",
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 2:$22a0-$23c0",
+      "CODE 2:$3434-$3578",
+      "CODE 3:$038a-$0394",
+      "CODE 4:$0b4e-$0c04",
+      "CODE 4:$0c6c-$0c90",
+      "CODE 4:$0e3a-$0e72",
+      "CODE 4:$3028-$305a",
+      "CODE 6:$0b60"
+    ]
+  },
+  "what_ends_a_game": {
+    "game_over_conditions": [
+      {
+        "condition": "All lives lost (-$234(a5) == 0)",
+        "evidence": "CODE 1:$2346-$234a (tst.w -$234(a5); beq -> exits gameplay loop $205a, enters High Score / Certificate of Merit check at CODE 1:$2406 -> $41a(a5) -> CODE 7:$09d8).",
+        "confidence": "PROVEN"
+      },
+      {
+        "condition": "Player keyboard abort (Command + Abort key)",
+        "evidence": "CODE 2:$2bae (btst #8, d6 = Cmd key) -> CODE 2:$2d18-$2d44 tests Abort key ($e(a0)), sets -$183(a5) = $ff, -$185(a5) = $ff, and executes clr.w -$234(a5) at CODE 2:$2d34 (setting lives to 0 so CODE 1:$2346 ends the game immediately).",
+        "confidence": "PROVEN"
+      },
+      {
+        "condition": "Recorded Demo playback finishes or is interrupted",
+        "evidence": "CODE 1:$2350 (tst.w -$2ee(a5); bne exits loop when demo mode -$2ee(a5) != 0 ends).",
+        "confidence": "PROVEN"
+      }
+    ],
+    "black_knight_victory_does_not_end_game": {
+      "behaviour": "Toppling the Black Knight in Room 4020 sets -$18a(a5) = -1 ($ffff at CODE 4:$275c). When Room 4020 exits, CODE 6:$09cc-$0b66 plays the throne/victory sequence, increments difficulty -$18e(a5) by +1 capped at 3 (Black Knight difficulty, CODE 6:$0b50-$0b5e), clears Fireball and Shield powers (-$276(a5) = 0 at CODE 6:$0b60), and returns Duncan to the Great Hall with his remaining lives and score intact to keep playing.",
+      "confidence": "PROVEN",
+      "evidence": [
+        "CODE 4:$275c",
+        "CODE 6:$09cc-$0b66"
+      ]
+    }
+  },
+  "extra_lives": {
+    "mechanism": "Recurring score-interval threshold stored as an 8-digit packed BCD longword in -$25c(a5).",
+    "initialization": "At game start (CODE 1:$20ae -> $3a2(a5) -> CODE 4:$5aea-$5b10), -$25c(a5) is set equal to the 32-bit BCD value at byte offset $44 of the active difficulty's Stbl resource (Data A Stbl 0..3).",
+    "award_check": "Every score award goes through $3ea(a5) (CODE 4:$5c14) -> $3da(a5) (CODE 4:$5b7e) -> $5b12-$5b32, which compares current 8-digit BCD score -$258(a5) against threshold -$25c(a5) ($5b14: cmp.l d1, d0; bcs.b $5b32). Whenever score >= -$25c(a5), $5b1a-$5b30 adds Stbl+$44 (via BCD helper $5b34) onto -$25c(a5) to advance the next threshold, increments lives -$234(a5) by +1 ($5b28: addq.w #$1, -$234(a5)), redraws the HUD ($3d2(a5)), and calls $5ab6 ($5b2e), which plays SOUN 8 immediately and arms -$2da(a5) = 13 ($0d) so $3b2(a5) ($5a9a-$5ab4) plays SOUN 8 a second time 13 updates (~1.08 s) later.",
+    "points_per_extra_life_by_difficulty": {
+      "0_novice_Stbl_0": 5000,
+      "1_intermediate_Stbl_1": 7500,
+      "2_advanced_Stbl_2": 10000,
+      "3_black_knight_Stbl_3": 15000
+    },
+    "raw_stbl_offset_44_bcd_hex": {
+      "Stbl_0": "$00005000",
+      "Stbl_1": "$00007500",
+      "Stbl_2": "$00010000",
+      "Stbl_3": "$00015000"
+    },
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 1:$20ae",
+      "CODE 4:$5a9a-$5b32",
+      "CODE 4:$5b7e-$5c28",
+      "Data A Stbl 0..3 byte offset $44..$47"
+    ]
+  }
+}

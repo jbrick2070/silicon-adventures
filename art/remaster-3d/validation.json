@@ -1,0 +1,979 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-05T06:17:13.776Z",
+  "sourceRoot": "D:\\silicon-adventures\\art\\castle",
+  "outputRoot": "D:\\silicon-adventures\\art\\remaster-3d",
+  "reportPath": "D:\\silicon-adventures\\art\\remaster-3d\\validation.json",
+  "method": {
+    "geometry": "Exact image dimensions and horizontal cell rectangles; exact source alpha replicated into every integer-scale subpixel.",
+    "structure": "For every originally opaque pixel, compare its black/white class against Rec.709-weighted sRGB code values (0.2126 R + 0.7152 G + 0.0722 B), threshold 128. Test every output subpixel and the mean of each corresponding source-pixel block.",
+    "luminanceNote": "This is a defined code-value threshold, not linear-light physical luminance.",
+    "rgbComparisonOutsideSourceMask": "Excluded; exact alpha is still checked everywhere, including transparent holes and sheet margins.",
+    "frameNumbering": "Zero-based; bounding-box right and bottom are exclusive.",
+    "limit": "Exact binary partition preservation establishes original pixel contours and internal line locations at this threshold. It does not establish anatomical interpretation, lighting quality, or animation coherence; these need visual review."
+  },
+  "assets": [
+    {
+      "name": "B-PSCR-4020.png",
+      "kind": "screen",
+      "frameCount": 1,
+      "frameWidth": 512,
+      "frameHeight": 342,
+      "outputs": [
+        {
+          "path": "D:\\silicon-adventures\\art\\remaster-3d\\native\\B-PSCR-4020.png",
+          "sha256": "f93f2833f4cff9345c2d6319a5b6d58a62f9df5eda79e16dc952064edba32041",
+          "format": "png",
+          "width": 512,
+          "height": 342,
+          "channels": 4,
+          "hasAlpha": true,
+          "colourspace": "srgb",
+          "scale": 1,
+          "expectedDimensions": [
+            512,
+            342
+          ],
+          "dimensionsMatch": true,
+          "frameLayout": {
+            "columns": 1,
+            "rows": 1,
+            "cellWidth": 512,
+            "cellHeight": 342,
+            "padding": 0
+          },
+          "alphaComparedPixels": 175104,
+          "alphaMismatches": 0,
+          "exactSourceAlphaExpansion": true,
+          "sourceOpaquePixelsCompared": 175104,
+          "expandedOpaquePixelsCompared": 175104,
+          "thresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAtEverySubpixel": true,
+          "blockMeanThresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAfterBlockMean": true,
+          "noCropOrPaddingChange": true,
+          "frames": [
+            {
+              "frameIndex": 0,
+              "sourceRectangle": [
+                0,
+                0,
+                512,
+                342
+              ],
+              "alphaBoundingBoxExclusive": [
+                0,
+                0,
+                512,
+                342
+              ],
+              "nontransparentPixels": 175104,
+              "opaquePixels": 175104,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "b0955f2ca93e145708faf30cfaee333d577da8a55e5c1373e5c4a755ce04266c",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            }
+          ],
+          "mismatchExamples": {
+            "alpha": [],
+            "threshold": [],
+            "blockMeanThreshold": []
+          }
+        },
+        {
+          "path": "D:\\silicon-adventures\\art\\remaster-3d\\4x\\B-PSCR-4020.png",
+          "sha256": "ae8de55a5f0564bea2490e0d9eba7ce545213b27b761071e2afac8aadc230153",
+          "format": "png",
+          "width": 2048,
+          "height": 1368,
+          "channels": 4,
+          "hasAlpha": true,
+          "colourspace": "srgb",
+          "scale": 4,
+          "expectedDimensions": [
+            2048,
+            1368
+          ],
+          "dimensionsMatch": true,
+          "frameLayout": {
+            "columns": 1,
+            "rows": 1,
+            "cellWidth": 2048,
+            "cellHeight": 1368,
+            "padding": 0
+          },
+          "alphaComparedPixels": 2801664,
+          "alphaMismatches": 0,
+          "exactSourceAlphaExpansion": true,
+          "sourceOpaquePixelsCompared": 175104,
+          "expandedOpaquePixelsCompared": 2801664,
+          "thresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAtEverySubpixel": true,
+          "blockMeanThresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAfterBlockMean": true,
+          "noCropOrPaddingChange": true,
+          "frames": [
+            {
+              "frameIndex": 0,
+              "sourceRectangle": [
+                0,
+                0,
+                2048,
+                1368
+              ],
+              "alphaBoundingBoxExclusive": [
+                0,
+                0,
+                2048,
+                1368
+              ],
+              "nontransparentPixels": 2801664,
+              "opaquePixels": 2801664,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "613fbc572eadabe483e62e672f461c7650ea1ae7a940ceecc294e7175016618f",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            }
+          ],
+          "mismatchExamples": {
+            "alpha": [],
+            "threshold": [],
+            "blockMeanThreshold": []
+          }
+        }
+      ],
+      "source": {
+        "path": "D:\\silicon-adventures\\art\\castle\\B-PSCR-4020.png",
+        "sha256": "3e6ba63dbc8e24f2a34c07a25fdc228b8a8ddb85386df4376e4ff8a3f2872873",
+        "format": "png",
+        "width": 512,
+        "height": 342,
+        "channels": 4,
+        "hasAlpha": false,
+        "colourspace": "b-w",
+        "expectedSha256": "3e6ba63dbc8e24f2a34c07a25fdc228b8a8ddb85386df4376e4ff8a3f2872873",
+        "hashMatchesOriginal": true,
+        "frames": [
+          {
+            "frameIndex": 0,
+            "sourceRectangle": [
+              0,
+              0,
+              512,
+              342
+            ],
+            "alphaBoundingBoxExclusive": [
+              0,
+              0,
+              512,
+              342
+            ],
+            "nontransparentPixels": 175104,
+            "opaquePixels": 175104,
+            "partiallyTransparentPixels": 0,
+            "alphaSha256": "b0955f2ca93e145708faf30cfaee333d577da8a55e5c1373e5c4a755ce04266c"
+          }
+        ],
+        "invalidOpaqueSourceColours": 0,
+        "nonBinarySourceAlphaPixels": 0
+      }
+    },
+    {
+      "name": "A-PPCT-101.png",
+      "kind": "sprite",
+      "frameCount": 6,
+      "frameWidth": 32,
+      "frameHeight": 40,
+      "outputs": [
+        {
+          "path": "D:\\silicon-adventures\\art\\remaster-3d\\native\\A-PPCT-101.png",
+          "sha256": "55de307b17344b3789227194a9846e2ea8578273181838bce93b586965aa45b7",
+          "format": "png",
+          "width": 192,
+          "height": 40,
+          "channels": 4,
+          "hasAlpha": true,
+          "colourspace": "srgb",
+          "scale": 1,
+          "expectedDimensions": [
+            192,
+            40
+          ],
+          "dimensionsMatch": true,
+          "frameLayout": {
+            "columns": 6,
+            "rows": 1,
+            "cellWidth": 32,
+            "cellHeight": 40,
+            "padding": 0
+          },
+          "alphaComparedPixels": 7680,
+          "alphaMismatches": 0,
+          "exactSourceAlphaExpansion": true,
+          "sourceOpaquePixelsCompared": 2992,
+          "expandedOpaquePixelsCompared": 2992,
+          "thresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAtEverySubpixel": true,
+          "blockMeanThresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAfterBlockMean": true,
+          "noCropOrPaddingChange": true,
+          "frames": [
+            {
+              "frameIndex": 0,
+              "sourceRectangle": [
+                0,
+                0,
+                32,
+                40
+              ],
+              "alphaBoundingBoxExclusive": [
+                4,
+                2,
+                32,
+                40
+              ],
+              "nontransparentPixels": 540,
+              "opaquePixels": 540,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "8a87c1fdee9de90464932c6f5f1bd143cadf33c5e35353e1d1b12fc615272509",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 1,
+              "sourceRectangle": [
+                32,
+                0,
+                32,
+                40
+              ],
+              "alphaBoundingBoxExclusive": [
+                0,
+                1,
+                22,
+                40
+              ],
+              "nontransparentPixels": 461,
+              "opaquePixels": 461,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "25709a54881d7e2d00c0790a9a8fca9f60fe707b1d3d073a2de1669a6dfb770c",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 2,
+              "sourceRectangle": [
+                64,
+                0,
+                32,
+                40
+              ],
+              "alphaBoundingBoxExclusive": [
+                2,
+                2,
+                19,
+                40
+              ],
+              "nontransparentPixels": 470,
+              "opaquePixels": 470,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "229626ce9c6831f5802e44b959a9c3a1b682788b5bc03adc50fa09037cbd8ae2",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 3,
+              "sourceRectangle": [
+                96,
+                0,
+                32,
+                40
+              ],
+              "alphaBoundingBoxExclusive": [
+                0,
+                2,
+                28,
+                40
+              ],
+              "nontransparentPixels": 560,
+              "opaquePixels": 560,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "e5edb2d907b4f9c030786223053366bc39f7d464ffe27ee8c24570aa8f14b42b",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 4,
+              "sourceRectangle": [
+                128,
+                0,
+                32,
+                40
+              ],
+              "alphaBoundingBoxExclusive": [
+                3,
+                0,
+                26,
+                40
+              ],
+              "nontransparentPixels": 475,
+              "opaquePixels": 475,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "b2ce85983348c0888c10d8e5d84f989e599fc93a1b3daccf79087d724a963eb7",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 5,
+              "sourceRectangle": [
+                160,
+                0,
+                32,
+                40
+              ],
+              "alphaBoundingBoxExclusive": [
+                6,
+                2,
+                23,
+                40
+              ],
+              "nontransparentPixels": 486,
+              "opaquePixels": 486,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "abe1be0af066e1136ff576b38fb9e72859c28a0f3ac77f8891f2a5bc97bda1d3",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            }
+          ],
+          "mismatchExamples": {
+            "alpha": [],
+            "threshold": [],
+            "blockMeanThreshold": []
+          }
+        },
+        {
+          "path": "D:\\silicon-adventures\\art\\remaster-3d\\4x\\A-PPCT-101.png",
+          "sha256": "2a2f7e5207d21b5ad3fdb41642426891ad2f3cfb3c349e460954fca298b5d359",
+          "format": "png",
+          "width": 768,
+          "height": 160,
+          "channels": 4,
+          "hasAlpha": true,
+          "colourspace": "srgb",
+          "scale": 4,
+          "expectedDimensions": [
+            768,
+            160
+          ],
+          "dimensionsMatch": true,
+          "frameLayout": {
+            "columns": 6,
+            "rows": 1,
+            "cellWidth": 128,
+            "cellHeight": 160,
+            "padding": 0
+          },
+          "alphaComparedPixels": 122880,
+          "alphaMismatches": 0,
+          "exactSourceAlphaExpansion": true,
+          "sourceOpaquePixelsCompared": 2992,
+          "expandedOpaquePixelsCompared": 47872,
+          "thresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAtEverySubpixel": true,
+          "blockMeanThresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAfterBlockMean": true,
+          "noCropOrPaddingChange": true,
+          "frames": [
+            {
+              "frameIndex": 0,
+              "sourceRectangle": [
+                0,
+                0,
+                128,
+                160
+              ],
+              "alphaBoundingBoxExclusive": [
+                16,
+                8,
+                128,
+                160
+              ],
+              "nontransparentPixels": 8640,
+              "opaquePixels": 8640,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "9b94ed25729317c692a67976b357c21696ef123f4003dcaea1f43de4b9293cbe",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 1,
+              "sourceRectangle": [
+                128,
+                0,
+                128,
+                160
+              ],
+              "alphaBoundingBoxExclusive": [
+                0,
+                4,
+                88,
+                160
+              ],
+              "nontransparentPixels": 7376,
+              "opaquePixels": 7376,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "0a2640cb637dd2c78b30ac8e0383cf01eb65a1dd39ab474279106ef05a6be104",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 2,
+              "sourceRectangle": [
+                256,
+                0,
+                128,
+                160
+              ],
+              "alphaBoundingBoxExclusive": [
+                8,
+                8,
+                76,
+                160
+              ],
+              "nontransparentPixels": 7520,
+              "opaquePixels": 7520,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "0abe2546ea7fc5e59d03fb52838a2167382ec9fe28d4d380e0549a5bdf046215",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 3,
+              "sourceRectangle": [
+                384,
+                0,
+                128,
+                160
+              ],
+              "alphaBoundingBoxExclusive": [
+                0,
+                8,
+                112,
+                160
+              ],
+              "nontransparentPixels": 8960,
+              "opaquePixels": 8960,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "4e60603f6b4bfcbba0dd263025dd9a82f922ac0335e9d6b95da3baa4aecc68c6",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 4,
+              "sourceRectangle": [
+                512,
+                0,
+                128,
+                160
+              ],
+              "alphaBoundingBoxExclusive": [
+                12,
+                0,
+                104,
+                160
+              ],
+              "nontransparentPixels": 7600,
+              "opaquePixels": 7600,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "5f02a7486bdfad3dbb61ff72d0f18e5d81e339a28b3a9ce50d052c20d052d8f3",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 5,
+              "sourceRectangle": [
+                640,
+                0,
+                128,
+                160
+              ],
+              "alphaBoundingBoxExclusive": [
+                24,
+                8,
+                92,
+                160
+              ],
+              "nontransparentPixels": 7776,
+              "opaquePixels": 7776,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "0a0941c06f4cbabc8466e110a5ed7e0426c1fd249a6746b32297631cb9cfb421",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            }
+          ],
+          "mismatchExamples": {
+            "alpha": [],
+            "threshold": [],
+            "blockMeanThreshold": []
+          }
+        }
+      ],
+      "source": {
+        "path": "D:\\silicon-adventures\\art\\castle\\A-PPCT-101.png",
+        "sha256": "a54c6c29b3fc58b28f6929bfb7d8da166d9879be100b429052b21eeac66fd4be",
+        "format": "png",
+        "width": 192,
+        "height": 40,
+        "channels": 4,
+        "hasAlpha": true,
+        "colourspace": "srgb",
+        "expectedSha256": "a54c6c29b3fc58b28f6929bfb7d8da166d9879be100b429052b21eeac66fd4be",
+        "hashMatchesOriginal": true,
+        "frames": [
+          {
+            "frameIndex": 0,
+            "sourceRectangle": [
+              0,
+              0,
+              32,
+              40
+            ],
+            "alphaBoundingBoxExclusive": [
+              4,
+              2,
+              32,
+              40
+            ],
+            "nontransparentPixels": 540,
+            "opaquePixels": 540,
+            "partiallyTransparentPixels": 0,
+            "alphaSha256": "8a87c1fdee9de90464932c6f5f1bd143cadf33c5e35353e1d1b12fc615272509"
+          },
+          {
+            "frameIndex": 1,
+            "sourceRectangle": [
+              32,
+              0,
+              32,
+              40
+            ],
+            "alphaBoundingBoxExclusive": [
+              0,
+              1,
+              22,
+              40
+            ],
+            "nontransparentPixels": 461,
+            "opaquePixels": 461,
+            "partiallyTransparentPixels": 0,
+            "alphaSha256": "25709a54881d7e2d00c0790a9a8fca9f60fe707b1d3d073a2de1669a6dfb770c"
+          },
+          {
+            "frameIndex": 2,
+            "sourceRectangle": [
+              64,
+              0,
+              32,
+              40
+            ],
+            "alphaBoundingBoxExclusive": [
+              2,
+              2,
+              19,
+              40
+            ],
+            "nontransparentPixels": 470,
+            "opaquePixels": 470,
+            "partiallyTransparentPixels": 0,
+            "alphaSha256": "229626ce9c6831f5802e44b959a9c3a1b682788b5bc03adc50fa09037cbd8ae2"
+          },
+          {
+            "frameIndex": 3,
+            "sourceRectangle": [
+              96,
+              0,
+              32,
+              40
+            ],
+            "alphaBoundingBoxExclusive": [
+              0,
+              2,
+              28,
+              40
+            ],
+            "nontransparentPixels": 560,
+            "opaquePixels": 560,
+            "partiallyTransparentPixels": 0,
+            "alphaSha256": "e5edb2d907b4f9c030786223053366bc39f7d464ffe27ee8c24570aa8f14b42b"
+          },
+          {
+            "frameIndex": 4,
+            "sourceRectangle": [
+              128,
+              0,
+              32,
+              40
+            ],
+            "alphaBoundingBoxExclusive": [
+              3,
+              0,
+              26,
+              40
+            ],
+            "nontransparentPixels": 475,
+            "opaquePixels": 475,
+            "partiallyTransparentPixels": 0,
+            "alphaSha256": "b2ce85983348c0888c10d8e5d84f989e599fc93a1b3daccf79087d724a963eb7"
+          },
+          {
+            "frameIndex": 5,
+            "sourceRectangle": [
+              160,
+              0,
+              32,
+              40
+            ],
+            "alphaBoundingBoxExclusive": [
+              6,
+              2,
+              23,
+              40
+            ],
+            "nontransparentPixels": 486,
+            "opaquePixels": 486,
+            "partiallyTransparentPixels": 0,
+            "alphaSha256": "abe1be0af066e1136ff576b38fb9e72859c28a0f3ac77f8891f2a5bc97bda1d3"
+          }
+        ],
+        "invalidOpaqueSourceColours": 0,
+        "nonBinarySourceAlphaPixels": 0
+      }
+    },
+    {
+      "name": "B-PPCT-906.png",
+      "kind": "sprite",
+      "frameCount": 3,
+      "frameWidth": 48,
+      "frameHeight": 32,
+      "outputs": [
+        {
+          "path": "D:\\silicon-adventures\\art\\remaster-3d\\native\\B-PPCT-906.png",
+          "sha256": "0924a8b921331d1a992a7d8ff419772f482519a30ee6f1a513e451be81f6e6be",
+          "format": "png",
+          "width": 144,
+          "height": 32,
+          "channels": 4,
+          "hasAlpha": true,
+          "colourspace": "srgb",
+          "scale": 1,
+          "expectedDimensions": [
+            144,
+            32
+          ],
+          "dimensionsMatch": true,
+          "frameLayout": {
+            "columns": 3,
+            "rows": 1,
+            "cellWidth": 48,
+            "cellHeight": 32,
+            "padding": 0
+          },
+          "alphaComparedPixels": 4608,
+          "alphaMismatches": 0,
+          "exactSourceAlphaExpansion": true,
+          "sourceOpaquePixelsCompared": 2077,
+          "expandedOpaquePixelsCompared": 2077,
+          "thresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAtEverySubpixel": true,
+          "blockMeanThresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAfterBlockMean": true,
+          "noCropOrPaddingChange": true,
+          "frames": [
+            {
+              "frameIndex": 0,
+              "sourceRectangle": [
+                0,
+                0,
+                48,
+                32
+              ],
+              "alphaBoundingBoxExclusive": [
+                0,
+                0,
+                43,
+                31
+              ],
+              "nontransparentPixels": 758,
+              "opaquePixels": 758,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "bbb911defbcbb6e941362cfc1867ee19d3828cb9d599634989a3bf7e2a35c693",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 1,
+              "sourceRectangle": [
+                48,
+                0,
+                48,
+                32
+              ],
+              "alphaBoundingBoxExclusive": [
+                0,
+                0,
+                41,
+                32
+              ],
+              "nontransparentPixels": 729,
+              "opaquePixels": 729,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "4ac234ac2a0302fc0992dd8136fab83876d5125334c78c36d234e08b8f7d7b03",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 2,
+              "sourceRectangle": [
+                96,
+                0,
+                48,
+                32
+              ],
+              "alphaBoundingBoxExclusive": [
+                3,
+                4,
+                40,
+                32
+              ],
+              "nontransparentPixels": 590,
+              "opaquePixels": 590,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "1ce457a7c2a85dd6c7a8cf5f908e22a6b400d87757c2c6033b63df8c414e528f",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            }
+          ],
+          "mismatchExamples": {
+            "alpha": [],
+            "threshold": [],
+            "blockMeanThreshold": []
+          }
+        },
+        {
+          "path": "D:\\silicon-adventures\\art\\remaster-3d\\4x\\B-PPCT-906.png",
+          "sha256": "b54a087d746bd0873119211e405372b63e81a53359c51117489758ad3abd93fa",
+          "format": "png",
+          "width": 576,
+          "height": 128,
+          "channels": 4,
+          "hasAlpha": true,
+          "colourspace": "srgb",
+          "scale": 4,
+          "expectedDimensions": [
+            576,
+            128
+          ],
+          "dimensionsMatch": true,
+          "frameLayout": {
+            "columns": 3,
+            "rows": 1,
+            "cellWidth": 192,
+            "cellHeight": 128,
+            "padding": 0
+          },
+          "alphaComparedPixels": 73728,
+          "alphaMismatches": 0,
+          "exactSourceAlphaExpansion": true,
+          "sourceOpaquePixelsCompared": 2077,
+          "expandedOpaquePixelsCompared": 33232,
+          "thresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAtEverySubpixel": true,
+          "blockMeanThresholdMismatches": 0,
+          "exactOpaqueBinaryPartitionAfterBlockMean": true,
+          "noCropOrPaddingChange": true,
+          "frames": [
+            {
+              "frameIndex": 0,
+              "sourceRectangle": [
+                0,
+                0,
+                192,
+                128
+              ],
+              "alphaBoundingBoxExclusive": [
+                0,
+                0,
+                172,
+                124
+              ],
+              "nontransparentPixels": 12128,
+              "opaquePixels": 12128,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "07b8da5093c477f69534338bdb15a37a3dc9fe090d17ceb294fe103422f08574",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 1,
+              "sourceRectangle": [
+                192,
+                0,
+                192,
+                128
+              ],
+              "alphaBoundingBoxExclusive": [
+                0,
+                0,
+                164,
+                128
+              ],
+              "nontransparentPixels": 11664,
+              "opaquePixels": 11664,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "309adc3a0bc27cad8bc0d944102df13a9f15e209f03a59fd5746ae64f7e67fd4",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            },
+            {
+              "frameIndex": 2,
+              "sourceRectangle": [
+                384,
+                0,
+                192,
+                128
+              ],
+              "alphaBoundingBoxExclusive": [
+                12,
+                16,
+                160,
+                128
+              ],
+              "nontransparentPixels": 9440,
+              "opaquePixels": 9440,
+              "partiallyTransparentPixels": 0,
+              "alphaSha256": "5c487893354a6720ec34b3fc4a75fb6f9035d077c13bde9cac2d848a415382ee",
+              "alphaMismatches": 0,
+              "thresholdMismatches": 0,
+              "blockMeanThresholdMismatches": 0
+            }
+          ],
+          "mismatchExamples": {
+            "alpha": [],
+            "threshold": [],
+            "blockMeanThreshold": []
+          }
+        }
+      ],
+      "source": {
+        "path": "D:\\silicon-adventures\\art\\castle\\B-PPCT-906.png",
+        "sha256": "633b46f4f533d1782ae0426a2c4c45bacc7cc84a7b33e46280d21f86553ebfa6",
+        "format": "png",
+        "width": 144,
+        "height": 32,
+        "channels": 4,
+        "hasAlpha": true,
+        "colourspace": "srgb",
+        "expectedSha256": "633b46f4f533d1782ae0426a2c4c45bacc7cc84a7b33e46280d21f86553ebfa6",
+        "hashMatchesOriginal": true,
+        "frames": [
+          {
+            "frameIndex": 0,
+            "sourceRectangle": [
+              0,
+              0,
+              48,
+              32
+            ],
+            "alphaBoundingBoxExclusive": [
+              0,
+              0,
+              43,
+              31
+            ],
+            "nontransparentPixels": 758,
+            "opaquePixels": 758,
+            "partiallyTransparentPixels": 0,
+            "alphaSha256": "bbb911defbcbb6e941362cfc1867ee19d3828cb9d599634989a3bf7e2a35c693"
+          },
+          {
+            "frameIndex": 1,
+            "sourceRectangle": [
+              48,
+              0,
+              48,
+              32
+            ],
+            "alphaBoundingBoxExclusive": [
+              0,
+              0,
+              41,
+              32
+            ],
+            "nontransparentPixels": 729,
+            "opaquePixels": 729,
+            "partiallyTransparentPixels": 0,
+            "alphaSha256": "4ac234ac2a0302fc0992dd8136fab83876d5125334c78c36d234e08b8f7d7b03"
+          },
+          {
+            "frameIndex": 2,
+            "sourceRectangle": [
+              96,
+              0,
+              48,
+              32
+            ],
+            "alphaBoundingBoxExclusive": [
+              3,
+              4,
+              40,
+              32
+            ],
+            "nontransparentPixels": 590,
+            "opaquePixels": 590,
+            "partiallyTransparentPixels": 0,
+            "alphaSha256": "1ce457a7c2a85dd6c7a8cf5f908e22a6b400d87757c2c6033b63df8c414e528f"
+          }
+        ],
+        "invalidOpaqueSourceColours": 0,
+        "nonBinarySourceAlphaPixels": 0
+      }
+    }
+  ],
+  "failures": [],
+  "manifest": {
+    "path": "D:\\silicon-adventures\\art\\castle-index.js",
+    "spriteReels": 172,
+    "spriteFrames": 684,
+    "screens": 20,
+    "matchesExpectedCounts": true
+  },
+  "summary": {
+    "sourceAssets": 3,
+    "sourceSpriteFrames": 9,
+    "outputFilesExpected": 6,
+    "outputFilesCompared": 6,
+    "spriteFramesComparedAcrossBothScales": 18,
+    "failureCount": 0,
+    "pass": true
+  }
+}

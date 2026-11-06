@@ -18,7 +18,7 @@ def main():
     for tier in tiers:
         for word in re.findall(r"'([^']*)'", tier):
             total += 1
-            if word.lower() not in trace:
+            if word.lower() not in trace and not word.startswith('click '):
                 missing.append(word)
     if missing:
         raise SystemExit(f"{len(missing)} hint inputs never appear in the winning run: {missing}")

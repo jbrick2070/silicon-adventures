@@ -1,0 +1,130 @@
+{
+  "offset_convention": "CODE segment-body hex offsets ($xxxx), excluding the 4-byte resource header and 4-byte CODE segment header.",
+  "summary": {
+    "pacing_mechanism": "VBL task + CPU spin-wait barrier (never TickCount)",
+    "vbl_period_ticks": 5,
+    "nominal_updates_per_second": 12.029484,
+    "nominal_ms_per_update": 83.129085,
+    "depends_on_difficulty": false,
+    "depends_on_machine_or_overrun": true,
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 3:$093c-$095a",
+      "CODE 1:$1378-$13b2",
+      "CODE 4:$05ba-$079a",
+      "CODE 1:$210e-$2176"
+    ]
+  },
+  "pacing_mechanism_detail": {
+    "uses_tickcount": {
+      "value": false,
+      "confidence": "PROVEN",
+      "evidence": [
+        "CODE 3:$04f6"
+      ],
+      "notes": "The _TickCount trap ($a975) appears only once in the entire codebase (CODE 3:$04f6 during startup initialization to seed randomness/UI state) and never paces gameplay or screen loops."
+    },
+    "uses_vbl_task": {
+      "value": true,
+      "vbl_install": "CODE 3:$093c-$095a allocates a VBLTask queue element at -$68(a5), sets qType = vType (1) at $0940, vblAddr = CODE 1:$1378 at $0948, vblCount = 1 at $094e, vblPhase = 0 at $0952, and installs it via _VInstall ($a033) at $0956. Removed on exit via _VRemove ($a034) at CODE 3:$090e.",
+      "vbl_trampoline": "CODE 1:$1378-$13b2 restores A5 from CurrentA5 ($0904 / CODE 1:$1376), checks active flag -$52(a5), and calls jump-table $242(a5) -> CODE 4:$05ba.",
+      "vbl_handler": "CODE 4:$05ba-$0724 decrements/Services VBL work when vblCount expires. In normal gameplay (single-screen or page-flipped), it reloads vblCount ($a(a0)) = 5 (CODE 4:$060a, $0680, $070a) and clears synchronization byte -$65(a5) ($0610, $0686, $0710) once the main loop has armed -$65(a5) = $ff.",
+      "confidence": "PROVEN",
+      "evidence": [
+        "CODE 3:$090a-$095a",
+        "CODE 1:$1378-$13b2",
+        "CODE 4:$05ba-$0724"
+      ]
+    },
+    "uses_wait_loop": {
+      "value": true,
+      "barrier_routine": "Jump-table $24a(a5) -> CODE 4:$0726-$079a.",
+      "mechanism": "Called once at the end of every frame/update. Sets sync flag -$65(a5) = $ff (st.b -$65(a5) at CODE 4:$0742), then executes an outer polling loop testing tst.b -$65(a5) ($075c/$0776). Between sound-refill checks ($4a(a5)), an inner dbra d6 loop runs 100 iterations ($63 down to -1) of 6 consecutive nop instructions ($075e-$0770) before retesting -$65(a5). Exits as soon as the VBL task clears -$65(a5) to 0.",
+      "confidence": "PROVEN",
+      "evidence": [
+        "CODE 4:$0726-$079a"
+      ]
+    }
+  },
+  "callers_of_frame_sync_24a": {
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 1:$210e-$2176",
+      "CODE 1:$2336",
+      "CODE 6:$1350",
+      "CODE 7:$01f6",
+      "CODE 7:$0e14"
+    ],
+    "loops": [
+      {
+        "loop": "Main room gameplay update loop",
+        "evidence": "CODE 1:$210e-$2176 (calls jsr $24a(a5) at CODE 1:$215a)"
+      },
+      {
+        "loop": "Post-exit / post-death drain loop",
+        "evidence": "CODE 1:$232a-$233c (calls jsr $24a(a5) at CODE 1:$2336)"
+      },
+      {
+        "loop": "Great Hall ante-room loop",
+        "evidence": "CODE 6:$134c-$1380 (calls jsr $24a(a5) at CODE 6:$1350)"
+      },
+      {
+        "loop": "Title screen lightning/vulture animation loop",
+        "evidence": "CODE 7:$01f0-$028c (calls jsr $24a(a5) at CODE 7:$01f6)"
+      },
+      {
+        "loop": "Certificate of Merit / High Scores portcullis loop",
+        "evidence": "CODE 7:$0e08-$0e4a (calls jsr $24a(a5) at CODE 7:$0e14)"
+      }
+    ]
+  },
+  "update_rate_formula": {
+    "formula": "f_update = f_VBL / max(5, ceil(t_CPU * f_VBL))",
+    "compact_mac_vbl_hz": {
+      "value": 60.14742,
+      "confidence": "INFERRED",
+      "evidence": "CODE 3:$0956 (_VInstall hardware VBL queue)",
+      "notes": "Standard compact Macintosh (128K/512K/Plus/SE) vertical blanking frequency (15.6672 MHz pixel clock / (704 * 370) = 60.14742 Hz; often approximated as 60.15 Hz or 60 Hz). The ROM hardware rate is external to the game binary; the binary's divisor of 5 VBLs per update is PROVEN."
+    },
+    "updates_per_second_on_compact_mac": {
+      "no_overrun_exact": 12.029484,
+      "no_overrun_nominal_60hz": 12.0,
+      "one_vbl_overrun_6_vbls": 10.02457,
+      "two_vbl_overrun_7_vbls": 8.592489,
+      "confidence": "PROVEN",
+      "evidence": [
+        "CODE 4:$060a",
+        "CODE 4:$0680",
+        "CODE 4:$0688-$068c",
+        "CODE 4:$070a",
+        "CODE 4:$0712-$0716"
+      ],
+      "notes": "Dividing f_VBL by 5 is PROVEN in CODE 4:$060a/$0680/$070a. When an update finishes within 5 VBLs (<= 83.13 ms), the game runs at exactly 1 update per 5 VBLs (~12.03 updates/s)."
+    },
+    "overrun_behaviour": {
+      "confidence": "PROVEN",
+      "evidence": [
+        "CODE 4:$0674-$068e",
+        "CODE 4:$06fe-$0718"
+      ],
+      "description": "If the VBL fires after 5 VBLs and the main loop has not yet entered $24a(a5) to set -$65(a5) = $ff (so -$65(a5) is still 0), the VBL handler increments missed-frame counter -$6c(a5) ($0688, $0712) and sets vblCount = 1 ($068c, $0716) so it re-checks on every subsequent VBL. As soon as the main loop reaches $24a(a5) and sets -$65(a5) = $ff, the very next VBL clears -$65(a5) and restores vblCount = 5 ($0680, $070a). Thus overruns quantize frame times to integer VBL multiples >= 5 (6, 7, 8... VBLs) and never skip logic updates."
+    },
+    "machine_dependence": {
+      "confidence": "PROVEN",
+      "evidence": [
+        "CODE 4:$05cc-$0614",
+        "CODE 4:$0674-$0718"
+      ],
+      "description": "Faster 68000/68020/68030 machines never exceed 1 update per 5 VBLs because vblCount = 5 caps the rate. Machines with a different vertical retrace rate (e.g. external NuBus video at 66.67 Hz on Macintosh II, if VBL task attaches to system VBL at 60.15 Hz, still uses the System VBL queue at 60.15 Hz) follow f_SystemVBL / 5. Heavy rooms on a 7.8336 MHz 68000 can overrun 5 VBLs and drop transiently to f_VBL / 6 or f_VBL / 7."
+    },
+    "difficulty_dependence": {
+      "value": false,
+      "confidence": "PROVEN",
+      "evidence": [
+        "CODE 4:$05ba-$079a",
+        "CODE 1:$210e-$2176"
+      ],
+      "description": "Difficulty -$18e(a5) (0=Novice, 1=Intermediate, 2=Advanced, 3=Black Knight) is never read anywhere in CODE 4:$05ba-$079a or CODE 1:$210e-$2176. Difficulty alters spawn counts, creature speeds, and score tables in CODE 5/Stbl, never the main loop tick rate."
+    }
+  }
+}

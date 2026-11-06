@@ -1,0 +1,1044 @@
+{
+  "description": "Hero state dispatch, with unresolved behavior explicitly left null.",
+  "ppct_forks": "Where numeric reels are listed, IDs 100-130 here are from Data A; IDs 147 and 158 are from Data B, as indexed in art/castle-index.js. Resource lookup uses the current resource search chain, so fork attribution is from the shipped index rather than an explicit fork operand in the call.",
+  "dispatch_evidence": "CODE 2:0x2a80-0x2b6a; state read from 0x12(a6), multiplied by four.",
+  "states": [
+    {
+      "state": 0,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002a9a",
+        "target": {
+          "segment": 2,
+          "offset": "0xc6c"
+        }
+      },
+      "meaning": "Ground movement and standing animation; tests horizontal movement and jump input.",
+      "ppct": [100, 101, 106, 119, 120],
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002a9a",
+        "CODE 2:0xc6c",
+        "CODE 2:0x327a",
+        "CODE 3:0x1a0",
+        "CODE 6:0x59c"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Reels selected by movement, facing and input; see pointer table at A5-0x17e."
+    },
+    {
+      "state": 1,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002a9e",
+        "target": {
+          "segment": 2,
+          "offset": "0xdac"
+        }
+      },
+      "meaning": "Moves vertically along a linked ladder and advances its animation.",
+      "ppct": [102],
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002a9e",
+        "CODE 2:0xdac",
+        "CODE 2:0x327a",
+        "CODE 3:0x1c0"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Ladder reel at pointer table offset 0x08."
+    },
+    {
+      "state": 2,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002aa2",
+        "target": {
+          "segment": 2,
+          "offset": "0xed2"
+        }
+      },
+      "meaning": "Selects a ladder transition or returns to ground movement.",
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002aa2",
+        "CODE 2:0xed2"
+      ],
+      "confidence": "PROVEN",
+      "notes": "PPCT resource ID not resolved."
+    },
+    {
+      "state": 3,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002aa6",
+        "target": {
+          "segment": 2,
+          "offset": "0x11b6"
+        }
+      },
+      "meaning": "Selects a jump trajectory and enters state 4.",
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002aa6",
+        "CODE 2:0x11b6"
+      ],
+      "confidence": "PROVEN",
+      "notes": "PPCT resource ID not resolved."
+    },
+    {
+      "state": 4,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002aaa",
+        "target": {
+          "segment": 2,
+          "offset": "0x1200"
+        }
+      },
+      "meaning": "Advances one jump trajectory record and checks collision and boundaries.",
+      "ppct": [104, 105, 117, 118],
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002aaa",
+        "CODE 2:0x1200",
+        "CODE 2:0x327a",
+        "CODE 3:0x1dc"
+      ],
+      "confidence": "PROVEN",
+      "notes": "The trajectory and facing select a reel."
+    },
+    {
+      "state": 5,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002aae",
+        "target": {
+          "segment": 2,
+          "offset": "0x14be"
+        }
+      },
+      "meaning": "Advances an accelerating fall and checks floors.",
+      "ppct": [123],
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002aae",
+        "CODE 2:0x14be",
+        "CODE 2:0x15ca",
+        "CODE 3:0x2e2"
+      ],
+      "confidence": "PROVEN",
+      "notes": "The fall reel is used when still airborne."
+    },
+    {
+      "state": 6,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002ab2",
+        "target": {
+          "segment": 2,
+          "offset": "0x160a"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002ab2"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 7,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002ab6",
+        "target": {
+          "segment": 2,
+          "offset": "0xfe4"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002ab6"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 8,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002aba",
+        "target": {
+          "segment": 2,
+          "offset": "0x1108"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002aba"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 9,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002abe",
+        "target": {
+          "segment": 2,
+          "offset": "0x1790"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002abe"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 10,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002ac2",
+        "target": {
+          "segment": 2,
+          "offset": "0x177a"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002ac2"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 11,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002ac6",
+        "target": {
+          "segment": 2,
+          "offset": "0x1930"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002ac6"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 12,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002aca",
+        "target": {
+          "segment": 2,
+          "offset": "0x0"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002aca"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 13,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002ace",
+        "target": {
+          "segment": 2,
+          "offset": "0x37c"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002ace"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 14,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002ad2",
+        "target": {
+          "segment": 2,
+          "offset": "0xfac"
+        }
+      },
+      "meaning": "Ladder transition animation; changes to a neighboring state when the animation finishes.",
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002ad2",
+        "CODE 2:0xfac"
+      ],
+      "confidence": "PROVEN",
+      "notes": "PPCT resource ID not resolved."
+    },
+    {
+      "state": 15,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002ad6",
+        "target": {
+          "segment": 2,
+          "offset": "0xf70"
+        }
+      },
+      "meaning": "Ladder transition animation; changes to a neighboring state when the animation finishes.",
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002ad6",
+        "CODE 2:0xf70"
+      ],
+      "confidence": "PROVEN",
+      "notes": "PPCT resource ID not resolved."
+    },
+    {
+      "state": 16,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002ada",
+        "target": {
+          "segment": 2,
+          "offset": "0x1986"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002ada"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 17,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002ade",
+        "target": {
+          "segment": 2,
+          "offset": "0x1994"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002ade"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 18,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002ae2",
+        "target": {
+          "segment": 2,
+          "offset": "0x19ec"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002ae2"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 19,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002ae6",
+        "target": {
+          "segment": 2,
+          "offset": "0x1a38"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002ae6"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 20,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002aea",
+        "target": {
+          "segment": 2,
+          "offset": "0x168e"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002aea"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 21,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002aee",
+        "target": {
+          "segment": 2,
+          "offset": "0x16c4"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002aee"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 22,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002af2",
+        "target": {
+          "segment": 2,
+          "offset": "0x1fd6"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002af2"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 23,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002af6",
+        "target": {
+          "segment": 2,
+          "offset": "0x2186"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002af6"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 24,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002afa",
+        "target": {
+          "segment": 2,
+          "offset": "0x1f8e"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002afa"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 25,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002afe",
+        "target": {
+          "segment": 2,
+          "offset": "0x20de"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002afe"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 26,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b02",
+        "target": {
+          "segment": 2,
+          "offset": "0x2020"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b02"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 27,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b06",
+        "target": {
+          "segment": 2,
+          "offset": "0x20a0"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b06"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 28,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b0a",
+        "target": {
+          "segment": 2,
+          "offset": "0x205a"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b0a"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 29,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b0e",
+        "target": {
+          "segment": 2,
+          "offset": "0x1f2c"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b0e"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 30,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b12",
+        "target": {
+          "segment": 2,
+          "offset": "0x2236"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b12"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 31,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b16",
+        "target": {
+          "segment": 2,
+          "offset": "0x2248"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b16"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 32,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b1a",
+        "target": {
+          "jump_table_offset": "0x432",
+          "segment": 5,
+          "offset": "0x1e0a"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b1a"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 33,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b1e",
+        "target": {
+          "segment": 2,
+          "offset": "0x1f6"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b1e"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 34,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b22",
+        "target": {
+          "segment": 2,
+          "offset": "0x2612"
+        }
+      },
+      "meaning": "Input bit 2 and a nonnegative span word at +6 start a timed animation and set that word to 1; otherwise returns to ground movement.",
+      "ppct": [147],
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b22",
+        "CODE 2:0x2612",
+        "CODE 2:0x264e",
+        "CODE 2:0x327a",
+        "CODE 6:0xc72"
+      ],
+      "confidence": "PROVEN",
+      "notes": "PPCT 147 is in Data B. The action's identity has not been established."
+    },
+    {
+      "state": 35,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b26",
+        "target": {
+          "segment": 2,
+          "offset": "0x22a0"
+        }
+      },
+      "meaning": "Runs a multi-phase animation, calls jump-table slots 0x36a and 0x3ea, and then resumes span dispatch.",
+      "ppct": [106, 127, 158],
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b26",
+        "CODE 2:0x22a0",
+        "CODE 2:0x22ca",
+        "CODE 2:0x22e2",
+        "CODE 2:0x2348",
+        "CODE 2:0x327a",
+        "CODE 3:0x214",
+        "CODE 3:0x31a",
+        "CODE 6:0x882"
+      ],
+      "confidence": "PROVEN",
+      "notes": "PPCT 106 and 127 are in Data A; PPCT 158 is in Data B. The action's identity has not been established."
+    },
+    {
+      "state": 36,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b2a",
+        "target": {
+          "segment": 2,
+          "offset": "0x23c2"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b2a"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 37,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b2e",
+        "target": {
+          "segment": 2,
+          "offset": "0x25b6"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b2e"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 38,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b32",
+        "target": {
+          "segment": 2,
+          "offset": "0x228a"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b32"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 39,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b36",
+        "target": {
+          "segment": 2,
+          "offset": "0x32e"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b36"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 40,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b3a",
+        "target": {
+          "segment": 2,
+          "offset": "0x2578"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b3a"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 41,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b3e",
+        "target": {
+          "segment": 2,
+          "offset": "0x9be"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b3e"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 42,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b42",
+        "target": {
+          "segment": 2,
+          "offset": "0x2684"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b42"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 43,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b46",
+        "target": {
+          "segment": 2,
+          "offset": "0x2734"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b46"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 44,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b4a",
+        "target": {
+          "segment": 2,
+          "offset": "0xa76"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b4a"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 45,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b4e",
+        "target": {
+          "segment": 2,
+          "offset": "0xb1a"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b4e"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 46,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b52",
+        "target": {
+          "segment": 2,
+          "offset": "0x1c70"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b52"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 47,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b56",
+        "target": {
+          "segment": 2,
+          "offset": "0x1cbe"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b56"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 48,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b5a",
+        "target": {
+          "segment": 2,
+          "offset": "0x27b2"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b5a"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 49,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b5e",
+        "target": {
+          "segment": 2,
+          "offset": "0x2892"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b5e"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 50,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b62",
+        "target": {
+          "segment": 2,
+          "offset": "0x2936"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b62"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 51,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b66",
+        "target": {
+          "segment": 2,
+          "offset": "0xbe6"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b66"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    },
+    {
+      "state": 52,
+      "dispatch": {
+        "segment": 2,
+        "offset": "0x002b6a",
+        "target": {
+          "segment": 2,
+          "offset": "0x2a30"
+        }
+      },
+      "meaning": null,
+      "ppct": null,
+      "evidence": [
+        "CODE 2:0x2a80",
+        "CODE 2:0x002b6a"
+      ],
+      "confidence": "PROVEN",
+      "notes": "Behavior and PPCT resource ID not yet resolved."
+    }
+  ]
+}

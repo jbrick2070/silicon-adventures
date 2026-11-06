@@ -4,3 +4,8 @@ __pycache__/
 *.tmp
 .DS_Store
 Thumbs.db
+
+archive/dc/rooms/work/
+
+# The Windows package is published as a release download.
+Enchanted Scepters - Windows.zip

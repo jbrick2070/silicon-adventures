@@ -1,0 +1,244 @@
+{
+  "offset_convention": "CODE segment-body hex offsets ($xxxx), excluding the 4-byte resource header and 4-byte CODE segment header.",
+  "common_rope_flag": {
+    "bit_mask": "$0200 (512)",
+    "meaning": "All six rope span kinds (519=$207, 520=$208, 525=$20d, 543=$21f, 545=$221, 546=$222) carry bit 9 ($0200). During freefall (CODE 2:$0c12, $150c) and jump trajectories (CODE 2:$1338), cmpi.w #$200, $4(a2, d4.w) prevents ropes from acting as solid floors unless grabbed by jump/rope-catch checks; span dispatch at CODE 2:$0722-$0732 masks $4(a2, d4.w) with #$00ff to index $073a + 8*((kind & $ff) - 1).",
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 2:$0722-$0732",
+      "CODE 2:$0c12-$0c18",
+      "CODE 2:$1338-$1344",
+      "CODE 2:$150c-$1512"
+    ]
+  },
+  "kinds": {
+    "519": {
+      "hex": "$0207",
+      "low_byte_kind": 7,
+      "rooms_used": ["1000", "2000", "2030"],
+      "hero_states": [10, 9],
+      "dispatch": "CODE 2:$076a -> state 10 ($2ac2 -> CODE 2:$177a), which clears frame $10(a6), sets climb-sound timer $2c(a6) = 4, and falls through to state 9 ($2abe -> CODE 2:$1790-$192c).",
+      "entry_rule": "Standard vertical rope segment (cannot be entered by pressing Down from a floor above because span.a holds left-neighbor rope span offset rather than top entry; caught from jumps or side-transfers).",
+      "climb_speed_px_per_update": {
+        "up": -8,
+        "down": 8,
+        "idle": 0,
+        "sound_cadence": "Plays SOUN 14 ($0e) every 9 climbing updates ($2c(a6) counts down from 8 to 0 and resets to 8 at CODE 2:$18b8 / $18f0; stopped via $5a(a5) when idle at $1898).",
+        "boundaries": "Clamped at top to span.c ($a(a2,d4.w) at $1902); climbing below span.d ($c(a2,d4.w) at $18c0) drops Duncan off the bottom of the rope into standard fall ($147c -> y += 10, then +8/update).",
+        "horizontal_transfer": "Pressing Left ($8(a6) < 0) or Right ($8(a6) > 0) shifts Duncan to the rope's left/right face ($1e(a6) = -8 or +8); pressing again in that direction transfers to adjacent rope span in span.a (left, $6(a2,d4.w)) or span.b (right, $8(a2,d4.w)) if nonzero ($17ae-$1800), or initiates a rope leap if Jump is pressed.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$2bd6",
+          "CODE 2:$2be6",
+          "CODE 2:$177a-$192c"
+        ]
+      },
+      "leap_speed_and_arc": {
+        "trigger": "Pressing Jump (btst #0, $14(a6) at CODE 2:$1806) when no adjacent rope blocks or when leaping off.",
+        "setup": "Plays SOUN 4 ($1868), subtracts 8 from Y ($1834: subq.w #$8, d1), snaps X to (span.x0 - 8) with facing -8 if leaping left or (span.x1 + 8) with facing +8 if leaping right ($180e-$1832), sets jump-trajectory pointer $2e(a6) = CODE 2:$13e4 + $28 = $140c ($1848-$184c), and transitions to hero state 4 ($1200).",
+        "arc_displacements_per_update": [
+          {"update": 1, "dx_magnitude": 1, "dy": 12, "frame": 5, "draw_dy": -9},
+          {"update": 2, "dx_magnitude": 10, "dy": 12, "frame": 6, "draw_dy": -9},
+          {"update": 3, "dx_magnitude": 8, "dy": 19, "frame": 0, "draw_dy": -9},
+          {"update": 4, "dx_magnitude": 0, "dy": 6, "frame": 0, "draw_dy": -9}
+        ],
+        "post_arc_fall": "On update 5, table sentinel -1 at $142c causes state 4 (CODE 2:$1268-$126a) to subtract 10 from Y and jump to $1494 (standard fall: +10 on that update, so net dy = 0 on the transition update, then +18, +26, +34... adding +8 per update at CODE 2:$14be). Note: dx_magnitude is negated when facing left ($2c(a6) < 0).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$1806-$1870",
+          "CODE 2:$1200-$1270",
+          "CODE 2:$140c-$1432",
+          "CODE 2:$1494-$14ca"
+        ]
+      }
+    },
+    "520": {
+      "hex": "$0208",
+      "low_byte_kind": 8,
+      "rooms_used": ["1000", "2000", "2030"],
+      "hero_states": [11, 9],
+      "dispatch": "CODE 2:$0772 -> state 11 ($2ac6 -> CODE 2:$1930-$196a), then branches into state 9 (CODE 2:$1790-$192c).",
+      "entry_rule": "Top-accessible vertical rope. Standing above the rope in state 11 delegates to ground state $0c6c unless Down ($a(a6) > 0) is pressed while not crouching ($1930-$1940), which snaps Duncan onto the rope at Y + 30 ($1946: addi.w #$1e, $e(a6)), advances floor cursor $6(a6) += 16 ($194c), switches active span to span.a ($6(a2,d4.w), the lower 519/520 rope span, at $1952), sets state 9 ($1956), and enters $1790. Also climbable upwards back onto the top ledge when Y < span.c ($1902-$1924).",
+      "climb_speed_px_per_update": {
+        "up": -8,
+        "down": 8,
+        "idle": 0,
+        "note": "Identical to kind 519 once on the rope because state 11 transitions directly to state 9 (CODE 2:$1790-$192c).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$1930-$196a",
+          "CODE 2:$1790-$192c"
+        ]
+      },
+      "leap_speed_and_arc": {
+        "trigger": "Identical to kind 519 (handled by state 9 at CODE 2:$1806-$1870).",
+        "setup": "y -= 8, x = span_edge ± 8, trajectory table CODE 2:$140c.",
+        "arc_displacements_per_update": [
+          {"update": 1, "dx_magnitude": 1, "dy": 12, "frame": 5, "draw_dy": -9},
+          {"update": 2, "dx_magnitude": 10, "dy": 12, "frame": 6, "draw_dy": -9},
+          {"update": 3, "dx_magnitude": 8, "dy": 19, "frame": 0, "draw_dy": -9},
+          {"update": 4, "dx_magnitude": 0, "dy": 6, "frame": 0, "draw_dy": -9}
+        ],
+        "post_arc_fall": "Same as kind 519 (CODE 2:$1268 -> $1494 -> $14be).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$1956-$1966",
+          "CODE 2:$1806-$1870",
+          "CODE 2:$140c-$1432"
+        ]
+      }
+    },
+    "543": {
+      "hex": "$021f",
+      "low_byte_kind": 31,
+      "rooms_used": ["1020"],
+      "hero_states": [41],
+      "dispatch": "CODE 2:$082a -> state 41 ($2b3e -> CODE 2:$09be-$0a52).",
+      "meaning": "One-way diagonal Dungeon chute / zip-line entry in Room 1020 (span 918 at y=196, x=[0,20], args=[35, 240, 972, 38, 0, 0]) used when Duncan falls into a pit into the Dungeon.",
+      "climb_speed_px_per_update": {
+        "value": null,
+        "forced_slide_dx_px_per_update": 18,
+        "forced_slide_dy_px_per_update": 16,
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$09be-$0a52"
+        ],
+        "why_null": "Player climb inputs are completely ignored in state 41. On an unvisited entry (-$280(a5) == 0 at $09be), Duncan plays SOUN 79 ($4f) once ($09ca-$09d6) and slides diagonally at a fixed +18 px/update horizontally (addi.w #$12, $c(a6) at $09da) and +16 px/update vertically (addi.w #$10, $e(a6) at $09e0), drawing Data A PPCT 125 ($74(a4)) frame 3 until Y >= 224 ($e0 at $09e6), then snaps to (span.a=35, span.b=240) on floor span 972 in stunned state 6 ($09ec-$0a18) and sets -$280(a5) = $ff ($0a1a). If -$280(a5) != 0 (room already visited in session), $0a24-$0a50 skips the slide and places Duncan directly at (35, 240) in state 0."
+      },
+      "leap_speed_and_arc": {
+        "value": null,
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$09be-$0a52"
+        ],
+        "why_null": "State 41 never reads $14(a6), so Duncan cannot leap off kind 543; additionally, bit $0200 blocks airborne rope-grab or floor landing onto kind 543 from inside the room."
+      }
+    },
+    "545": {
+      "hex": "$0221",
+      "low_byte_kind": 33,
+      "rooms_used": ["3020", "4000", "4020"],
+      "hero_states": [46, 47],
+      "dispatch": "CODE 2:$083a -> state 46 ($2b52 -> CODE 2:$1c70-$1cbc), which initializes $10(a6) = 0, $2c(a6) = 4, state = 47 ($2f), snaps X to span.x0+4 or span.x1-4, and runs state 47 ($2b56 -> CODE 2:$1cbe-$1f08).",
+      "meaning": "Multi-segment climbable vertical rope network (supports chained upper/lower segments on the same rope when a ledge or grease section splits a rope, plus side-to-side transfers).",
+      "climb_speed_px_per_update": {
+        "up": -8,
+        "down": 8,
+        "idle": 0,
+        "sound_cadence": "Plays SOUN 14 ($0e) every 9 climbing updates ($2c(a6) reset to 8 at CODE 2:$1e3e / $1eca; stopped via $5a(a5) when idle at $1e1e).",
+        "segment_chaining": "Climbing above span.e ($10(a2,d4.w) at $1eda) switches to upper segment span.c ($a(a2,d4.w)) if > 0, or clamps at span.e if <= 0 ($1ee2-$1f04). Climbing below span.f ($12(a2,d4.w) at $1e46) switches to lower segment span.d ($c(a2,d4.w)) if > 0 ($1e56), clamps at span.f if span.d < 0 ($1e50 -> $1f00, blocked bottom), or drops off the rope at X + 4 into standard fall ($147c) if span.d == 0 ($1e90-$1eba). If the new lower segment has kind 546 ($222), $1e60-$1e7a immediately plays SOUN 87 ($57) and sets timer $2c(a6) = 300 ($012c).",
+        "horizontal_transfer": "Pressing Left/Right shifts between rope faces and transfers to span.a ($6(a2,d4.w), left) or span.b ($8(a2,d4.w), right) if > 0; if span.a/span.b < 0 ($1cee/$1d18), steps directly onto an adjacent floor ledge via $1db0-$1e06.",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$1c70-$1f08"
+        ]
+      },
+      "leap_speed_and_arc": {
+        "trigger": "Pressing Jump (btst #0, $14(a6) at CODE 2:$1d48).",
+        "setup": "Plays SOUN 4 ($1da6), subtracts 8 from Y ($1d74: subq.w #$8, d1), snaps X to (span.x0 - 8) facing -8 or (span.x1 + 8) facing +8 ($1d50-$1d72), sets trajectory pointer $2e(a6) = CODE 2:$13e4 + $28 = $140c ($1d88-$1d8c), and enters state 4 ($1200).",
+        "arc_displacements_per_update": [
+          {"update": 1, "dx_magnitude": 1, "dy": 12, "frame": 5, "draw_dy": -9},
+          {"update": 2, "dx_magnitude": 10, "dy": 12, "frame": 6, "draw_dy": -9},
+          {"update": 3, "dx_magnitude": 8, "dy": 19, "frame": 0, "draw_dy": -9},
+          {"update": 4, "dx_magnitude": 0, "dy": 6, "frame": 0, "draw_dy": -9}
+        ],
+        "post_arc_fall": "Same as kinds 519/520: update 5 subtracts 10 from Y at CODE 2:$1268 and enters $1494 (+10 on that update, then +18, +26... adding +8/update).",
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$1d48-$1dae",
+          "CODE 2:$140c-$1432"
+        ]
+      }
+    },
+    "546": {
+      "hex": "$0222",
+      "low_byte_kind": 34,
+      "rooms_used": ["4000"],
+      "hero_states": [46, 47],
+      "dispatch": "CODE 2:$0842 -> state 46 ($1c70-$1cbc, playing SOUN 87 ($57) on entry at $1c96 or segment transition at $1e6c) -> state 47 ($1cbe-$1f08).",
+      "meaning": "Greased / slippery vertical rope section in Room 4000 (Black Knight 1, spans 540 and 990) that forces Duncan to slide down uncontrollably.",
+      "climb_speed_px_per_update": {
+        "value": null,
+        "forced_slide_dy_px_per_update": 10,
+        "forced_slide_dx_px_per_update": 0,
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$1c8e-$1c9e",
+          "CODE 2:$1cc6-$1cd6",
+          "CODE 2:$1e42-$1eba"
+        ],
+        "why_null": "At the top of state 47, CODE 2:$1cc6 tests cmpi.w #$222, $4(a2, d4.w). When on kind 546 ($222), $1cce executes move.w #$a, $a(a6) (+10 px/update downward) and branches unconditionally via bra.w $1e42, bypassing all Left/Right/Jump/Up/Down input checks. Duncan slides down at +10 px/update (holding current rope climb frame without playing SOUN 14 because $2c(a6) was set to 300 = $012c on entry at $1ca0/$1e74) until Y > span.f ($12(a2,d4.w)), where he either chains to span.d ($1e56) or drops off the bottom into freefall ($1e90-$1eba)."
+      },
+      "leap_speed_and_arc": {
+        "value": null,
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$1cc6-$1cd6"
+        ],
+        "why_null": "Because CODE 2:$1cc6-$1cd4 branches directly past $1cd8-$1dae to $1e42 on every update while span kind == $222, Jump ($1d48) and Left/Right transfer ($1cd8) are unreachable while on kind 546."
+      }
+    },
+    "525": {
+      "hex": "$020d",
+      "low_byte_kind": 13,
+      "rooms_used": ["1010"],
+      "hero_states": [18, 19],
+      "rope_object_routine": "$342 (CODE 4:$4f14-$5004), spawned twice in Room 1010 at CODE 5:$02d0 (left rope, phase 0) and CODE 5:$02e8 (right rope, phase 11)",
+      "dispatch": "CODE 2:$079a -> state 18 ($2ae2 -> CODE 2:$19ec-$1a36) -> state 19 ($2ae6 -> CODE 2:$1a38-$1be4), with anchor offset table at CODE 2:$1be6-$1c6e.",
+      "swing_behaviour": {
+        "pendulum_period_updates": 22,
+        "phase_advance_rate": "1 phase index per update (0..21, wrapping 22 -> 0 at CODE 4:$4f60-$4f6a). In Room 1010, the two ropes are spawned 11 steps (180 degrees) out of phase (left starts at 0, right starts at 11) so they swing toward/away from each other symmetrically.",
+        "dynamic_span_gate": "Routine $342 dynamically opens and closes each kind-525 span's right bound span.x1 = span.x0 + 95 ($5f) only during the 3-update window nearest the outer platform, setting span.x1 = span.x0 - 1 (disabled) on the other 19 updates (CODE 4:$4f72-$4fa6): left rope (index 0, -$226(a5)) opens on phases {20, 21, 0}; right rope (index 1, -$22a(a5)) opens on phases {9, 10, 11}.",
+        "grab_window": "When Duncan jumps into an open kind-525 span, state 18 (CODE 2:$19ec-$1a36) checks the rope's current phase $4(a3) (after $342 has incremented it): left rope (span.a == 0) is caught on phases {0, 1, 21}; right rope (span.a == 1) is caught on phases {10, 11, 12}; otherwise Duncan misses and falls ($1494).",
+        "hero_coordinates_while_swinging": "In state 19 (CODE 2:$1a38-$1be4), Duncan does not integrate velocity; instead, his (X, Y) each update are set directly to (rope_anchor_x + dx, rope_anchor_y + dy) indexed by rope phase $4(a3) in byte-pair table CODE 2:$1be6 (signed dx, unsigned dy):",
+        "phase_offset_table_1be6": [
+          {"phase": 0, "dx": 64, "dy": 63, "rope_frame": 0, "hero_ppct_128_frame": 0},
+          {"phase": 1, "dx": 59, "dy": 68, "rope_frame": 1, "hero_ppct_128_frame": 0},
+          {"phase": 2, "dx": 47, "dy": 76, "rope_frame": 2, "hero_ppct_128_frame": 1},
+          {"phase": 3, "dx": 32, "dy": 83, "rope_frame": 3, "hero_ppct_128_frame": 1},
+          {"phase": 4, "dx": 16, "dy": 87, "rope_frame": 4, "hero_ppct_128_frame": 2},
+          {"phase": 5, "dx": 0, "dy": 89, "rope_frame": 5, "hero_ppct_128_frame": 2},
+          {"phase": 6, "dx": -16, "dy": 87, "rope_frame": 6, "hero_ppct_128_frame": 3},
+          {"phase": 7, "dx": -32, "dy": 83, "rope_frame": 7, "hero_ppct_128_frame": 3},
+          {"phase": 8, "dx": -47, "dy": 76, "rope_frame": 8, "hero_ppct_128_frame": 4},
+          {"phase": 9, "dx": -59, "dy": 68, "rope_frame": 9, "hero_ppct_128_frame": 4},
+          {"phase": 10, "dx": -64, "dy": 63, "rope_frame": 10, "hero_ppct_128_frame": 5},
+          {"phase": 11, "dx": -64, "dy": 63, "rope_frame": 10, "hero_ppct_128_frame": 5},
+          {"phase": 12, "dx": -59, "dy": 68, "rope_frame": 9, "hero_ppct_128_frame": 5},
+          {"phase": 13, "dx": -47, "dy": 76, "rope_frame": 8, "hero_ppct_128_frame": 4},
+          {"phase": 14, "dx": -32, "dy": 83, "rope_frame": 7, "hero_ppct_128_frame": 4},
+          {"phase": 15, "dx": -16, "dy": 87, "rope_frame": 6, "hero_ppct_128_frame": 3},
+          {"phase": 16, "dx": 0, "dy": 89, "rope_frame": 5, "hero_ppct_128_frame": 3},
+          {"phase": 17, "dx": 16, "dy": 87, "rope_frame": 4, "hero_ppct_128_frame": 2},
+          {"phase": 18, "dx": 32, "dy": 83, "rope_frame": 3, "hero_ppct_128_frame": 2},
+          {"phase": 19, "dx": 47, "dy": 76, "rope_frame": 2, "hero_ppct_128_frame": 1},
+          {"phase": 20, "dx": 59, "dy": 68, "rope_frame": 1, "hero_ppct_128_frame": 1},
+          {"phase": 21, "dx": 64, "dy": 63, "rope_frame": 0, "hero_ppct_128_frame": 0}
+        ],
+        "rope_to_rope_midair_transfer": "Pressing Jump (btst #0, $14(a6) at CODE 2:$1a80) first checks whether the two ropes are at their inner meeting point ($1a8c-$1b5a): from left rope (-$226(a5)) on phases {9, 10, 11, 12} if right rope (-$22a(a5)) is in phases 0..4, Duncan transfers directly onto -$22a(a5) and plays SOUN 4 ($1ad4); symmetrically, from right rope (-$22a(a5)) on phases {20, 21, 0, 1} if left rope (-$226(a5)) is in phases 10..14, Duncan transfers directly onto -$226(a5) and plays SOUN 4 ($1b48).",
+        "leap_off_swinging_rope": {
+          "setup": "If Jump is pressed outside the rope-to-rope transfer window ($1b5e-$1bbc), state 19 plays SOUN 4 ($1bb2), adds +30 ($1e) to Y ($1b6a), advances floor cursor $6(a6) += 4 ($1b70), chooses facing $1e(a6) = $2c(a6) = -8 (left, during phases 1..10 while swinging leftward) or +8 (right, during phases 0 or 11..21 while swinging rightward) ($1b74-$1b8a), sets trajectory pointer $2e(a6) = CODE 2:$13e4 + $18 = $13fc ($1b96-$1b9a), and enters state 4 ($1200).",
+          "arc_displacements_per_update": [
+            {"update": 1, "dx_magnitude": 16, "dy": -25, "frame": 3, "draw_dy": -9},
+            {"update": 2, "dx_magnitude": 16, "dy": -3, "frame": 4, "draw_dy": -9},
+            {"update": 3, "dx_magnitude": 1, "dy": 12, "frame": 5, "draw_dy": -9},
+            {"update": 4, "dx_magnitude": 10, "dy": 12, "frame": 6, "draw_dy": -9},
+            {"update": 5, "dx_magnitude": 8, "dy": 19, "frame": 0, "draw_dy": -9},
+            {"update": 6, "dx_magnitude": 0, "dy": 6, "frame": 0, "draw_dy": -9}
+          ],
+          "post_arc_fall": "Update 7 hits sentinel -1 at $142c, subtracts 10 from Y ($1268), and enters standard fall $1494 (+10 on that update, then +18, +26...).",
+          "climb_speed_px_per_update": null,
+          "climb_null_reason": "Duncan hangs from the bottom knot of the pendulum rope and cannot climb up or down along kind 525."
+        },
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 2:$079a-$07a0",
+          "CODE 2:$19ec-$1c6e",
+          "CODE 2:$13fc-$1432",
+          "CODE 4:$4f14-$5004",
+          "CODE 5:$02bc-$02ee"
+        ]
+      }
+    }
+  }
+}

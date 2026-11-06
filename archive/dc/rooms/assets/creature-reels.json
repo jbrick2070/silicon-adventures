@@ -1,0 +1,76 @@
+{
+  "description": "Partial code-grounded creature animation extraction. CODE offsets are relative to the segment body. Resource IDs and frame indices are integers; frame indices are zero-based. Names from the extraction brief are INFERRED. Null means the category, order, or identity has not been established; it does not mean no animation exists.",
+  "rendering_evidence": "PROVEN: CODE 4 $0 is called with reel pointer in A1 and frame index in D2; CODE 6 $0 loads the reel resource selected by ID, using PPCT at CODE 6 $268. The recorded Data B identity follows art/castle-index.js.",
+  "routines": {
+    "$26a": {
+      "constructor": "CODE 4 $806", "label": "guard and whip man", "label_confidence": "INFERRED",
+      "reels": [{"ppct": 408, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $908, $940, $9b8", "CODE 6 $556-$560"]}, {"ppct": 406, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $a22", "CODE 6 $53a-$544"]}, {"ppct": 405, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $ab2", "CODE 6 $52c-$536"]}, {"ppct": 407, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $b4c, $b5e, $bbe", "CODE 6 $548-$552"]}],
+      "sequences": [{"category": null, "ppct": 408, "frames": [0,0,0,0,1,1,1,1], "confidence": "PROVEN", "evidence": ["CODE 4 $908-$92c"], "notes": "When entered with counter 0, frames use counter arithmetic shift right by two and counter advances to 8."}, {"category": null, "ppct": 408, "frames": [3,3,3,3,4,4,4,4], "confidence": "PROVEN", "evidence": ["CODE 4 $9d8-$9de and $940-$964"], "notes": "Entry sets counter 12; frames use counter shifted right by two until 20."}],
+      "walking": null, "attacking": null, "dying": null, "notes": "The gameplay labels and remaining paths have not been proven."
+    },
+    "$272": {
+      "constructor": "CODE 4 $ec0", "label": "door that releases guards", "label_confidence": "INFERRED",
+      "reels": [{"ppct": 400, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $f44, $f78", "CODE 6 $4a0-$4aa"]}, {"ppct": 401, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $f4c, $f80", "CODE 6 $4ae-$4b8"]}],
+      "walking": null, "attacking": null, "dying": null, "notes": "CODE 4 $f3e-$f54 and $f72-$f8a choose reel based on sign of object field $4; exact sequence and category remain unresolved."
+    },
+    "$282": {
+      "constructor": "CODE 4 $1008", "label": "bat", "label_confidence": "INFERRED",
+      "reels": [{"ppct": 300, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 6 $468-$472", "CODE 4 $1044, $1072, $10a4"]}],
+      "walking": {"description": "Normal moving animation advances 1, 2, 1, 2 repeatedly after its initial value of 0, while that update path is reached.", "frames": [1,2], "repeat": true, "confidence": "PROVEN", "evidence": ["CODE 4 $1024, $1068-$10a4"]},
+      "attacking": null,
+      "dying": {"description": "The hit path can draw frame 0 while falling, then repeatedly draws frame 5 while its counter expires; collisions can take other exits.", "frames": [0,5], "repeat_last": true, "confidence": "PROVEN", "evidence": ["CODE 4 $122a-$1310, $1332-$1348"]},
+      "notes": "Whether a separate attack animation exists has not been established."
+    },
+    "$28a": {
+      "constructor": "CODE 4 $135c", "label": "rat", "label_confidence": "INFERRED",
+      "reels": [{"ppct": 310, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 6 $476-$480", "CODE 4 $138a, $163e, $1590"]}, {"ppct": 311, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 6 $484-$48e", "CODE 4 $1390, $1644, $159e"]}],
+      "walking": {"frames": [1,0], "repeat": true, "confidence": "PROVEN", "evidence": ["CODE 4 $163a, $158a-$15ae"], "facing_rule": "Field $8(a6) <= 0 selects 310; positive selects 311.", "notes": "A newly spawned object's frame counter is zero; each normal update decrements it and wraps negative to 1."},
+      "attacking": null, "dying": null, "notes": "CODE 4 $1472 and $1406 use frames 2 and 3 on other movement paths; their gameplay categories are not established."
+    },
+    "$29a": {
+      "constructor": "CODE 4 $16d2", "label": "rock henchman with the weight", "label_confidence": "INFERRED",
+      "reels": [{"ppct": 703, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 6 $b68-$b72", "CODE 4 $17a4-$17b8"]}, {"ppct": 704, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 6 $b76-$b80", "CODE 4 $175a, $17a4-$17b8"]}, {"ppct": 521, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 6 $492-$49c", "CODE 4 $1810-$181e"]}],
+      "sequences": [{"category": null, "frames": [[704,0],[704,1],[704,1],[704,1],[703,0],[703,0],[703,0],[703,0],[703,1],[703,1],[703,1],[703,2],[703,2],[703,2],[703,3],[704,2],[704,2],[704,2],[704,0]], "confidence": "PROVEN", "evidence": ["CODE 4 $176a-$17bc; raw table $185e-$18aa", "CODE 6 $b68-$b80"], "notes": "Each pair is [PPCT, frame]; the next table row has a negative final byte and ends the sequence. CODE 4 $17bc-$1802 takes an additional branch at frame 3."}],
+      "walking": null, "attacking": null, "dying": null, "notes": "Labels for the sequence and other branches remain unresolved."
+    },
+    "$2a2": {
+      "constructor": "CODE 4 $1a38", "label": "dragon", "label_confidence": "INFERRED",
+      "reels": [{"ppct": 710, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $1ac2, $1b3a", "CODE 6 $bca-$bd4"]}, {"ppct": 711, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $1bcc", "CODE 6 $bd8-$be2"]}, {"ppct": 714, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $1bb6", "CODE 6 $bf4-$bfe"]}],
+      "sequences": [{"category": null, "ppct": 710, "frames": [0,0,0,0,1,1,1,1,1], "confidence": "PROVEN", "evidence": ["CODE 4 $1ab0-$1ab6, $1ac2-$1aee"], "notes": "On entry counter is zero; indices 0 through 8 are drawn before the transition."}],
+      "walking": null, "attacking": null, "dying": null, "notes": "Other sequences include table-driven draws; gameplay phase labels remain unresolved."
+    },
+    "$2aa": {
+      "constructor": "CODE 4 $1ca2", "label": "shield chamber", "label_confidence": "INFERRED",
+      "reels": [{"ppct": 715, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $1cd4-$1d32", "CODE 6 $c02-$c0c"]}, {"ppct": 716, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $1d76-$1da8", "CODE 6 $c10-$c1a"]}, {"ppct": 717, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $1e10-$1e20, $1e4a-$1e5a", "CODE 6 $c1e-$c28"]}],
+      "sequences": [{"category": null, "ppct": 715, "frames": [0,1,1,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,1,1], "confidence": "PROVEN", "evidence": ["CODE 4 $1d06-$1d32, table $1d40-$1d58"], "notes": "Table byte 42 triggers a side effect and is drawn as frame 3; signed -1 terminates. Prior idle path draws frame 0."}],
+      "walking": null, "attacking": null, "dying": null, "notes": "These conventional creature categories are not established for this routine."
+    },
+    "$2b2": {
+      "constructor": "CODE 4 $1e7a", "label": "mutant", "label_confidence": "INFERRED",
+      "reels": [{"ppct": 434, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 6 $82e-$838", "CODE 4 $2126, $215c"]}, {"ppct": 435, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 6 $83c-$846", "CODE 4 $1f26, $1fa6"]}, {"ppct": 436, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 6 $84a-$854", "CODE 4 $1fdc, $2038"]}],
+      "walking": {"ppct": 435, "frames_when_horizontal_delta_nonpositive": [0,1,2,3], "frames_when_horizontal_delta_positive": [4,5,6,7], "repeat": true, "confidence": "PROVEN", "evidence": ["CODE 4 $1e7a-$1e84, $2298-$22b0, $1edc-$1f30, $1f6a-$1fb0, tables $2208-$2211"], "notes": "Each table ends at a negative sentinel and resets its index. Position limits can interrupt the cycle."},
+      "sequences": [{"category": null, "ppct": 434, "frames": [0,1,0,1,0,1,2,3,2,1,0,0,2,3,2,1,0], "confidence": "PROVEN", "evidence": ["CODE 4 $211c-$2138, table $213e-$214f"]}, {"category": null, "ppct": 434, "frames": [4,4,5,5,6,7,8,9], "confidence": "PROVEN", "evidence": ["CODE 4 $2152-$216e, table $2176-$217e"]}, {"category": null, "ppct": 436, "frames": [0,0,1,1,2,2,2,3,3], "confidence": "PROVEN", "evidence": ["CODE 4 $2026-$204a, table $205a-$2063"]}],
+      "attacking": null, "dying": null, "notes": "The gameplay meanings of the other table-driven paths are unresolved."
+    },
+    "$2da": {
+      "constructor": "CODE 4 $25be", "label": "Black Knight", "label_confidence": "INFERRED",
+      "reels": [{"ppct": 902, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $2652", "CODE 6 $e12-$e1c"]}, {"ppct": 903, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $2640", "CODE 6 $e20-$e2a"]}],
+      "sequences": [{"category": null, "ppct": [903,902], "frames": [0,1,1,0,2,2,0,1,1,0,2,2], "confidence": "PROVEN", "evidence": ["CODE 4 $2708-$2778; table $2780-$2798"], "notes": "Both reels are drawn with each listed frame; the negative table word ends this phase."}, {"category": null, "ppct": [903,902], "frames": [0,1,1,1], "confidence": "PROVEN", "evidence": ["CODE 4 $279a-$27d4; table $27fc-$2804"], "notes": "Both reels draw each frame until the negative sentinel."}],
+      "walking": null, "attacking": null, "dying": null, "notes": "The phase labels and all supplemental draw paths are unresolved."
+    },
+    "$2ea": {
+      "constructor": "CODE 4 $2e3a", "label": "gargoyle", "label_confidence": "INFERRED",
+      "reels": [{"ppct": 906, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $307a", "CODE 6 $e4a-$e54"]}, {"ppct": 907, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $3080", "CODE 6 $e58-$e62"]}],
+      "walking": {"frames": [1,2], "repeat": true, "confidence": "PROVEN", "evidence": ["CODE 4 $3060-$3098, $30ea-$3122"], "facing_rule": "Field $10(a6) negative selects PPCT 907, otherwise PPCT 906.", "notes": "On each update the counter is incremented and frame is 1 plus the low bit. Position limits interrupt movement; first frame depends on incoming counter parity."},
+      "attacking": null, "dying": null, "notes": "Other phases and the distinct PPCT 922 draws remain unresolved."
+    },
+    "$31a": {
+      "constructor": "CODE 4 $3d7c", "label": "wizard", "label_confidence": "INFERRED",
+      "reels": [{"ppct": 430, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $3e08, $3e3c", "CODE 6 $7f6-$800"]}, {"ppct": 431, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $3f1e", "CODE 6 $804-$80e"]}, {"ppct": 432, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $3f26", "CODE 6 $812-$81c"]}, {"ppct": 437, "fork": "Data B", "confidence": "PROVEN", "evidence": ["CODE 4 $3ed0", "CODE 6 $858-$862"]}],
+      "sequences": [{"category": null, "ppct": 430, "frames": [5,5,5,6,6,6,5,5,5,7,7,7,7], "confidence": "PROVEN", "evidence": ["CODE 4 $3dfe-$3e1a; table $3e22-$3e30"], "notes": "Negative byte terminates this table. Subsequent phase depends on a random test."}, {"category": null, "ppct": 430, "frames": [0,1,2,3,4], "confidence": "PROVEN", "evidence": ["CODE 4 $3e32-$3e4e; table $3e56-$3e5b"]}],
+      "walking": null, "attacking": null, "dying": null, "notes": "Other phase labels and sequence tables remain unresolved."
+    },
+    "$32a": {"constructor": "CODE 4 $4958", "label": "fountain and vulture", "label_confidence": "INFERRED", "walking": null, "attacking": null, "dying": null, "reels": null, "evidence": ["CODE 0 jump table $32a -> CODE 4 $4958"], "notes": "Animation paths remain unresolved."},
+    "$332": {"constructor": "CODE 4 $464c", "label": "burning eye", "label_confidence": "INFERRED", "walking": null, "attacking": null, "dying": null, "reels": null, "evidence": ["CODE 0 jump table $332 -> CODE 4 $464c"], "notes": "Animation paths remain unresolved."}
+  }
+}

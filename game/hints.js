@@ -25,6 +25,34 @@ window.ScepterHints = (() => {
     23272, 23449, 23679, 24601, 25538, 26474, 26847, 27201, 28593, 29361, 30379, 31514,
     31555, 32256
   ]);
+  // The marsh rooms read alike and the bog is on a clock. Bearings below are the disk's map.
+  const MARSH_ROOMS = {
+    24338: ['Marsh · hidden valley', [
+      'Gather anything scattered here first. Canyon walls close this valley on two sides, and worn ground leads to each way out.',
+      'South leads into the slough. East leads to the port.',
+      'Go south to the slough, where the ground rises to the south and leads out of the marsh.'
+    ]],
+    25936: ['Slough · the marsh', [
+      'The ground is higher to the south, as the room says. East is the bog.',
+      'Do not linger in the bog to the east: it swallows anyone who stays.',
+      'South leaves the marsh for the cliff road. North returns to the hidden valley. East is the bog, and it is only worth crossing quickly.'
+    ]],
+    2577: ['Bog · sinking', [
+      'The mud is taking you. Every turn here counts.',
+      'The bog kills on its sixth turn. Walking around costs nothing, but any command spends a turn.',
+      'Leave now. North is the port, south the alcove, east the swamp and west the slough. Do not rest here.'
+    ]],
+    25694: ['Swamp · the marsh', [
+      'The ground gets wetter to the north. Rocks lie east and vegetation south, as the room says.',
+      'A great hunter wanders this ground, so keep your wits about you and your strength up.',
+      'West returns to the bog. South leads to the ferns and east to the gulley.'
+    ]],
+    4315: ['Stagnant pool · the marsh', [
+      'The only way out on foot is east. The west is shallow water and mud.',
+      'Tall cliffs close the north.',
+      'Go east to the mellow pond.'
+    ]]
+  };
   const TEMPLE_TRAPS = {
     32726: ['Sand room · sealed temple hall', [
       'The door behind you has locked; the only way out of the temple is forward to the High Altar.',
@@ -64,7 +92,7 @@ window.ScepterHints = (() => {
     20189: ['Squasher · temple gauntlet', [
       'The walls close in with every turn, and OPEN alone will not unlock the western door.',
       'Look for the secret button drawn on the door itself.',
-      'Click the door to hit its secret button, then go west into the High Altar.'
+      'Click the narrow door high up on the far wall, not the large door below it, to hit the secret button. Then go west into the High Altar.'
     ]]
   };
   const milestones = [
@@ -76,33 +104,33 @@ window.ScepterHints = (() => {
     { title: 'Elron’s charge',
       done: (has, _seen, _scene, named) => named('freeze spell'),
       tiers: ['Your master’s sanctum holds a book worth reading.',
-        'Wizard’s Sanctum, north of the banquet hall: read the book, then do what it says with the sword, and take the spell.',
-        ['read book', 'swing sword', 'get freeze spell']] },
+        'Wizard’s Sanctum, north of the courtyard, which is east of the banquet hall: read the book, then do what it says with the sword, and take the spell.',
+        ['north', 'east', 'east', 'north', 'read book', 'swing sword', 'get freeze spell']] },
     { title: 'Into the dungeon',
       done: (has) => has(LANTERN) || has(KEYRING),
       tiers: ['The armory keeps a shield. The dungeon beyond it keeps a key, and a way down.',
-        'Armory, south of the banquet hall: get shield. Dungeon to the east: the cell holds a key ring; back in the dungeon, OPEN, go south, and take the lantern.',
-        ['get shield', 'east', 'get key ring', 'west', 'open', 'south', 'get lantern']] },
+        'Armory, south of the banquet hall: get shield. Dungeon to the east, and the cell east of that: get the key ring; back in the dungeon, OPEN, go south, and take the lantern.',
+        ['south', 'west', 'south', 'get shield', 'east', 'east', 'get key ring', 'west', 'open', 'south', 'get lantern']] },
     { title: 'The boiling pool',
       done: (has) => has(FLUTE),
       tiers: ['A boiling pool bars the way below. Cold would help, and the lab beyond has music in it.',
-        'Well tunnel east, cavern pool south, landing west to the boiling pool: cast freeze. Pedestal south, lab east, music room north: SEARCH, then take the flute.',
-        ['cast freeze', 'south', 'east', 'north', 'search', 'get flute']] },
+        'Well tunnel east, cavern pool south, landing west to the boiling pool: cast freeze. Pedestal south, lab east, art east, great hall east, fountain east, music room north: SEARCH, then take the flute.',
+        ['east', 'south', 'west', 'cast freeze', 'south', 'east', 'east', 'east', 'east', 'north', 'search', 'get flute']] },
     { title: 'The snake and the wand',
       done: (has) => has(WAND),
       tiers: ['Music soothes what guards the cavern, and an altar answers prayer.',
-        'Cavern, south of the great hall: play flute. Altar to the west: pray, then take the wand.',
-        ['play flute', 'west', 'pray', 'get wand']] },
+        'Cavern, south of the lab: play flute. Altar to the west: pray, then take the wand.',
+        ['south', 'west', 'west', 'west', 'south', 'play flute', 'west', 'pray', 'get wand']] },
     { title: 'The Earth Scepter',
       done: (has) => has(EARTH),
       tiers: ['The chasm wants a bridge, and the demon beyond it wants a word for what the sky shows after rain.',
         'Chasm, east of the cavern: wave wand, go east, answer RAINBOW, go east to the Elven Throne.',
-        ['wave wand', 'east', 'rainbow', 'east', 'get earth scepter']] },
+        ['east', 'east', 'east', 'wave wand', 'east', 'rainbow', 'east', 'get earth scepter']] },
     { title: 'The temple',
       done: (has, seen) => has(AIR) || seen(HIGH_ALTAR),
       tiers: ['Rest where the corner invites it. The temple to the south hides the Air Scepter, and its halls are traps.',
         'Corner: SIT. Tree path, temple vista, temple stairs, up to the priest’s room: open, east, open, east. Sand room: push until the sand stops (four pushes in all), then north. Dogleg: open, east. Slide floor: east immediately. Jumping door: south, and repeat south if it slams shut. Ball: south immediately. Spikes: click the floor, then west. Web: cut, west. Squasher: click the door, then west.',
-        ['sit', 'south', 'up', 'open', 'east', 'open', 'east', 'push', 'push', 'push', 'push', 'north', 'open', 'east', 'east', 'south', 'south', 'south', 'west', 'cut', 'west']] },
+        ['sit', 'south', 'south', 'south', 'up', 'open', 'east', 'open', 'east', 'push', 'push', 'push', 'push', 'north', 'open', 'east', 'east', 'south', 'south', 'south', 'click the loose floor stone', 'west', 'cut', 'west', 'west', 'west', 'west', 'west', 'cut', 'west', 'click the narrow door high up', 'west']] },
     { title: 'The Air Scepter',
       done: (has) => has(AIR),
       tiers: ['At the High Altar, read before you kneel.',
@@ -111,35 +139,35 @@ window.ScepterHints = (() => {
     { title: 'Diving gear',
       done: (has) => has(SUIT),
       tiers: ['The sea road needs a suit. A tavern on the dunes keeps one in a closet.',
-        'Marsh: get sword. Slough south, ledge west, lava path south, dunes west, salty bar: OPEN. Drinks west, gambling south: OPEN. Closet west: get diving suit, diving helmet, air tank.',
-        ['get sword', 'south', 'west', 'south', 'west', 'open', 'west', 'south', 'open', 'west', 'get diving suit', 'get diving helmet', 'get air tank']] },
+        'Marsh: get sword. Slough south, cliff road south, ledge west, lava path south, lava tunnel south, sea cliff west to the dunes, salty bar west: OPEN. Drinks west, gambling south: OPEN. Closet west: get diving suit, diving helmet, air tank.',
+        ['get sword', 'south', 'south', 'west', 'south', 'south', 'south', 'west', 'west', 'open', 'west', 'south', 'open', 'west', 'get diving suit', 'get diving helmet', 'get air tank']] },
     { title: 'Oil and a chip',
       done: (has) => has(CHIP) || has(PEARL) || has(TRIDENT) || has(WATER),
       tiers: ['The dock keeps oil. The beach keeps a small thing worth searching for, and keep it safe: a thief would end the sea voyage.',
         'Salty bar south to the dock: get oil can. Seaside east, silicon beach: SEARCH, get chip.',
-        ['south', 'get oil can', 'east', 'search', 'get chip']] },
+        ['south', 'get oil can', 'east', 'east', 'search', 'get chip']] },
     { title: 'The wreck’s pearl',
       done: (has, seen, scene, _named, objects) =>
         has(PEARL) || has(TRIDENT) || has(IRONKEY) || has(WATER) ||
         seen(MURALS) || seen(NEPTUNE) || (scene === SHELL && !objects.has(OYSTER)),
       tiers: ['A wreck lies in the shallows. Its store room chest is locked, and frost cracks locks.',
-        'Clear water south, south sea west, deck north: down to the hold, south to the cannon, store room: open. If the chest resists, cast freeze spell, open again, and get the pearl.',
-        ['south', 'west', 'north', 'down', 'south', 'open', 'get pearl', 'cast freeze spell', 'open', 'get pearl']] },
+        'Clear water, seaweed and trench south, then south sea, galleon and wheel west, deck north: down to the hold, south to the cannon, south to the store room: open. If the chest resists, cast freeze spell, open again, and get the pearl.',
+        ['south', 'south', 'south', 'west', 'west', 'west', 'north', 'down', 'south', 'south', 'open', 'cast freeze spell', 'open', 'get pearl']] },
     { title: 'The oyster and the trident',
       done: (has) => has(TRIDENT) || has(IRONKEY) || has(WATER),
       tiers: ['An oyster blocks the channel and would trade for a pearl. Neptune’s throne hides a weapon.',
-        'Up to the deck, wheel south, galleon east, on to the shell: give pearl. Murals north, Neptune’s Throne east: search, get trident.',
-        ['up', 'south', 'east', 'give pearl', 'north', 'east', 'search', 'get trident']] },
+        'North twice to the hold, up to the deck, wheel south, then east past the galleon and south sea, trench east, shell east: give pearl. Murals north, palace north, Neptune’s Throne east: search, get trident.',
+        ['north', 'north', 'up', 'south', 'east', 'east', 'east', 'east', 'give pearl', 'north', 'north', 'east', 'search', 'get trident']] },
     { title: 'The hatch and the Queen',
       done: (has) => has(IRONKEY) || has(WATER),
       tiers: ['A hatch in the sea floor leads to an airlock that needs oil, and to a Queen who asks for what you carry.',
-        'Hatch, south of Neptune’s Throne: open, down. Airlock: close hatch, turn, oil airlock, open airlock. Greeting east: wait, drop. Court north, then east: wait, say SCEPTER, and take the iron key.',
-        ['open', 'down', 'close hatch', 'turn', 'oil airlock', 'open airlock', 'east', 'wait', 'drop', 'north', 'east', 'wait', 'scepter', 'get iron key']] },
+        'Hatch, south of Neptune’s Throne: open, down. Airlock: close hatch, turn, oil airlock, open airlock. Greeting east: wait, drop. Court north, then east twice to the Queen: wait, say SCEPTER, and take the iron key.',
+        ['south', 'open', 'down', 'close hatch', 'turn', 'oil airlock', 'open airlock', 'east', 'wait', 'drop', 'north', 'east', 'east', 'wait', 'scepter', 'get iron key']] },
     { title: 'The Water Scepter',
       done: (has) => has(WATER),
       tiers: ['A grate past the bend hides a lair; a thrown trident settles it. Then the Queen’s own chamber.',
-        'Back out through the airlock in diving gear. Murals, bend east, hook south, grate west: open with the iron key; crawl tunnel west; lair: throw trident. Return through the airlock to the court and the queen, then south: get water scepter.',
-        ['open', 'west', 'throw trident', 'wait', 'south', 'get water scepter']] },
+        'Back out through the airlock in diving gear. Shell, bend east, hook south, grate west: open with the iron key; crawl tunnel west; lair: throw trident. Return through the airlock to the court and the queen, then south: get water scepter.',
+        ['west', 'south', 'get diving suit', 'get diving helmet', 'get air tank', 'drop wand', 'drop flute', 'drop key ring', 'drop lantern', 'open', 'west', 'close airlock', 'open hatch', 'up', 'north', 'west', 'south', 'south', 'east', 'south', 'west', 'open', 'west', 'west', 'west', 'throw trident', 'east', 'east', 'east', 'east', 'north', 'west', 'north', 'north', 'east', 'south', 'down', 'close hatch', 'turn', 'open airlock', 'east', 'wait', 'drop', 'north', 'east', 'east', 'wait', 'south', 'get water scepter']] },
     { title: 'The submarine',
       // Boarding the sub deck is only the beginning of the voyage.  Once Saber
       // stands on mainland ground carrying the Water Scepter, the crossing is done.
@@ -147,24 +175,24 @@ window.ScepterHints = (() => {
         has(ROPE) || has(FIRE) || seen(OFFICE) || seen(VOLCANO_TOP) ||
         (Boolean(scene) && has(WATER) && !SEA_AND_SUB.has(scene)),
       tiers: ['The computer south of the Queen’s chamber is missing a part, and the submarine beyond needs a pilot.',
-        'Meager room south, computer west: insert chip. Submarine west, sub deck: open, down. Helm room: close. Control: click the panel switches until the boat moves. Then east, open, up, and north to the beach.',
-        ['south', 'west', 'insert chip', 'west', 'open', 'down', 'close', 'west', 'east', 'open', 'up', 'north']] },
+        'Meager room south, computer west: insert chip. Submarine west, sub deck west: open, down. Helm room: close. Control west: click the centre, centre, left, right and centre controls, reading the viewplate as you go. Then east, open, up, and north to the beach.',
+        ['south', 'west', 'insert chip', 'west', 'west', 'open', 'down', 'close', 'west', 'click the centre control', 'click the centre control', 'click the left control', 'click the right control', 'click the centre control', 'east', 'open', 'up', 'north']] },
     { title: 'The Hurk office',
       done: (has, seen, scene, _named, objects) =>
         has(ROPE) || has(FIRE) || seen(VOLCANO_TOP) || scene === DEVILS_SANCTUM || objects.has(TIED_ROPE),
       tiers: ['The Hurk command post keeps rope you will need at the volcano.',
-        'Silicon beach to the mesa, ram north, bunker west, lobby north: open. Office: cast freeze spell on the Captain, then get rope.',
-        ['open', 'north', 'cast freeze spell', 'get rope']] },
+        'North from Silicon beach up the coast to the butte, mesa west, desert west, ram north, center north, bunker west, lobby west: open, north. Office: cast freeze spell on the Captain, then get rope.',
+        ['north', 'north', 'north', 'north', 'north', 'north', 'north', 'north', 'west', 'west', 'north', 'north', 'west', 'west', 'open', 'north', 'cast freeze spell', 'get rope']] },
     { title: 'The Fire Scepter',
       done: (has) => has(FIRE),
       tiers: ['A sphinx hides a stair. Below it, the phoenix, a sealed sepulchre and a shrine guard the volcano path.',
-        'Sphinx, south of the cactus: search, down. Passage south, basin east, phoenix north: EYE. Ante chamber east, sepulchre north: BREAK, open. Shrine north: open, UNWRAP. Cliff path north to the volcano top: tie rope, down. Fire Demon: cast freeze spell, swing sword, get fire scepter.',
-        ['search', 'down', 'south', 'east', 'north', 'eye', 'east', 'north', 'break', 'open', 'north', 'open', 'unwrap', 'north', 'tie rope', 'down', 'cast freeze spell', 'swing sword', 'get fire scepter']] },
+        'Sphinx, south of the sphinx vista, past the cactus: search, down. Stair entrance south to the passage, annex south, basin east, phoenix north: EYE. Ante chamber east, sepulchre north: BREAK, open. Shrine north: open, UNWRAP. Cliff path, snake trail, then north to the volcano top: tie rope, down. Fire Demon: cast freeze spell, swing sword, get fire scepter.',
+        ['south', 'east', 'east', 'south', 'south', 'south', 'south', 'west', 'west', 'south', 'search', 'down', 'south', 'south', 'east', 'north', 'eye', 'east', 'north', 'break', 'open', 'north', 'open', 'unwrap', 'north', 'north', 'north', 'tie rope', 'down', 'cast freeze spell', 'swing sword', 'get fire scepter']] },
     { title: 'The return',
       done: (_has, _seen, scene) => scene === FINALE,
       tiers: ['Carry all four scepters home. The gates ask who you are; tell them.',
-        'Volcano top: up. Butte, mesa west, ram north. Main road: answer SABER. Rampart north, east. South road north. Crossroads: SABER. Bridge room west, courtyard north.',
-        ['up', 'west', 'north', 'saber', 'north', 'east', 'north', 'saber', 'west', 'north']] },
+        'Up to the volcano top, take the rope, leave it at the snake trail, go back north and down to the butte. Mesa west, desert west, ram north, center north, main road north: answer SABER. Rampart north, camp and post east, south road north, crossroads north: SABER. Bridge room west, courtyard west, then north.',
+        ['up', 'get rope', 'south', 'drop rope', 'north', 'down', 'west', 'west', 'north', 'north', 'north', 'saber', 'north', 'east', 'east', 'north', 'north', 'saber', 'west', 'west', 'north']] },
     { title: 'The Finale',
       done: () => false,
       tiers: ['Wait, and listen.', 'Wait.', ['wait']] }
@@ -305,6 +333,10 @@ window.ScepterHints = (() => {
     }
     if (!has(AIR) && TEMPLE_TRAPS[state.scene]) {
       return templeHint(state.scene, objects);
+    }
+    if (MARSH_ROOMS[state.scene]) {
+      const [title, tiers] = MARSH_ROOMS[state.scene];
+      return local('local/marsh/' + state.scene, title, tiers);
     }
     if (index === 17) {
       const missing = [

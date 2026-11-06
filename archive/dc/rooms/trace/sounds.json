@@ -1,0 +1,4267 @@
+{
+  "offset_convention": "CODE segment-body hex offsets ($xxxx), excluding the 4-byte resource header and 4-byte CODE segment header.",
+  "epistemic_note": {
+    "gameplay_triggers_and_conditions": "PROVEN — read directly from 68000 CODE 1..7 call sites, state machines, and SFTR tables.",
+    "descriptive_timbre_nouns": "INFERRED — per brief rules, no audio was played or decoded; descriptive words (e.g. chime, buzz, squeak, squawk, thud) are inferred from the proven gameplay/animation context, while the trigger event itself is PROVEN."
+  },
+  "sound_engine_architecture": {
+    "$52(a5)": "CODE 1:$0118-$0156 — primary register-based sound player; plays loaded SOUN resource matching d0.w >= 0 (114 call sites in events.json across CODE 2, CODE 4, CODE 5).",
+    "$3a(a5)": "CODE 1:$0078-$0080 — stack-based Pascal wrapper (`move.w $4(a7), d0; bsr.w $0118`) used by CODE 6 (Great Hall: SOUN 0, 88, 89, and special stop -1) and CODE 7 (Title screen SFTR 20: SOUN 92, 93, 94; High Score screen SFTR 21: SOUN 90, 91).",
+    "$5a(a5)": "CODE 1:$0158-$0182 — stops a specific active looping SOUN ID in d0.w (used exclusively for SOUN 14 climb loop and SOUN 99 Shield hum).",
+    "$62(a5)": "CODE 1:$024a-$02a4 — loads an SFTR sound-bank resource for a room/screen and preloads its SOUN handles.",
+    "$6a(a5)": "CODE 1:$0184 — silences all active sound channels on room/screen exit (CODE 4:$4f02, CODE 7:$022a, CODE 7:$0e20).",
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 1:$0078-$02a4"
+    ]
+  },
+  "counts": {
+    "total_soun_resources_on_disk": 73,
+    "data_a_soun_count": 15,
+    "data_b_soun_count": 58,
+    "unnamed_or_partially_unnamed_in_events_json": 58,
+    "played_via_3a_wrapper_only": 7,
+    "unused_unreferenced_soun_resources": [
+      1,
+      97
+    ],
+    "total_events_json_jsr_52_sites_resolved": 114
+  },
+  "unnamed_and_non_events_sounds_resolved": {
+    "1": {
+      "soun_id": 1,
+      "hex_id": "$01",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "unused_zero_call_sites_in_code_0_to_7",
+      "meaning": null,
+      "confidence": null,
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "why_null": "PROVEN unreferenced in game code: exhaustive scan of all jsr $52(a5) and jsr $3a(a5) calls and SFTR sound-set lists across CODE 0..7 finds zero references to this SOUN resource, and playing/listening to audio resources is prohibited by the brief.",
+      "unreferenced_proof": {
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$0078-$02a4",
+          "All CODE 1..7 $52(a5) and $3a(a5) call sites"
+        ]
+      }
+    },
+    "3": {
+      "soun_id": 3,
+      "hex_id": "$03",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "partially_null_in_events_json",
+      "meaning": "Hero dizzy animation chime B (marker $d5) AND Fireball power acquisition fanfare (Room 2030)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$5e",
+          "event": "Hero dizzy / stunned stars animation loop chime B (stream marker $d5)",
+          "condition": "Byte read from hero animation stream (a3)+ equals $d5 (CODE 2:$0052-$005e)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$2318",
+          "event": "Fireball power fanfare / shimmer on picking up Fireball in Room 2030 (span kind 24, state 35)",
+          "condition": "Hero claims Fireball pedestal after forcefield -$31c(a5) is unlocked (CODE 2:$22f6-$2320, awards Stbl index 13 = 1,000 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "4": {
+      "soun_id": 4,
+      "hex_id": "$04",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero safe jump/fall landing AND rope/pendulum grab or leap-off thud",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 5,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$12bc",
+          "event": "Hero catches vertical rope or ladder mid-jump",
+          "condition": "Airborne jump arc intersects grabbable rope/ladder span (CODE 2:$12a8-$12c4)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$1314",
+          "event": "Hero lands on floor from normal jump",
+          "condition": "Jump trajectory reaches solid floor span without stun (CODE 2:$1300-$1320)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$15a4",
+          "event": "Hero safe landing from short fall",
+          "condition": "Freefall lands on solid floor within safe drop height (CODE 2:$159a-$15ac)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$1ad4",
+          "event": "Hero leaps off swinging pendulum rope (span kind 525, state 12)",
+          "condition": "Jump button pressed while clinging to swinging pendulum rope (CODE 2:$1ac0-$1adc)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$1b48",
+          "event": "Hero leaps off vertical rope (span kinds 519/520/545)",
+          "condition": "Jump button initiating rope leap trajectory (CODE 2:$1b34-$1b50)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "5": {
+      "soun_id": 5,
+      "hex_id": "$05",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero stumbles / slips off floor ledge",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$1632",
+          "event": "Hero stumbles / slips off floor ledge into fall",
+          "condition": "Walking/stepping past floor span edge initiates ledge-stumble drop (CODE 2:$1618-$163a)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "6": {
+      "soun_id": 6,
+      "hex_id": "$06",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero hard-fall landing thud (medium stun drop)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$1590",
+          "event": "Hero hard-fall landing thud (medium drop -> stunned crouch/dizzy state)",
+          "condition": "Freefall distance exceeds safe threshold and lands on floor in stun state (CODE 2:$1578-$1598)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "7": {
+      "soun_id": 7,
+      "hex_id": "$07",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero throws ordinary rock",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$34f0",
+          "event": "Hero throws ordinary rock",
+          "condition": "Throw triggered without Fireball power (!btst #0, $15(a6)) and rock count -$2c2(a5) != 0 (CODE 2:$34d8-$34f6)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "8": {
+      "soun_id": 8,
+      "hex_id": "$08",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Extra life awarded double-chime fanfare (plays on award and again 13 updates later)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$5ac8",
+          "event": "Extra-life fanfare second chime (13 updates after extra life is awarded)",
+          "condition": "Bonus ticker $2(a6) counts down from 13 ($0d) to 0 in $5ab6 (CODE 4:$5ab6-$5ad0)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$5b2e",
+          "event": "Extra-life fanfare first chime (score crosses -$25c(a5) extra-life threshold)",
+          "condition": "BCD score reaches extra-life threshold (every 5,000 / 7,500 / 10,000 / 15,000 pts), increments lives, and sets $2(a6) = 13 for second chime (CODE 4:$5af4-$5b34)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "9": {
+      "soun_id": 9,
+      "hex_id": "$09",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Fireball projectile launched (by Hero with Fireball power or by Floating Burning Eye $332)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$3508",
+          "event": "Hero throws Fireball projectile",
+          "condition": "Throw triggered with Fireball power (btst #0, $15(a6)) and rock count -$2c2(a5) != 0 (CODE 2:$34f8-$350c)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$4386",
+          "event": "Floating Burning Eye ($332) fires 8-way homing fireball",
+          "condition": "Burning Eye AI selects slots 4..5 (25% of cycles) in Room 2030 (CODE 4:$424a-$438c)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "10": {
+      "soun_id": 10,
+      "hex_id": "$0a",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero fatal hit / untreated plague collapse death cry",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$5c4",
+          "event": "Hero fatal hit / plague collapse cry",
+          "condition": "Hero takes unshielded contact/projectile hit or untreated plague tick with -$33c(a5) <= 0 (CODE 2:$05b8-$05dc)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "11": {
+      "soun_id": 11,
+      "hex_id": "$0b",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "partially_null_in_events_json",
+      "meaning": "Item pickup chime: collecting a Rock Bag (+10 rocks) or an Elixir bottle (+1 elixir)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$26ec",
+          "event": "Hero picks up bag of rocks (+10 BCD rocks in -$2c2(a5), span kind 26, state 38)",
+          "condition": "Action pressed on rock-bag span while current BCD rock count -$2c2(a5) <= $7f (<= 79 rocks) (CODE 2:$26e0-$2714)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$2790",
+          "event": "Hero picks up Elixir bottle (+1 elixir in -$33c(a5), span kind 32, state 43)",
+          "condition": "Action pressed on elixir span (CODE 2:$2786-$27a0)",
+          "was_null_in_events_json": false
+        }
+      ]
+    },
+    "13": {
+      "soun_id": 13,
+      "hex_id": "$0d",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Rock bag full rejection buzz/chime (picking up rocks when already carrying 80+)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$2720",
+          "event": "Rock bag full rejection buzz/chime (cannot carry more rocks)",
+          "condition": "Action pressed on rock-bag span when current BCD rock count -$2c2(a5) > $7f (80+ rocks) (CODE 2:$26e0-$2726)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "29": {
+      "soun_id": 29,
+      "hex_id": "$1d",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Mechanical lever / pulley toggle click ($2d2 drawbridge lever in Room 4020 and $1d68(pc) pulley lever in Room 3030)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 3,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$2542",
+          "event": "Room 4020 drawbridge lever ($2d2) mechanical click when toggled",
+          "condition": "Lever hit by rock/fireball or pulled via span kind 36 shifts walkway ±68 px (CODE 4:$2534-$2588)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 5:$1eac",
+          "event": "Room 3030 rope-pulley lever ($1d68(pc)) click when toggled A",
+          "condition": "Pulley lever activated via rock/fireball or hero pull (branch A, CODE 5:$1ea0-$1eb4)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 5:$1ef6",
+          "event": "Room 3030 rope-pulley lever ($1d68(pc)) click when toggled B",
+          "condition": "Pulley lever activated (branch B, CODE 5:$1eea-$1efe)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "30": {
+      "soun_id": 30,
+      "hex_id": "$1e",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Fire burst: Dragon ($2a2) breathing flame in Room 3010 AND Gargoyle ($2ea) burning when hit by a Fireball",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$1afe",
+          "event": "Dragon ($2a2) roars / breathes gout of flame in Room 3010",
+          "condition": "Dragon finishes emerging 24 px left from cave and activates fire-breath hazard (CODE 4:$1aee-$1b16)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$3056",
+          "event": "Gargoyle ($2ea) bursts into flame when struck by a Fireball",
+          "condition": "Fireball power active (btst #0, -$276(a5)) and player projectile hits Gargoyle (CODE 4:$3028-$305c, awards Stbl index 18 = 100 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "31": {
+      "soun_id": 31,
+      "hex_id": "$1f",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Dragon ($2a2) crushed by $2aa ceiling weight in Room 3010",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$1c66",
+          "event": "Dragon ($2a2) crushed roar/thud when hit by $2aa ceiling weight",
+          "condition": "Ceiling weight drops onto extended Dragon head in Room 3010 (CODE 4:$1c50-$1c6c, awards Stbl index 12 = 150 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "32": {
+      "soun_id": 32,
+      "hex_id": "$20",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "partially_null_in_events_json",
+      "meaning": "Heavy slam / crush: timed portcullis/gate slamming shut (CODE 2:$1fb2) AND ceiling weight crushing Boulder Henchman ($29a)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$1fb2",
+          "event": "Portcullis / gate / trapdoor slams shut when chain timer expires",
+          "condition": "Gate countdown timer reaches 0 after chain release (CODE 2:$1fa4-$1fba)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 4:$1840",
+          "event": "Ceiling weight crushes Boulder Henchman ($29a)",
+          "condition": "Dropped ceiling weight impacts Henchman (CODE 4:$1830-$184c, awards Stbl index 15 = 100 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "33": {
+      "soun_id": 33,
+      "hex_id": "$21",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Corrosive ceiling drip ($2fa) splash / acid sizzle on floor or dissolving moving platform in Room 2010",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3600",
+          "event": "Corrosive ceiling drip ($2fa) splashes / sizzles on floor span",
+          "condition": "Falling acid/water drip impacts non-platform floor span in Room 2010 (CODE 4:$35ee-$3608)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$361c",
+          "event": "Corrosive ceiling drip ($2fa) sizzles and dissolves a moving platform",
+          "condition": "Falling drip impacts moving platform in Room 2010 (CODE 4:$360a-$3644)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "34": {
+      "soun_id": 34,
+      "hex_id": "$22",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Lightning bolt & thunderclap (Wizard $31a lightning spell in Room 2030 and Storm Cloud $38a strikes in Room 3030)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 4,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3ef0",
+          "event": "Wizard ($31a) fires lightning bolt",
+          "condition": "Wizard lightning discharge in Room 2030 (CODE 4:$3ee4-$3ef8)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$54b4",
+          "event": "Storm cloud ($38a) periodic lightning flash & thunderclap in Room 3030",
+          "condition": "Cloud strike countdown $6(a6) reaches 0 (CODE 4:$54a0-$54b8)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$5628",
+          "event": "Storm cloud ($38a) targeted lightning bolt strikes exposed high ledge",
+          "condition": "Hero stands high (Y <= 69) within cloud X window in Room 3030 (CODE 4:$55f0-$5630)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$565e",
+          "event": "Storm cloud ($38a) lightning electrocutes hero on Shield pedestal",
+          "condition": "Cloud zaps hero touching Shield stand without clearing puzzle (CODE 4:$563a-$5670)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "35": {
+      "soun_id": 35,
+      "hex_id": "$23",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Rolling / thrown boulder bounce on stone floor ($29a Henchman boulders and $312 cliff boulders)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 3,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$1936",
+          "event": "Henchman's thrown boulder ($29a) bounces off floor/wall A",
+          "condition": "Boulder collision bounce in $29a boulder update (CODE 4:$1928-$193e)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$1a06",
+          "event": "Henchman's thrown boulder ($29a) bounces off floor/wall B",
+          "condition": "Secondary floor/ledge bounce in $29a boulder update (CODE 4:$19f8-$1a0e)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$3d14",
+          "event": "Rolling cliff boulder ($312) bounces along cavern ledges in Room 2020",
+          "condition": "Boulder floor-span bounce in Underground River (CODE 4:$3d06-$3d1c)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "36": {
+      "soun_id": 36,
+      "hex_id": "$24",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight ($2da) gulping / finishing beer mug on throne",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$2734",
+          "event": "Black Knight ($2da) gulps / finishes beer mug",
+          "condition": "Black Knight completes mug-drinking animation phase 2 (CODE 4:$2728-$273c)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "37": {
+      "soun_id": 37,
+      "hex_id": "$25",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight's ($2da) thrown projectile bouncing off floor/platform in Room 4020",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3388",
+          "event": "Black Knight's thrown projectile ($2da) bounces off floor/platform A",
+          "condition": "Throne projectile bounce A in Room 4020 (CODE 4:$337c-$3390)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$33a0",
+          "event": "Black Knight's thrown projectile ($2da) bounces off floor/platform B",
+          "condition": "Throne projectile bounce B in Room 4020 (CODE 4:$3394-$33a8)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "39": {
+      "soun_id": 39,
+      "hex_id": "$27",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight ($2da) raising / resetting a lowered throne pillar",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$268e",
+          "event": "Black Knight ($2da) raises / resets a lowered throne pillar",
+          "condition": "Black Knight steps to pillar control and restores a lowered pillar segment (CODE 4:$2680-$2696)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "40": {
+      "soun_id": 40,
+      "hex_id": "$28",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Wizard's 3-switch forcefield ($30a) wrong-switch error buzz (resets switch sequence)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3a7e",
+          "event": "Wizard's 3-switch forcefield ($30a) wrong-switch buzz (puzzle resets)",
+          "condition": "Out-of-order switch hit in Room 2030 resets switch progress (CODE 4:$3a72-$3a88)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "41": {
+      "soun_id": 41,
+      "hex_id": "$29",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Wizard's 3-switch forcefield ($30a) puzzle solved fanfare (drops forcefield)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3a6a",
+          "event": "Wizard's 3-switch forcefield ($30a) solved chime (gate drops)",
+          "condition": "Final required switch hit in correct order in Room 2030 (CODE 4:$3a60-$3ac8, awards Stbl index 7 = 100 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "42": {
+      "soun_id": 42,
+      "hex_id": "$2a",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero pulling wall lever (setting room mechanism flag -$39a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$2822",
+          "event": "Hero pulls wall lever (ceiling weight / bridge lever span)",
+          "condition": "Action pressed at wall lever span, setting room trigger -$39a(a5) (CODE 2:$2816-$2830)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "43": {
+      "soun_id": 43,
+      "hex_id": "$2b",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Floating Burning Eye ($332) stunned by rock or fireball (frozen for 70 updates)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$462c",
+          "event": "Floating Burning Eye ($332) stunned by rock or fireball (70 updates)",
+          "condition": "Player projectile hits unstunned Burning Eye in Room 2030 (CODE 4:$45f0-$4636, awards Stbl index 9 = 25 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "45": {
+      "soun_id": 45,
+      "hex_id": "$2d",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Smallest-tier Magic Broom ($32a tier 2+) stunned by rock or fireball",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$4934",
+          "event": "Smallest Magic Broom ($32a tier 2+) stunned by rock or fireball",
+          "condition": "Player projectile hits smallest-tier Magic Broom in Room 2030 (CODE 4:$4910-$493e, stuns 24 updates, awards Stbl index 8 = 25 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "46": {
+      "soun_id": 46,
+      "hex_id": "$2e",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Magic Broom ($32a tier 0 or 1) splitting into 3 smaller brooms when hit",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$4926",
+          "event": "Magic Broom ($32a) splits into 3 smaller brooms",
+          "condition": "Player projectile hits tier-0 (large) or tier-1 (medium) Magic Broom in Room 2030 (CODE 4:$4910-$492c, awards Stbl index 8 = 25 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "47": {
+      "soun_id": 47,
+      "hex_id": "$2f",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Dungeon Whip Guard ($26a) whip backswing / wind-up",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$a8c",
+          "event": "Dungeon Whip Guard whip wind-up / backswing ($26a)",
+          "condition": "Rightward whip lash enters wind-up frame (CODE 4:$0a84-$0a94)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "48": {
+      "soun_id": 48,
+      "hex_id": "$30",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Boulder Henchman ($29a) grunt / heave when hurling boulder",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$17c8",
+          "event": "Boulder Henchman ($29a) grunt / heave when hurling boulder",
+          "condition": "Henchman throw animation releases bouncing boulder in Room 3000 or 4010 (CODE 4:$17b8-$17d0)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "49": {
+      "soun_id": 49,
+      "hex_id": "$31",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Wizard ($31a) casting arcing fireball spell",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3f0a",
+          "event": "Wizard ($31a) casts arcing fireball leftward (-4 px/update)",
+          "condition": "Wizard fireball spell release in Room 2030 (CODE 4:$3efe-$3f12)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "50": {
+      "soun_id": 50,
+      "hex_id": "$32",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Magic Shield power acquisition fanfare in Room 3030",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$2510",
+          "event": "Shield power fanfare on picking up Magic Shield in Room 3030 (span kind 25, state 36)",
+          "condition": "Hero claims Shield pedestal (CODE 2:$24f8-$2516, awards Stbl index 14 = 1,000 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "51": {
+      "soun_id": 51,
+      "hex_id": "$33",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Gargoyle ($2ea) wing-flap / screech (summon, pre-launch, swoop, hero grab, and carry-off)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 8,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$2d04",
+          "event": "Gargoyle ($2ea) wing-flap / screech during Black Knight summon animation A",
+          "condition": "All 5 throne pillars lowered -> Gargoyle awakens phase A (CODE 4:$2cf8-$2d0c)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2d88",
+          "event": "Gargoyle ($2ea) wing-flap / screech during summon animation B",
+          "condition": "Gargoyle awakens/descends phase B (CODE 4:$2d7c-$2d90)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2e02",
+          "event": "Gargoyle ($2ea) wing-flap / screech during summon animation C",
+          "condition": "Gargoyle awakens/launches phase C (CODE 4:$2df6-$2e0a)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2ecc",
+          "event": "Perched Gargoyle ($2ea) pre-launch warning screech / wing-beat",
+          "condition": "Gargoyle countdown nears swoop launch in Rooms 4000/4010/4020 (CODE 4:$2ec0-$2ed4)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2ee6",
+          "event": "Gargoyle ($2ea) launches horizontal swoop at ±16 px/update",
+          "condition": "Gargoyle enters screen edge toward hero (CODE 4:$2ed6-$2ef0)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2fbe",
+          "event": "Gargoyle ($2ea) grabs hero (leftward swoop) to carry off",
+          "condition": "Swooping Gargoyle collides with hero (stopping Shield SOUN 99 if active) (CODE 4:$2f88-$2fc6)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2ffe",
+          "event": "Gargoyle ($2ea) grabs hero (rightward swoop) to carry off",
+          "condition": "Rightward swooping Gargoyle collides with hero (CODE 4:$2fc8-$3006)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$30e0",
+          "event": "Gargoyle ($2ea) wing-flap while carrying captured hero upward",
+          "condition": "Carry-off ascent periodic wing-beat (CODE 4:$30d4-$30e8)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "52": {
+      "soun_id": 52,
+      "hex_id": "$34",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Wizard ($31a) staff charge / zap windup before spell",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3eb4",
+          "event": "Wizard ($31a) raises staff / charges spell",
+          "condition": "Wizard spell-cast windup in Room 2030 (CODE 4:$3ea8-$3ebc)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "53": {
+      "soun_id": 53,
+      "hex_id": "$35",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight ($2da) hurling projectile from throne",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$29bc",
+          "event": "Black Knight ($2da) hurls projectile (boulder/mug) from throne",
+          "condition": "Black Knight throw animation spawns aimed projectile (CODE 4:$29ae-$29c4)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "54": {
+      "soun_id": 54,
+      "hex_id": "$36",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight ($2da) toppling from throne when defeated",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$2b44",
+          "event": "Black Knight ($2da) topples from throne (victory scream/crash)",
+          "condition": "Hero crosses span kind 21 (state 32 -> -$274(a5)) while all 5 throne pillars are down (CODE 4:$2b38-$2b58, awards Stbl index 19 = 5,000 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "55": {
+      "soun_id": 55,
+      "hex_id": "$37",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight ($2da) lifting beer mug to drink",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$2718",
+          "event": "Black Knight ($2da) lifts beer mug / begins drinking",
+          "condition": "Black Knight enters mug-drinking animation phase 1 (CODE 4:$270c-$2720)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "56": {
+      "soun_id": 56,
+      "hex_id": "$38",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Player rock ricocheting harmlessly off Dungeon Whip Guard ($26a)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$b72",
+          "event": "Player rock ricochets harmlessly off Dungeon Whip Guard ($26a)",
+          "condition": "Ordinary rock (!btst #0, -$276(a5)) hits Whip Guard and bounces back at -1/4 velocity (CODE 4:$0b4e-$0b78)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "57": {
+      "soun_id": 57,
+      "hex_id": "$39",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Dungeon Whip Guard ($26a) knocked down by State-26 mace chain or Fireball",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$c00",
+          "event": "Dungeon Whip Guard knocked down ($26a)",
+          "condition": "Hit by State-26 spiked mace chain (-$274(a5) != 0) or Fireball (CODE 4:$0ba0-$0c04, awards Stbl index 1 = 150 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "58": {
+      "soun_id": 58,
+      "hex_id": "$3a",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Guard ($272/$27a) throwing spear / torch / rock",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$dc0",
+          "event": "Guard ($272/$27a) throws spear / torch / rock at hero",
+          "condition": "Hero is on same 32-px Y band in front of Guard within 200 px (CODE 4:$0d40-$0dc4)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "60": {
+      "soun_id": 60,
+      "hex_id": "$3c",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Wooden door creaking open / slamming shut ($272 Guard door and $1f6a(pc) room-entry door)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$fd6",
+          "event": "Guard spawn door ($272) creaks open / shuts",
+          "condition": "Door spawner opens wooden door to release a Guard (CODE 4:$0fc8-$0fe0)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 5:$1fc8",
+          "event": "Entry wooden door slams shut behind Duncan ($1f6a(pc) in Rooms 1000 & 4020)",
+          "condition": "Entry-door closing animation finishes on first visit to Room 1000 (entry 0) or Room 4020 (CODE 5:$1f92-$1fd0)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "61": {
+      "soun_id": 61,
+      "hex_id": "$3d",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Shot Mutant ($2b2) or shot Vulture ($322) corpse thudding onto ground",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$21ae",
+          "event": "Killed Mutant ($2b2) corpse thuds onto floor",
+          "condition": "Shot Mutant falling at +15 px/update lands on floor span (CODE 4:$219c-$21b4)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$4c1c",
+          "event": "Shot Vulture ($322) thuds onto ground after +30 px/update fall",
+          "condition": "Killed Vulture reaches floor before offscreen respawn timer resets (CODE 4:$4c0e-$4c24)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "62": {
+      "soun_id": 62,
+      "hex_id": "$3e",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Vulture ($322) squawk when hit by rock or fireball",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$4e02",
+          "event": "Vulture ($322) squawks when shot out of the air",
+          "condition": "Player rock or fireball hits Vulture in Room 2000 or 3010 (CODE 4:$4ddc-$4e08, awards Stbl index 10 = 30 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "63": {
+      "soun_id": 63,
+      "hex_id": "$3f",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Vulture ($322) wing-flap takeoff from perch",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$4a64",
+          "event": "Vulture ($322) flaps wings on taking off from perch into swoop",
+          "condition": "Perch countdown expires and Vulture launches (CODE 4:$4a50-$4a6a)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "64": {
+      "soun_id": 64,
+      "hex_id": "$40",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Vulture ($322) perching caw",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$49fc",
+          "event": "Vulture ($322) caws / settles onto perch",
+          "condition": "Vulture lands/perches in Room 2000 or 3010 (CODE 4:$49e2-$4a02)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "65": {
+      "soun_id": 65,
+      "hex_id": "$41",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Dungeon Whip Guard ($26a) whip crack",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$a0c",
+          "event": "Dungeon Whip Guard cracks whip leftward ($26a)",
+          "condition": "Whip lash left animation reaches strike frame (CODE 4:$0a00-$0a14)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$a7a",
+          "event": "Dungeon Whip Guard cracks whip rightward ($26a)",
+          "condition": "Whip lash right animation reaches strike frame (CODE 4:$0a6e-$0a82)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "66": {
+      "soun_id": 66,
+      "hex_id": "$42",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Guard ($272/$27a) turn-around grunt / footstep at patrol bound or random reversal",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 3,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$cf4",
+          "event": "Guard ($272/$27a) grunts / footsteps on turning right at left patrol bound",
+          "condition": "Guard X <= xmin ($6(a6)) sets vx = +4 (CODE 4:$0ce6-$0cfe)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$d16",
+          "event": "Guard ($272/$27a) grunts / footsteps on turning left at right patrol bound",
+          "condition": "Guard X >= xmax ($8(a6)) sets vx = -4 (CODE 4:$0d08-$0d20)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$d30",
+          "event": "Guard ($272/$27a) grunts on random mid-patrol direction reversal",
+          "condition": "10-update timer check rolls unsigned PRNG <= 1000 ($03e8) and negates vx (CODE 4:$0d22-$0d36)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "67": {
+      "soun_id": 67,
+      "hex_id": "$43",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Mutant ($2b2) hit / death cry",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$222a",
+          "event": "Mutant ($2b2) hit / death cry",
+          "condition": "Player rock or fireball in -$194(a5) hits Mutant (CODE 4:$220a-$2236, awards Stbl index 11 = 30 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "68": {
+      "soun_id": 68,
+      "hex_id": "$44",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Mutant ($2b2) idle patrol growl",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$20d4",
+          "event": "Mutant ($2b2) idle growl / grunt",
+          "condition": "Mutant pauses during patrol check to vocalize (CODE 4:$20c4-$20dc)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "69": {
+      "soun_id": 69,
+      "hex_id": "$45",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Plague Bat ($282) squeak / chirp on retargeting flight toward hero",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$110a",
+          "event": "Plague Bat ($282) screech / wing-chirp on retargeting toward hero",
+          "condition": "Bat retarget countdown expires every d2 + (rand & d3) updates (CODE 4:$10f8-$1112)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "70": {
+      "soun_id": 70,
+      "hex_id": "$46",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Plague Rat ($28a/$292) squeak on nest spawn or patrol turnaround",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 3,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$1542",
+          "event": "Plague Rat ($28a/$292) squeaks on reversing at right patrol bound",
+          "condition": "Rat X >= xmax ($4(a6)) negates vx (CODE 4:$1526-$1548)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$1584",
+          "event": "Plague Rat ($28a/$292) squeaks on reversing or dropping at ledge",
+          "condition": "Rat hits left bound / ledge turn check (CODE 4:$1570-$158a)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$16ca",
+          "event": "Plague Rat ($292) squeaks on emerging from rat nest",
+          "condition": "Multi-rat spawner $292 spawns a new Rat (CODE 4:$16b8-$16d0)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "73": {
+      "soun_id": 73,
+      "hex_id": "$49",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "partially_null_in_events_json",
+      "meaning": "Chain / lock mechanism sound: pulling ceiling chain, unlocking keyhole with key, or opening chest",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 3,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$1f26",
+          "event": "Hero pulls overhead chain / ceiling ring (entering state 29 = $1d)",
+          "condition": "Hero activates pull-chain span to open portcullis/trapdoor (CODE 2:$1f18-$1f30)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$2276",
+          "event": "Hero unlocks keyhole / prison door / cage using carried key",
+          "condition": "Action pressed at keyhole span while carrying matching key (CODE 2:$2268-$2286, awards Stbl index 6 = 500 pts)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$2444",
+          "event": "Hero opens treasure/key chest or Shield-pedestal lock",
+          "condition": "Action pressed on chest/lock interaction span (CODE 2:$2436-$244c)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "78": {
+      "soun_id": 78,
+      "hex_id": "$4e",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero bumping / bonking head or body into solid wall or ceiling while airborne",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$28a",
+          "event": "Hero bonks head / bumps into solid wall or ceiling during jump or knockback",
+          "condition": "Airborne/recoil horizontal or ceiling collision triggers bounce-back state (CODE 2:$0254-$0294)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$1712",
+          "event": "Hero bumps wall/obstruction during sideways jump or knockback",
+          "condition": "Horizontal span check blocks airborne/stumble motion (CODE 2:$16fc-$1718)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "79": {
+      "soun_id": 79,
+      "hex_id": "$4f",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero sliding down Room 1020 Dungeon entry chute / zip-line on first visit",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$9d0",
+          "event": "Hero slides down Room 1020 Dungeon entry chute / zip-line (span kind 543, state 41)",
+          "condition": "First visit to Room 1020 (-$280(a5) == 0) at start of chute slide (CODE 2:$09be-$09d6)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "82": {
+      "soun_id": 82,
+      "hex_id": "$52",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Guard ($272/$27a) hit / knockdown cry",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$e5e",
+          "event": "Guard ($272/$27a) hit cry (knocked down by rock or burned by Fireball)",
+          "condition": "Player projectile in -$194(a5) hits Guard (CODE 4:$0e2c-$0e72, awards Stbl index 2 = 50 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "83": {
+      "soun_id": 83,
+      "hex_id": "$53",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "partially_null_in_events_json",
+      "meaning": "Hero lethal fall / plunging into bottomless pit",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$340",
+          "event": "Hero enters fatal neck-break / lethal fall impact sequence (state 13 = $0d)",
+          "condition": "Prior hero state $12(a6) != $0d on entering lethal-fall collapse (CODE 2:$032e-$034c)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$a5a",
+          "event": "Hero falls into bottomless pit toward Dungeon (span kind 29, state 40)",
+          "condition": "First update of pit-drop state before transitioning to Room 1020 via -$18a(a5) = -42 (CODE 2:$0a54-$0a68)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "85": {
+      "soun_id": 85,
+      "hex_id": "$55",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Plague Bat ($282) killed squeak",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$132c",
+          "event": "Plague Bat ($282) killed squeak",
+          "condition": "Player rock or fireball in -$194(a5) hits flying or latched bat (CODE 4:$121e-$1356, awards Stbl index 3 = 30 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "86": {
+      "soun_id": 86,
+      "hex_id": "$56",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Heavy splash or weight impact: hero/drip/boulder splashing into liquid (kind 22) AND $2aa ceiling weight thud",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 6,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$87a",
+          "event": "Hero splashes into water / lava / acid pit (span kind 22, state 33)",
+          "condition": "Hero lands on or enters liquid hazard span kind 22 (CODE 2:$0802 -> $086c-$0888)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$1522",
+          "event": "Hero falls from freefall directly into water / liquid hazard (span kind 22)",
+          "condition": "Freefall floor check hits span kind 22 ($16) (CODE 2:$1514-$1528)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$1ddc",
+          "event": "Dragon-chamber ceiling weight ($2aa) slams onto floor / stop A",
+          "condition": "Dropped weight in Room 3010 reaches bottom limit without crushing or after impact (CODE 4:$1dd0-$1de2)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$1dfe",
+          "event": "Dragon-chamber ceiling weight ($2aa) heavy thud B",
+          "condition": "Secondary impact branch of $2aa weight drop (CODE 4:$1df2-$1e04)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$3658",
+          "event": "Ceiling drip ($2fa) plops into water pool at bottom of Room 2010",
+          "condition": "Falling drip impacts liquid span kind 22 ($16) (CODE 4:$35a0-$35b0, $3646-$3660)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$3d54",
+          "event": "Rolling cliff boulder ($312) splashes into Underground River in Room 2020",
+          "condition": "Boulder enters river water in Room 2020 (CODE 4:$3d48-$3d5c)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "87": {
+      "soun_id": 87,
+      "hex_id": "$57",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Plague Rat ($28a/$292) killed squeak",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$15e0",
+          "event": "Plague Rat ($28a/$292) killed squeak",
+          "condition": "Player rock or fireball in -$194(a5) hits Rat (CODE 4:$15a6-$1600, awards Stbl index 0 = 20 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "88": {
+      "soun_id": 88,
+      "hex_id": "$58",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "Great Hall ante-room wooden door closing (played via stack wrapper $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 6:$1310",
+          "event": "Great Hall wooden door closes after Duncan steps out or cancels"
+        }
+      ]
+    },
+    "89": {
+      "soun_id": 89,
+      "hex_id": "$59",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "Great Hall ante-room wooden door opening (played via stack wrapper $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 6:$12f8",
+          "event": "Great Hall wooden door opens when Duncan approaches/selects a doorway"
+        }
+      ]
+    },
+    "90": {
+      "soun_id": 90,
+      "hex_id": "$5a",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "High Score / Certificate of Merit iron portcullis slamming shut at frame 4 (played via $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 7:$0e0e",
+          "event": "High Score / Certificate of Merit portcullis slams shut on frame d7 == 4 (SFTR 21)"
+        }
+      ]
+    },
+    "91": {
+      "soun_id": 91,
+      "hex_id": "$5b",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "High Score / Certificate of Merit portcullis chain lowering start at frame 0 (played via $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 7:$0d8c",
+          "event": "High Score / Certificate of Merit portcullis begins lowering on frame d7 == 0 (SFTR 21)"
+        }
+      ]
+    },
+    "92": {
+      "soun_id": 92,
+      "hex_id": "$5c",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "Title screen lightning thunderclap (played via $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 7:$017c",
+          "event": "Title screen lightning flash thunderclap (SFTR 20)"
+        }
+      ]
+    },
+    "93": {
+      "soun_id": 93,
+      "hex_id": "$5d",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "Title screen vulture screech on frame 1 (played via $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 7:$013e",
+          "event": "Title screen vulture animation screech on frame d7 == 1 (SFTR 20)"
+        }
+      ]
+    },
+    "94": {
+      "soun_id": 94,
+      "hex_id": "$5e",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "Title screen looping ambient wind / theme (retriggered every 109 updates via $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 7:$01f0",
+          "event": "Title screen ambient theme/wind retriggered every 109 ($6c+1) updates (SFTR 20)"
+        }
+      ]
+    },
+    "95": {
+      "soun_id": 95,
+      "hex_id": "$5f",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Room 2020 Underground River entry rushing-water ambience",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 5:$d86",
+          "event": "Underground River (Room 2020 Fireball 3) room-entry rushing-water ambience",
+          "condition": "Played once during Room 2020 setup right before entering main loop $33a(a5) (CODE 5:$0d82-$0d8e)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "97": {
+      "soun_id": 97,
+      "hex_id": "$61",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "unused_zero_call_sites_in_code_0_to_7",
+      "meaning": null,
+      "confidence": null,
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "why_null": "PROVEN unreferenced in game code: exhaustive scan of all jsr $52(a5) and jsr $3a(a5) calls and SFTR sound-set lists across CODE 0..7 finds zero references to this SOUN resource, and playing/listening to audio resources is prohibited by the brief.",
+      "unreferenced_proof": {
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$0078-$02a4",
+          "All CODE 1..7 $52(a5) and $3a(a5) call sites"
+        ]
+      }
+    }
+  },
+  "all_73_soun_resources": {
+    "0": {
+      "soun_id": 0,
+      "hex_id": "$00",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "register_level_label_in_events_json",
+      "meaning": "Hero walking footstep",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 3,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$d9e",
+          "event": "Hero walking footstep",
+          "condition": "Walking animation step index reaches footfall frame 0 or 3 (CODE 2:$0d88-$0da4)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$105c",
+          "event": "Hero step during stair/ledge transition A",
+          "condition": "Stair/step animation frame index == 0 or 3 (CODE 2:$1048-$1062)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$10d0",
+          "event": "Hero step during stair/ledge transition B",
+          "condition": "Stair/step animation frame index == 0 or 3 (CODE 2:$10bc-$10d6)",
+          "was_null_in_events_json": false
+        }
+      ],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5)",
+          "evidence": "CODE 6:$132e",
+          "event": "Hero walking footstep every 4 updates inside Great Hall ante-room"
+        }
+      ]
+    },
+    "1": {
+      "soun_id": 1,
+      "hex_id": "$01",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "unused_zero_call_sites_in_code_0_to_7",
+      "meaning": null,
+      "confidence": null,
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "why_null": "PROVEN unreferenced in game code: exhaustive scan of all jsr $52(a5) and jsr $3a(a5) calls and SFTR sound-set lists across CODE 0..7 finds zero references to this SOUN resource, and playing/listening to audio resources is prohibited by the brief.",
+      "unreferenced_proof": {
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$0078-$02a4",
+          "All CODE 1..7 $52(a5) and $3a(a5) call sites"
+        ]
+      }
+    },
+    "2": {
+      "soun_id": 2,
+      "hex_id": "$02",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "register_level_label_in_events_json",
+      "meaning": "Hero dizzy / stunned birdies animation loop chime A (stream marker $d6)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$48",
+          "event": "Hero dizzy / stunned stars animation loop chime A (stream marker $d6)",
+          "condition": "Byte read from hero animation stream (a3)+ equals $d6 (CODE 2:$003c-$0048)",
+          "was_null_in_events_json": false
+        }
+      ]
+    },
+    "3": {
+      "soun_id": 3,
+      "hex_id": "$03",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "partially_null_in_events_json",
+      "meaning": "Hero dizzy animation chime B (marker $d5) AND Fireball power acquisition fanfare (Room 2030)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$5e",
+          "event": "Hero dizzy / stunned stars animation loop chime B (stream marker $d5)",
+          "condition": "Byte read from hero animation stream (a3)+ equals $d5 (CODE 2:$0052-$005e)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$2318",
+          "event": "Fireball power fanfare / shimmer on picking up Fireball in Room 2030 (span kind 24, state 35)",
+          "condition": "Hero claims Fireball pedestal after forcefield -$31c(a5) is unlocked (CODE 2:$22f6-$2320, awards Stbl index 13 = 1,000 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "4": {
+      "soun_id": 4,
+      "hex_id": "$04",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero safe jump/fall landing AND rope/pendulum grab or leap-off thud",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 5,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$12bc",
+          "event": "Hero catches vertical rope or ladder mid-jump",
+          "condition": "Airborne jump arc intersects grabbable rope/ladder span (CODE 2:$12a8-$12c4)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$1314",
+          "event": "Hero lands on floor from normal jump",
+          "condition": "Jump trajectory reaches solid floor span without stun (CODE 2:$1300-$1320)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$15a4",
+          "event": "Hero safe landing from short fall",
+          "condition": "Freefall lands on solid floor within safe drop height (CODE 2:$159a-$15ac)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$1ad4",
+          "event": "Hero leaps off swinging pendulum rope (span kind 525, state 12)",
+          "condition": "Jump button pressed while clinging to swinging pendulum rope (CODE 2:$1ac0-$1adc)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$1b48",
+          "event": "Hero leaps off vertical rope (span kinds 519/520/545)",
+          "condition": "Jump button initiating rope leap trajectory (CODE 2:$1b34-$1b50)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "5": {
+      "soun_id": 5,
+      "hex_id": "$05",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero stumbles / slips off floor ledge",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$1632",
+          "event": "Hero stumbles / slips off floor ledge into fall",
+          "condition": "Walking/stepping past floor span edge initiates ledge-stumble drop (CODE 2:$1618-$163a)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "6": {
+      "soun_id": 6,
+      "hex_id": "$06",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero hard-fall landing thud (medium stun drop)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$1590",
+          "event": "Hero hard-fall landing thud (medium drop -> stunned crouch/dizzy state)",
+          "condition": "Freefall distance exceeds safe threshold and lands on floor in stun state (CODE 2:$1578-$1598)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "7": {
+      "soun_id": 7,
+      "hex_id": "$07",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero throws ordinary rock",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$34f0",
+          "event": "Hero throws ordinary rock",
+          "condition": "Throw triggered without Fireball power (!btst #0, $15(a6)) and rock count -$2c2(a5) != 0 (CODE 2:$34d8-$34f6)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "8": {
+      "soun_id": 8,
+      "hex_id": "$08",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Extra life awarded double-chime fanfare (plays on award and again 13 updates later)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$5ac8",
+          "event": "Extra-life fanfare second chime (13 updates after extra life is awarded)",
+          "condition": "Bonus ticker $2(a6) counts down from 13 ($0d) to 0 in $5ab6 (CODE 4:$5ab6-$5ad0)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$5b2e",
+          "event": "Extra-life fanfare first chime (score crosses -$25c(a5) extra-life threshold)",
+          "condition": "BCD score reaches extra-life threshold (every 5,000 / 7,500 / 10,000 / 15,000 pts), increments lives, and sets $2(a6) = 13 for second chime (CODE 4:$5af4-$5b34)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "9": {
+      "soun_id": 9,
+      "hex_id": "$09",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Fireball projectile launched (by Hero with Fireball power or by Floating Burning Eye $332)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$3508",
+          "event": "Hero throws Fireball projectile",
+          "condition": "Throw triggered with Fireball power (btst #0, $15(a6)) and rock count -$2c2(a5) != 0 (CODE 2:$34f8-$350c)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$4386",
+          "event": "Floating Burning Eye ($332) fires 8-way homing fireball",
+          "condition": "Burning Eye AI selects slots 4..5 (25% of cycles) in Room 2030 (CODE 4:$424a-$438c)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "10": {
+      "soun_id": 10,
+      "hex_id": "$0a",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero fatal hit / untreated plague collapse death cry",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$5c4",
+          "event": "Hero fatal hit / plague collapse cry",
+          "condition": "Hero takes unshielded contact/projectile hit or untreated plague tick with -$33c(a5) <= 0 (CODE 2:$05b8-$05dc)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "11": {
+      "soun_id": 11,
+      "hex_id": "$0b",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "partially_null_in_events_json",
+      "meaning": "Item pickup chime: collecting a Rock Bag (+10 rocks) or an Elixir bottle (+1 elixir)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$26ec",
+          "event": "Hero picks up bag of rocks (+10 BCD rocks in -$2c2(a5), span kind 26, state 38)",
+          "condition": "Action pressed on rock-bag span while current BCD rock count -$2c2(a5) <= $7f (<= 79 rocks) (CODE 2:$26e0-$2714)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$2790",
+          "event": "Hero picks up Elixir bottle (+1 elixir in -$33c(a5), span kind 32, state 43)",
+          "condition": "Action pressed on elixir span (CODE 2:$2786-$27a0)",
+          "was_null_in_events_json": false
+        }
+      ]
+    },
+    "12": {
+      "soun_id": 12,
+      "hex_id": "$0c",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "register_level_label_in_events_json",
+      "meaning": "Elixir automatically consumed to cure Rat or Plague Bat bite (20-update immunity)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$54a",
+          "event": "Elixir automatically consumed to cure Rat bite (grants 20 updates immunity)",
+          "condition": "Rat hazard (type 5) touches standing hero while immunity $2a(a6) <= 0 and elixir count -$33c(a5) > 0 (CODE 2:$0530-$0558)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$5a0",
+          "event": "Elixir automatically consumed to cure latched Plague Bat bite (grants 20 updates immunity)",
+          "condition": "Latched bat count -$25e(a5) >= 1 while immunity $2a(a6) <= 0 and elixir count -$33c(a5) > 0 (CODE 2:$0582-$05ae)",
+          "was_null_in_events_json": false
+        }
+      ]
+    },
+    "13": {
+      "soun_id": 13,
+      "hex_id": "$0d",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Rock bag full rejection buzz/chime (picking up rocks when already carrying 80+)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$2720",
+          "event": "Rock bag full rejection buzz/chime (cannot carry more rocks)",
+          "condition": "Action pressed on rock-bag span when current BCD rock count -$2c2(a5) > $7f (80+ rocks) (CODE 2:$26e0-$2726)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "14": {
+      "soun_id": 14,
+      "hex_id": "$0e",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "register_level_label_in_events_json",
+      "meaning": "Hero ladder or vertical rope climbing loop (plays every 9 climbing updates; stopped via $5a(a5) when idle)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 6,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$de8",
+          "event": "Hero climbing up standard ladder (looping/periodic rung step)",
+          "condition": "Ladder climb-up sound timer $30(a6) counts down to 0 and resets to 8 (CODE 2:$0dd8-$0df0)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$e0c",
+          "event": "Hero climbing down standard ladder (looping/periodic rung step)",
+          "condition": "Ladder climb-down sound timer $30(a6) counts down to 0 and resets to 8 (CODE 2:$0dfc-$0e14)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$18b8",
+          "event": "Hero climbing up vertical rope (span kinds 519/520, state 9)",
+          "condition": "Rope climb-up timer $2c(a6) expires and resets to 8 (CODE 2:$18a4-$18c0)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$18f0",
+          "event": "Hero climbing down vertical rope (span kinds 519/520, state 9)",
+          "condition": "Rope climb-down timer $2c(a6) expires and resets to 8 (CODE 2:$18dc-$18f8)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$1e3e",
+          "event": "Hero climbing up toggleable/bell rope (span kind 545, state 42)",
+          "condition": "Kind-545 rope climb-up timer $2c(a6) expires and resets to 8 (CODE 2:$1e2a-$1e46)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$1eca",
+          "event": "Hero climbing down toggleable/bell rope (span kind 545, state 42)",
+          "condition": "Kind-545 rope climb-down timer $2c(a6) expires and resets to 8 (CODE 2:$1eb6-$1ed2)",
+          "was_null_in_events_json": false
+        }
+      ],
+      "other_sound_api_sites": [
+        {
+          "api": "$5a(a5) [stop]",
+          "evidence": "CODE 2:$0dce",
+          "event": "Stops SOUN 14 when hero stops moving on standard ladder"
+        },
+        {
+          "api": "$5a(a5) [stop]",
+          "evidence": "CODE 2:$17c2",
+          "event": "Stops SOUN 14 when hero stops moving on vertical rope (state 9)"
+        },
+        {
+          "api": "$5a(a5) [stop]",
+          "evidence": "CODE 2:$1d22",
+          "event": "Stops SOUN 14 when hero stops moving on kind-545 rope (state 42)"
+        }
+      ]
+    },
+    "29": {
+      "soun_id": 29,
+      "hex_id": "$1d",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Mechanical lever / pulley toggle click ($2d2 drawbridge lever in Room 4020 and $1d68(pc) pulley lever in Room 3030)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 3,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$2542",
+          "event": "Room 4020 drawbridge lever ($2d2) mechanical click when toggled",
+          "condition": "Lever hit by rock/fireball or pulled via span kind 36 shifts walkway ±68 px (CODE 4:$2534-$2588)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 5:$1eac",
+          "event": "Room 3030 rope-pulley lever ($1d68(pc)) click when toggled A",
+          "condition": "Pulley lever activated via rock/fireball or hero pull (branch A, CODE 5:$1ea0-$1eb4)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 5:$1ef6",
+          "event": "Room 3030 rope-pulley lever ($1d68(pc)) click when toggled B",
+          "condition": "Pulley lever activated (branch B, CODE 5:$1eea-$1efe)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "30": {
+      "soun_id": 30,
+      "hex_id": "$1e",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Fire burst: Dragon ($2a2) breathing flame in Room 3010 AND Gargoyle ($2ea) burning when hit by a Fireball",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$1afe",
+          "event": "Dragon ($2a2) roars / breathes gout of flame in Room 3010",
+          "condition": "Dragon finishes emerging 24 px left from cave and activates fire-breath hazard (CODE 4:$1aee-$1b16)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$3056",
+          "event": "Gargoyle ($2ea) bursts into flame when struck by a Fireball",
+          "condition": "Fireball power active (btst #0, -$276(a5)) and player projectile hits Gargoyle (CODE 4:$3028-$305c, awards Stbl index 18 = 100 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "31": {
+      "soun_id": 31,
+      "hex_id": "$1f",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Dragon ($2a2) crushed by $2aa ceiling weight in Room 3010",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$1c66",
+          "event": "Dragon ($2a2) crushed roar/thud when hit by $2aa ceiling weight",
+          "condition": "Ceiling weight drops onto extended Dragon head in Room 3010 (CODE 4:$1c50-$1c6c, awards Stbl index 12 = 150 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "32": {
+      "soun_id": 32,
+      "hex_id": "$20",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "partially_null_in_events_json",
+      "meaning": "Heavy slam / crush: timed portcullis/gate slamming shut (CODE 2:$1fb2) AND ceiling weight crushing Boulder Henchman ($29a)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$1fb2",
+          "event": "Portcullis / gate / trapdoor slams shut when chain timer expires",
+          "condition": "Gate countdown timer reaches 0 after chain release (CODE 2:$1fa4-$1fba)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 4:$1840",
+          "event": "Ceiling weight crushes Boulder Henchman ($29a)",
+          "condition": "Dropped ceiling weight impacts Henchman (CODE 4:$1830-$184c, awards Stbl index 15 = 100 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "33": {
+      "soun_id": 33,
+      "hex_id": "$21",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Corrosive ceiling drip ($2fa) splash / acid sizzle on floor or dissolving moving platform in Room 2010",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3600",
+          "event": "Corrosive ceiling drip ($2fa) splashes / sizzles on floor span",
+          "condition": "Falling acid/water drip impacts non-platform floor span in Room 2010 (CODE 4:$35ee-$3608)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$361c",
+          "event": "Corrosive ceiling drip ($2fa) sizzles and dissolves a moving platform",
+          "condition": "Falling drip impacts moving platform in Room 2010 (CODE 4:$360a-$3644)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "34": {
+      "soun_id": 34,
+      "hex_id": "$22",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Lightning bolt & thunderclap (Wizard $31a lightning spell in Room 2030 and Storm Cloud $38a strikes in Room 3030)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 4,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3ef0",
+          "event": "Wizard ($31a) fires lightning bolt",
+          "condition": "Wizard lightning discharge in Room 2030 (CODE 4:$3ee4-$3ef8)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$54b4",
+          "event": "Storm cloud ($38a) periodic lightning flash & thunderclap in Room 3030",
+          "condition": "Cloud strike countdown $6(a6) reaches 0 (CODE 4:$54a0-$54b8)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$5628",
+          "event": "Storm cloud ($38a) targeted lightning bolt strikes exposed high ledge",
+          "condition": "Hero stands high (Y <= 69) within cloud X window in Room 3030 (CODE 4:$55f0-$5630)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$565e",
+          "event": "Storm cloud ($38a) lightning electrocutes hero on Shield pedestal",
+          "condition": "Cloud zaps hero touching Shield stand without clearing puzzle (CODE 4:$563a-$5670)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "35": {
+      "soun_id": 35,
+      "hex_id": "$23",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Rolling / thrown boulder bounce on stone floor ($29a Henchman boulders and $312 cliff boulders)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 3,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$1936",
+          "event": "Henchman's thrown boulder ($29a) bounces off floor/wall A",
+          "condition": "Boulder collision bounce in $29a boulder update (CODE 4:$1928-$193e)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$1a06",
+          "event": "Henchman's thrown boulder ($29a) bounces off floor/wall B",
+          "condition": "Secondary floor/ledge bounce in $29a boulder update (CODE 4:$19f8-$1a0e)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$3d14",
+          "event": "Rolling cliff boulder ($312) bounces along cavern ledges in Room 2020",
+          "condition": "Boulder floor-span bounce in Underground River (CODE 4:$3d06-$3d1c)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "36": {
+      "soun_id": 36,
+      "hex_id": "$24",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight ($2da) gulping / finishing beer mug on throne",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$2734",
+          "event": "Black Knight ($2da) gulps / finishes beer mug",
+          "condition": "Black Knight completes mug-drinking animation phase 2 (CODE 4:$2728-$273c)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "37": {
+      "soun_id": 37,
+      "hex_id": "$25",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight's ($2da) thrown projectile bouncing off floor/platform in Room 4020",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3388",
+          "event": "Black Knight's thrown projectile ($2da) bounces off floor/platform A",
+          "condition": "Throne projectile bounce A in Room 4020 (CODE 4:$337c-$3390)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$33a0",
+          "event": "Black Knight's thrown projectile ($2da) bounces off floor/platform B",
+          "condition": "Throne projectile bounce B in Room 4020 (CODE 4:$3394-$33a8)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "39": {
+      "soun_id": 39,
+      "hex_id": "$27",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight ($2da) raising / resetting a lowered throne pillar",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$268e",
+          "event": "Black Knight ($2da) raises / resets a lowered throne pillar",
+          "condition": "Black Knight steps to pillar control and restores a lowered pillar segment (CODE 4:$2680-$2696)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "40": {
+      "soun_id": 40,
+      "hex_id": "$28",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Wizard's 3-switch forcefield ($30a) wrong-switch error buzz (resets switch sequence)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3a7e",
+          "event": "Wizard's 3-switch forcefield ($30a) wrong-switch buzz (puzzle resets)",
+          "condition": "Out-of-order switch hit in Room 2030 resets switch progress (CODE 4:$3a72-$3a88)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "41": {
+      "soun_id": 41,
+      "hex_id": "$29",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Wizard's 3-switch forcefield ($30a) puzzle solved fanfare (drops forcefield)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3a6a",
+          "event": "Wizard's 3-switch forcefield ($30a) solved chime (gate drops)",
+          "condition": "Final required switch hit in correct order in Room 2030 (CODE 4:$3a60-$3ac8, awards Stbl index 7 = 100 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "42": {
+      "soun_id": 42,
+      "hex_id": "$2a",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero pulling wall lever (setting room mechanism flag -$39a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$2822",
+          "event": "Hero pulls wall lever (ceiling weight / bridge lever span)",
+          "condition": "Action pressed at wall lever span, setting room trigger -$39a(a5) (CODE 2:$2816-$2830)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "43": {
+      "soun_id": 43,
+      "hex_id": "$2b",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Floating Burning Eye ($332) stunned by rock or fireball (frozen for 70 updates)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$462c",
+          "event": "Floating Burning Eye ($332) stunned by rock or fireball (70 updates)",
+          "condition": "Player projectile hits unstunned Burning Eye in Room 2030 (CODE 4:$45f0-$4636, awards Stbl index 9 = 25 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "45": {
+      "soun_id": 45,
+      "hex_id": "$2d",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Smallest-tier Magic Broom ($32a tier 2+) stunned by rock or fireball",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$4934",
+          "event": "Smallest Magic Broom ($32a tier 2+) stunned by rock or fireball",
+          "condition": "Player projectile hits smallest-tier Magic Broom in Room 2030 (CODE 4:$4910-$493e, stuns 24 updates, awards Stbl index 8 = 25 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "46": {
+      "soun_id": 46,
+      "hex_id": "$2e",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Magic Broom ($32a tier 0 or 1) splitting into 3 smaller brooms when hit",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$4926",
+          "event": "Magic Broom ($32a) splits into 3 smaller brooms",
+          "condition": "Player projectile hits tier-0 (large) or tier-1 (medium) Magic Broom in Room 2030 (CODE 4:$4910-$492c, awards Stbl index 8 = 25 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "47": {
+      "soun_id": 47,
+      "hex_id": "$2f",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Dungeon Whip Guard ($26a) whip backswing / wind-up",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$a8c",
+          "event": "Dungeon Whip Guard whip wind-up / backswing ($26a)",
+          "condition": "Rightward whip lash enters wind-up frame (CODE 4:$0a84-$0a94)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "48": {
+      "soun_id": 48,
+      "hex_id": "$30",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Boulder Henchman ($29a) grunt / heave when hurling boulder",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$17c8",
+          "event": "Boulder Henchman ($29a) grunt / heave when hurling boulder",
+          "condition": "Henchman throw animation releases bouncing boulder in Room 3000 or 4010 (CODE 4:$17b8-$17d0)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "49": {
+      "soun_id": 49,
+      "hex_id": "$31",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Wizard ($31a) casting arcing fireball spell",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3f0a",
+          "event": "Wizard ($31a) casts arcing fireball leftward (-4 px/update)",
+          "condition": "Wizard fireball spell release in Room 2030 (CODE 4:$3efe-$3f12)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "50": {
+      "soun_id": 50,
+      "hex_id": "$32",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Magic Shield power acquisition fanfare in Room 3030",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$2510",
+          "event": "Shield power fanfare on picking up Magic Shield in Room 3030 (span kind 25, state 36)",
+          "condition": "Hero claims Shield pedestal (CODE 2:$24f8-$2516, awards Stbl index 14 = 1,000 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "51": {
+      "soun_id": 51,
+      "hex_id": "$33",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Gargoyle ($2ea) wing-flap / screech (summon, pre-launch, swoop, hero grab, and carry-off)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 8,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$2d04",
+          "event": "Gargoyle ($2ea) wing-flap / screech during Black Knight summon animation A",
+          "condition": "All 5 throne pillars lowered -> Gargoyle awakens phase A (CODE 4:$2cf8-$2d0c)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2d88",
+          "event": "Gargoyle ($2ea) wing-flap / screech during summon animation B",
+          "condition": "Gargoyle awakens/descends phase B (CODE 4:$2d7c-$2d90)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2e02",
+          "event": "Gargoyle ($2ea) wing-flap / screech during summon animation C",
+          "condition": "Gargoyle awakens/launches phase C (CODE 4:$2df6-$2e0a)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2ecc",
+          "event": "Perched Gargoyle ($2ea) pre-launch warning screech / wing-beat",
+          "condition": "Gargoyle countdown nears swoop launch in Rooms 4000/4010/4020 (CODE 4:$2ec0-$2ed4)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2ee6",
+          "event": "Gargoyle ($2ea) launches horizontal swoop at ±16 px/update",
+          "condition": "Gargoyle enters screen edge toward hero (CODE 4:$2ed6-$2ef0)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2fbe",
+          "event": "Gargoyle ($2ea) grabs hero (leftward swoop) to carry off",
+          "condition": "Swooping Gargoyle collides with hero (stopping Shield SOUN 99 if active) (CODE 4:$2f88-$2fc6)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$2ffe",
+          "event": "Gargoyle ($2ea) grabs hero (rightward swoop) to carry off",
+          "condition": "Rightward swooping Gargoyle collides with hero (CODE 4:$2fc8-$3006)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$30e0",
+          "event": "Gargoyle ($2ea) wing-flap while carrying captured hero upward",
+          "condition": "Carry-off ascent periodic wing-beat (CODE 4:$30d4-$30e8)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "52": {
+      "soun_id": 52,
+      "hex_id": "$34",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Wizard ($31a) staff charge / zap windup before spell",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$3eb4",
+          "event": "Wizard ($31a) raises staff / charges spell",
+          "condition": "Wizard spell-cast windup in Room 2030 (CODE 4:$3ea8-$3ebc)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "53": {
+      "soun_id": 53,
+      "hex_id": "$35",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight ($2da) hurling projectile from throne",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$29bc",
+          "event": "Black Knight ($2da) hurls projectile (boulder/mug) from throne",
+          "condition": "Black Knight throw animation spawns aimed projectile (CODE 4:$29ae-$29c4)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "54": {
+      "soun_id": 54,
+      "hex_id": "$36",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight ($2da) toppling from throne when defeated",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$2b44",
+          "event": "Black Knight ($2da) topples from throne (victory scream/crash)",
+          "condition": "Hero crosses span kind 21 (state 32 -> -$274(a5)) while all 5 throne pillars are down (CODE 4:$2b38-$2b58, awards Stbl index 19 = 5,000 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "55": {
+      "soun_id": 55,
+      "hex_id": "$37",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Black Knight ($2da) lifting beer mug to drink",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$2718",
+          "event": "Black Knight ($2da) lifts beer mug / begins drinking",
+          "condition": "Black Knight enters mug-drinking animation phase 1 (CODE 4:$270c-$2720)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "56": {
+      "soun_id": 56,
+      "hex_id": "$38",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Player rock ricocheting harmlessly off Dungeon Whip Guard ($26a)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$b72",
+          "event": "Player rock ricochets harmlessly off Dungeon Whip Guard ($26a)",
+          "condition": "Ordinary rock (!btst #0, -$276(a5)) hits Whip Guard and bounces back at -1/4 velocity (CODE 4:$0b4e-$0b78)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "57": {
+      "soun_id": 57,
+      "hex_id": "$39",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Dungeon Whip Guard ($26a) knocked down by State-26 mace chain or Fireball",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$c00",
+          "event": "Dungeon Whip Guard knocked down ($26a)",
+          "condition": "Hit by State-26 spiked mace chain (-$274(a5) != 0) or Fireball (CODE 4:$0ba0-$0c04, awards Stbl index 1 = 150 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "58": {
+      "soun_id": 58,
+      "hex_id": "$3a",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Guard ($272/$27a) throwing spear / torch / rock",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$dc0",
+          "event": "Guard ($272/$27a) throws spear / torch / rock at hero",
+          "condition": "Hero is on same 32-px Y band in front of Guard within 200 px (CODE 4:$0d40-$0dc4)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "60": {
+      "soun_id": 60,
+      "hex_id": "$3c",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Wooden door creaking open / slamming shut ($272 Guard door and $1f6a(pc) room-entry door)",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$fd6",
+          "event": "Guard spawn door ($272) creaks open / shuts",
+          "condition": "Door spawner opens wooden door to release a Guard (CODE 4:$0fc8-$0fe0)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 5:$1fc8",
+          "event": "Entry wooden door slams shut behind Duncan ($1f6a(pc) in Rooms 1000 & 4020)",
+          "condition": "Entry-door closing animation finishes on first visit to Room 1000 (entry 0) or Room 4020 (CODE 5:$1f92-$1fd0)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "61": {
+      "soun_id": 61,
+      "hex_id": "$3d",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Shot Mutant ($2b2) or shot Vulture ($322) corpse thudding onto ground",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$21ae",
+          "event": "Killed Mutant ($2b2) corpse thuds onto floor",
+          "condition": "Shot Mutant falling at +15 px/update lands on floor span (CODE 4:$219c-$21b4)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$4c1c",
+          "event": "Shot Vulture ($322) thuds onto ground after +30 px/update fall",
+          "condition": "Killed Vulture reaches floor before offscreen respawn timer resets (CODE 4:$4c0e-$4c24)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "62": {
+      "soun_id": 62,
+      "hex_id": "$3e",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Vulture ($322) squawk when hit by rock or fireball",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$4e02",
+          "event": "Vulture ($322) squawks when shot out of the air",
+          "condition": "Player rock or fireball hits Vulture in Room 2000 or 3010 (CODE 4:$4ddc-$4e08, awards Stbl index 10 = 30 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "63": {
+      "soun_id": 63,
+      "hex_id": "$3f",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Vulture ($322) wing-flap takeoff from perch",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$4a64",
+          "event": "Vulture ($322) flaps wings on taking off from perch into swoop",
+          "condition": "Perch countdown expires and Vulture launches (CODE 4:$4a50-$4a6a)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "64": {
+      "soun_id": 64,
+      "hex_id": "$40",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Vulture ($322) perching caw",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$49fc",
+          "event": "Vulture ($322) caws / settles onto perch",
+          "condition": "Vulture lands/perches in Room 2000 or 3010 (CODE 4:$49e2-$4a02)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "65": {
+      "soun_id": 65,
+      "hex_id": "$41",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Dungeon Whip Guard ($26a) whip crack",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$a0c",
+          "event": "Dungeon Whip Guard cracks whip leftward ($26a)",
+          "condition": "Whip lash left animation reaches strike frame (CODE 4:$0a00-$0a14)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$a7a",
+          "event": "Dungeon Whip Guard cracks whip rightward ($26a)",
+          "condition": "Whip lash right animation reaches strike frame (CODE 4:$0a6e-$0a82)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "66": {
+      "soun_id": 66,
+      "hex_id": "$42",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Guard ($272/$27a) turn-around grunt / footstep at patrol bound or random reversal",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 3,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$cf4",
+          "event": "Guard ($272/$27a) grunts / footsteps on turning right at left patrol bound",
+          "condition": "Guard X <= xmin ($6(a6)) sets vx = +4 (CODE 4:$0ce6-$0cfe)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$d16",
+          "event": "Guard ($272/$27a) grunts / footsteps on turning left at right patrol bound",
+          "condition": "Guard X >= xmax ($8(a6)) sets vx = -4 (CODE 4:$0d08-$0d20)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$d30",
+          "event": "Guard ($272/$27a) grunts on random mid-patrol direction reversal",
+          "condition": "10-update timer check rolls unsigned PRNG <= 1000 ($03e8) and negates vx (CODE 4:$0d22-$0d36)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "67": {
+      "soun_id": 67,
+      "hex_id": "$43",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Mutant ($2b2) hit / death cry",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$222a",
+          "event": "Mutant ($2b2) hit / death cry",
+          "condition": "Player rock or fireball in -$194(a5) hits Mutant (CODE 4:$220a-$2236, awards Stbl index 11 = 30 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "68": {
+      "soun_id": 68,
+      "hex_id": "$44",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Mutant ($2b2) idle patrol growl",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$20d4",
+          "event": "Mutant ($2b2) idle growl / grunt",
+          "condition": "Mutant pauses during patrol check to vocalize (CODE 4:$20c4-$20dc)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "69": {
+      "soun_id": 69,
+      "hex_id": "$45",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Plague Bat ($282) squeak / chirp on retargeting flight toward hero",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$110a",
+          "event": "Plague Bat ($282) screech / wing-chirp on retargeting toward hero",
+          "condition": "Bat retarget countdown expires every d2 + (rand & d3) updates (CODE 4:$10f8-$1112)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "70": {
+      "soun_id": 70,
+      "hex_id": "$46",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Plague Rat ($28a/$292) squeak on nest spawn or patrol turnaround",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 3,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$1542",
+          "event": "Plague Rat ($28a/$292) squeaks on reversing at right patrol bound",
+          "condition": "Rat X >= xmax ($4(a6)) negates vx (CODE 4:$1526-$1548)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$1584",
+          "event": "Plague Rat ($28a/$292) squeaks on reversing or dropping at ledge",
+          "condition": "Rat hits left bound / ledge turn check (CODE 4:$1570-$158a)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$16ca",
+          "event": "Plague Rat ($292) squeaks on emerging from rat nest",
+          "condition": "Multi-rat spawner $292 spawns a new Rat (CODE 4:$16b8-$16d0)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "73": {
+      "soun_id": 73,
+      "hex_id": "$49",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "partially_null_in_events_json",
+      "meaning": "Chain / lock mechanism sound: pulling ceiling chain, unlocking keyhole with key, or opening chest",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 3,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$1f26",
+          "event": "Hero pulls overhead chain / ceiling ring (entering state 29 = $1d)",
+          "condition": "Hero activates pull-chain span to open portcullis/trapdoor (CODE 2:$1f18-$1f30)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$2276",
+          "event": "Hero unlocks keyhole / prison door / cage using carried key",
+          "condition": "Action pressed at keyhole span while carrying matching key (CODE 2:$2268-$2286, awards Stbl index 6 = 500 pts)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$2444",
+          "event": "Hero opens treasure/key chest or Shield-pedestal lock",
+          "condition": "Action pressed on chest/lock interaction span (CODE 2:$2436-$244c)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "78": {
+      "soun_id": 78,
+      "hex_id": "$4e",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero bumping / bonking head or body into solid wall or ceiling while airborne",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$28a",
+          "event": "Hero bonks head / bumps into solid wall or ceiling during jump or knockback",
+          "condition": "Airborne/recoil horizontal or ceiling collision triggers bounce-back state (CODE 2:$0254-$0294)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$1712",
+          "event": "Hero bumps wall/obstruction during sideways jump or knockback",
+          "condition": "Horizontal span check blocks airborne/stumble motion (CODE 2:$16fc-$1718)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "79": {
+      "soun_id": 79,
+      "hex_id": "$4f",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Hero sliding down Room 1020 Dungeon entry chute / zip-line on first visit",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$9d0",
+          "event": "Hero slides down Room 1020 Dungeon entry chute / zip-line (span kind 543, state 41)",
+          "condition": "First visit to Room 1020 (-$280(a5) == 0) at start of chute slide (CODE 2:$09be-$09d6)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "82": {
+      "soun_id": 82,
+      "hex_id": "$52",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Guard ($272/$27a) hit / knockdown cry",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$e5e",
+          "event": "Guard ($272/$27a) hit cry (knocked down by rock or burned by Fireball)",
+          "condition": "Player projectile in -$194(a5) hits Guard (CODE 4:$0e2c-$0e72, awards Stbl index 2 = 50 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "83": {
+      "soun_id": 83,
+      "hex_id": "$53",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "partially_null_in_events_json",
+      "meaning": "Hero lethal fall / plunging into bottomless pit",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 2,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$340",
+          "event": "Hero enters fatal neck-break / lethal fall impact sequence (state 13 = $0d)",
+          "condition": "Prior hero state $12(a6) != $0d on entering lethal-fall collapse (CODE 2:$032e-$034c)",
+          "was_null_in_events_json": false
+        },
+        {
+          "evidence": "CODE 2:$a5a",
+          "event": "Hero falls into bottomless pit toward Dungeon (span kind 29, state 40)",
+          "condition": "First update of pit-drop state before transitioning to Room 1020 via -$18a(a5) = -42 (CODE 2:$0a54-$0a68)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "84": {
+      "soun_id": 84,
+      "hex_id": "$54",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "register_level_label_in_events_json",
+      "meaning": "Hero yanking State-26 spiked mace chain in Room 1020 Dungeon",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$20f2",
+          "event": "Hero yanks State-26 spiked mace chain in Room 1020 Dungeon (sets -$274(a5))",
+          "condition": "Mouse click (bit 1 of $14(a6)) while holding mace chain in state 26 -> enters state 27 ($1b) (CODE 2:$20dc-$20fc)",
+          "was_null_in_events_json": false
+        }
+      ]
+    },
+    "85": {
+      "soun_id": 85,
+      "hex_id": "$55",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Plague Bat ($282) killed squeak",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$132c",
+          "event": "Plague Bat ($282) killed squeak",
+          "condition": "Player rock or fireball in -$194(a5) hits flying or latched bat (CODE 4:$121e-$1356, awards Stbl index 3 = 30 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "86": {
+      "soun_id": 86,
+      "hex_id": "$56",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Heavy splash or weight impact: hero/drip/boulder splashing into liquid (kind 22) AND $2aa ceiling weight thud",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 6,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$87a",
+          "event": "Hero splashes into water / lava / acid pit (span kind 22, state 33)",
+          "condition": "Hero lands on or enters liquid hazard span kind 22 (CODE 2:$0802 -> $086c-$0888)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 2:$1522",
+          "event": "Hero falls from freefall directly into water / liquid hazard (span kind 22)",
+          "condition": "Freefall floor check hits span kind 22 ($16) (CODE 2:$1514-$1528)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$1ddc",
+          "event": "Dragon-chamber ceiling weight ($2aa) slams onto floor / stop A",
+          "condition": "Dropped weight in Room 3010 reaches bottom limit without crushing or after impact (CODE 4:$1dd0-$1de2)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$1dfe",
+          "event": "Dragon-chamber ceiling weight ($2aa) heavy thud B",
+          "condition": "Secondary impact branch of $2aa weight drop (CODE 4:$1df2-$1e04)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$3658",
+          "event": "Ceiling drip ($2fa) plops into water pool at bottom of Room 2010",
+          "condition": "Falling drip impacts liquid span kind 22 ($16) (CODE 4:$35a0-$35b0, $3646-$3660)",
+          "was_null_in_events_json": true
+        },
+        {
+          "evidence": "CODE 4:$3d54",
+          "event": "Rolling cliff boulder ($312) splashes into Underground River in Room 2020",
+          "condition": "Boulder enters river water in Room 2020 (CODE 4:$3d48-$3d5c)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "87": {
+      "soun_id": 87,
+      "hex_id": "$57",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Plague Rat ($28a/$292) killed squeak",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 4:$15e0",
+          "event": "Plague Rat ($28a/$292) killed squeak",
+          "condition": "Player rock or fireball in -$194(a5) hits Rat (CODE 4:$15a6-$1600, awards Stbl index 0 = 20 pts)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "88": {
+      "soun_id": 88,
+      "hex_id": "$58",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "Great Hall ante-room wooden door closing (played via stack wrapper $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 6:$1310",
+          "event": "Great Hall wooden door closes after Duncan steps out or cancels"
+        }
+      ]
+    },
+    "89": {
+      "soun_id": 89,
+      "hex_id": "$59",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "Great Hall ante-room wooden door opening (played via stack wrapper $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 6:$12f8",
+          "event": "Great Hall wooden door opens when Duncan approaches/selects a doorway"
+        }
+      ]
+    },
+    "90": {
+      "soun_id": 90,
+      "hex_id": "$5a",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "High Score / Certificate of Merit iron portcullis slamming shut at frame 4 (played via $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 7:$0e0e",
+          "event": "High Score / Certificate of Merit portcullis slams shut on frame d7 == 4 (SFTR 21)"
+        }
+      ]
+    },
+    "91": {
+      "soun_id": 91,
+      "hex_id": "$5b",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "High Score / Certificate of Merit portcullis chain lowering start at frame 0 (played via $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 7:$0d8c",
+          "event": "High Score / Certificate of Merit portcullis begins lowering on frame d7 == 0 (SFTR 21)"
+        }
+      ]
+    },
+    "92": {
+      "soun_id": 92,
+      "hex_id": "$5c",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "Title screen lightning thunderclap (played via $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 7:$017c",
+          "event": "Title screen lightning flash thunderclap (SFTR 20)"
+        }
+      ]
+    },
+    "93": {
+      "soun_id": 93,
+      "hex_id": "$5d",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "Title screen vulture screech on frame 1 (played via $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 7:$013e",
+          "event": "Title screen vulture animation screech on frame d7 == 1 (SFTR 20)"
+        }
+      ]
+    },
+    "94": {
+      "soun_id": 94,
+      "hex_id": "$5e",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "played_via_3a_stack_wrapper_not_in_events_json",
+      "meaning": "Title screen looping ambient wind / theme (retriggered every 109 updates via $3a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "other_sound_api_sites": [
+        {
+          "api": "$3a(a5) [play]",
+          "evidence": "CODE 7:$01f0",
+          "event": "Title screen ambient theme/wind retriggered every 109 ($6c+1) updates (SFTR 20)"
+        }
+      ]
+    },
+    "95": {
+      "soun_id": 95,
+      "hex_id": "$5f",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "unnamed_all_null_in_events_json",
+      "meaning": "Room 2020 Underground River entry rushing-water ambience",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 5:$d86",
+          "event": "Underground River (Room 2020 Fireball 3) room-entry rushing-water ambience",
+          "condition": "Played once during Room 2020 setup right before entering main loop $33a(a5) (CODE 5:$0d82-$0d8e)",
+          "was_null_in_events_json": true
+        }
+      ]
+    },
+    "97": {
+      "soun_id": 97,
+      "hex_id": "$61",
+      "resource_file": "Data A.rsrc",
+      "status_in_events_json": "unused_zero_call_sites_in_code_0_to_7",
+      "meaning": null,
+      "confidence": null,
+      "jsr_52_call_count": 0,
+      "jsr_52_sites": [],
+      "why_null": "PROVEN unreferenced in game code: exhaustive scan of all jsr $52(a5) and jsr $3a(a5) calls and SFTR sound-set lists across CODE 0..7 finds zero references to this SOUN resource, and playing/listening to audio resources is prohibited by the brief.",
+      "unreferenced_proof": {
+        "confidence": "PROVEN",
+        "evidence": [
+          "CODE 1:$0078-$02a4",
+          "All CODE 1..7 $52(a5) and $3a(a5) call sites"
+        ]
+      }
+    },
+    "99": {
+      "soun_id": 99,
+      "hex_id": "$63",
+      "resource_file": "Data B.rsrc",
+      "status_in_events_json": "register_level_label_in_events_json",
+      "meaning": "Magic Shield active protective hum loop (started via $52(a5) in state 37; stopped via $5a(a5))",
+      "confidence": "PROVEN",
+      "jsr_52_call_count": 1,
+      "jsr_52_sites": [
+        {
+          "evidence": "CODE 2:$2598",
+          "event": "Magic Shield active hum loop starts (state 37 = $25, up to 30 updates)",
+          "condition": "Action pressed while standing upright with Shield power bit 1 owned; stopped via $5a(a5) on release/expiry (CODE 2:$258a-$2604)",
+          "was_null_in_events_json": false
+        }
+      ],
+      "other_sound_api_sites": [
+        {
+          "api": "$5a(a5) [stop]",
+          "evidence": "CODE 2:$25fe",
+          "event": "Stops Shield hum SOUN 99 when 30-update Shield timer expires or Action is released"
+        },
+        {
+          "api": "$5a(a5) [stop]",
+          "evidence": "CODE 4:$2fa0",
+          "event": "Stops Shield hum SOUN 99 when leftward Gargoyle ($2ea) grabs shielded hero"
+        },
+        {
+          "api": "$5a(a5) [stop]",
+          "evidence": "CODE 4:$2fe0",
+          "event": "Stops Shield hum SOUN 99 when rightward Gargoyle ($2ea) grabs shielded hero"
+        }
+      ]
+    }
+  },
+  "events_json_all_114_calls_resolved": [
+    {
+      "call_index": 0,
+      "segment": 2,
+      "offset": "$48",
+      "soun_id": 2,
+      "previous_event_in_events_json": "Animation stream marker $d6",
+      "resolved_event": "Hero dizzy / stunned stars animation loop chime A (stream marker $d6)",
+      "resolved_condition": "Byte read from hero animation stream (a3)+ equals $d6 (CODE 2:$003c-$0048)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$48"
+    },
+    {
+      "call_index": 1,
+      "segment": 2,
+      "offset": "$5e",
+      "soun_id": 3,
+      "previous_event_in_events_json": "Animation stream marker $d5",
+      "resolved_event": "Hero dizzy / stunned stars animation loop chime B (stream marker $d5)",
+      "resolved_condition": "Byte read from hero animation stream (a3)+ equals $d5 (CODE 2:$0052-$005e)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$5e"
+    },
+    {
+      "call_index": 2,
+      "segment": 2,
+      "offset": "$28a",
+      "soun_id": 78,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero bonks head / bumps into solid wall or ceiling during jump or knockback",
+      "resolved_condition": "Airborne/recoil horizontal or ceiling collision triggers bounce-back state (CODE 2:$0254-$0294)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$28a"
+    },
+    {
+      "call_index": 3,
+      "segment": 2,
+      "offset": "$340",
+      "soun_id": 83,
+      "previous_event_in_events_json": "Hero field $12 changes to $0d",
+      "resolved_event": "Hero enters fatal neck-break / lethal fall impact sequence (state 13 = $0d)",
+      "resolved_condition": "Prior hero state $12(a6) != $0d on entering lethal-fall collapse (CODE 2:$032e-$034c)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$340"
+    },
+    {
+      "call_index": 4,
+      "segment": 2,
+      "offset": "$54a",
+      "soun_id": 12,
+      "previous_event_in_events_json": "Counter at A5-$33c is decremented",
+      "resolved_event": "Elixir automatically consumed to cure Rat bite (grants 20 updates immunity)",
+      "resolved_condition": "Rat hazard (type 5) touches standing hero while immunity $2a(a6) <= 0 and elixir count -$33c(a5) > 0 (CODE 2:$0530-$0558)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$54a"
+    },
+    {
+      "call_index": 5,
+      "segment": 2,
+      "offset": "$5a0",
+      "soun_id": 12,
+      "previous_event_in_events_json": "Counter at A5-$33c is decremented",
+      "resolved_event": "Elixir automatically consumed to cure latched Plague Bat bite (grants 20 updates immunity)",
+      "resolved_condition": "Latched bat count -$25e(a5) >= 1 while immunity $2a(a6) <= 0 and elixir count -$33c(a5) > 0 (CODE 2:$0582-$05ae)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$5a0"
+    },
+    {
+      "call_index": 6,
+      "segment": 2,
+      "offset": "$5c4",
+      "soun_id": 10,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero fatal hit / plague collapse cry",
+      "resolved_condition": "Hero takes unshielded contact/projectile hit or untreated plague tick with -$33c(a5) <= 0 (CODE 2:$05b8-$05dc)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$5c4"
+    },
+    {
+      "call_index": 7,
+      "segment": 2,
+      "offset": "$87a",
+      "soun_id": 86,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero splashes into water / lava / acid pit (span kind 22, state 33)",
+      "resolved_condition": "Hero lands on or enters liquid hazard span kind 22 (CODE 2:$0802 -> $086c-$0888)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$87a"
+    },
+    {
+      "call_index": 8,
+      "segment": 2,
+      "offset": "$9d0",
+      "soun_id": 79,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero slides down Room 1020 Dungeon entry chute / zip-line (span kind 543, state 41)",
+      "resolved_condition": "First visit to Room 1020 (-$280(a5) == 0) at start of chute slide (CODE 2:$09be-$09d6)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$9d0"
+    },
+    {
+      "call_index": 9,
+      "segment": 2,
+      "offset": "$a5a",
+      "soun_id": 83,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero falls into bottomless pit toward Dungeon (span kind 29, state 40)",
+      "resolved_condition": "First update of pit-drop state before transitioning to Room 1020 via -$18a(a5) = -42 (CODE 2:$0a54-$0a68)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$a5a"
+    },
+    {
+      "call_index": 10,
+      "segment": 2,
+      "offset": "$d9e",
+      "soun_id": 0,
+      "previous_event_in_events_json": "Animation step at index 0 or 3",
+      "resolved_event": "Hero walking footstep",
+      "resolved_condition": "Walking animation step index reaches footfall frame 0 or 3 (CODE 2:$0d88-$0da4)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$d9e"
+    },
+    {
+      "call_index": 11,
+      "segment": 2,
+      "offset": "$de8",
+      "soun_id": 14,
+      "previous_event_in_events_json": "Hero timer at $30(a6) resets to 8",
+      "resolved_event": "Hero climbing up standard ladder (looping/periodic rung step)",
+      "resolved_condition": "Ladder climb-up sound timer $30(a6) counts down to 0 and resets to 8 (CODE 2:$0dd8-$0df0)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$de8"
+    },
+    {
+      "call_index": 12,
+      "segment": 2,
+      "offset": "$e0c",
+      "soun_id": 14,
+      "previous_event_in_events_json": "Hero timer at $30(a6) resets to 8",
+      "resolved_event": "Hero climbing down standard ladder (looping/periodic rung step)",
+      "resolved_condition": "Ladder climb-down sound timer $30(a6) counts down to 0 and resets to 8 (CODE 2:$0dfc-$0e14)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$e0c"
+    },
+    {
+      "call_index": 13,
+      "segment": 2,
+      "offset": "$105c",
+      "soun_id": 0,
+      "previous_event_in_events_json": "Animation step at index 0 or 3",
+      "resolved_event": "Hero step during stair/ledge transition A",
+      "resolved_condition": "Stair/step animation frame index == 0 or 3 (CODE 2:$1048-$1062)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$105c"
+    },
+    {
+      "call_index": 14,
+      "segment": 2,
+      "offset": "$10d0",
+      "soun_id": 0,
+      "previous_event_in_events_json": "Animation step at index 0 or 3",
+      "resolved_event": "Hero step during stair/ledge transition B",
+      "resolved_condition": "Stair/step animation frame index == 0 or 3 (CODE 2:$10bc-$10d6)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$10d0"
+    },
+    {
+      "call_index": 15,
+      "segment": 2,
+      "offset": "$12bc",
+      "soun_id": 4,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero catches vertical rope or ladder mid-jump",
+      "resolved_condition": "Airborne jump arc intersects grabbable rope/ladder span (CODE 2:$12a8-$12c4)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$12bc"
+    },
+    {
+      "call_index": 16,
+      "segment": 2,
+      "offset": "$1314",
+      "soun_id": 4,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero lands on floor from normal jump",
+      "resolved_condition": "Jump trajectory reaches solid floor span without stun (CODE 2:$1300-$1320)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$1314"
+    },
+    {
+      "call_index": 17,
+      "segment": 2,
+      "offset": "$1522",
+      "soun_id": 86,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero falls from freefall directly into water / liquid hazard (span kind 22)",
+      "resolved_condition": "Freefall floor check hits span kind 22 ($16) (CODE 2:$1514-$1528)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$1522"
+    },
+    {
+      "call_index": 18,
+      "segment": 2,
+      "offset": "$1590",
+      "soun_id": 6,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero hard-fall landing thud (medium drop -> stunned crouch/dizzy state)",
+      "resolved_condition": "Freefall distance exceeds safe threshold and lands on floor in stun state (CODE 2:$1578-$1598)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$1590"
+    },
+    {
+      "call_index": 19,
+      "segment": 2,
+      "offset": "$15a4",
+      "soun_id": 4,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero safe landing from short fall",
+      "resolved_condition": "Freefall lands on solid floor within safe drop height (CODE 2:$159a-$15ac)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$15a4"
+    },
+    {
+      "call_index": 20,
+      "segment": 2,
+      "offset": "$1632",
+      "soun_id": 5,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero stumbles / slips off floor ledge into fall",
+      "resolved_condition": "Walking/stepping past floor span edge initiates ledge-stumble drop (CODE 2:$1618-$163a)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$1632"
+    },
+    {
+      "call_index": 21,
+      "segment": 2,
+      "offset": "$1712",
+      "soun_id": 78,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero bumps wall/obstruction during sideways jump or knockback",
+      "resolved_condition": "Horizontal span check blocks airborne/stumble motion (CODE 2:$16fc-$1718)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$1712"
+    },
+    {
+      "call_index": 22,
+      "segment": 2,
+      "offset": "$18b8",
+      "soun_id": 14,
+      "previous_event_in_events_json": "Hero timer at $2c(a6) resets to 8",
+      "resolved_event": "Hero climbing up vertical rope (span kinds 519/520, state 9)",
+      "resolved_condition": "Rope climb-up timer $2c(a6) expires and resets to 8 (CODE 2:$18a4-$18c0)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$18b8"
+    },
+    {
+      "call_index": 23,
+      "segment": 2,
+      "offset": "$18f0",
+      "soun_id": 14,
+      "previous_event_in_events_json": "Hero timer at $2c(a6) resets to 8",
+      "resolved_event": "Hero climbing down vertical rope (span kinds 519/520, state 9)",
+      "resolved_condition": "Rope climb-down timer $2c(a6) expires and resets to 8 (CODE 2:$18dc-$18f8)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$18f0"
+    },
+    {
+      "call_index": 24,
+      "segment": 2,
+      "offset": "$1ad4",
+      "soun_id": 4,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero leaps off swinging pendulum rope (span kind 525, state 12)",
+      "resolved_condition": "Jump button pressed while clinging to swinging pendulum rope (CODE 2:$1ac0-$1adc)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$1ad4"
+    },
+    {
+      "call_index": 25,
+      "segment": 2,
+      "offset": "$1b48",
+      "soun_id": 4,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero leaps off vertical rope (span kinds 519/520/545)",
+      "resolved_condition": "Jump button initiating rope leap trajectory (CODE 2:$1b34-$1b50)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$1b48"
+    },
+    {
+      "call_index": 26,
+      "segment": 2,
+      "offset": "$1e3e",
+      "soun_id": 14,
+      "previous_event_in_events_json": "Hero timer at $2c(a6) resets to 8",
+      "resolved_event": "Hero climbing up toggleable/bell rope (span kind 545, state 42)",
+      "resolved_condition": "Kind-545 rope climb-up timer $2c(a6) expires and resets to 8 (CODE 2:$1e2a-$1e46)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$1e3e"
+    },
+    {
+      "call_index": 27,
+      "segment": 2,
+      "offset": "$1eca",
+      "soun_id": 14,
+      "previous_event_in_events_json": "Hero timer at $2c(a6) resets to 8",
+      "resolved_event": "Hero climbing down toggleable/bell rope (span kind 545, state 42)",
+      "resolved_condition": "Kind-545 rope climb-down timer $2c(a6) expires and resets to 8 (CODE 2:$1eb6-$1ed2)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$1eca"
+    },
+    {
+      "call_index": 28,
+      "segment": 2,
+      "offset": "$1f26",
+      "soun_id": 73,
+      "previous_event_in_events_json": "Hero field $12 changes to $1d",
+      "resolved_event": "Hero pulls overhead chain / ceiling ring (entering state 29 = $1d)",
+      "resolved_condition": "Hero activates pull-chain span to open portcullis/trapdoor (CODE 2:$1f18-$1f30)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$1f26"
+    },
+    {
+      "call_index": 29,
+      "segment": 2,
+      "offset": "$1fb2",
+      "soun_id": 32,
+      "previous_event_in_events_json": "Hero timer reaches zero",
+      "resolved_event": "Portcullis / gate / trapdoor slams shut when chain timer expires",
+      "resolved_condition": "Gate countdown timer reaches 0 after chain release (CODE 2:$1fa4-$1fba)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$1fb2"
+    },
+    {
+      "call_index": 30,
+      "segment": 2,
+      "offset": "$20f2",
+      "soun_id": 84,
+      "previous_event_in_events_json": "Hero input bit 1 is cleared and field $12 changes to $1b",
+      "resolved_event": "Hero yanks State-26 spiked mace chain in Room 1020 Dungeon (sets -$274(a5))",
+      "resolved_condition": "Mouse click (bit 1 of $14(a6)) while holding mace chain in state 26 -> enters state 27 ($1b) (CODE 2:$20dc-$20fc)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$20f2"
+    },
+    {
+      "call_index": 31,
+      "segment": 2,
+      "offset": "$2276",
+      "soun_id": 73,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero unlocks keyhole / prison door / cage using carried key",
+      "resolved_condition": "Action pressed at keyhole span while carrying matching key (CODE 2:$2268-$2286, awards Stbl index 6 = 500 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$2276"
+    },
+    {
+      "call_index": 32,
+      "segment": 2,
+      "offset": "$2318",
+      "soun_id": 3,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Fireball power fanfare / shimmer on picking up Fireball in Room 2030 (span kind 24, state 35)",
+      "resolved_condition": "Hero claims Fireball pedestal after forcefield -$31c(a5) is unlocked (CODE 2:$22f6-$2320, awards Stbl index 13 = 1,000 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$2318"
+    },
+    {
+      "call_index": 33,
+      "segment": 2,
+      "offset": "$2444",
+      "soun_id": 73,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero opens treasure/key chest or Shield-pedestal lock",
+      "resolved_condition": "Action pressed on chest/lock interaction span (CODE 2:$2436-$244c)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$2444"
+    },
+    {
+      "call_index": 34,
+      "segment": 2,
+      "offset": "$2510",
+      "soun_id": 50,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Shield power fanfare on picking up Magic Shield in Room 3030 (span kind 25, state 36)",
+      "resolved_condition": "Hero claims Shield pedestal (CODE 2:$24f8-$2516, awards Stbl index 14 = 1,000 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$2510"
+    },
+    {
+      "call_index": 35,
+      "segment": 2,
+      "offset": "$2598",
+      "soun_id": 99,
+      "previous_event_in_events_json": "Hero timer at $2c(a6) is set to 30",
+      "resolved_event": "Magic Shield active hum loop starts (state 37 = $25, up to 30 updates)",
+      "resolved_condition": "Action pressed while standing upright with Shield power bit 1 owned; stopped via $5a(a5) on release/expiry (CODE 2:$258a-$2604)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$2598"
+    },
+    {
+      "call_index": 36,
+      "segment": 2,
+      "offset": "$26ec",
+      "soun_id": 11,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero picks up bag of rocks (+10 BCD rocks in -$2c2(a5), span kind 26, state 38)",
+      "resolved_condition": "Action pressed on rock-bag span while current BCD rock count -$2c2(a5) <= $7f (<= 79 rocks) (CODE 2:$26e0-$2714)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$26ec"
+    },
+    {
+      "call_index": 37,
+      "segment": 2,
+      "offset": "$2720",
+      "soun_id": 13,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Rock bag full rejection buzz/chime (cannot carry more rocks)",
+      "resolved_condition": "Action pressed on rock-bag span when current BCD rock count -$2c2(a5) > $7f (80+ rocks) (CODE 2:$26e0-$2726)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$2720"
+    },
+    {
+      "call_index": 38,
+      "segment": 2,
+      "offset": "$2790",
+      "soun_id": 11,
+      "previous_event_in_events_json": "Counter at A5-$33c is incremented",
+      "resolved_event": "Hero picks up Elixir bottle (+1 elixir in -$33c(a5), span kind 32, state 43)",
+      "resolved_condition": "Action pressed on elixir span (CODE 2:$2786-$27a0)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$2790"
+    },
+    {
+      "call_index": 39,
+      "segment": 2,
+      "offset": "$2822",
+      "soun_id": 42,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero pulls wall lever (ceiling weight / bridge lever span)",
+      "resolved_condition": "Action pressed at wall lever span, setting room trigger -$39a(a5) (CODE 2:$2816-$2830)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$2822"
+    },
+    {
+      "call_index": 40,
+      "segment": 2,
+      "offset": "$34f0",
+      "soun_id": 7,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero throws ordinary rock",
+      "resolved_condition": "Throw triggered without Fireball power (!btst #0, $15(a6)) and rock count -$2c2(a5) != 0 (CODE 2:$34d8-$34f6)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$34f0"
+    },
+    {
+      "call_index": 41,
+      "segment": 2,
+      "offset": "$3508",
+      "soun_id": 9,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Hero throws Fireball projectile",
+      "resolved_condition": "Throw triggered with Fireball power (btst #0, $15(a6)) and rock count -$2c2(a5) != 0 (CODE 2:$34f8-$350c)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 2:$3508"
+    },
+    {
+      "call_index": 42,
+      "segment": 4,
+      "offset": "$a0c",
+      "soun_id": 65,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Dungeon Whip Guard cracks whip leftward ($26a)",
+      "resolved_condition": "Whip lash left animation reaches strike frame (CODE 4:$0a00-$0a14)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$a0c"
+    },
+    {
+      "call_index": 43,
+      "segment": 4,
+      "offset": "$a7a",
+      "soun_id": 65,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Dungeon Whip Guard cracks whip rightward ($26a)",
+      "resolved_condition": "Whip lash right animation reaches strike frame (CODE 4:$0a6e-$0a82)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$a7a"
+    },
+    {
+      "call_index": 44,
+      "segment": 4,
+      "offset": "$a8c",
+      "soun_id": 47,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Dungeon Whip Guard whip wind-up / backswing ($26a)",
+      "resolved_condition": "Rightward whip lash enters wind-up frame (CODE 4:$0a84-$0a94)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$a8c"
+    },
+    {
+      "call_index": 45,
+      "segment": 4,
+      "offset": "$b72",
+      "soun_id": 56,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Player rock ricochets harmlessly off Dungeon Whip Guard ($26a)",
+      "resolved_condition": "Ordinary rock (!btst #0, -$276(a5)) hits Whip Guard and bounces back at -1/4 velocity (CODE 4:$0b4e-$0b78)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$b72"
+    },
+    {
+      "call_index": 46,
+      "segment": 4,
+      "offset": "$c00",
+      "soun_id": 57,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Dungeon Whip Guard knocked down ($26a)",
+      "resolved_condition": "Hit by State-26 spiked mace chain (-$274(a5) != 0) or Fireball (CODE 4:$0ba0-$0c04, awards Stbl index 1 = 150 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$c00"
+    },
+    {
+      "call_index": 47,
+      "segment": 4,
+      "offset": "$cf4",
+      "soun_id": 66,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Guard ($272/$27a) grunts / footsteps on turning right at left patrol bound",
+      "resolved_condition": "Guard X <= xmin ($6(a6)) sets vx = +4 (CODE 4:$0ce6-$0cfe)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$cf4"
+    },
+    {
+      "call_index": 48,
+      "segment": 4,
+      "offset": "$d16",
+      "soun_id": 66,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Guard ($272/$27a) grunts / footsteps on turning left at right patrol bound",
+      "resolved_condition": "Guard X >= xmax ($8(a6)) sets vx = -4 (CODE 4:$0d08-$0d20)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$d16"
+    },
+    {
+      "call_index": 49,
+      "segment": 4,
+      "offset": "$d30",
+      "soun_id": 66,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Guard ($272/$27a) grunts on random mid-patrol direction reversal",
+      "resolved_condition": "10-update timer check rolls unsigned PRNG <= 1000 ($03e8) and negates vx (CODE 4:$0d22-$0d36)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$d30"
+    },
+    {
+      "call_index": 50,
+      "segment": 4,
+      "offset": "$dc0",
+      "soun_id": 58,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Guard ($272/$27a) throws spear / torch / rock at hero",
+      "resolved_condition": "Hero is on same 32-px Y band in front of Guard within 200 px (CODE 4:$0d40-$0dc4)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$dc0"
+    },
+    {
+      "call_index": 51,
+      "segment": 4,
+      "offset": "$e5e",
+      "soun_id": 82,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Guard ($272/$27a) hit cry (knocked down by rock or burned by Fireball)",
+      "resolved_condition": "Player projectile in -$194(a5) hits Guard (CODE 4:$0e2c-$0e72, awards Stbl index 2 = 50 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$e5e"
+    },
+    {
+      "call_index": 52,
+      "segment": 4,
+      "offset": "$fd6",
+      "soun_id": 60,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Guard spawn door ($272) creaks open / shuts",
+      "resolved_condition": "Door spawner opens wooden door to release a Guard (CODE 4:$0fc8-$0fe0)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$fd6"
+    },
+    {
+      "call_index": 53,
+      "segment": 4,
+      "offset": "$110a",
+      "soun_id": 69,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Plague Bat ($282) screech / wing-chirp on retargeting toward hero",
+      "resolved_condition": "Bat retarget countdown expires every d2 + (rand & d3) updates (CODE 4:$10f8-$1112)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$110a"
+    },
+    {
+      "call_index": 54,
+      "segment": 4,
+      "offset": "$132c",
+      "soun_id": 85,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Plague Bat ($282) killed squeak",
+      "resolved_condition": "Player rock or fireball in -$194(a5) hits flying or latched bat (CODE 4:$121e-$1356, awards Stbl index 3 = 30 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$132c"
+    },
+    {
+      "call_index": 55,
+      "segment": 4,
+      "offset": "$1542",
+      "soun_id": 70,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Plague Rat ($28a/$292) squeaks on reversing at right patrol bound",
+      "resolved_condition": "Rat X >= xmax ($4(a6)) negates vx (CODE 4:$1526-$1548)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$1542"
+    },
+    {
+      "call_index": 56,
+      "segment": 4,
+      "offset": "$1584",
+      "soun_id": 70,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Plague Rat ($28a/$292) squeaks on reversing or dropping at ledge",
+      "resolved_condition": "Rat hits left bound / ledge turn check (CODE 4:$1570-$158a)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$1584"
+    },
+    {
+      "call_index": 57,
+      "segment": 4,
+      "offset": "$15e0",
+      "soun_id": 87,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Plague Rat ($28a/$292) killed squeak",
+      "resolved_condition": "Player rock or fireball in -$194(a5) hits Rat (CODE 4:$15a6-$1600, awards Stbl index 0 = 20 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$15e0"
+    },
+    {
+      "call_index": 58,
+      "segment": 4,
+      "offset": "$16ca",
+      "soun_id": 70,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Plague Rat ($292) squeaks on emerging from rat nest",
+      "resolved_condition": "Multi-rat spawner $292 spawns a new Rat (CODE 4:$16b8-$16d0)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$16ca"
+    },
+    {
+      "call_index": 59,
+      "segment": 4,
+      "offset": "$17c8",
+      "soun_id": 48,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Boulder Henchman ($29a) grunt / heave when hurling boulder",
+      "resolved_condition": "Henchman throw animation releases bouncing boulder in Room 3000 or 4010 (CODE 4:$17b8-$17d0)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$17c8"
+    },
+    {
+      "call_index": 60,
+      "segment": 4,
+      "offset": "$1840",
+      "soun_id": 32,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Ceiling weight crushes Boulder Henchman ($29a)",
+      "resolved_condition": "Dropped ceiling weight impacts Henchman (CODE 4:$1830-$184c, awards Stbl index 15 = 100 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$1840"
+    },
+    {
+      "call_index": 61,
+      "segment": 4,
+      "offset": "$1936",
+      "soun_id": 35,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Henchman's thrown boulder ($29a) bounces off floor/wall A",
+      "resolved_condition": "Boulder collision bounce in $29a boulder update (CODE 4:$1928-$193e)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$1936"
+    },
+    {
+      "call_index": 62,
+      "segment": 4,
+      "offset": "$1a06",
+      "soun_id": 35,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Henchman's thrown boulder ($29a) bounces off floor/wall B",
+      "resolved_condition": "Secondary floor/ledge bounce in $29a boulder update (CODE 4:$19f8-$1a0e)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$1a06"
+    },
+    {
+      "call_index": 63,
+      "segment": 4,
+      "offset": "$1afe",
+      "soun_id": 30,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Dragon ($2a2) roars / breathes gout of flame in Room 3010",
+      "resolved_condition": "Dragon finishes emerging 24 px left from cave and activates fire-breath hazard (CODE 4:$1aee-$1b16)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$1afe"
+    },
+    {
+      "call_index": 64,
+      "segment": 4,
+      "offset": "$1c66",
+      "soun_id": 31,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Dragon ($2a2) crushed roar/thud when hit by $2aa ceiling weight",
+      "resolved_condition": "Ceiling weight drops onto extended Dragon head in Room 3010 (CODE 4:$1c50-$1c6c, awards Stbl index 12 = 150 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$1c66"
+    },
+    {
+      "call_index": 65,
+      "segment": 4,
+      "offset": "$1ddc",
+      "soun_id": 86,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Dragon-chamber ceiling weight ($2aa) slams onto floor / stop A",
+      "resolved_condition": "Dropped weight in Room 3010 reaches bottom limit without crushing or after impact (CODE 4:$1dd0-$1de2)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$1ddc"
+    },
+    {
+      "call_index": 66,
+      "segment": 4,
+      "offset": "$1dfe",
+      "soun_id": 86,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Dragon-chamber ceiling weight ($2aa) heavy thud B",
+      "resolved_condition": "Secondary impact branch of $2aa weight drop (CODE 4:$1df2-$1e04)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$1dfe"
+    },
+    {
+      "call_index": 67,
+      "segment": 4,
+      "offset": "$20d4",
+      "soun_id": 68,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Mutant ($2b2) idle growl / grunt",
+      "resolved_condition": "Mutant pauses during patrol check to vocalize (CODE 4:$20c4-$20dc)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$20d4"
+    },
+    {
+      "call_index": 68,
+      "segment": 4,
+      "offset": "$21ae",
+      "soun_id": 61,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Killed Mutant ($2b2) corpse thuds onto floor",
+      "resolved_condition": "Shot Mutant falling at +15 px/update lands on floor span (CODE 4:$219c-$21b4)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$21ae"
+    },
+    {
+      "call_index": 69,
+      "segment": 4,
+      "offset": "$222a",
+      "soun_id": 67,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Mutant ($2b2) hit / death cry",
+      "resolved_condition": "Player rock or fireball in -$194(a5) hits Mutant (CODE 4:$220a-$2236, awards Stbl index 11 = 30 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$222a"
+    },
+    {
+      "call_index": 70,
+      "segment": 4,
+      "offset": "$2542",
+      "soun_id": 29,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Room 4020 drawbridge lever ($2d2) mechanical click when toggled",
+      "resolved_condition": "Lever hit by rock/fireball or pulled via span kind 36 shifts walkway ±68 px (CODE 4:$2534-$2588)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$2542"
+    },
+    {
+      "call_index": 71,
+      "segment": 4,
+      "offset": "$268e",
+      "soun_id": 39,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Black Knight ($2da) raises / resets a lowered throne pillar",
+      "resolved_condition": "Black Knight steps to pillar control and restores a lowered pillar segment (CODE 4:$2680-$2696)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$268e"
+    },
+    {
+      "call_index": 72,
+      "segment": 4,
+      "offset": "$2718",
+      "soun_id": 55,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Black Knight ($2da) lifts beer mug / begins drinking",
+      "resolved_condition": "Black Knight enters mug-drinking animation phase 1 (CODE 4:$270c-$2720)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$2718"
+    },
+    {
+      "call_index": 73,
+      "segment": 4,
+      "offset": "$2734",
+      "soun_id": 36,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Black Knight ($2da) gulps / finishes beer mug",
+      "resolved_condition": "Black Knight completes mug-drinking animation phase 2 (CODE 4:$2728-$273c)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$2734"
+    },
+    {
+      "call_index": 74,
+      "segment": 4,
+      "offset": "$29bc",
+      "soun_id": 53,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Black Knight ($2da) hurls projectile (boulder/mug) from throne",
+      "resolved_condition": "Black Knight throw animation spawns aimed projectile (CODE 4:$29ae-$29c4)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$29bc"
+    },
+    {
+      "call_index": 75,
+      "segment": 4,
+      "offset": "$2b44",
+      "soun_id": 54,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Black Knight ($2da) topples from throne (victory scream/crash)",
+      "resolved_condition": "Hero crosses span kind 21 (state 32 -> -$274(a5)) while all 5 throne pillars are down (CODE 4:$2b38-$2b58, awards Stbl index 19 = 5,000 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$2b44"
+    },
+    {
+      "call_index": 76,
+      "segment": 4,
+      "offset": "$2d04",
+      "soun_id": 51,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Gargoyle ($2ea) wing-flap / screech during Black Knight summon animation A",
+      "resolved_condition": "All 5 throne pillars lowered -> Gargoyle awakens phase A (CODE 4:$2cf8-$2d0c)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$2d04"
+    },
+    {
+      "call_index": 77,
+      "segment": 4,
+      "offset": "$2d88",
+      "soun_id": 51,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Gargoyle ($2ea) wing-flap / screech during summon animation B",
+      "resolved_condition": "Gargoyle awakens/descends phase B (CODE 4:$2d7c-$2d90)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$2d88"
+    },
+    {
+      "call_index": 78,
+      "segment": 4,
+      "offset": "$2e02",
+      "soun_id": 51,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Gargoyle ($2ea) wing-flap / screech during summon animation C",
+      "resolved_condition": "Gargoyle awakens/launches phase C (CODE 4:$2df6-$2e0a)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$2e02"
+    },
+    {
+      "call_index": 79,
+      "segment": 4,
+      "offset": "$2ecc",
+      "soun_id": 51,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Perched Gargoyle ($2ea) pre-launch warning screech / wing-beat",
+      "resolved_condition": "Gargoyle countdown nears swoop launch in Rooms 4000/4010/4020 (CODE 4:$2ec0-$2ed4)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$2ecc"
+    },
+    {
+      "call_index": 80,
+      "segment": 4,
+      "offset": "$2ee6",
+      "soun_id": 51,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Gargoyle ($2ea) launches horizontal swoop at ±16 px/update",
+      "resolved_condition": "Gargoyle enters screen edge toward hero (CODE 4:$2ed6-$2ef0)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$2ee6"
+    },
+    {
+      "call_index": 81,
+      "segment": 4,
+      "offset": "$2fbe",
+      "soun_id": 51,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Gargoyle ($2ea) grabs hero (leftward swoop) to carry off",
+      "resolved_condition": "Swooping Gargoyle collides with hero (stopping Shield SOUN 99 if active) (CODE 4:$2f88-$2fc6)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$2fbe"
+    },
+    {
+      "call_index": 82,
+      "segment": 4,
+      "offset": "$2ffe",
+      "soun_id": 51,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Gargoyle ($2ea) grabs hero (rightward swoop) to carry off",
+      "resolved_condition": "Rightward swooping Gargoyle collides with hero (CODE 4:$2fc8-$3006)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$2ffe"
+    },
+    {
+      "call_index": 83,
+      "segment": 4,
+      "offset": "$3056",
+      "soun_id": 30,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Gargoyle ($2ea) bursts into flame when struck by a Fireball",
+      "resolved_condition": "Fireball power active (btst #0, -$276(a5)) and player projectile hits Gargoyle (CODE 4:$3028-$305c, awards Stbl index 18 = 100 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$3056"
+    },
+    {
+      "call_index": 84,
+      "segment": 4,
+      "offset": "$30e0",
+      "soun_id": 51,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Gargoyle ($2ea) wing-flap while carrying captured hero upward",
+      "resolved_condition": "Carry-off ascent periodic wing-beat (CODE 4:$30d4-$30e8)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$30e0"
+    },
+    {
+      "call_index": 85,
+      "segment": 4,
+      "offset": "$3388",
+      "soun_id": 37,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Black Knight's thrown projectile ($2da) bounces off floor/platform A",
+      "resolved_condition": "Throne projectile bounce A in Room 4020 (CODE 4:$337c-$3390)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$3388"
+    },
+    {
+      "call_index": 86,
+      "segment": 4,
+      "offset": "$33a0",
+      "soun_id": 37,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Black Knight's thrown projectile ($2da) bounces off floor/platform B",
+      "resolved_condition": "Throne projectile bounce B in Room 4020 (CODE 4:$3394-$33a8)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$33a0"
+    },
+    {
+      "call_index": 87,
+      "segment": 4,
+      "offset": "$3600",
+      "soun_id": 33,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Corrosive ceiling drip ($2fa) splashes / sizzles on floor span",
+      "resolved_condition": "Falling acid/water drip impacts non-platform floor span in Room 2010 (CODE 4:$35ee-$3608)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$3600"
+    },
+    {
+      "call_index": 88,
+      "segment": 4,
+      "offset": "$361c",
+      "soun_id": 33,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Corrosive ceiling drip ($2fa) sizzles and dissolves a moving platform",
+      "resolved_condition": "Falling drip impacts moving platform in Room 2010 (CODE 4:$360a-$3644)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$361c"
+    },
+    {
+      "call_index": 89,
+      "segment": 4,
+      "offset": "$3658",
+      "soun_id": 86,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Ceiling drip ($2fa) plops into water pool at bottom of Room 2010",
+      "resolved_condition": "Falling drip impacts liquid span kind 22 ($16) (CODE 4:$35a0-$35b0, $3646-$3660)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$3658"
+    },
+    {
+      "call_index": 90,
+      "segment": 4,
+      "offset": "$3a6a",
+      "soun_id": 41,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Wizard's 3-switch forcefield ($30a) solved chime (gate drops)",
+      "resolved_condition": "Final required switch hit in correct order in Room 2030 (CODE 4:$3a60-$3ac8, awards Stbl index 7 = 100 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$3a6a"
+    },
+    {
+      "call_index": 91,
+      "segment": 4,
+      "offset": "$3a7e",
+      "soun_id": 40,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Wizard's 3-switch forcefield ($30a) wrong-switch buzz (puzzle resets)",
+      "resolved_condition": "Out-of-order switch hit in Room 2030 resets switch progress (CODE 4:$3a72-$3a88)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$3a7e"
+    },
+    {
+      "call_index": 92,
+      "segment": 4,
+      "offset": "$3d14",
+      "soun_id": 35,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Rolling cliff boulder ($312) bounces along cavern ledges in Room 2020",
+      "resolved_condition": "Boulder floor-span bounce in Underground River (CODE 4:$3d06-$3d1c)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$3d14"
+    },
+    {
+      "call_index": 93,
+      "segment": 4,
+      "offset": "$3d54",
+      "soun_id": 86,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Rolling cliff boulder ($312) splashes into Underground River in Room 2020",
+      "resolved_condition": "Boulder enters river water in Room 2020 (CODE 4:$3d48-$3d5c)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$3d54"
+    },
+    {
+      "call_index": 94,
+      "segment": 4,
+      "offset": "$3eb4",
+      "soun_id": 52,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Wizard ($31a) raises staff / charges spell",
+      "resolved_condition": "Wizard spell-cast windup in Room 2030 (CODE 4:$3ea8-$3ebc)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$3eb4"
+    },
+    {
+      "call_index": 95,
+      "segment": 4,
+      "offset": "$3ef0",
+      "soun_id": 34,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Wizard ($31a) fires lightning bolt",
+      "resolved_condition": "Wizard lightning discharge in Room 2030 (CODE 4:$3ee4-$3ef8)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$3ef0"
+    },
+    {
+      "call_index": 96,
+      "segment": 4,
+      "offset": "$3f0a",
+      "soun_id": 49,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Wizard ($31a) casts arcing fireball leftward (-4 px/update)",
+      "resolved_condition": "Wizard fireball spell release in Room 2030 (CODE 4:$3efe-$3f12)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$3f0a"
+    },
+    {
+      "call_index": 97,
+      "segment": 4,
+      "offset": "$4386",
+      "soun_id": 9,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Floating Burning Eye ($332) fires 8-way homing fireball",
+      "resolved_condition": "Burning Eye AI selects slots 4..5 (25% of cycles) in Room 2030 (CODE 4:$424a-$438c)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$4386"
+    },
+    {
+      "call_index": 98,
+      "segment": 4,
+      "offset": "$462c",
+      "soun_id": 43,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Floating Burning Eye ($332) stunned by rock or fireball (70 updates)",
+      "resolved_condition": "Player projectile hits unstunned Burning Eye in Room 2030 (CODE 4:$45f0-$4636, awards Stbl index 9 = 25 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$462c"
+    },
+    {
+      "call_index": 99,
+      "segment": 4,
+      "offset": "$4926",
+      "soun_id": 46,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Magic Broom ($32a) splits into 3 smaller brooms",
+      "resolved_condition": "Player projectile hits tier-0 (large) or tier-1 (medium) Magic Broom in Room 2030 (CODE 4:$4910-$492c, awards Stbl index 8 = 25 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$4926"
+    },
+    {
+      "call_index": 100,
+      "segment": 4,
+      "offset": "$4934",
+      "soun_id": 45,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Smallest Magic Broom ($32a tier 2+) stunned by rock or fireball",
+      "resolved_condition": "Player projectile hits smallest-tier Magic Broom in Room 2030 (CODE 4:$4910-$493e, stuns 24 updates, awards Stbl index 8 = 25 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$4934"
+    },
+    {
+      "call_index": 101,
+      "segment": 4,
+      "offset": "$49fc",
+      "soun_id": 64,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Vulture ($322) caws / settles onto perch",
+      "resolved_condition": "Vulture lands/perches in Room 2000 or 3010 (CODE 4:$49e2-$4a02)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$49fc"
+    },
+    {
+      "call_index": 102,
+      "segment": 4,
+      "offset": "$4a64",
+      "soun_id": 63,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Vulture ($322) flaps wings on taking off from perch into swoop",
+      "resolved_condition": "Perch countdown expires and Vulture launches (CODE 4:$4a50-$4a6a)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$4a64"
+    },
+    {
+      "call_index": 103,
+      "segment": 4,
+      "offset": "$4c1c",
+      "soun_id": 61,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Shot Vulture ($322) thuds onto ground after +30 px/update fall",
+      "resolved_condition": "Killed Vulture reaches floor before offscreen respawn timer resets (CODE 4:$4c0e-$4c24)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$4c1c"
+    },
+    {
+      "call_index": 104,
+      "segment": 4,
+      "offset": "$4e02",
+      "soun_id": 62,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Vulture ($322) squawks when shot out of the air",
+      "resolved_condition": "Player rock or fireball hits Vulture in Room 2000 or 3010 (CODE 4:$4ddc-$4e08, awards Stbl index 10 = 30 pts)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$4e02"
+    },
+    {
+      "call_index": 105,
+      "segment": 4,
+      "offset": "$54b4",
+      "soun_id": 34,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Storm cloud ($38a) periodic lightning flash & thunderclap in Room 3030",
+      "resolved_condition": "Cloud strike countdown $6(a6) reaches 0 (CODE 4:$54a0-$54b8)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$54b4"
+    },
+    {
+      "call_index": 106,
+      "segment": 4,
+      "offset": "$5628",
+      "soun_id": 34,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Storm cloud ($38a) targeted lightning bolt strikes exposed high ledge",
+      "resolved_condition": "Hero stands high (Y <= 69) within cloud X window in Room 3030 (CODE 4:$55f0-$5630)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$5628"
+    },
+    {
+      "call_index": 107,
+      "segment": 4,
+      "offset": "$565e",
+      "soun_id": 34,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Storm cloud ($38a) lightning electrocutes hero on Shield pedestal",
+      "resolved_condition": "Cloud zaps hero touching Shield stand without clearing puzzle (CODE 4:$563a-$5670)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$565e"
+    },
+    {
+      "call_index": 108,
+      "segment": 4,
+      "offset": "$5ac8",
+      "soun_id": 8,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Extra-life fanfare second chime (13 updates after extra life is awarded)",
+      "resolved_condition": "Bonus ticker $2(a6) counts down from 13 ($0d) to 0 in $5ab6 (CODE 4:$5ab6-$5ad0)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$5ac8"
+    },
+    {
+      "call_index": 109,
+      "segment": 4,
+      "offset": "$5b2e",
+      "soun_id": 8,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Extra-life fanfare first chime (score crosses -$25c(a5) extra-life threshold)",
+      "resolved_condition": "BCD score reaches extra-life threshold (every 5,000 / 7,500 / 10,000 / 15,000 pts), increments lives, and sets $2(a6) = 13 for second chime (CODE 4:$5af4-$5b34)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 4:$5b2e"
+    },
+    {
+      "call_index": 110,
+      "segment": 5,
+      "offset": "$d86",
+      "soun_id": 95,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Underground River (Room 2020 Fireball 3) room-entry rushing-water ambience",
+      "resolved_condition": "Played once during Room 2020 setup right before entering main loop $33a(a5) (CODE 5:$0d82-$0d8e)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 5:$d86"
+    },
+    {
+      "call_index": 111,
+      "segment": 5,
+      "offset": "$1eac",
+      "soun_id": 29,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Room 3030 rope-pulley lever ($1d68(pc)) click when toggled A",
+      "resolved_condition": "Pulley lever activated via rock/fireball or hero pull (branch A, CODE 5:$1ea0-$1eb4)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 5:$1eac"
+    },
+    {
+      "call_index": 112,
+      "segment": 5,
+      "offset": "$1ef6",
+      "soun_id": 29,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Room 3030 rope-pulley lever ($1d68(pc)) click when toggled B",
+      "resolved_condition": "Pulley lever activated (branch B, CODE 5:$1eea-$1efe)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 5:$1ef6"
+    },
+    {
+      "call_index": 113,
+      "segment": 5,
+      "offset": "$1fc8",
+      "soun_id": 60,
+      "previous_event_in_events_json": null,
+      "resolved_event": "Entry wooden door slams shut behind Duncan ($1f6a(pc) in Rooms 1000 & 4020)",
+      "resolved_condition": "Entry-door closing animation finishes on first visit to Room 1000 (entry 0) or Room 4020 (CODE 5:$1f92-$1fd0)",
+      "confidence": "PROVEN",
+      "evidence": "CODE 5:$1fc8"
+    }
+  ]
+}

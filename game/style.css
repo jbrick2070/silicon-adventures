@@ -99,3 +99,51 @@ dialog:has(.folio){max-width:min(660px,95vw);width:660px}
 .sad-castle-note{display:flex;align-items:center;gap:12px}
 .sad-castle-note img{width:32px;height:32px;flex:none;image-rendering:pixelated;mix-blend-mode:multiply}
 @media(max-width:520px){.bestiary-specimen{grid-template-columns:1fr;justify-items:center}.specimen-info{justify-items:center;text-align:center}}
+.ways{margin:0;padding:4px 10px;font:12px/1.35 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.02em;color:var(--ink,#23201a);border-top:1px solid currentColor}
+.chronicle-list{list-style:none;margin:8px 0;padding:0;max-height:46vh;overflow:auto;border-top:1px solid var(--line)}
+.chronicle-list li{display:grid;grid-template-columns:minmax(90px,150px) 1fr;gap:10px;padding:5px 2px;border-bottom:1px solid var(--light);font-size:14px;line-height:1.35}
+.chronicle-owner{font:11px var(--mono);color:var(--muted);overflow-wrap:anywhere}
+.chronicle-text{white-space:pre-line}
+.chronicle-hidden .chronicle-text{color:var(--muted)}
+.chronicle-note{grid-column:2;font:11px var(--mono);color:var(--muted)}
+.chronicle-all{font:12px var(--mono);display:inline-flex;gap:5px;align-items:center}
+.chronicle-group{font:bold 13px var(--mono);margin:12px 0 4px}
+.deed-list{list-style:none;margin:0;padding:0}
+.deed-list li{display:grid;grid-template-columns:18px 1fr;gap:2px 8px;padding:4px 0;border-bottom:1px solid var(--light);font-size:14px}
+.deed-mark{font-size:12px;line-height:1.6}
+.deed-title{font-weight:bold}
+.deed-note{grid-column:2;color:var(--muted);font-size:13px}
+.deed-done .deed-note{color:var(--ink)}
+.cast-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px;margin-top:10px}
+#dialogBody .cast-card{margin:0;padding:4px;border:1px solid var(--line);background:none;font:11px var(--mono);display:flex;flex-direction:column;align-items:center;gap:3px;min-height:92px}
+#dialogBody .cast-card[aria-pressed=true]{background:var(--light)}
+.cast-card img{max-width:100%;max-height:62px;image-rendering:pixelated}
+.cast-detail{min-height:92px;margin-top:8px}
+.cast-line{margin:3px 0;font-size:14px}
+#castleGame{width:min(760px,97vw);max-height:97vh;padding:0;border:2px solid var(--ink);background:var(--paper);box-shadow:4px 4px 0 var(--ink)}
+#castleGame::backdrop{background:#0b0a12d0}
+.castle-stage{background:#000;display:flex;justify-content:center}
+#castleCanvas{width:100%;max-width:728px;height:auto;image-rendering:pixelated;display:block;outline-offset:-3px}
+.castle-line{min-height:1.5em;margin:0;padding:4px 10px;font:12px var(--mono);border-bottom:1px solid var(--line)}
+.castle-menu{padding:8px 12px;font-size:14px}.castle-menu p{margin:4px 0 8px}
+.castle-menu label{display:block;margin:4px 0;font-size:14px}
+.castle-buttons{display:flex;flex-wrap:wrap;gap:6px}
+.castle-buttons button,.castle-menu>button{padding:5px 10px;border:1px solid var(--ink);background:none;font:bold 12px var(--mono)}
+.castle-buttons .primary-mini{background:var(--ink);color:var(--paper)}
+.castle-controls{width:100%;margin-top:10px;border-collapse:collapse;font:12px/1.35 var(--mono)}
+.castle-controls th,.castle-controls td{padding:2px 8px 2px 0;text-align:left;vertical-align:top;border-top:1px solid var(--line,#8886)}
+.castle-controls td:last-child,.castle-controls tr:first-child th:last-child{white-space:nowrap}
+#castleCanvas{cursor:crosshair}
+#castleCanvas.castle-hd{image-rendering:auto}
+.castle-touch-note{display:none;font:12px var(--mono)}
+@media(hover:none) and (pointer:coarse){.castle-controls{display:none}.castle-touch-note{display:block}}
+.castle-touch{display:flex;justify-content:space-between;gap:10px;padding:6px 10px;touch-action:none;user-select:none}
+.castle-touch[hidden]{display:none}
+.castle-pad{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.castle-pad div{display:flex;flex-direction:column;gap:4px}
+.castle-pad button{min-width:46px;min-height:38px;border:1px solid var(--ink);background:none;font:bold 12px var(--mono);touch-action:none}
+@media(hover:hover) and (pointer:fine){.castle-touch{display:none}}
+.castle-mark{width:20px;height:20px;image-rendering:pixelated}
+.castle-volume{display:flex;align-items:center;gap:8px;font-size:13px}.castle-volume img{transform:rotate(90deg);height:30px;width:auto;image-rendering:pixelated}
+.castle-line img{width:32px;height:32px;vertical-align:middle;margin-right:6px;image-rendering:pixelated}
+.deed-icon{width:16px;height:16px;image-rendering:pixelated}

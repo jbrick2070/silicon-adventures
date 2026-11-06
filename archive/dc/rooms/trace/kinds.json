@@ -1,0 +1,146 @@
+{
+  "offset_convention": "CODE segment-body hex offsets ($xxxx), excluding the 4-byte resource header and 4-byte CODE segment header.",
+  "kind_21": {
+    "span_kind": 21,
+    "hex": "$15",
+    "hero_state": 32,
+    "dispatch_chain": [
+      "CODE 2:$07da-$07e0 (move.w #$20, $12(a6); rts)",
+      "CODE 2:$2b1a (jmp $432(a5))",
+      "CODE 0 jump table $432 -> CODE 5:$1e0a-$1efe"
+    ],
+    "room_used": {
+      "id": "3030",
+      "name": "Shield 4 (Labyrinth / Invisible Steps)",
+      "span_record": {
+        "span_byte_offset": 882,
+        "floor_y": 253,
+        "x0": 73,
+        "x1": 83,
+        "kind": 21,
+        "args": [0, 0, 0, 0, 0, 0]
+      },
+      "uniqueness": "Room 3030 is the only room in castle-data.js with a span of kind 21."
+    },
+    "meaning": "Wall switch at the bottom-left of Room 3030 that temporarily reveals the active column of invisible/vanishing floating steps leading up to the Shield pedestal.",
+    "exact_mechanics": {
+      "trigger": "In state 32 (CODE 5:$1e0a-$1efe), if switch timer -$31c(a5) == 0, Duncan is not crouching (!btst #4, $15(a6)), and Action is pressed (btst #2, $14(a6)), $1e1c-$1e26 clears Action and sets -$31c(a5) = -1; otherwise it delegates to normal ground movement via jmp $1f2(a5) -> CODE 2:$0c6c.",
+      "timeline_updates": [
+        "Update 1 (-$31c == -1 -> 1, CODE 5:$1ee4-$1efc): snaps hero X ($c(a6)) to 80 ($50), plays SOUN 29 ($1d, switch click) via $52(a5) at $1ef6, sets -$31c(a5) = 1, and draws Duncan reaching with Data B PPCT 146 ($c8(a4)) frame 0 at (72, 246).",
+        "Updates 2..5 (-$31c == 1..4 -> 2..5): draws Duncan PPCT 146 frames from byte table CODE 5:$1e80 (0, 0, 1, 2, 3, 4, 4, 3, 3, 0) while wall switch prop -$394(a5) (Data B PPCT 712) shifts to frame 1 when -$31c >= 3 ($1e52-$1e5c).",
+        "Update 6 (-$31c == 5 -> 6, CODE 5:$1ede-$1ee2): sets visibility flag -$33a(a5) = $ff (st.b -$33a(a5)), illuminating the active invisible platforms.",
+        "Updates 7..10 (-$31c == 6..9 -> 7..10): finishes Duncan's 10-update switch-pull animation; once -$31c > 10 ($1e30), Duncan regains full ground movement ($1f2(a5)) while -$31c continues counting up in room helper CODE 5:$1d68-$1e08.",
+        "Updates 11..19 (-$31c == 11..19): room helper CODE 5:$1db0-$1e08 draws Data B PPCT 700 (-$324(a5)) step-marker sprites over the active step set selected by random mask -$278(a5) while -$33a(a5) != 0, and advances -$31c(a5) by 1 each update ($1dc4).",
+        "Update 20 (-$31c == 20, CODE 5:$1ea2-$1eb2 / $1dc6-$1de2): clears -$33a(a5) = 0 (hiding the step markers again) and plays SOUN 29 ($1d) a second time as the switch resets.",
+        "Updates 21..24 (-$31c == 21..24 -> 0, CODE 5:$1de4-$1df6): animates wall switch PPCT 712 back to frame 0 and resets -$31c(a5) = 0 when -$31c reaches 24 ($18), allowing the switch to be pulled again."
+      ]
+    },
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 2:$07da-$07e0",
+      "CODE 2:$2b1a",
+      "CODE 5:$197a-$1aca",
+      "CODE 5:$1d68-$1efe"
+    ]
+  },
+  "kind_37": {
+    "span_kind": 37,
+    "hex": "$25",
+    "hero_state": 52,
+    "dispatch_chain": [
+      "CODE 2:$085a-$0860 (move.w #$34, $12(a6); bra.b $86e -> clr.w $2c(a6); rts)",
+      "CODE 2:$2b6a (jmp $2a30(pc))",
+      "CODE 2:$2a30-$2a7e"
+    ],
+    "room_used": {
+      "id": "4020",
+      "name": "Black Knight 3 (Throne Room)",
+      "span_records": [
+        {
+          "span_byte_offset": 1152,
+          "floor_row_offset": "$046e",
+          "floor_y": 135,
+          "x0": 231,
+          "x1": 245,
+          "kind": 37,
+          "installed_when": "Only the LEFT kind-36 lever has been pulled (d7 = 0 at CODE 5:$67c0)"
+        },
+        {
+          "span_byte_offset": 1188,
+          "floor_row_offset": "$0492",
+          "floor_y": 135,
+          "x0": 244,
+          "x1": 258,
+          "kind": 37,
+          "installed_when": "Only the RIGHT kind-36 lever has been pulled (d7 = 1 at CODE 5:$67cc)"
+        }
+      ],
+      "uniqueness": "Room 4020 is the only room in castle-data.js with spans of kind 37. At room load, floor row y=135 in the floor directory ($0092) points to an empty sentinel ($04b6) until at least one kind-36 lever is pulled."
+    },
+    "meaning": "Unlatched half-bridge trap span at the center chasm (y = 135) of Room 4020: when only one of the two bottom levers has been pulled, stepping onto the extended half-bridge makes Duncan teeter/wobble for 8 updates and then plunge straight through into the chasm.",
+    "exact_mechanics": {
+      "animation": "State 52 (CODE 2:$2a30-$2a7e) selects Data B PPCT 152 ($e0(a4), left-facing when $1e(a6) < 0) or Data B PPCT 153 ($e4(a4), right-facing when $1e(a6) >= 0) and steps word index $2c(a6) by +2 each update through word table CODE 2:$2a6e: [0, 1, 2, 1, 2, 1, 2, 3, -1], drawing at y - 4 without allowing player input ($2a44-$2a68).",
+      "drop_transition": "On the 9th update ($2c(a6) = 16 -> table word $ffff < 0 at $2a4c-$2a50), $2a52-$2a5a sets frame D2 = 4, advances hero's floor-directory cursor $6(a6) by +4 bytes (skipping past y = 135 so Duncan cannot re-catch the bridge), and jumps to CODE 2:$0ba8, which enters vertical freefall state 51 ($33 at $0bc2/$0be6) into the pit at the bottom of Room 4020."
+    },
+    "confidence": "PROVEN",
+    "evidence": [
+      "CODE 2:$085a-$0860",
+      "CODE 2:$0ba8-$0be6",
+      "CODE 2:$2a30-$2a7e",
+      "CODE 2:$2b6a",
+      "CODE 5:$67b6-$67e2",
+      "CODE 6:$0f48-$0f5e"
+    ]
+  },
+  "room_4020_kind_36_levers": {
+    "span_kind": 36,
+    "hex": "$24",
+    "hero_state": 49,
+    "hero_handler": "CODE 2:$0852-$0858 -> CODE 2:$2b5e -> CODE 2:$2892-$2902",
+    "lever_object_routine": "$2d2 (CODE 4:$24d4-$25bc), spawned twice in Room 4020 at CODE 5:$1bd2 (left) and CODE 5:$1bde (right)",
+    "bridge_patch_helper": "$462(a5) -> CODE 5:$67b6-$67e2",
+    "levers_in_room_4020": [
+      {
+        "side": "left",
+        "floor_y": 255,
+        "x0": 6,
+        "x1": 24,
+        "room_span_offset": "$663e (span table offset 1656)",
+        "initial_args": "a = 0 (state: unpulled), b = +$d8 (+216 bytes -> points to right lever span $6716)",
+        "lever_ppct": "Data B PPCT 712 (-$394(a5)), drawn at (2, 241)",
+        "half_bridge_ppct": "Data B PPCT 715 (-$390(a5)) frame 0, drawn at (232, 141)",
+        "hero_pull_ppct": "Data B PPCT 146 ($c8(a4)), drawn at (x0 - 8, y - 7)"
+      },
+      {
+        "side": "right",
+        "floor_y": 255,
+        "x0": 459,
+        "x1": 477,
+        "room_span_offset": "$6716 (span table offset 1872)",
+        "initial_args": "a = 0 (state: unpulled), b = -$d8 (-216 bytes -> points to left lever span $663e)",
+        "lever_ppct": "Data B PPCT 717 (-$388(a5)), drawn at (469, 241)",
+        "half_bridge_ppct": "Data B PPCT 715 (-$390(a5)) frame 1, drawn at (245, 141)",
+        "hero_pull_ppct": "Data B PPCT 155 ($ec(a4)), drawn at (x1 - 12, y - 7)"
+      }
+    ],
+    "what_they_do": [
+      "1. Pressing Action on an unpulled kind-36 span (span.a == 0) while not crouching sets span.a = 1 (CODE 2:$28aa). While span.a > 0, hero state 49 ($28ba-$28f4) animates Duncan pulling the wall lever using byte table CODE 2:$28fa [0, 0, 1, 2, 3, 4, 4, 3, 3, 0].",
+      "2. Simultaneously, the paired $2d2 lever object (CODE 4:$24fa-$25bc) sees span.a > 0, plays SOUN 29 ($1d) on tick 1 ($2542), advances span.a each update up to 4 ($2550-$2556), and on completion sets span.a = -1 (permanently pulled, $2558), switches the lever sprite to pulled frame 1 ($256c), draws its half of the center bridge at y = 141 using Data B PPCT 715 ($2574-$257c), and calls $3ea(a5) with d0 = $22 (Stbl index 17 = 0 points in all 4 Stbl resources, $2580-$2584).",
+      "3. At CODE 4:$2588-$25a8, $2d2 inspects the OTHER kind-36 lever's span.a via adda.w $8(a4), a4 ($8(a4) = ±$d8): if the other lever is NOT yet pulled (span.a >= 0), it calls $462(a5) (CODE 5:$67b6) with d7 = 0 (left only) or d7 = 1 (right only), patching the y = 135 floor-directory slot ($92(a0)) to collapsing kind-37 span row $046e or $0492. Once BOTH levers are pulled (other span.a < 0), $2598 sets d7 = 2 and calls $462(a5) ($67d4), patching $92(a0) to solid bridge row $044a ([1116, 231, 258, kind=35, a=2, b=249, c=102])."
+    ],
+    "do_they_matter_to_toppling_the_black_knight": {
+      "answer": true,
+      "why": "Strictly required. Toppling the Black Knight requires setting all 5 bits (bits 0..4, mask $1f) of the throne pillar-lever bitmask -$399(a5) / $18(a6) (checked at CODE 2:$2832 cmpi.b #$1f, -$399(a5) -> state 50 victory sequence $2904, and in Black Knight $2da at CODE 4:$2668 / $2bf0-$2c0e). Those 5 bits come from span.a of the five kind-35 pillar-lever spans in Room 4020: bit 0 (x=33..53, y=40), bit 1 (x=150..170, y=255), bit 2 (x=231..258, y=135), bit 3 (x=316..336, y=255), and bit 4 (x=439..459, y=40). Pillar lever 2 (span.a = 2, setting bit 2 = $04) exists ONLY on floor row $044a (span 1116 at y = 135), which is spliced into the room's active floor directory ONLY when $462(a5) is called with d7 = 2 — i.e., after BOTH kind-36 levers have been pulled. With 0 or 1 kind-36 levers pulled, span 1116 is unreachable in the floor table (standing at x=231..258, y=135 either misses the floor completely or hits collapsing kind-37 spans 1152/1188), so bit 2 of -$399(a5) can never be set and the Black Knight cannot be toppled.",
+      "confidence": "PROVEN",
+      "evidence": [
+        "CODE 2:$27f4-$27f8",
+        "CODE 2:$2832-$283a",
+        "CODE 4:$2588-$25a8",
+        "CODE 4:$2668-$2670",
+        "CODE 4:$2bf0-$2c26",
+        "CODE 5:$1bc2-$1be6",
+        "CODE 5:$67b6-$67e2"
+      ]
+    }
+  }
+}
