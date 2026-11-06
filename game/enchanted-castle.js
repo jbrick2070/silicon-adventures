@@ -755,7 +755,7 @@
     const $ = q => dialog.querySelector(q), canvas = $('canvas'), line = $('#castleLine');
     // A key tapped between two ticks still counts for one tick.
     const painter = new Painter(canvas), keys = new Set(), tapped = new Set(), input = {};
-    let core = null, view = 'loading', frame = 0, last = 0, spare = 0, paused = false, tick = 0, cine = null;
+    let core = null, view = 'loading', frame = 0, last = 0, spare = 0, paused = false, tick = 0, cine = null, padDir = 0, padA = false, padLock = false;
     let pointer = null, usedMouse = false, lineUntil = 0;
     const options = {classic: false, ward: false, vertical: false, captions: true, remastered: false};
     try { Object.assign(options, JSON.parse(localStorage.getItem('castle-options') || '{}')); } catch { /* Storage may be blocked. */ }
@@ -852,9 +852,35 @@
       const button = i => !!pad.buttons[i]?.pressed, x = pad.axes[0] || 0, y = pad.axes[1] || 0;
       input.left ||= x < -.4 || button(14); input.right ||= x > .4 || button(15);
       input.up ||= y < -.5 || button(12); input.down ||= y > .5 || button(13);
-      input.jump ||= button(0); input.action ||= button(1); input.fire ||= button(2) || button(7); input.duck ||= button(3);
+      // The press that chose a menu item must not also jump or go through a door.
+      if (padLock && !button(0)) padLock = false;
+      input.jump ||= button(0) && !padLock; input.action ||= button(1); input.fire ||= button(2) || button(7); input.duck ||= button(3);
       usedMouse = usedMouse && !button(2);
+      // The right stick aims. Modern play aims at a point, and Classic moves the arm along its range.
+      const aimX = pad.axes[2] || 0, aimY = pad.axes[3] || 0;
+      if (Math.hypot(aimX, aimY) > .4 && core?.hero) {
+        usedMouse = false; input.arm = null;
+        if (options.classic) input.arm = Math.round((aimX + 1) * 255.5);
+        else input.aimAt = {x: core.hero.x + 16 + aimX * 200, y: core.hero.y + 16 + aimY * 200};
+      }
       if (button(9) && !startHeld) togglePause();
+      startHeld = button(9);
+    }
+    const padNow = () => [...(navigator.getGamepads?.() || [])].find(Boolean);
+    const padPressed = () => !!padNow()?.buttons.some((b, i) => b.pressed && i !== 8);
+    // Menus, scores and the pause panel work from a controller: move with the stick or pad, choose with A.
+    function menuPad() {
+      const pad = padNow();
+      if (!pad) return;
+      const button = i => !!pad.buttons[i]?.pressed, x = pad.axes[0] || 0, y = pad.axes[1] || 0;
+      const dir = y < -.5 || x < -.5 || button(12) || button(14) ? -1 : y > .5 || x > .5 || button(13) || button(15) ? 1 : 0;
+      const list = [...dialog.querySelectorAll('[data-panel]:not([hidden]) button, [data-panel]:not([hidden]) input')].filter(b => b.offsetParent && !b.disabled);
+      const at = list.indexOf(document.activeElement);
+      if (dir && dir !== padDir && list.length) list[at < 0 ? 0 : (at + dir + list.length) % list.length].focus();
+      padDir = dir;
+      if (button(0) && !padA) { padLock = true; (at >= 0 ? list[at] : list[0])?.click(); }
+      padA = button(0);
+      if (paused && button(9) && !startHeld) togglePause();
       startHeld = button(9);
     }
     function togglePause() {
@@ -870,12 +896,13 @@
     function step() {
       tick++;
       if (cine) {
-        if (!keys.size) cine.armed = true;
+        const held = keys.size || padPressed();
+        if (!held) cine.armed = true;
         const age = (performance.now() - cine.start) / 1000, shot = (reduced.matches ? 0 : CINE_SHOT) + cine.hold;
-        if ((cine.armed && keys.size) || age > shot) { const {then} = cine; cine = null; then(); }
+        if ((cine.armed && held) || age > shot) { const {then} = cine; cine = null; then(); }
         return;
       }
-      if (view !== 'game' || paused || !core) return;
+      if (view !== 'game' || paused || !core) { menuPad(); return; }
       if (core.demo) {
         onEvents(core.tick(core.demoInput()));
         if (core.script.done || core.mode === 'over') toTitle();
