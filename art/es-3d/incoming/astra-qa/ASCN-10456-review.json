@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-10456.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Added numerous submerged stones throughout water, multiple small leafy plants on the right island beyond the single drawn spiky plant, and a stone-colored horizontal strip across the bottom edge. These additions violate add-nothing/no-borders requirements. Main guide outlines remain recognizable; no precise geometry displacement is asserted from this overlay.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af4c-59b7-7ea3-a3bc-15f701e8d7bb\\exec-03ee70c1-35da-4986-9be6-1d5ab4507a7f.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-10456-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; source resampled to guide size without crop, registration, or warping; 50 percent overlay."
+}

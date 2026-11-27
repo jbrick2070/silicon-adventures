@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-20168.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-017ea67e-f450-402a-bfee-4b9db5f7174d.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-20168.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-20168-attempt1-overlay.png",
+  "reason": "Both jars remain recognizable and main wall/floor boundaries align. The right jar left neck/shoulder contour is smoothed inward by approximately 10-12 guide pixels around y530-570 (roughly 2.5-3 native pixels), exceeding the approximate 8-guide-pixel target. Conservative rejection under the strict object-contour requirement.",
+  "measurement": "Visual fixed-canvas overlay plus annotated neck detail. Detail reference lines x950/x970 and y500/y530/y560. This is a small over-tolerance mismatch, not gross displacement."
+}

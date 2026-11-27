@@ -1,0 +1,11 @@
+{
+  "file": "ASCN-25655.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Re-evaluation finds a missed floor-seam endpoint: the guide black center stroke ends at about y1206-1207, while the candidate dark seam continues to y1255, roughly 48-49 guide pixels (12 native) farther. A white channel continues below the source black endpoint, so this could be interpreted as shading, but the explicit trace-every-line rule is not verified; conservatively reject. Ball, supports, doorway and other seams remain closely aligned; no added standalone objects or text.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-5ac1d99a-88a9-4259-b5d1-4b07c03d11f2.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-25655-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Visual assessment, not a mathematical pixel-perfect certificate.",
+  "detail": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-25655-attempt1-seam-detail.png",
+  "review_revision": "Initial PASS corrected to FAIL after parent flagged bottom center-seam endpoint. Native guide pixels inspected directly; no generated asset promoted by QA."
+}

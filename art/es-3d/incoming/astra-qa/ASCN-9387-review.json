@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-9387.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af4c-59b7-7ea3-a3bc-15f701e8d7bb\\exec-1ecc4e72-a594-401d-b0f3-561a30301ecc.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-9387.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-9387-attempt1-overlay.png",
+  "reason": "The far-right frond of the leftmost palm is shortened: guide tip approximately (393,515), render tip approximately (387,492) after full-canvas resize. About 23 guide pixels vertical displacement (5.75 native), over the 8 guide pixel tolerance. Other main tree trunks, clearing contours, and path broadly align; no distinct added standalone object is needed for this rejection.",
+  "measurement": "Visual estimate using annotated full-coordinate crop; no registration or cropping used in overlay."
+}

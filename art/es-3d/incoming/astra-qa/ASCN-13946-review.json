@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-13946.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-e02a0652-0a89-41e8-af82-f802c7c0fbd7.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-13946.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-13946-attempt1-overlay.png",
+  "reason": "Horizon and dune-region boundaries broadly align; empty sky and object count are preserved. Grass blade tips move: in the farther clump, the middle blade guide tip is around y840 but render tip is around y812, approximately 28 guide pixels (7 native) upward. Other blades also shift/lengthen, and foreground clump bases are raised. These plant-contour changes exceed tolerance.",
+  "measurement": "Visual fixed-canvas overlay plus annotated grass tip detail with y730/y756/y840 reference lines."
+}

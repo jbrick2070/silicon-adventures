@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-20177.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Path bends, two crossing vines and main palm/foreground-plant silhouettes remain recognizable. Added winding vines and leafy shoots wrap all four trunks, protruding outside their drawn silhouettes; additional background tree/leaf silhouettes occupy the blank upper region. The guide only draws the two crossing vines, not these trunk-wrapping vines. Rejected for added objects; no exact displacement measurement asserted.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-a507386d-1dad-419f-9419-09dc488fbb58.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-20177-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay."
+}

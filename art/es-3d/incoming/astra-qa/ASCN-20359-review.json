@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-20359.png",
+  "verdict": "PASS",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-8db6dcd1-d6a9-4aab-8927-80379b2bf2e7.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-20359.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-20359-attempt1-overlay.png",
+  "reason": "Tree trunk and branch layout, crown areas, horizon silhouette, both shrub masses, central dark ground object, and two light patches remain recognizable and overlay closely. No distinct standalone object is added. No material semantic edge displacement beyond approximately 8 guide pixels was observed; inspected the upper-right short branch tip in a coordinate-detail crop.",
+  "measurement": "Visual fixed-canvas full-guide overlay and branch detail. Small tip/foliage differences are around the approximate two-native-pixel tolerance; no global registration or cropping applied."
+}

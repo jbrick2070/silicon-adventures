@@ -1,0 +1,10 @@
+{
+  "file": "ASCN-30379.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Cannon, circular rear features, three bubbles, wall opening, beams and dark floor patch remain recognizable. However both upright cannon supports are extended upward. Left support guide top is y547-549, while rendered top is about y536-538 (11-13 guide pixels, about 2.75-3.25 native); the enlarged fixed-coordinate detail confirms this exceeds approximate tolerance. No added standalone props; coral remains primarily on the cannon surface.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-e0490cf0-33ac-4f41-a051-b9171074847e.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-30379-attempt1-overlay.png",
+  "detail": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-30379-attempt1-support-detail.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay plus enlarged support-top detail. Guide endpoint read from pixels; rendered endpoint visually estimated."
+}

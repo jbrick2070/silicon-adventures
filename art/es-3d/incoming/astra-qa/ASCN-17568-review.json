@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-17568.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Candidate retains the compass letters N, W, E and the stylized south glyph from the guide. This conflicts with the explicit no-text prompt; parent confirmed no implicit exception for existing compass labels. Map frame, internal icons and round compass markers broadly align in the overlay, with no independently established major displacement. Rejection is for the unresolved no-text versus preserve-original-labels conflict.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-d8ff511b-8927-42a9-848a-fca9c392664b.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-17568-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay."
+}

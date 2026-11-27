@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-27689.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "The right flat horizon moves from approximately y538 in the guide to y584 in the normalized render (about 46 guide pixels downward), changing the slope/horizon junction and exceeding the approximately 8-guide-pixel tolerance. The trail lower-left tip also extends from approximately x207 in the guide to x155 at similar y1235 in the render (roughly 50 guide pixels leftward); this is inside the actual contour rather than merely filling the blank margin. The cloud grows past its guide bounds, particularly its left wisps near x220 versus guide x240. The sun, single cloud, and trail remain recognizable, with no text, border, or residual dither, but structural alignment fails.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-4946f90c-baa2-4622-b050-21fab07c3ddb.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-27689-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Coordinates are visual estimates, not a mathematical pixel-perfect certificate."
+}

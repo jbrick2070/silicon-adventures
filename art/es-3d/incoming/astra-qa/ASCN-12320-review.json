@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-12320.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Wall/corner junctions, left doorway and both right openings align closely in fixed-canvas overlay; no clearly greater-than-about-8-guide-pixel semantic displacement found. However, many separate rubble slabs and stones have been added across the originally empty floor. Despite the disk text describing debris, the explicit add-nothing-to-the-drawing rule excludes these objects. Rejection is for additions.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-f95e9eae-7256-4cb6-aa98-3c6e3b456bbd.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-12320-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay."
+}

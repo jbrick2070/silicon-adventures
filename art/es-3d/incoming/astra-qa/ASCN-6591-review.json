@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-6591",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-cc71abd5-5361-4900-a926-0766887c8104.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-6591.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-6591-attempt1-overlay.png",
+  "reason": "The terrain-to-sky boundary is shifted downward and flattened. Original stippled land begins around y350-380 with small height changes; candidate has a straight horizon near y405. This exceeds the geometry tolerance throughout. Four angular ravine planes and cropped sun arc otherwise align closely; no standalone added objects or frame.",
+  "measurement": "Visual estimates in guide coordinates after full-canvas resize only: left horizon about y378 to y405 (~27 pixels); right-middle horizon about y353 to y405 (~52 pixels). Allowed tolerance is about 8 guide pixels."
+}

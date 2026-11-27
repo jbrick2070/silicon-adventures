@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-19497",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-47d12587-1fa4-4f1d-a147-9d35fbe07c21.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-19497.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-19497-attempt1-overlay.png",
+  "reason": "Localized borderline geometry failure on the large left canopy: the far-left lower point and far-right pointed lobe are extended downward beyond the original outer gray outline. The other palms, band seams, two ground plants, and branching path broadly align, and there are no added trees/props or visible border. Middle canopy retains its original four angular tips; detailed inspection did not find an added lobe.",
+  "measurement": "Visual estimates after full-canvas resize only to 1352x1256: large left canopy far-left tip is near y464-467 in source versus approximately y476-478 in candidate (about 10-14 pixels); far-right lobe ends near y366-369 in source versus y378-380 in candidate (about 10-14 pixels). These localized estimates exceed ~8 guide pixels. Left-canopy detail provides shared reference lines at y360,380,460,480 for parent review."
+}

@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-27504.png",
+  "verdict": "PASS",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-7829d5e4-105c-42e5-a4ae-a8f14b049cac.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-27504.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-27504-attempt1-overlay.png",
+  "reason": "All three support pairs, far black opening, ceiling/wall intersections and floor outline remain recognizable and overlay closely. No additional standalone objects. No material semantic edge displacement beyond approximately 8 guide pixels observed; shading adds depth to the existing support faces without changing layout.",
+  "measurement": "Visual fixed full-canvas 1352x1256 overlay, no crop or registration."
+}

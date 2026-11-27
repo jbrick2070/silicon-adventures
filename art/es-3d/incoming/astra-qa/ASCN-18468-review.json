@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-18468.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Angular hull, two pipes, small tower, raised dark structure and main region edges align closely in visual overlay; barnacles/moss remain on existing surfaces. However the candidate retains a full-width white outer strip across the top and long white margin strips along the left/right edges, violating the explicit no-border requirement even though inherited from guide margins. Rejection is for border strips, not an independently established geometry shift.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-5e83291a-6c2a-4abc-a9e1-0895f37e0d4a.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-18468-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay."
+}

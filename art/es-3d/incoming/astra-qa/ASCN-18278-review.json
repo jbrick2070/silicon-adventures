@@ -1,0 +1,10 @@
+{
+  "file": "ASCN-18278.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Outer stairwell and side-wall contours align closely, but internal staircase geometry changes. Near the top, the guide tread at about y90-112 becomes a separate dark riser plus an additional narrow tread, increasing the visible step sequence. Several lower riser front edges are also raised: guide y272 is around rendered y261, and guide y384 is around rendered y372 (roughly 11-12 guide pixels, 2.75-3 native). No new standalone props; original bottom line is present in guide. Measurements are visual estimates from fixed-canvas overlay and annotated top-stair comparison.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-b4597ab8-c1f8-4afc-bbbd-bba5baf38cb6.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-18278-attempt1-overlay.png",
+  "detail": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-18278-attempt1-topstairs-detail.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay."
+}

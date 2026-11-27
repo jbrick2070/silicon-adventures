@@ -1,0 +1,10 @@
+{
+  "file": "ASCN-3521.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "The road contours, cliff facets, two-peak distant silhouette, and lower horizontal distant edge appear closely aligned in the fixed-canvas overlay. However, the small cloud patch expands beyond the source outline: the guide rightmost cloud dots end around x1173, while clearly visible rendered cloud wisps extend to roughly x1210-1220 (about 35-45 guide pixels rightward). The left cloud edge also approaches the cliff around x1008 instead of the guide start near x1023. These are changes to the cloud object silhouette beyond the approximately 8-guide-pixel tolerance, not merely texture inside it. No additional props, text, or white frame are visible.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-6793ba7b-e5b5-4912-bb02-091981d133da.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-3521-attempt1-overlay.png",
+  "detail": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-3521-attempt1-cloud-detail.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Coordinates are visual estimates, not a mathematical pixel-perfect certificate."
+}

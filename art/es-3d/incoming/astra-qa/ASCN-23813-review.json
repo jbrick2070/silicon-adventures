@@ -1,0 +1,10 @@
+{
+  "file": "ASCN-23813.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "The foreground path, far plateau notches, canyon facets, and small far opening largely retain their guide positions. However, the upper-left tall formation gains a distinct cap/top face and a new rear-left vertical boundary. The guide top-left vertex is approximately (70,18), whereas the added rendered cap reaches left to about (41,5), roughly 29 guide pixels left and 13 pixels up, with a new edge descending from that cap into a previously continuous light facet. This is new structural geometry outside the traced face, beyond the approximately 8-guide-pixel tolerance, rather than surface texture or permitted bottom-margin fill. No text or white border strip is present.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-aab9ac6a-8461-4c04-954e-b746dae3e14b.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-23813-attempt1-overlay.png",
+  "detail": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-23813-attempt1-upperleft-detail.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Coordinates are visual estimates, not a mathematical pixel-perfect certificate."
+}

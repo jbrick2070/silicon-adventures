@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-12523.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "The sun remains an explicit black dotted/dashed outline at approximately x260-583, y0-188, directly violating the prompt ban on dots instead of becoming a solid realistically rendered object. Its circumference, the cactus with two arms, horizon near y439, and two large branching shaded patches otherwise remain closely aligned; no clear large contour displacement is needed to establish this failure. A new cast-shadow connector from the cactus base toward the lower-right shaded patch is also visible. The ground crack network is surface texture consistent with the disk description of dried mud, so it is not independently counted as added props.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-9a2970d8-8ba4-41ea-84fe-4fb25324b4c0.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-12523-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Coordinates are visual estimates, not a mathematical pixel-perfect certificate."
+}

@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-27318.png",
+  "verdict": "PASS",
+  "attempts": 1,
+  "reason": "The fixed-canvas overlay retains the stair edge count and positions, far flat landing, dark doorway, side walls, ceiling junction, and the original gaps in the upper-left diagonal seam. The far-wall corners remain approximately (640,510) and (803,510), and the landing/stair junction remains around y890; visible deviations are only a few guide pixels, with no clear structural displacement exceeding the approximately 8-guide-pixel tolerance. No added props, text, people, or white border strips are visible. The thin bottom blank area is filled with the adjacent stair surface.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-4a142383-b298-43b0-a011-82d5f0863a9f.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-27318-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Coordinates are visual estimates, not a mathematical pixel-perfect certificate."
+}

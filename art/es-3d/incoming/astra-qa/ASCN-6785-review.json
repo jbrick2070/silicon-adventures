@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-6785.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Lower water-region shoreline is materially moved: its upper-left junction begins around guide (830,694), but the candidate starts near (697,714), about 133 guide pixels left and 20 down (over 33 native pixels horizontally). The resulting shallow-water wedge cuts across previously dry land. Both grass clumps remain but gain extra blades, and cloud outlines are also softened/expanded. Sun and distant horizon align approximately. Coordinates are visual estimates from fixed-canvas overlay.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-c89296f4-0383-42f4-80af-6958b8341a0c.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-6785-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay."
+}

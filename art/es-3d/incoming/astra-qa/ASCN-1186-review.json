@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-1186.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-78c7fe80-2476-4f56-9d25-df065cac2f4d.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-1186.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-1186-attempt1-overlay.png",
+  "reason": "Bucket footprint, handle, both rocks, cave planes and pool perimeter broadly align. The rope upper endpoint is extended from guide y30-35 to the top canvas edge, about 30-35 guide pixels (7.5-8.75 native) upward. Drawn ripple outlines are also widened leftward, with outer ripple left edge around x508 versus guide roughly x545. These required object/line coordinates exceed tolerance.",
+  "measurement": "Visual fixed full-canvas overlay; rope endpoint and ripple extents compared without registration. Bottom margin fill does not alter accepted scene coordinates."
+}

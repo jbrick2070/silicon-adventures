@@ -1,0 +1,12 @@
+{
+  "file": "ASCN-5878.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Added lily pads and submerged rocks; rear waterline shifted ~30-35 guide pixels (7.5-8.75 native). Room omitted.",
+  "sources": [
+    "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af4c-59b7-7ea3-a3bc-15f701e8d7bb\\exec-984dce56-3c5c-40c0-b4e8-f0da022119f0.png"
+  ],
+  "overlays": [
+    "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-5878-attempt1-overlay.png"
+  ]
+}

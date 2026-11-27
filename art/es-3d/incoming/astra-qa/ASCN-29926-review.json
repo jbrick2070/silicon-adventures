@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-29926.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Road bends, cliff faces, volcano/ridge skyline and sun align closely. Cloud silhouettes do not: the left cloud extends to roughly x350 where its guide dotted silhouette begins near x383-385, a 33-35 guide-pixel horizontal expansion (about 8-9 native); the right cloud also expands left beyond its guide extent. Clouds remain recognizable but exceed the approximate 8-guide-pixel tolerance. Coordinates are visual estimates from fixed-canvas overlay.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-a2c95487-271b-4eac-96d0-453dd66c266c.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-29926-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay."
+}

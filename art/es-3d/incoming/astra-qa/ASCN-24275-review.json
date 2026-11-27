@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-24275.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-eaa24eb5-b988-4ca7-a939-4532f6cdb8e3.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-24275.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-24275-attempt1-overlay.png",
+  "reason": "Curved upper bands and door/slats broadly align, but wall/floor intersection shifts downward across the back wall. At central dark panel, guide base is around y704 while rendered base is around y734, approximately 30 guide pixels (7.5 native) lower. This changes the room floor boundary well beyond tolerance.",
+  "measurement": "Visual fixed-canvas overlay plus annotated floor detail with y704/y734 reference lines."
+}

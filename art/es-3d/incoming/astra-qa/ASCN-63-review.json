@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-63.png",
+  "verdict": "PASS",
+  "attempts": 1,
+  "reason": "Visual fixed-canvas overlay passes: volcano crater and major slope divisions, rear cliff and all foreground/midground rock silhouettes track the guide within the approximate 8-guide-pixel tolerance. All drawn objects remain recognizable; no added smoke, lava, plants or other standalone objects. Texture/light stay within existing surfaces.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-c797e4ae-bb91-4f6a-8920-538cd6394a34.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-63-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Visual assessment, not a mathematical pixel-perfect certificate."
+}

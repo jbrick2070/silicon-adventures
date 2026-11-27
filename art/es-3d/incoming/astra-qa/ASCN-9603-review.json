@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-9603.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af4c-59b7-7ea3-a3bc-15f701e8d7bb\\exec-ea748d51-6260-4600-abe4-03eff309e838.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-9603.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-9603-attempt1-overlay.png",
+  "reason": "Added multiple separate background tree trunks and foliage in uniformly shaded regions between the two existing distant trunks; added a continuous black frame at the left, right, and bottom edges. The original objects and main silhouettes broadly align, but added objects and border violate the explicit constraints.",
+  "measurement": "Visual fixed-canvas overlay inspection. No material semantic displacement beyond tolerance identified; failure is additions/border."
+}

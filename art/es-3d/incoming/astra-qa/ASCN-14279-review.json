@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-14279.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af4c-59b7-7ea3-a3bc-15f701e8d7bb\\exec-8a5f0905-bd29-4002-b493-0df22893a4dc.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-14279.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-14279-attempt1-overlay.png",
+  "reason": "Path outer left edge near the upper bend shifts left: at guide y730, original edge is approximately x505 while render edge is approximately x485, around 20 guide pixels (5 native) displacement. The large tree, crown areas, mountain band, and foreground plant remain recognizable and mostly align, but path geometry exceeds tolerance.",
+  "measurement": "Visual estimate using full-canvas overlay and annotated path crop. Crop reference lines are x480, x500 and y700, y730, y780."
+}
