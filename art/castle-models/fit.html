@@ -1,0 +1,22 @@
+<!doctype html><meta charset=utf-8><body style="margin:0">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<canvas id=c></canvas>
+<script type=module>
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const c = document.getElementById('c');
+const r = new THREE.WebGLRenderer({canvas: c, antialias: true, alpha: true, preserveDrawingBuffer: true, premultipliedAlpha: false});
+r.setClearColor(0, 0); r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.35;
+const scene = new THREE.Scene();
+scene.add(new THREE.HemisphereLight(0xdfe6ff, 0x4a4036, 1.5));
+const key = new THREE.DirectionalLight(0xffe2b8, 3.6); key.position.set(-2, 3, 3); scene.add(key);
+const fill = new THREE.DirectionalLight(0xa0c0ff, .8); fill.position.set(3, 0, 2); scene.add(fill);
+window.frame = (url, w, h) => new Promise((ok, no) => new GLTFLoader().load(url, g => {
+  scene.add(g.scene); r.setSize(w, h, false);
+  const b = new THREE.Box3().setFromObject(g.scene), s = b.getSize(new THREE.Vector3()), m = b.getCenter(new THREE.Vector3());
+  const hh = s.y / 2 * 1.002, hw = hh * w / h, cam = new THREE.OrthographicCamera(-hw, hw, hh, -hh, .01, 20);
+  cam.position.set(m.x, m.y, m.z + 5); cam.lookAt(m); r.render(scene, cam);
+  const data = c.toDataURL('image/png'); scene.remove(g.scene); ok(data);
+}, undefined, no));
+window.ready = true;
+</script>
