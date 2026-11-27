@@ -174,8 +174,6 @@
     if($('layerBtn').disabled)return;
     const on=typeof force==='boolean'?force:!view.refreshed;
     if(on!==view.refreshed)view.setRefreshed(on);
-    const style=view.colour?'colour':'ink';
-    try{localStorage.setItem('scepters-picture-mode',(on?'':'original-')+style);}catch{}
     syncLayerUi();drawChart();dirty=true;refreshHover=true;
     if(playing&&state&&scene)controls();
     if(playing){message(on?enhancedName():'Original plate');$('world').focus({preventScroll:true});}
@@ -1351,10 +1349,11 @@
     initAudio();
     window.SiliconChronicle?.load();
     let enterKnock=false;
-    let pictureMode='colour';
-    try{pictureMode=localStorage.getItem('scepters-picture-mode')||pictureMode;}catch{}
-    view.setColour(pictureMode!=='ink'&&pictureMode!=='original-ink');
-    view.setRefreshed(pictureMode!=='original-ink'&&pictureMode!=='original-colour');
+    // Every visit opens in Lit colour so nobody misses it. Refreshed 1-bit and the original
+    // plate are for comparing during a visit, so neither is remembered.
+    try{localStorage.removeItem('scepters-picture-mode');}catch{}
+    view.setColour(true);
+    view.setRefreshed(true);
     try{captions=localStorage.getItem('scepters-captions')!=='off';checkpointsOn=localStorage.getItem('scepters-checkpoints')!=='off';}catch{}
     fitViewport();
     scene=designs.get('ASCN/7990');

@@ -759,6 +759,8 @@
     let pointer = null, usedMouse = false, lineUntil = 0;
     const options = {classic: false, ward: false, vertical: false, captions: true, remastered: true};
     try { Object.assign(options, JSON.parse(localStorage.getItem('castle-options') || '{}')); } catch { /* Storage may be blocked. */ }
+    // Every visit opens in the Remastered look so nobody misses it. Turning it off in Options lasts for this visit.
+    options.remastered = true;
     for (const box of dialog.querySelectorAll('[data-opt]')) {
       box.checked = !!options[box.dataset.opt];
       box.addEventListener('change', () => {
@@ -775,7 +777,10 @@
     const panel = name => { for (const p of dialog.querySelectorAll('[data-panel]')) p.hidden = p.dataset.panel !== name; };
     function applyLook() {
       const on = !!options.remastered;
-      return (on ? loadHD() : Promise.resolve()).then(() => { painter.setScale(on ? HD_SCALE : 1); canvas.classList.toggle('castle-hd', on); });
+      return (on ? loadHD() : Promise.resolve()).then(() => {
+        if (!!options.remastered !== on) return; // the box was changed again while the art loaded
+        painter.setScale(on ? HD_SCALE : 1); canvas.classList.toggle('castle-hd', on);
+      });
     }
     function showControls() { for (const table of dialog.querySelectorAll('[data-controls]')) table.innerHTML = controlsTable(options.classic); }
     showControls();

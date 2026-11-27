@@ -174,12 +174,17 @@ def smoke(page, base):
 
     # The Enchanted Castle opens from a game in progress and spends no turn.
     frozen = api("state")
-    # New players get the Remastered look. The reel coverage below runs in the classic look, where every frame is cheap.
+    # Every visit opens in the Remastered look, even with it saved as off.
     page.evaluate("localStorage.setItem('castle-options', JSON.stringify({remastered: false}))")
     page.locator("#bookmarks").click()
     page.get_by_role("button", name="The Enchanted Castle", exact=True).click()
     page.wait_for_selector("#castleGame[open]")
     page.wait_for_function("EnchantedCastle.debug.view()==='title'", timeout=60000)
+    assert page.evaluate("document.querySelector('#castleGame [data-opt=remastered]').checked"), "Castle did not open in the Remastered look"
+    # The reel coverage below runs in the classic look, where every frame is cheap.
+    page.evaluate("""() => { const box = document.querySelector('#castleGame [data-opt=remastered]');
+      box.checked = false; box.dispatchEvent(new Event('change')); }""")
+    page.wait_for_function("!document.getElementById('castleCanvas').classList.contains('castle-hd') && EnchantedCastle.debug.painter.scale === 1", timeout=15000)
     page.get_by_role("button", name="Beginner").click()
     page.locator("#castleCanvas").focus()
     page.keyboard.press("d")
