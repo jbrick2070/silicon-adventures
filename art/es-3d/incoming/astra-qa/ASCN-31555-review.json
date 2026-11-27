@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-31555.png",
+  "verdict": "PASS",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-b9fb8674-5d31-4c35-b5d2-21a5c54339bd.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-31555.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-31555-attempt1-overlay.png",
+  "reason": "Left branching plant, three right-side blades, foreground rock, right wall, seabed horizon, and both bubbles remain recognizable and closely overlay their guide outlines. No new standalone objects observed. No material semantic-boundary shift beyond approximately 8 guide pixels observed; minor stem/blade edge smoothing remains around tolerance.",
+  "measurement": "Visual fixed full-canvas 1352x1256 overlay. Seabed caustic/material texture changes were not treated as new objects or geometric boundaries."
+}

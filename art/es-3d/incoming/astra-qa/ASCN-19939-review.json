@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-19939.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-b966982b-b368-466a-9511-5015e7121430.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-19939.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-19939-attempt1-overlay.png",
+  "reason": "Main path and cliff silhouettes largely align, but the lower-right background region is removed: guide has a distinct dotted plane with a horizontal upper boundary around y768, visible to the right of the sloping cliff, while render leaves that entire region the same blank white as above. The dark opening upper-left edge also moves roughly 10-12 guide pixels upward, a smaller over-tolerance change.",
+  "measurement": "Visual fixed full-canvas overlay; annotated opening detail uses y260/y275 reference lines. Missing lower-right plane is the primary rejection."
+}

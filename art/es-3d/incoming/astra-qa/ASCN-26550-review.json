@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-26550",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-b6c3a995-3ea7-4491-8152-b79db4ea68a7.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-26550.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-26550-attempt1-overlay.png",
+  "reason": "FAIL no-border rule: prominent black rectangular frame segments remain along top, left, and bottom, although adjacent blank margin was filled. The bottom horizontal frame crosses nearly the entire canvas about 48 pixels above the image edge. Cactus, central faceted flat-top rock, diagonal wall planes, and foreground contour otherwise align closely, with no standalone added props.",
+  "measurement": "Full-canvas resize only to 1352x1256. Frame follows approximately y1207 at bottom and x39-46 at left, with a top horizontal near y9. Major semantic object contours visually stay within approximately 8 guide pixels, excluding fine cactus needles/material relief."
+}

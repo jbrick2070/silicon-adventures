@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-20431.png",
+  "verdict": "PASS",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-609a405d-8900-4f2e-b90a-8ee5d5eb4142.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-20431.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-20431-attempt1-overlay.png",
+  "reason": "Hatch rim and inner wall boundaries, four rail posts/rails, deck planks, loose timber and two bubbles remain recognizable and closely align. No added standalone objects or material displacement beyond approximately 8 guide pixels observed. No broad blank outer border strip; scene materials reach canvas edges.",
+  "measurement": "Visual fixed full-canvas overlay plus annotated lower-left hatch detail with x255/x285 and y1050/y1080 reference lines."
+}

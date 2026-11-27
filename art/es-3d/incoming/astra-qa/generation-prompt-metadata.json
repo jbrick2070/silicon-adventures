@@ -1,0 +1,361 @@
+{
+  "base_prompt": "Repaint this exact scene as a rich, truly lit 3D render. Trace every line of the input image exactly, like an inked drawing being coloured in: the output must overlay the input with no shift. Keep the camera, horizon and perspective, and keep every wall edge, doorway and landmark exactly where it is. Do not add, remove or move anything. No text, people, frames or borders. No dither patterns or dots. Solid realistic materials, muted dark yellow key light from the upper left, cool slate fill, no orange glow.",
+  "reinforcement": "Disk text is scene context only, never lettering. Paint only the objects and silhouettes actually drawn; flat or halftone regions receive material and light only, with no new plants, stones, structures, distant silhouettes, or edge strips. Preserve all full-canvas boundaries.",
+  "reinforcement_starts_row": 12,
+  "reinforcement_starts_file": "ASCN-20177.png",
+  "rows": [
+    {
+      "file": "ASCN-5112.png",
+      "place": "rapids, jungle",
+      "disk": "White water churns to either side, the stream roars southward."
+    },
+    {
+      "file": "ASCN-5878.png",
+      "place": "mellow pond, jungle",
+      "disk": "Tall cliffs rise to the north, there is a rocky wall south."
+    },
+    {
+      "file": "ASCN-9387.png",
+      "place": "jungle clearing, jungle",
+      "disk": "The jungle surrounds a small clearing."
+    },
+    {
+      "file": "ASCN-9603.png",
+      "place": "port, jungle",
+      "disk": "Redwoods thrust to the sky."
+    },
+    {
+      "file": "ASCN-10456.png",
+      "place": "quiet water, jungle",
+      "disk": "The stream continues north-south."
+    },
+    {
+      "file": "ASCN-12217.png",
+      "place": "riverside, jungle",
+      "disk": "A peaceful stream runs by to the east."
+    },
+    {
+      "file": "ASCN-12955.png",
+      "place": "whirlpool, jungle",
+      "disk": "The water slows considerably."
+    },
+    {
+      "file": "ASCN-14279.png",
+      "place": "beaten path, jungle",
+      "disk": "You are on a well worn path that runs from east to west."
+    },
+    {
+      "file": "ASCN-14979.png",
+      "place": "shallows, jungle",
+      "disk": "The water runs from north to south between narrow river banks."
+    },
+    {
+      "file": "ASCN-17473.png",
+      "place": "pot, jungle",
+      "disk": "There is a large pot and some wood here."
+    },
+    {
+      "file": "ASCN-20168.png",
+      "place": "magic hut, jungle",
+      "disk": "You are inside a grass hut."
+    },
+    {
+      "file": "ASCN-20177.png",
+      "place": "vines, jungle",
+      "disk": "Larger trees fill the center of the jungle."
+    },
+    {
+      "file": "ASCN-20359.png",
+      "place": "forest clearing, jungle",
+      "disk": "You arrive at a peaceful forest clearing."
+    },
+    {
+      "file": "ASCN-14895.png",
+      "place": "outcrop, desert",
+      "disk": "A stone outcrop stands in the fearsome heat."
+    },
+    {
+      "file": "ASCN-12086.png",
+      "place": "ante chamber, ruins",
+      "disk": "There is a large entrance west and smaller tunnels running north and south."
+    },
+    {
+      "file": "ASCN-12320.png",
+      "place": "annex, ruins",
+      "disk": "Scattered debris fills the empty annex."
+    },
+    {
+      "file": "ASCN-26748.png",
+      "place": "camp, ruins",
+      "disk": "The ramparts are to the west and a path climbs east."
+    },
+    {
+      "file": "ASCN-23449.png",
+      "place": "seaweed, sea",
+      "disk": "Large underwater plants wave in the gentle ocean current."
+    },
+    {
+      "file": "ASCN-31555.png",
+      "place": "clear water, sea",
+      "disk": "Green light plays on the sea floor."
+    },
+    {
+      "file": "ASCN-2818.png",
+      "place": "basin, temple",
+      "disk": "A small basin punctuates the end of the hallway."
+    },
+    {
+      "file": "ASCN-16874.png",
+      "place": "temple vista, temple",
+      "disk": "To the south lies a huge Mayan Temple."
+    },
+    {
+      "file": "ASCN-18278.png",
+      "place": "temple stairs, temple",
+      "disk": "Stairs climb to a small room at the summit."
+    },
+    {
+      "file": "ASCN-21162.png",
+      "place": "slide floor, temple",
+      "disk": "There is a door to the east."
+    },
+    {
+      "file": "ASCN-25655.png",
+      "place": "ball, temple",
+      "disk": "There are entrances to the north and south."
+    },
+    {
+      "file": "ASCN-27504.png",
+      "place": "passage, temple",
+      "disk": "Stairs lead up to the north."
+    },
+    {
+      "file": "ASCN-63.png",
+      "place": "volcano vista, volcanic",
+      "disk": "A volcano smolders in the south."
+    },
+    {
+      "file": "ASCN-19939.png",
+      "place": "cliff path, volcanic",
+      "disk": "To the north is an upward winding path."
+    },
+    {
+      "file": "ASCN-29926.png",
+      "place": "south road, volcanic",
+      "disk": "The gravel road winds down to the south, the castle is northward."
+    },
+    {
+      "file": "ASCN-2464.png",
+      "place": "spiral stairs, castle",
+      "disk": "Steps lead up to the top of the battlements."
+    },
+    {
+      "file": "ASCN-17568.png",
+      "place": "map room, castle",
+      "disk": "An ornate map is painted on the west wall of this small room."
+    },
+    {
+      "file": "ASCN-24275.png",
+      "place": "arena, castle",
+      "disk": "There is no exit except a door on the west wall."
+    },
+    {
+      "file": "ASCN-15776.png",
+      "place": "tidewater, coast",
+      "disk": "The ocean floor slants down to the south."
+    },
+    {
+      "file": "ASCN-1725.png",
+      "place": "back room, crypt",
+      "disk": "This room contains a rough straw bed."
+    },
+    {
+      "file": "ASCN-10525.png",
+      "place": "cave painting, crypt",
+      "disk": "Charcoal paintings line the north wall of the cave."
+    },
+    {
+      "file": "ASCN-16121.png",
+      "place": "lonely hall, crypt",
+      "disk": "The hallway runs east-west."
+    },
+    {
+      "file": "ASCN-17730.png",
+      "place": "dead end, crypt",
+      "disk": "This alcove looks like the lair of a large insect."
+    },
+    {
+      "file": "ASCN-20431.png",
+      "place": "deck, wreck",
+      "disk": "The ship extends to the north and south."
+    },
+    {
+      "file": "ASCN-30379.png",
+      "place": "cannon, wreck",
+      "disk": "A rusty cannon encrusted with coral points to the west."
+    },
+    {
+      "file": "ASCN-7395.png",
+      "place": "bridge room, castle",
+      "disk": "There is a courtyard to the west and a moat to the east."
+    },
+    {
+      "file": "ASCN-6785.png",
+      "place": "seaside, coast",
+      "disk": "You are walking along an east-west beach."
+    },
+    {
+      "file": "ASCN-13946.png",
+      "place": "dunes, coast",
+      "disk": "A shack is visible to the west, a salty breeze blows from the quiet sea to the south."
+    },
+    {
+      "file": "ASCN-18468.png",
+      "place": "submarine, coast",
+      "disk": "An old submarine covered with barnacles and moss floats to the west."
+    },
+    {
+      "file": "ASCN-1186.png",
+      "place": "cavern pool, crypt",
+      "disk": "A shaft of light from above breaks the darkness."
+    },
+    {
+      "file": "ASCN-4874.png",
+      "place": "landing, crypt",
+      "disk": "Dark stone steps lead up to the north."
+    },
+    {
+      "file": "ASCN-12321.png",
+      "place": "pedestal, crypt",
+      "disk": "There is a boiling pool north and a door east."
+    },
+    {
+      "file": "ASCN-27318.png",
+      "place": "stair entrance, crypt",
+      "disk": "Dark stairs descend into blackness."
+    },
+    {
+      "file": "ASCN-6591.png",
+      "place": "ravine, desert",
+      "disk": "An empty ravine provides no respite from the boiling sun."
+    },
+    {
+      "file": "ASCN-12523.png",
+      "place": "mud, desert",
+      "disk": "The ground is laced with cracks from long dried mud."
+    },
+    {
+      "file": "ASCN-26550.png",
+      "place": "cactus, desert",
+      "disk": "A lone cactus stands watch."
+    },
+    {
+      "file": "ASCN-27689.png",
+      "place": "trail, desert",
+      "disk": "A lonely trail runs north-south."
+    },
+    {
+      "file": "ASCN-29592.png",
+      "place": "sphinx vista, desert",
+      "disk": "A huge and ancient sphinx appears to be cut from the side of the cliff."
+    },
+    {
+      "file": "ASCN-3521.png",
+      "place": "cliff road, highland",
+      "disk": "The trail climbs to the south and falls to the north and east."
+    },
+    {
+      "file": "ASCN-9440.png",
+      "place": "narrow pass, highland",
+      "disk": "A narrow pass runs north-south."
+    },
+    {
+      "file": "ASCN-23813.png",
+      "place": "chasm view, highland",
+      "disk": "The path continues east to a deep canyon."
+    },
+    {
+      "file": "ASCN-19497.png",
+      "place": "tree path, jungle",
+      "disk": "You are walking along a north-south path."
+    },
+    {
+      "file": "ASCN-27293.png",
+      "place": "corner, jungle",
+      "disk": "You are surrounded by a misty jungle."
+    },
+    {
+      "file": "ASCN-1776.png",
+      "place": "meager room, machinery",
+      "disk": "The Queen's Chamber is north, there is a room west."
+    },
+    {
+      "file": "ASCN-10919.png",
+      "place": "post, ruins",
+      "disk": "The camp lies west and a road climbs north."
+    },
+    {
+      "file": "ASCN-290.png",
+      "place": "sea room, sea",
+      "disk": "The tunnel continues east and west."
+    },
+    {
+      "file": "ASCN-6048.png",
+      "place": "crawl tunnel, sea",
+      "disk": "A low tunnel runs east-west."
+    },
+    {
+      "file": "ASCN-3122.png",
+      "place": "dogleg, temple",
+      "disk": "There is a door to the east."
+    },
+    {
+      "file": "ASCN-4684.png",
+      "place": "boiling pool, volcanic",
+      "disk": "You stand on the north side of a boiling pool."
+    }
+  ],
+  "per_room_guidance": {
+    "ASCN-23449.png": "The only sea plants are the two stems with their exact drawn branches. Preserve the two small bubbles drawn at upper left and every drawn rock silhouette. Do not add fish, coral, additional bubbles, seaweed, seabed stones, or other objects in empty regions.",
+    "ASCN-31555.png": "Preserve the left branching sea plant, the three thin blades at bottom right, the single foreground rock, the right wall, and exactly the two drawn bubbles. Preserve every branch and blade tip coordinate and the flat top of the foreground rock. Empty water and seabed remain empty: no additional plants, fish, stones, shells or bubbles.",
+    "ASCN-2818.png": "Preserve the solid black symbolic wall shape exactly as drawn, including its solid oval top with no hole, flared horizontal arms, and tapered lower stem. It is an existing wall motif, not text or a person. Keep all three basin ellipses and tapered base exactly on the guide. The remaining floor is empty.",
+    "ASCN-16874.png": "Preserve the temple tiers, summit doorway, and every stair tread at their exact drawn positions. Exactly two foreground palm trees are drawn; keep their trunk silhouettes and polygonal frond boundaries unchanged. The foreground courtyard is empty. Do not add plants, stones, carvings, statues, railings, extra stairs or temple structures.",
+    "ASCN-18278.png": "The view contains only the drawn stair treads/risers, their flanking wall planes, and an empty foreground floor. Preserve the exact number, height, width and endpoints of every stair. The summit room is outside this crop: do not add a visible room, doorway, railing, ornament, object, or extra step.",
+    "ASCN-21162.png": "Preserve every wall-panel seam, the central opening's irregular polygonal contours and its inner threshold, and every individual floor spike exactly at its drawn tip and base coordinates. Keep the same spike count and the same cropped spikes along the bottom. Do not regularize, reorder, move, add or remove spikes. No ornament or debris.",
+    "ASCN-25655.png": "The single large ball stays at exactly the guide's size, center and silhouette, suspended between the two drawn sloping supports. Preserve each support edge and every wall/floor panel seam, including the central floor seam and small distant rectangular opening. No extra balls, supports, carvings, stairs, objects or debris.",
+    "ASCN-27504.png": "The visible hallway floor is empty and flat exactly as drawn. The mentioned stairs are not visible in the guide; do not add stairs. Keep the three pairs of vertical wall supports, all adjoining wall/ceiling/floor edges, and the dark far opening at their exact coordinates. No debris, torches, doors, decorations or extra supports.",
+    "ASCN-63.png": "Preserve the volcano's black crater opening, each faceted slope edge, all foreground rock silhouettes, and the right mountain exactly. The ground between those shapes is empty. Do not add smoke plumes, lava, fire, glowing cracks, plants, extra rocks or distant mountains; smoldering is scene context only, not a new drawn object.",
+    "ASCN-19939.png": "Preserve the single winding path surface and both its boundaries exactly, including the inner angular bend. Preserve every tall cliff face edge and shaded gap. The path is empty; no rails, steps, stones, plants or objects. Do not extend any cliff silhouette into the blank right background.",
+    "ASCN-29926.png": "Preserve the exact winding road and layered cliff edges, distant volcano/hill profile, the two drawn cloud patches, and the round sun at its current position and diameter. The castle is outside this view; do not add a castle. Road gravel is a surface material only, no standalone boulders or vegetation. No smoke plume, lava or additional distant silhouettes.",
+    "ASCN-2464.png": "Preserve every visible stair tread and riser as drawn, including their irregular spacing and changing widths; do not add or subdivide steps. Keep the battlement notches, upper landing, left tower edge, stair sidewall and all seam endpoints exactly. No railings, banners, torches, doors, or other additions. Empty floor and sky stay empty.",
+    "ASCN-17568.png": "Preserve the existing rectangular painted map, its internal region boundaries and every pictorial icon at exactly its existing coordinates. Keep the four circular compass markers at their exact positions. No new map features, decorative frame, surrounding objects or additional labels.",
+    "ASCN-24275.png": "Preserve all curved overhead bands at their precise heights and curvature, each wall panel/column edge, and the left slatted door with exactly the drawn slat positions. The arena floor is empty. No furnishings, spectators, torches, railings, handles, additional doorways, weapons or debris.",
+    "ASCN-15776.png": "Keep the left single rock, the right U-shaped two-bladed sea plant, exactly two bubbles and the seabed's existing boundary/contour regions. Preserve the plant silhouette and its empty inner gap exactly. The remaining seabed and water contain no objects: do not add seaweed, coral, fish, shells, pebbles or bubbles.",
+    "ASCN-1725.png": "Keep every angular cave opening and wall facet exactly as drawn. Preserve the single raised straw bed/platform including its thin top plane, front rim, two visible legs and their exact endpoints. Straw is confined inside the drawn bed silhouette. No blanket, pillow, extra legs, bedding mound, loose straw on the empty floor, stones, torches, or added objects.",
+    "ASCN-10525.png": "The five existing black pictographic wall marks are flat charcoal paintings, not living subjects. Trace their exact shapes, sizes and coordinates without elaborating them: upper winged mark, left flame-like mark, lower-left animal-like mark, central bow-and-arrow-like mark, and right stick-shaped mark. Preserve all cave wall planes and the empty floor. Do not add realistic animals, people, flames, smoke, text or additional paintings.",
+    "ASCN-16121.png": "This is an empty angular stone hallway. Preserve every polygonal wall boundary, ceiling boundary, floor boundary and distant dark opening exactly without smoothing away corners. Only surface material and light change. No loose stones, debris, stalactites, stairs, doors, wall markings, torches or additional objects.",
+    "ASCN-17730.png": "This is an empty angular cave alcove with flat faceted walls, an empty floor, and a dark central recess. Trace the boundaries of every wall plane, central recess and floor exactly. The disk text describes atmosphere only; do not add any insect, nest, webs, bones, debris, stones or objects. Preserve existing scene regions to all canvas edges with no additional margin.",
+    "ASCN-20431.png": "Preserve the rectangular open deck hatch, its rim and interior edges, four railing posts and beams, every drawn deck plank boundary, the single loose timber at upper right, and the two bubbles exactly. Empty underwater background contains no new coral, plants, fish, debris or silhouettes. Keep the exact counts and endpoints of rails and plank lines. Extend the adjacent surface over any thin blank outer canvas strip without moving or cropping any actual structural line; no frame.",
+    "ASCN-30379.png": "Preserve this exact end-on view of a cannon on its two straight supports, with its concentric circular rear outlines and tapered barrel pointing through the wall opening. Preserve the two tall side beams, wall plank boundaries, three bubbles and exact dark trapezoidal patch beneath the cannon. Do not add wheels, ropes, loose debris, or branching coral: coral encrustation may only be surface material within existing silhouettes. Floor remains empty.",
+    "ASCN-7395.png": "This is an empty castle room. Preserve the small beveled narrow window on the rear wall and every bevel, the large right doorway with its left inner wall panel, the short visible planked bridge portion and diagonal line visible through it. Keep all ceiling, corner, floor and doorway edges exactly fixed. Do not invent scenery in the white doorway area or add furniture, masonry block boundaries, railings, debris or props. Fill the thin blank outer canvas strips with the immediately adjacent scene material without shifting any actual structural edge or cropping.",
+    "ASCN-6785.png": "Preserve the precise horizon and the angular boundaries of both water regions against the beach, the circular sun and both sparse cloud patch shapes, and exactly the two grass clumps at left with every drawn blade tip unchanged. Do not broaden the clouds or grow extra grass blades. Flat beach remains empty; no pebbles, shells, driftwood, foam bands, distant land or new silhouettes. Change dots to continuous materials while retaining their region boundaries. Fill the thin blank bottom canvas margin with adjacent beach surface without cropping or shifting anything.",
+    "ASCN-13946.png": "The guide contains a completely empty sky, a straight sea horizon, two wavy water/beach boundaries, one curved foreground dune boundary, and exactly two three-bladed grass clumps at lower left. Trace every blade silhouette and all region boundaries exactly. The shack in the disk text is offscreen: do not add a shack or any structure. No sun, clouds, new plants, pebbles, shells or foam stripes. Give each existing halftone region continuous material without moving its contour. Fill the thin blank bottom and left outer canvas margins with immediately adjacent surface, keeping all object coordinates fixed.",
+    "ASCN-18468.png": "Trace the exact unusual angular submarine silhouette in the guide, including its two upright narrow pipes, faceted small tower, large dark raised structure to the right, all sloping hull edges and surrounding water/background region boundaries. Do not redesign it into a rounded modern submarine. Barnacles and moss are surface texture within existing silhouettes only, not added objects or growth protruding past edges. No new portholes, railings, antennas, ropes or shoreline objects. Fill only thin blank outer canvas margins with their immediately adjacent scene material without moving structure or cropping.",
+    "ASCN-1186.png": "Preserve exactly the hanging rope's curve and endpoints, bucket with handle and rim, existing drawn ripple arcs, pool boundary, two foreground rocks, and all faceted cavern wall planes. Material and lighting only: no additional rocks, stalactites, droplets, bubbles, vegetation or extra ripple outlines. Keep the bucket's width, bottom contour and handle opening exact. Fill the continuous thin blank bottom canvas margin with adjacent foreground stone surface without moving either rock or the pool edge, and retain genuine irregular cave cutouts.",
+    "ASCN-4874.png": "There are exactly five visible stair treads and five risers. Trace every tread/riser boundary, width, endpoint and slope exactly; do not insert intermediate steps, smooth or redesign the staircase. Preserve the dark doorway opening, every cave wall plane boundary and the empty floor. No rubble, railings, wall decorations or props. The blank rectangular strips along the bottom and right outside the drawn scene must be filled with the immediately adjacent floor or wall material, without changing any actual structural line, cropping, zooming or shifting the scene.",
+    "ASCN-12321.png": "Preserve the central low cylindrical pedestal with its exact top ellipse and base contour, the surrounding flat oval patch, the small dark rectangular wall panel and circular feature, the right dark doorway and every room boundary and horizontal floor line. No additional pool, steam, bubbles, stones, furniture, bevels or objects: disk text is offscreen context. The pedestal top is plain; do not put any object on it. Keep the exact floor and doorway line endpoints, and no outer frame.",
+    "ASCN-27318.png": "Trace every individual stair boundary exactly with the same number, spacing, slope and endpoints as drawn. Keep the broad foreground step, narrow distant steps, far landing and small dark doorway fixed. Do not convert the far flat landing into more stairs. Preserve wall/ceiling edges, including the gaps in the drawn upper-left seam; no new railings, lamps, stones, props or masonry lines. Fill the thin blank strip at the extreme bottom with adjacent step surface without cropping or moving any drawn edge.",
+    "ASCN-6591.png": "The scene contains only empty desert ground, the four connected angular ravine wall planes, and a partially cropped circular sun at upper left. Preserve every ravine top edge, bottom edge and corner, the background terrain-to-sky boundary and sun arc exactly. Do not smooth the angular walls, deepen or widen the ravine, or add stones, plants, cracks, distant mountains, clouds or dunes. Each stippled region becomes a continuous material while retaining its contour. Fill any thin blank outer canvas strip with adjacent scene material, without moving real contours.",
+    "ASCN-12523.png": "Preserve exactly the single cactus with two arms, all its existing outline projections, the partially cropped sun arc, the terrain horizon, and the two broad branching shaded ground patches. The branching ground patches must retain every drawn contour and endpoint; depict them as dried mud features without expanding them or adding a network of new cracks. No rocks, extra cactus arms, flowers, plants, distant hills or clouds. Empty dotted ground gets material only. Fill thin blank outer margins with adjacent ground without shifting actual boundaries.",
+    "ASCN-26550.png": "Preserve exactly the single right-hand cactus and its two arms, the central flat-topped faceted rock, both diagonal canyon walls and every wall facet, and the angular foreground terrain boundary. Do not round or reinterpret the central rock as a tree stump, or add cactus arms, flowers, rocks, loose debris, clouds or distant objects. Cactus needles must stay within the existing spiny silhouette. Fill the blank rectangular bottom strip and narrow left outer margin with adjacent scene materials, preserving all actual object positions and structural boundaries with no crop or zoom.",
+    "ASCN-27689.png": "The scene contains only the winding trail, bare desert terrain with the exact sloping left skyline and flat right horizon, the large partly cropped sun and the single narrow cloud patch. Preserve both trail edges and their endpoints exactly. Replace the dotted sun outline with a solid sun disk whose outer arc is at the same coordinates, and replace the cloud dots with continuous cloud material strictly within the original patch. No rocks, plants, dunes, mountains, additional clouds or footprints. Fill narrow blank outer ground margins with adjacent ground, no frame or crop.",
+    "ASCN-29592.png": "This is the exact stylized stone sphinx carved into the cliff, not a living person. Preserve the facial line positions, head/headdress outline, neck and tiered body, the two forepaws with exactly four rounded toe ends each, and the central rectangular recess between the paws. Do not anatomically redesign or beautify the sphinx or add ornaments. Trace all cliff planes and every structural seam. The broad white foreground is empty ground, not a picture mat; render it as continuous plain stone/sand material without new objects, retaining all statue coordinates. No text or frame.",
+    "ASCN-3521.png": "Preserve the winding cliff road's exact edges and width, every faceted cliff plane, the distant two-peak dark mountain silhouette and its horizontal lower edge, and the small narrow cloud patch. Do not add safety railings, roadside stones, vegetation, new peaks or extra clouds. Do not erase any shaded right-hand landscape region. Convert halftones to continuous materials only. The narrow outer bottom/left blank strips are canvas margins; fill with adjacent scene surface and remove only any outer frame stroke, without changing actual cliff or road boundaries, cropping or shifting the scene.",
+    "ASCN-9440.png": "This is an empty narrow pass. Preserve exactly the four connected faceted wall planes and every top, bottom and dividing edge, including the horizontal rightmost segment and its endpoint. Preserve the higher straight terrain-to-sky boundary behind them; do not reinterpret it as an outer picture frame or lower it. Foreground and sky are completely empty. No rocks, plants, clouds, mountains, steps, cracks, debris or additional geometry. Fill only thin side/bottom canvas margins with the adjacent plain surface, keeping all real contours fixed.",
+    "ASCN-23813.png": "Preserve exactly the winding foreground path, the elevated far plateau, the small dark opening in the far cliff, and every vertical faceted canyon plane and corner. Keep all path widths, sharp turns, plateau notches and wall edges fixed. Do not connect the disconnected paths with new bridges, add railings, stairs, plants, loose rocks or additional openings. Extend adjacent ground over the thin blank bottom canvas strip and eliminate only the outer frame stroke, preserving the actual path/cliff geometry without cropping or moving it.",
+    "ASCN-19497.png": "Preserve exactly the three palm trunks, all of their drawn horizontal band boundaries, the broad angular palm-canopy silhouettes with every existing point, the two spiky ground plants, and all edges of the branching path. Do not expand the canopies into extra separate fronds, add vines or new leaves, or invent background trees, shrubs, roots, stones or jungle silhouettes. The dark background is one continuous field of light/material with no new objects. Fill only thin blank outer margins with immediately adjacent scene material and remove outer frame strokes, preserving actual canopy and path contours.",
+    "ASCN-27293.png": "Preserve the exact broad vertical planes, their seams and floor junctions, the rectangular dark opening with sloping lower edge, and the entire jagged overhead canopy band including every triangular point and its uneven upper boundary. The stippled strip above the canopy remains a distinct scene region. Do not reinterpret this into a different jungle composition: no added trees, vines, leaves, shrubs, stones or distant silhouettes. Use continuous materials and mist/light only within existing regions. Fill narrow blank outer left/bottom margins with adjacent scene material and remove outer frame strokes without moving actual edges or cropping.",
+    "ASCN-1776.png": "Preserve the central rectangular pedestal/cabinet and the small upright square object on it, including both its outer and inner square contours. Keep all faceted sidewall and ceiling planes, the two side recesses and pale vertical inset shapes, floor and rear wall exactly fixed. The square object is an existing scene object, not an outer picture frame. No text, buttons, cables, machinery, ornament, additional props or floor debris. Fill only thin blank outer canvas margins with adjacent wall/ceiling/floor material, removing outer frame strokes without changing the existing object outlines or structural coordinates.",
+    "ASCN-10919.png": "Preserve the exact curved rear wall with its narrow top band, the rectangular right wall with its top band, the faceted left doorway/post formation and every inner and outer edge, and the curved rear wall-to-ground boundary. The foreground and sky are empty. No new roads, tents, camp objects, rubble, grass, clouds, masonry joints or distant scenery from the disk context. Fill the thin blank bottom strip and lower-right outer canvas strip with adjacent ground material, keeping all actual wall/post contours fixed and eliminating outer frame lines, with no crop or zoom."
+  }
+}

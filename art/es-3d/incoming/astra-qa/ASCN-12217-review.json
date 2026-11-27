@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-12217.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af4c-59b7-7ea3-a3bc-15f701e8d7bb\\exec-8c285f48-b4ef-463a-b4b1-3601788165e1.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-12217.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-12217-attempt1-overlay.png",
+  "reason": "The diagonal-hatched stream band is rendered as a solid stone wall, while flowing water is placed in the upper dotted bank region, around the four distant trunks. At x700 the original stream upper boundary is around y527 and the rendered water starts around y315, roughly 212 guide pixels apart. Multiple standalone boulders are added in that water. Surface outlines mostly trace the drawing, but water and bank semantics are swapped and objects added.",
+  "measurement": "Visual coordinate estimates in the full-canvas 1352x1256 overlay; no registration. Approximate upper water edge displacement 212 guide pixels / 53 native pixels."
+}

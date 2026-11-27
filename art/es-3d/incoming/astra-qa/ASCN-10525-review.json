@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-10525.png",
+  "verdict": "PASS",
+  "attempts": 1,
+  "reason": "Visual fixed-canvas overlay passes: cave-plane boundaries and floor junctions track the guide, and all five charcoal pictographs retain their recognizable shapes and placements within the approximate 8-guide-pixel tolerance. Pictographs stay flat on the wall; no added characters, objects or text. No full-width white margin strip; irregular white top/left cutouts follow the original plane silhouettes.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-d4f8f6b8-3105-467b-bd7d-3d4f9ca075da.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-10525-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Visual assessment, not a mathematical pixel-perfect certificate."
+}

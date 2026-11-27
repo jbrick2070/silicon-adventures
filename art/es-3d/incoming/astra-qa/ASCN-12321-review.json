@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-12321",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-55b6b2f6-2aa0-41fc-b1c3-e443ea8e067d.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-12321.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-12321-attempt1-overlay.png",
+  "reason": "Pedestal ellipse/base, surrounding oval, button panel, doorway, and room plane joins align closely; no border or standalone props. However the original horizontal floor joints are not retained one-for-one: candidate inserts several additional converging floor seams between the rear corner and the foreground pedestal. The original regular roughly 32-guide-pixel spacing becomes much denser toward the back. This fails the explicit horizontal-floor-line preservation check; if parent classifies these as permitted material texture, overall object silhouettes otherwise pass.",
+  "measurement": "Visual full-canvas comparison after resizing only to 1352x1256. Guide floor seams near y800,832,864,896 are supplemented by numerous intervening candidate seams around y775,786,795,806,818,847,886. Original y896 seam is approximately y906 in candidate (~10 guide pixels). Cropped floor evidence saved separately without registration."
+}

@@ -1,0 +1,10 @@
+{
+  "file": "ASCN-10919.png",
+  "verdict": "PASS",
+  "attempts": 1,
+  "reason": "The curved rear wall and top band, right rectangular wall and top band, faceted left doorway/post, and wall-ground boundaries remain closely aligned in the fixed-canvas overlay. The rear-wall crown remains around y212, the curved wall-ground midpoint around y458, and the right wall-ground line around y601. The left foreground face follows its source pattern-defined diagonal boundary and lower corner near (120,935); the close crop shows no clear structural displacement beyond approximately 8 guide pixels. Blank bottom/right margins are filled with adjacent ground. No new props, landscape, text, people, frames, borders, or residual dither are visible.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-66df2ffe-4469-4c3a-ab1d-f6dcc3dbe6ad.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-10919-attempt1-overlay.png",
+  "detail": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-10919-attempt1-leftface-detail.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Coordinates are visual estimates, not a mathematical pixel-perfect certificate."
+}

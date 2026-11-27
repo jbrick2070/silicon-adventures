@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-23449.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Two plants, two bubbles and major rocks remain recognizable, with no obvious new standalone objects. However the branch geometry is changed: the left plant upper-left lateral tip near guide (166,340) moves to approximately (149,341), about 17 guide pixels (4.25 native), and several other leaf tips are similarly extended/curved. The two short lower-right branches of the right plant, visible over the rocks around guide y920 and y980, are absent. These violate alignment and preserve-every-object requirements. Coordinates are visual estimates from fixed-canvas overlay.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-770f11f8-b086-4257-bc7e-6047cc9db706.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-23449-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay."
+}

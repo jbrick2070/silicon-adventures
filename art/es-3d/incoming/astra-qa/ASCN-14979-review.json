@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-14979.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-0f91effc-e7ea-4208-97cb-49c562de68d7.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-14979.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-14979-attempt1-overlay.png",
+  "reason": "Added many separate visible submerged rocks in the originally unbroken diagonal-hatched water region, including large isolated rounded stones in the lower half. The foreground boat prow is rendered as a sand-filled stone triangle with separate pebbles rather than a recognizable boat. Main bank, wall, and outer prow silhouettes largely align, but added standalone objects and changed foreground object semantics violate the constraints.",
+  "measurement": "Visual fixed-canvas overlay review; geometry is broadly close and failure does not rely on an unmeasured pixel-shift claim."
+}

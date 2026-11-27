@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-12086.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-9e73c7fd-5c4c-409b-b08c-a9806c42c069.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-12086.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-12086-attempt1-overlay.png",
+  "reason": "Main room back corners and doorway outer outlines align closely. The left doorway inner wall/floor boundary changes from the guide horizontal edge near y677 to a sloping edge; near x205 the candidate boundary is approximately y654, around 23 guide pixels (5.75 native) upward. This shifts a required doorway plane beyond tolerance.",
+  "measurement": "Visual full-canvas overlay plus annotated doorway detail with x205 and y650/y677 reference lines. No registration/cropping used to align the full overlay."
+}

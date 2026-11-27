@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-14895.png",
+  "verdict": "PASS",
+  "attempts": 1,
+  "reason": "Visual fixed-canvas overlay passes: the outcrop cap endpoints and fluted face, rear cliff joints and skyline, and long foreground ridge follow the guide. No clearly greater-than-about-8-guide-pixel semantic edge displacement found. No new standalone objects or text. Black left/bottom outlines derive from guide rather than a newly added frame. Gold key light and cool slate shadow are visible; no dither pattern.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-f0693cfc-90d1-4644-9154-0171ef1c4a7f.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-14895-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Visual assessment, not a pixel-perfect mathematical certificate."
+}

@@ -1,0 +1,12 @@
+{
+  "file": "ASCN-15776.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Main rock, plant, bubbles and seabed geometry pass the approximate tolerance check, but the render retains a full-width white top margin about 26 guide pixels deep. This is a visible image border, contrary to the explicit no-frames/no-borders requirement. Parent review rejected final promotion; no final room file was saved.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-4cbc517b-5b5a-40ee-9045-91f49a8ce5fe.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-15776-attempt1-overlay.png",
+  "detail": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-15776-attempt1-plant-detail.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay, plus enlarged same-coordinate plant comparison. Visual assessment, not a mathematical pixel-perfect certificate.",
+  "initial_geometry_verdict": "PASS",
+  "initial_geometry_reason": "Visual fixed-canvas overlay passes: single rock, U-shaped plant (both tips, inner opening and bottom), two bubbles, upper seabed edge and middle band boundaries remain recognizable and follow the guide within the approximate 8-guide-pixel tolerance. Enlarged plant detail checked because smoothing alters the pixel stair steps; no clearly material greater-than-tolerance displacement established. No added standalone objects or text."
+}

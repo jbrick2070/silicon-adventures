@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-12955.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Forbidden caption \"The water slows considerably.\" is rendered across the whirlpool. Added leafy plants protrude beyond the rear bank silhouette (especially left bank) and right foreground bank, obscuring original boundaries; a stone-colored vertical strip is added along the left image edge. Primary bank and prow outlines remain recognizable. Caption alone definitively fails the no-text requirement; no exact geometric displacement measurement asserted.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af4c-59b7-7ea3-a3bc-15f701e8d7bb\\exec-11ef8b8d-8ff4-494d-8997-0a806d2cacd6.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-12955-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay."
+}

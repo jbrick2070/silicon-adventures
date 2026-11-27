@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-26748.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-ffca87b1-26f8-4cd7-a1a6-31a684632d62.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-26748.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-26748-attempt1-overlay.png",
+  "reason": "Ramparts, gateway, path, and tent outer silhouette broadly align. The wooden tripod legs are lengthened and splayed: its left foot moves from approximately (945,877) to (931,897), while center foot moves from y912 to about y929. These 17-20 guide pixel shifts (roughly 4-5 native) exceed tolerance.",
+  "measurement": "Visual full-canvas overlay plus annotated tripod detail with x945 and y880/y900/y915 reference lines."
+}

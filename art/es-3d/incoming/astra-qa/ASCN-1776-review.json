@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-1776",
+  "verdict": "PASS",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-584a9e12-bd3d-4cb1-a252-038373198a3c.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-1776.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-1776-attempt1-overlay.png",
+  "reason": "Pedestal/cabinet, upright double-square object, room facets, both side recesses and pale inset shapes remain recognizable and closely aligned. No added props or missing major planes. Original thin scene-plane outlines remain along irregular outer silhouettes, but adjacent margins are filled with continuous material; no independent rectangular outer frame or blank margin strip is visible.",
+  "measurement": "Full-canvas resize only to 1352x1256. Visual overlay estimates are generally within ~8 guide pixels on semantic object/plane edges. The upright square bottom is about 5-7 pixels lower, and left floor-wall join and outer foreground wall corners are near the tolerance. Crosshatching in the original floor is treated as dithering rather than discrete structural seams."
+}

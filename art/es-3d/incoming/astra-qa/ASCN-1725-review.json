@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-1725.png",
+  "verdict": "PASS",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-dc38dbc2-1c2f-4f5e-a593-687965a359be.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-1725.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-1725-attempt1-overlay.png",
+  "reason": "Straw bed top footprint, front rim and two legs remain recognizable and closely overlay the guide. Cave openings, faceted wall boundaries and foreground floor boundary also align closely. No new standalone objects or material semantic displacement beyond approximately 8 guide pixels observed.",
+  "measurement": "Visual fixed full-canvas 1352x1256 overlay. Straw/wood and stone surface patterns treated as requested material repainting."
+}

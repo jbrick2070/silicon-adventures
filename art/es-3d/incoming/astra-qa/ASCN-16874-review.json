@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-16874.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-12dcc0f3-24c2-4a01-8871-e03db46b8300.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-16874.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-16874-attempt1-overlay.png",
+  "reason": "Temple outer tiers, doorway and palms broadly align. Stair tread count/spacing does not: the guide has repeated horizontal tread boundaries at roughly 32 guide pixel intervals, whereas the render introduces additional treads with tighter spacing near the top. Many guide boundaries fall in the middle of rendered risers rather than on tread edges; near guide y671 the nearest rendered tread edge is approximately y655, around 16 guide pixels (4 native) away.",
+  "measurement": "Visual fixed-canvas overlay and annotated vertical stair comparison. Red reference lines follow guide rows 383,415,447,479,511,543,575,607,639,671,703,735,767,799,831,863."
+}

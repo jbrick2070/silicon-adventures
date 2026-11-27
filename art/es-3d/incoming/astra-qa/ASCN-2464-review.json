@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-2464.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-1c97b6b7-56cc-4ac2-aec5-9ccbce2ac88f.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-2464.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-2464-attempt1-overlay.png",
+  "reason": "Stair treads/risers, curved stair sidewall, wall-floor intersection and battlements align closely with no material over-tolerance shift observed. However the output retains a visible black frame line and flat slate margin across the entire bottom edge, outside the rendered floor (about 28 guide pixels deep). This violates the explicit no-frames-or-borders prompt requirement. Geometry itself is acceptable.",
+  "measurement": "Visual fixed-canvas overlay. Border is visible in the original generated candidate; no crop/registration performed."
+}

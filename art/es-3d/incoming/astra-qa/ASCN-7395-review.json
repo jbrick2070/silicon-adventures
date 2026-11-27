@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-7395.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-1ca0e834-a95b-46a3-a7f9-b0d80db495a9.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-7395.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-7395-attempt1-overlay.png",
+  "reason": "Room joins, small beveled window, doorway panel, diagonal doorway line and bridge planks closely align with no material over-tolerance shift observed. However a blank white strip remains along the upper-left outside canvas margin, approximately 15 guide pixels wide and 314 pixels tall. It is a visible outer border, separate from the legitimate white window/door openings. Overall rejected under the no-border rule; geometry passes.",
+  "measurement": "Visual fixed-canvas overlay. Filled bottom margin is acceptable; retained upper-left outside strip is the rejection."
+}

@@ -1,0 +1,14 @@
+{
+  "file": "ASCN-5112.png",
+  "verdict": "FAIL",
+  "attempts": 2,
+  "reason": "Attempt 1 added sky foliage and moved right bank notch ~19-24 guide pixels. Attempt 2 corrected those but moved prow inner apex ~24-26 guide pixels (6-6.5 native). Room omitted.",
+  "sources": [
+    "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af4c-59b7-7ea3-a3bc-15f701e8d7bb\\exec-62e37ff8-1af1-402d-ba7f-a003f528724f.png",
+    "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af4c-59b7-7ea3-a3bc-15f701e8d7bb\\exec-1dcdeada-f16f-41a8-820b-8740bdc7b127.png"
+  ],
+  "overlays": [
+    "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-5112-attempt1-overlay.png",
+    "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-5112-attempt2-overlay.png"
+  ]
+}

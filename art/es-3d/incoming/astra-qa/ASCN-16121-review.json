@@ -1,0 +1,11 @@
+{
+  "room": "ASCN-16121.png",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-49f5952b-baa1-4028-a17d-a3d68a18009d.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-16121.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-16121-attempt1-overlay.png",
+  "reason": "Cave planes, floor, ceiling and opening pass geometry review, but a continuous white margin remains along the entire bottom edge, with additional outer edge margins. This constitutes a visible border even though its upper contour is uneven. Parent review rejected promotion under the explicit no-frames/no-borders requirement; no final room file was saved.",
+  "measurement": "Visual fixed full-canvas 1352x1256 overlay, without cropping or registration.",
+  "initial_geometry_verdict": "PASS",
+  "initial_geometry_reason": "Winding floor, faceted wall planes, ceiling joints and far black opening remain recognizable and overlay closely. No new standalone object or erased scene plane. No material semantic edge displacement beyond approximately 8 guide pixels observed. The guide irregular blank outer margins are retained; no separate decorative frame is added."
+}

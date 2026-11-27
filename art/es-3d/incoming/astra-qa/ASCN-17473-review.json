@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-17473.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "Pot, five visible pieces of wood, two palms, and the major wall/block outlines remain recognizable and broadly align. However, multiple standalone leafy plants have been added on the open ground along the rear wall, and numerous new background tree trunks/canopy silhouettes fill the previously uniform grey region. These violate add nothing. No exact out-of-tolerance displacement claim is made; rejection is for added objects.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-c4a134e0-9c76-4e9b-a24d-092223a3ef23.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-17473-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay."
+}

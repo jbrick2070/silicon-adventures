@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-2818.png",
+  "verdict": "PASS",
+  "attempts": 1,
+  "reason": "Visual fixed-canvas overlay passes: wall/pillar junctions, central wall motif and basin outer base, rim and inner ellipse align within the approximate 8-guide-pixel tolerance. The motif remains a flat wall symbol, not a new figure or text. No added standalone objects. Lit stone and basin water replace the original fills without dithering.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-f31d19a4-d622-49f4-9718-2e5c8b83bd3f.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-2818-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Visual assessment, not a mathematical pixel-perfect certificate."
+}

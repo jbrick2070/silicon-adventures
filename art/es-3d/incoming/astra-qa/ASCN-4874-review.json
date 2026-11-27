@@ -1,0 +1,10 @@
+{
+  "file": "ASCN-4874.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "The five stair treads/risers, dark opening, and main wall planes appear closely aligned, and the blank bottom/right margins are filled without a white border. However, the lower-left wall/floor boundary changes shape: at x approximately 0 the guide boundary is near y1095, while the normalized render boundary is near y1144 (roughly 45-50 guide pixels lower). The guide bends down toward (72,1118), whereas the render uses an almost straight diagonal toward the shared corner near (214,1080). This is a structural edge shift beyond the approximately 8-guide-pixel tolerance, not a texture difference.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-4701c5d2-d5f6-40b7-b240-54c6d976b910.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-4874-attempt1-overlay.png",
+  "detail": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-4874-attempt1-floor-detail.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Coordinates are visual estimates, not a mathematical pixel-perfect certificate."
+}

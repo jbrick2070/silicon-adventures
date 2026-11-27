@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-17730.png",
+  "verdict": "PASS",
+  "attempts": 1,
+  "reason": "Visual fixed-canvas overlay passes: faceted alcove side planes, dark rear-wall contour and floor junctions follow the guide within the approximate 8-guide-pixel tolerance. Empty alcove remains empty; no insect, props, text or full-width border strips added. Realistic stone texture and directional light remain inside the existing surfaces.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-ccf68bb1-4972-4816-a083-710fc6d4af74.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-17730-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Visual assessment, not a mathematical pixel-perfect certificate."
+}

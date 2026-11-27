@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-29592",
+  "verdict": "PASS",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-82493609-c1bc-4322-8270-e9e36ecf4cb0.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-29592.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-29592-attempt1-overlay.png",
+  "reason": "Sphinx head outline and drawn face lines, neck, body tiers, central recess, four toes on each paw, and cliff planes retain their original positions and recognizable shapes. The empty foreground is rendered as uninterrupted ground without added props. No visible outer frame or blank margin strip.",
+  "measurement": "Full-canvas resize only to 1352x1256. Overlay visually indicates semantic boundaries generally within the approximately 8-guide-pixel tolerance, including toe tips/bases, tier joints, and cliff joins. Fine stone relief and lighting treated as material detail."
+}

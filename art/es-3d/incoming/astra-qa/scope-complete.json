@@ -1,0 +1,397 @@
+{
+  "scope": "Batches 5 and 4 only",
+  "original_rows": "15-58 inclusive",
+  "generation_complete": true,
+  "independent_qa_complete": true,
+  "parent_final_acceptance_pending": false,
+  "attempted": [
+    "ASCN-12086.png",
+    "ASCN-12320.png",
+    "ASCN-26748.png",
+    "ASCN-23449.png",
+    "ASCN-31555.png",
+    "ASCN-2818.png",
+    "ASCN-16874.png",
+    "ASCN-18278.png",
+    "ASCN-21162.png",
+    "ASCN-25655.png",
+    "ASCN-27504.png",
+    "ASCN-63.png",
+    "ASCN-19939.png",
+    "ASCN-29926.png",
+    "ASCN-2464.png",
+    "ASCN-17568.png",
+    "ASCN-24275.png",
+    "ASCN-15776.png",
+    "ASCN-1725.png",
+    "ASCN-10525.png",
+    "ASCN-16121.png",
+    "ASCN-17730.png",
+    "ASCN-20431.png",
+    "ASCN-30379.png",
+    "ASCN-7395.png",
+    "ASCN-6785.png",
+    "ASCN-13946.png",
+    "ASCN-18468.png",
+    "ASCN-1186.png",
+    "ASCN-4874.png",
+    "ASCN-12321.png",
+    "ASCN-27318.png",
+    "ASCN-6591.png",
+    "ASCN-12523.png",
+    "ASCN-26550.png",
+    "ASCN-27689.png",
+    "ASCN-29592.png",
+    "ASCN-3521.png",
+    "ASCN-9440.png",
+    "ASCN-23813.png",
+    "ASCN-19497.png",
+    "ASCN-27293.png",
+    "ASCN-1776.png",
+    "ASCN-10919.png"
+  ],
+  "skipped": [],
+  "retained_prior_attempts": [
+    "ASCN-12086.png",
+    "ASCN-12320.png",
+    "ASCN-26748.png",
+    "ASCN-23449.png",
+    "ASCN-31555.png",
+    "ASCN-2818.png",
+    "ASCN-16874.png",
+    "ASCN-18278.png",
+    "ASCN-21162.png",
+    "ASCN-25655.png",
+    "ASCN-27504.png"
+  ],
+  "generated_after_scope_change": [
+    "ASCN-63.png",
+    "ASCN-19939.png",
+    "ASCN-29926.png",
+    "ASCN-2464.png",
+    "ASCN-17568.png",
+    "ASCN-24275.png",
+    "ASCN-15776.png",
+    "ASCN-1725.png",
+    "ASCN-10525.png",
+    "ASCN-16121.png",
+    "ASCN-17730.png",
+    "ASCN-20431.png",
+    "ASCN-30379.png",
+    "ASCN-7395.png",
+    "ASCN-6785.png",
+    "ASCN-13946.png",
+    "ASCN-18468.png",
+    "ASCN-1186.png",
+    "ASCN-4874.png",
+    "ASCN-12321.png",
+    "ASCN-27318.png",
+    "ASCN-6591.png",
+    "ASCN-12523.png",
+    "ASCN-26550.png",
+    "ASCN-27689.png",
+    "ASCN-29592.png",
+    "ASCN-3521.png",
+    "ASCN-9440.png",
+    "ASCN-23813.png",
+    "ASCN-19497.png",
+    "ASCN-27293.png",
+    "ASCN-1776.png",
+    "ASCN-10919.png"
+  ],
+  "existing_at_scope_change_retained": {
+    "ASCN-31555.png": [
+      "D:\\silicon-adventures\\art\\es-3d\\incoming\\ASCN-31555.png"
+    ],
+    "ASCN-2818.png": [
+      "D:\\silicon-adventures\\art\\es-3d\\incoming\\ASCN-2818.png"
+    ]
+  },
+  "attempt_count": 44,
+  "new_attempt_count_after_scope_change": 33,
+  "retry_count_in_selected_scope": 0,
+  "skipped_count": 0,
+  "last_generated_file": "ASCN-10919.png",
+  "last_generated_original_row": 58,
+  "excluded_later_rows": [
+    "ASCN-290.png",
+    "ASCN-6048.png",
+    "ASCN-3122.png",
+    "ASCN-4684.png"
+  ],
+  "branch": "feature/asset-parity",
+  "note": "All selected rooms were attempted once in original order. Rows 15-25 already had generation/review work at the scope change and were retained without rerendering. Rows 26-58 were checked in both final locations before generation; no existing room was encountered. Independent QA exists for all 44 selected rooms. Parent owns final acceptance and promotion; review PASS can be overridden after parent audit.",
+  "records": [
+    {
+      "file": "ASCN-12086.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-12086-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-9e73c7fd-5c4c-409b-b08c-a9806c42c069.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-12320.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-12320-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-f95e9eae-7256-4cb6-aa98-3c6e3b456bbd.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-26748.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-26748-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-ffca87b1-26f8-4cd7-a1a6-31a684632d62.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-23449.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-23449-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-770f11f8-b086-4257-bc7e-6047cc9db706.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-31555.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-31555-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-b9fb8674-5d31-4c35-b5d2-21a5c54339bd.png",
+      "verdict": "PASS"
+    },
+    {
+      "file": "ASCN-2818.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-2818-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-f31d19a4-d622-49f4-9718-2e5c8b83bd3f.png",
+      "verdict": "PASS"
+    },
+    {
+      "file": "ASCN-16874.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-16874-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-12dcc0f3-24c2-4a01-8871-e03db46b8300.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-18278.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-18278-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-b4597ab8-c1f8-4afc-bbbd-bba5baf38cb6.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-21162.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-21162-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-5b76ba1d-2a95-472c-b618-962f26b4ee9e.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-25655.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-25655-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-5ac1d99a-88a9-4259-b5d1-4b07c03d11f2.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-27504.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-27504-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-7829d5e4-105c-42e5-a4ae-a8f14b049cac.png",
+      "verdict": "PASS"
+    },
+    {
+      "file": "ASCN-63.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-63-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-c797e4ae-bb91-4f6a-8920-538cd6394a34.png",
+      "verdict": "PASS"
+    },
+    {
+      "file": "ASCN-19939.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-19939-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-b966982b-b368-466a-9511-5015e7121430.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-29926.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-29926-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-a2c95487-271b-4eac-96d0-453dd66c266c.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-2464.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-2464-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-1c97b6b7-56cc-4ac2-aec5-9ccbce2ac88f.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-17568.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-17568-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-d8ff511b-8927-42a9-848a-fca9c392664b.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-24275.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-24275-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-eaa24eb5-b988-4ca7-a939-4532f6cdb8e3.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-15776.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-15776-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-4cbc517b-5b5a-40ee-9045-91f49a8ce5fe.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-1725.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-1725-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-dc38dbc2-1c2f-4f5e-a593-687965a359be.png",
+      "verdict": "PASS"
+    },
+    {
+      "file": "ASCN-10525.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-10525-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-d4f8f6b8-3105-467b-bd7d-3d4f9ca075da.png",
+      "verdict": "PASS"
+    },
+    {
+      "file": "ASCN-16121.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-16121-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-49f5952b-baa1-4028-a17d-a3d68a18009d.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-17730.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-17730-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-ccf68bb1-4972-4816-a083-710fc6d4af74.png",
+      "verdict": "PASS"
+    },
+    {
+      "file": "ASCN-20431.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-20431-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-609a405d-8900-4f2e-b90a-8ee5d5eb4142.png",
+      "verdict": "PASS"
+    },
+    {
+      "file": "ASCN-30379.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-30379-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-e0490cf0-33ac-4f41-a051-b9171074847e.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-7395.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-7395-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-1ca0e834-a95b-46a3-a7f9-b0d80db495a9.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-6785.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-6785-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-c89296f4-0383-42f4-80af-6958b8341a0c.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-13946.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-13946-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-e02a0652-0a89-41e8-af82-f802c7c0fbd7.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-18468.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-18468-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-5e83291a-6c2a-4abc-a9e1-0895f37e0d4a.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-1186.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-1186-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-78c7fe80-2476-4f56-9d25-df065cac2f4d.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-4874.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-4874-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-4701c5d2-d5f6-40b7-b240-54c6d976b910.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-12321.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-12321-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-55b6b2f6-2aa0-41fc-b1c3-e443ea8e067d.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-27318.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-27318-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-4a142383-b298-43b0-a011-82d5f0863a9f.png",
+      "verdict": "PASS"
+    },
+    {
+      "file": "ASCN-6591.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-6591-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-cc71abd5-5361-4900-a926-0766887c8104.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-12523.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-12523-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-9a2970d8-8ba4-41ea-84fe-4fb25324b4c0.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-26550.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-26550-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-b6c3a995-3ea7-4491-8152-b79db4ea68a7.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-27689.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-27689-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-4946f90c-baa2-4622-b050-21fab07c3ddb.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-29592.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-29592-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-82493609-c1bc-4322-8270-e9e36ecf4cb0.png",
+      "verdict": "PASS"
+    },
+    {
+      "file": "ASCN-3521.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-3521-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-6793ba7b-e5b5-4912-bb02-091981d133da.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-9440.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-9440-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-a48c5ca3-502f-4a28-b401-aa7d1f0ee85d.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-23813.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-23813-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-aab9ac6a-8461-4c04-954e-b746dae3e14b.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-19497.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-19497-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-47d12587-1fa4-4f1d-a147-9d35fbe07c21.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-27293.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-27293-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-397cf0ae-1341-40a6-b0ed-3cfdd9aaba36.png",
+      "verdict": "FAIL"
+    },
+    {
+      "file": "ASCN-1776.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-1776-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-584a9e12-bd3d-4cb1-a252-038373198a3c.png",
+      "verdict": "PASS"
+    },
+    {
+      "file": "ASCN-10919.png",
+      "review_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-10919-review.json",
+      "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-66df2ffe-4469-4c3a-ab1d-f6dcc3dbe6ad.png",
+      "verdict": "PASS"
+    }
+  ],
+  "completed_utc": "2026-11-06T07:04:20.231649Z",
+  "parent_final_accepted_count": 12,
+  "parent_final_omitted_count": 32,
+  "parent_final_acceptance_complete": true,
+  "accepted_selected_count": 12,
+  "omitted_selected_count": 32,
+  "parent_audit": "All 44 selected rooms reviewed. All 12 accepted final PNGs byte-match generated sources and manifest hashes. All 32 failed candidates omitted. No later batch-3 rooms generated."
+}

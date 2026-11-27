@@ -1,0 +1,9 @@
+{
+  "file": "ASCN-27293.png",
+  "verdict": "FAIL",
+  "attempts": 1,
+  "reason": "The dark outer frame remains clearly visible: a long near-horizontal black border around y1238 spans nearly the full width, joined to a left vertical segment around x18-30; a separate upper-left frame segment also persists. The filled outer margins do not remove these frame lines, so the explicit no-frames-or-borders requirement fails. The vertical planes, floor seams, dark opening (approximately x708-932, y517-820), jagged overhead-band points, and upper strip otherwise align closely in the overlay, with no clear structural shift exceeding approximately 8 guide pixels. No text or separate added props are visible.",
+  "source": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-397cf0ae-1341-40a6-b0ed-3cfdd9aaba36.png",
+  "overlay": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-27293-attempt1-overlay.png",
+  "comparison": "Full guide canvas 1352x1256; candidate resized to guide size without crop, registration, or warping; 50 percent overlay. Coordinates are visual estimates, not a mathematical pixel-perfect certificate."
+}

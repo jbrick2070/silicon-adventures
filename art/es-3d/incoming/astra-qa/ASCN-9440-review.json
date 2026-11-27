@@ -1,0 +1,9 @@
+{
+  "room": "ASCN-9440",
+  "verdict": "FAIL",
+  "source_path": "C:\\Users\\jeffr\\.codex\\generated_images\\01a1af57-8bf3-7691-a820-03da5fd925ec\\exec-a48c5ca3-502f-4a28-b401-aa7d1f0ee85d.png",
+  "guide_path": "D:\\silicon-adventures\\art\\es-3d\\guides\\ASCN-9440.png",
+  "overlay_path": "D:\\silicon-adventures\\art\\es-3d\\incoming\\astra-qa\\ASCN-9440-attempt1-overlay.png",
+  "reason": "The elevated background terrain region above the four wall planes is erased and rendered as sky. Its original horizontal boundary near y154 is missing; candidate sky now meets the wall tops near y290-314. Wall plane contours themselves align closely, and sky/foreground contain no added props or border.",
+  "measurement": "Full-canvas resize only to 1352x1256. Original terrain-to-sky boundary y154 versus effective rendered boundary at wall tops y290-314 is a roughly 136-160 guide pixel change, far beyond the ~8 guide pixel tolerance."
+}
